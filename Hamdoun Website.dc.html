@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  html, body { margin:0; padding:0; background:oklch(99% 0.003 80); }
+  body { font-family:'IBM Plex Sans', -apple-system, 'Segoe UI', sans-serif; color:oklch(14% 0.008 45); line-height:1.5; }
+  a { color:oklch(14% 0.008 45); text-decoration:none; }
+  a:hover { color:oklch(46% 0.13 60); }
+  @keyframes pulse { 0%,80%,100% { opacity:.25 } 40% { opacity:1 } }
+  @media (prefers-reduced-motion: reduce) { .demo-dot { animation:none !important; opacity:1 !important; } }
+</style>
+</helmet>
+
+<!-- ══════════ HEADER ══════════ -->
+<header style="position:sticky;top:0;z-index:20;background:color-mix(in oklch, oklch(99% 0.003 80) 92%, transparent);backdrop-filter:blur(6px);">
+  <div style="max-width:1080px;margin:0 auto;padding:20px 40px;display:flex;align-items:center;justify-content:space-between;">
+    <div style="display:flex;align-items:center;gap:10px;">
+      <img src="assets/logo-mark.svg" style="width:26px;height:26px;display:block;" alt="">
+      <span style="font:600 18px/1 'IBM Plex Sans',sans-serif;">Hamdoun</span>
+    </div>
+    <nav aria-label="Hoofdnavigatie" style="display:flex;gap:32px;font-size:0.9375rem;color:oklch(50% 0.012 65);">
+      <a href="#aanpak" style="color:oklch(50% 0.012 65);">Aanpak</a>
+      <a href="#demo" style="color:oklch(50% 0.012 65);">Zie het in actie</a>
+      <a href="#nieuws" style="color:oklch(50% 0.012 65);">Nieuws</a>
+      <a href="#faq" style="color:oklch(50% 0.012 65);">Veelgestelde vragen</a>
+      <a href="#contact" style="color:oklch(50% 0.012 65);">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<!-- ══════════ HERO ══════════ -->
+<section data-screen-label="Hero" style="padding:88px 0;">
+  <div style="max-width:1080px;margin:0 auto;padding:0 40px;display:flex;flex-direction:column;gap:24px;">
+    <div style="font:600 clamp(2.5rem,2rem + 2vw,4rem)/1.05 'IBM Plex Sans',sans-serif;max-width:720px;">Gerichte AI voor concrete problemen.</div>
+    <div style="font:400 1.125rem/1.55 'IBM Plex Sans',sans-serif;color:oklch(50% 0.012 65);max-width:680px;">
+      Geen platform voor "AI in het algemeen". Wij bouwen één werkende oplossing voor
+      één specifiek knelpunt — vaak ontstaan uit wetgeving, compliance of een tijdrovend
+      handmatig proces.
+    </div>
+    <div style="display:flex;gap:12px;margin-top:8px;">
+      <a href="#contact" style="background:oklch(14% 0.008 45);color:oklch(99% 0.003 80);padding:11px 20px;border-radius:3px;font-weight:600;font-size:0.9375rem;" style-hover="background:oklch(28% 0.012 55);color:oklch(99% 0.003 80);">Plan een gesprek</a>
+      <a href="#demo" style="border:1px solid oklch(76% 0.01 75);color:oklch(14% 0.008 45);padding:11px 20px;border-radius:3px;font-weight:600;font-size:0.9375rem;">Zie het in actie ↓</a>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ AANPAK ══════════ -->
+<section id="aanpak" data-screen-label="Aanpak" style="padding:88px 0;background:oklch(97% 0.004 80);border-top:1px solid oklch(87% 0.008 75);border-bottom:1px solid oklch(87% 0.008 75);">
+  <div style="max-width:1080px;margin:0 auto;padding:0 40px;">
+    <div style="font:500 0.8125rem/1.3 'IBM Plex Mono',monospace;letter-spacing:0.06em;text-transform:uppercase;color:oklch(50% 0.012 65);margin-bottom:16px;">Aanpak</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:40px;">
+      <div>
+        <div style="font:600 1.25rem/1.35 'IBM Plex Sans',sans-serif;margin-bottom:8px;">1. Eén knelpunt</div>
+        <div style="font:400 0.875rem/1.5 'IBM Plex Sans',sans-serif;color:oklch(50% 0.012 65);">We beginnen bij het concrete, vervelende probleem — niet bij een technologie die we willen verkopen.</div>
+      </div>
+      <div>
+        <div style="font:600 1.25rem/1.35 'IBM Plex Sans',sans-serif;
+margin-bottom:8px;">2. Op maat gebouwd</div>
+        <div style="font:400 0.875rem/1.5 'IBM Plex Sans',sans-serif;color:oklch(50% 0.012 65);">Een gerichte workflow of tool, precies afgestemd op jullie proces en verplichtingen.</div>
+      </div>
+      <div>
+        <div style="font:600 1.25rem/1.35 'IBM Plex Sans',sans-serif;margin-bottom:8px;">3. Mens blijft aan zet</div>
+        <div style="font:400 0.875rem/1.5 'IBM Plex Sans',sans-serif;color:oklch(50% 0.012 65);">Automatisering doet het voorwerk; belangrijke beslissingen blijven bij een mens.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ DEMO ══════════ -->
+<section id="demo" data-screen-label="Zie het in actie" style="padding:88px 0;">
+  <div style="max-width:1080px;margin:0 auto;padding:0 40px;">
+    <div style="font:500 0.8125rem/1.3 'IBM Plex Mono',monospace;letter-spacing:0.06em;text-transform:uppercase;color:oklch(50% 0.012 65);margin-bottom:16px;">Zie het in actie</div>
+    <div style="font:600 1.75rem/1.25 'IBM Plex Sans',sans-serif;margin-bottom:12px;">Drie lopende voorbeelden, live te proberen.</div>
+    <div style="font:400 1rem/1.55 'IBM Plex Sans',sans-serif;color:oklch(50% 0.012 65);max-width:600px;margin-bottom:32px;">Geen mockup — dit zijn vereenvoudigde, echt werkende versies van de logica achter drie producten.</div>
+
+    <div style="display:flex;gap:10px;margin-bottom:32px;flex-wrap:wrap;" role="tablist" aria-label="Kies demo">
+      <button onClick="{{ kiesMeldstroom }}" role="tab" aria-selected="{{ isMeldstroom }}" style="cursor:pointer;padding:10px 18px;border-radius:3px;font-weight:600;font-size:0.9375rem;font-family:'IBM Plex Sans',sans-serif;border:1px solid {{ tabMsBorder }};background:{{ tabMsBg }};color:{{ tabMsColor }};transition:all 120ms ease;">Meldstroom — HSE-melding</button>
+      <button onClick="{{ kiesZzp }}" role="tab" aria-selected="{{ isZzp }}" style="cursor:pointer;padding:10px 18px;border-radius:3px;font-weight:600;font-size:0.9375rem;font-family:'IBM Plex Sans',sans-serif;border:1px solid {{ tabZzpBorder }};background:{{ tabZzpBg }};color:{{ tabZzpColor }};transition:all 120ms ease;">Zzp-scan — vacaturecheck</button>
+      <button onClick="{{ kiesAfspraak }}" role="tab" aria-selected="{{ isAfspraak }}" style="cursor:pointer;padding:10px 18px;border-radius:3px;font-weight:600;font-size:0.9375rem;font-family:'IBM Plex Sans',sans-serif;border:1px solid {{ tabApBorder }};background:{{ tabApBg }};color:{{ tabApColor }};transition:all 120ms ease;">Afspraakopvolging — WhatsApp</button>
+    </div>
+
+    <!-- MELDSTROOM DEMO -->
+    <sc-if value="{{ isMeldstroom }}" hint-placeholder-val="{{ true }}">
+    <div style="border:1px solid oklch(87% 0.008 75);border-radius:6px;box-shadow:0 1px 0 oklch(20% 0.01 50 / 0.04), 0 8px 24px oklch(20% 0.01 50 / 0.06);overflow:hidden;">
+      <div style="padding:16px 24px;border-bottom:1px solid oklch(87% 0.008 75);display:flex;align-items:baseline;gap:8px;background:oklch(97% 0.004 80);">
+        <span style="font:600 15px/1 'IBM Plex Sans',sans-serif;">Hamdoun</span>
+        <span style="font:500 0.8125rem/1.3 'IBM Plex Mono',monospace;letter-spacing:0.06em;color:oklch(46% 0.13 60);border-left:2px solid oklch(64% 0.15 65);padding-left:8px;">MELDSTROOM</span>
+      </div>
+      <div style="padding:28px;display:grid;grid-template-columns:1fr 1fr;gap:28px;">
+        <div>
+          <div style="font:500 0.8125rem/1.3 'IBM Plex Mono',monospace;letter-spacing:0.06em;text-transform:uppercase;color:oklch(50% 0.012 65);margin-bottom:10px;">Inkomende e-mail</div>
+          <div style="border:1px solid oklch(87% 0.008 75);border-radius:3px;padding:16px;font-size:0.875rem;line-height:1.6;background:oklch(97% 0.004 80);">
+            <div style="color:oklch(50% 0.012 65);margin-bottom:8px;font-family:'IBM Plex Mono',monospace;font-size:0.75rem;">van: j.devries@voorbeeldbedrijf.nl · 08:14</div>
+            <span>Tijdens het lossen van pallets in magazijn 3 viel een kratje van rek B-14. Geen persoonlijk letsel; rek is beveiligd met extra strap in afwachting van inspectie.</span>
+          </div>
+          <button onClick="{{ runMeldstroom }}" disabled="{{ msLoading }}" style="margin-top:16px;background:{{ msBtnBg }};color:oklch(99% 0.003 80);padding:11px 20px;border-radius:3px;font-weight:600;font-size:0.9375rem;font-family:'IBM Plex Sans',sans-serif;border:none;cursor:pointer;">Verwerk melding →</button>
+        </div>
+        <div>
+          <div style="font:500 0.8125rem/1.3 'IBM Plex Mono',monospace;letter-spacing:0.06em;text-transform:uppercase;color:oklch(50% 0.012 65);margin-bottom:10px;">Gegenereerd conceptrapport</div>
+          <div aria-live="polite" style="border:1px solid oklch(87% 0.008 75);border-radius:3px;padding:16px;min-height:180px;background:oklch(97% 0.004 80);">
+            <sc-if value="{{ msIdle }}" hint-placeholder-val="{{ true }}">
+              <div style="font-size:0.875rem;color:oklch(50% 0.012 65);">Klik "Verwerk melding" om te starten.</div>
+            </sc-if>
+            <sc-if value="{{ msLoading }}" hint-placeholder-val="{{ false }}">
+              <div style="font-size:0.875rem;color:oklch(50% 0.012 65);display:flex;align-items:center;gap:6px;"><span>Verwerken</span><span class="demo-dot" style="display:inline-block;width:6px;height:6px;border-radius:50%;background:oklch(50% 0.012 65);animation:pulse 1s infinite ease-in-out;"></span><span class="demo-dot" style="display:inline-block;width:6px;height:6px;border-radius:50%;background:oklch(50% 0.012 65);animation:pulse 1s infinite ease-in-out 0.15s;"></span><span class="demo-dot" style="display:inline-block;width:6px;height:6px;border-radius:50%;background:oklch(50% 0.012 65);animation:pulse 1s infinite ease-in-out 0.3s;"></span></div>
+            </sc-if>
+            <sc-if value="{{ msDone }}" hint-placeholder-val="{{ false }}">
+              <div style="font-size:0.875rem;">
+                <div style="margin-bottom:8px;"><b>Locatie</b> — Magazijn 3, Rotterdam</div>
+                <div style="margin-bottom:8px;"><b>Categorie</b> — Bijna-ongeval, vallend object</div>
+                <div style="margin-bottom:12px;"><b>Datum</b> — 17 april 2026, 08:14</div>
+                <div style="background:oklch(93% 0.05 75);border-left:3px solid oklch(64% 0.15 65);border-radius:3px;padding:10px 12px;font-size:0.8125rem;color:oklch(46% 0.13 60);">⚠ Handmatige controle vereist — concept klaar voor review.</div>
+              </div>
+            </sc-if>
+          </div>
+        </div>
+      </div>
+    </div>
+    </sc-if>
+
+    <!-- ZZP-SCAN DEMO -->
+    <sc-if value="{{ isZzp }}" hint-placeholder-val="{{ false }}">
+    <div style="border:1px solid oklch(87% 0.008 75);border-radius:6px;box-shadow:0 1px 0 oklch(20% 0.01 50 / 0.04), 0 8px 24px oklch(20% 0.01 50 / 0.06);overflow:hidden;">
+      <div style="padding:16px 24px;border-bottom:1px solid oklch(87% 0.008 75);display:flex;align-items:baseline;gap:8px;background:oklch(97% 0.004 80);">
+        <span style="font:600 15px/1 'IBM Plex Sans',sans-serif;">Hamdoun</span>
+        <span style="font:500 0.8125rem/1.3 'IBM Plex Mono',monospace;letter-spacing:0.06em;color:oklch(50% 0.15 200);border-left:2px solid oklch(64% 0.15 200);padding-left:8px;">ZZP-SCAN</span>
+      </div>
+      <div style="padding:28px;display:grid;grid-template-columns:1fr 1fr;gap:28px;">
+        <div>
+          <label for="zzp-input" style="display:block;font:500 0.8125rem/1.3 'IBM Plex Mono',monospace;letter-spacing:0.06em;text-transform:uppercase;color:oklch(50% 0.012 65);margin-bottom:10px;">Vacaturetekst (bewerkbaar)</label>
+          <textarea id="zzp-input" rows="7" value="{{ zzpText }}" onChange="{{ zzpTextChange }}" style="width:100%;box-sizing:border-box;font:400 0.875rem/1.5 'IBM Plex Sans',sans-serif;padding:14px;border-radius:3px;border:1px solid oklch(76% 0.01 75);resize:vertical;color:oklch(14% 0.008 45);background:oklch(99% 0.003 80);"></textarea>
+          <button onClick="{{ runZzp }}" disabled="{{ zzpLoading }}" style="margin-top:16px;background:{{ zzpBtnBg }};color:oklch(99% 0.003 80);padding:11px 20px;border-radius:3px;font-weight:600;font-size:0.9375rem;font-family:'IBM Plex Sans',sans-serif;border:none;cursor:pointer;">Check geschiktheid →</button>
+        </div>
+        <div>
+          <div style="font:500 0.8125rem/1.3 'IBM Plex Mono',monospace;letter-spacing:0.06em;text-transform:uppercase;color:oklch(50% 0.012 65);margin-bottom:10px;">Beoordeling</div>
+          <div aria-live="polite" style="border:1px solid oklch(87% 0.008 75);border-radius:3px;padding:16px;min-height:180px;background:oklch(97% 0.004 80);">
+            <sc-if value="{{ zzpIdle }}" hint-placeholder-val="{{ true }}">
+              <div style="font-size:0.875rem;color:oklch(50% 0.012 65);">Klik "Check geschiktheid" om te starten.</div>
+            </sc-if>
+            <sc-if value="{{ zzpLoading }}" hint-placeholder-val="{{ false }}">
+              <div style="font-size:0.875rem;color:oklch(50% 0.012 65);display:flex;align-items:center;gap:6px;"><span>Analyseren</span><span class="demo-dot" style="display:inline-block;width:6px;height:6px;border-radius:50%;background:oklch(50% 0.012 65);animation:pulse 1s infinite ease-in-out;"></span><span class="demo-dot" style="display:inline-block;width:6px;height:6px;border-radius:50%;background:oklch(50% 0.012 65);animation:pulse 1s infinite ease-in-out 0.15s;"></span><span class="demo-dot" style="display:inline-block;width:6px;height:6px;border-radius:50%;background:oklch(50% 0.012 65);animation:pulse 1s infinite ease-in-out 0.3s;"></span></div>
+            </sc-if>
+            <sc-if value="{{ zzpDone }}" hint-placeholder-val="{{ false }}">
+              <div style="font-size:0.875rem;">
+                <div style="background:{{ zzpToneBg }};border-left:3px solid {{ zzpToneBorder }};border-radius:3px;padding:12px 14px;margin-bottom:12px;">
+                  <div style="font-weight:600;color:{{ zzpToneText }};margin-bottom:4px;">{{ zzpVerdict }}</div>
+                  <div style="font-size:0.8125rem;color:oklch(50% 0.012 65);">{{ zzpReason }}</div>
+                </div>
+                <div style="font-family:'IBM Plex Mono',monospace;font-size:0.75rem;color:oklch(50% 0.012 65);">{{ zzpScoreLine }}</div>
+              </div>
+            </sc-if>
+          </div>
+        </div>
+      </div>
+    </div>
+    </sc-if>
+
+    <!-- AFSPRAAKOPVOLGING DEMO -->
+    <sc-if value="{{ isAfspraak }}" hint-placeholder-val="{{ false }}">
+    <div style="border:1px solid oklch(87% 0.008 75);border-radius:6px;box-shadow:0 1px 0 oklch(20% 0.01 50 / 0.04), 0 8px 24px oklch(20% 0.01 50 / 0.06);overflow:hidden;">
+      <div style="padding:16px 24px;border-bottom:1px solid oklch(87% 0.008 75);display:flex;align-items:baseline;justify-content:space-between;gap:8px;background:oklch(97% 0.004 80);">
+        <div style="display:flex;align-items:baseline;gap:8px;">
+          <span style="font:600 15px/1 'IBM Plex Sans',sans-serif;">Hamdoun</span>
+          <span style="font:500 0.8125rem/1.3 'IBM Plex Mono',monospace;letter-spacing:0.06em;color:oklch(46% 0.13 155);border-left:2px solid oklch(64% 0.15 155);padding-left:8px;">AFSPRAAKOPVOLGING</span>
+        </div>
+        <a href="Workflow Presentatie.dc.html" style="font:500 0.8125rem/1.3 'IBM Plex Mono',monospace;color:oklch(50% 0.012 65);">Bekijk als presentatie ↗</a>
+      </div>
+      <div style="padding:28px;display:grid;grid-template-columns:1fr 1fr;gap:28px;">
+        <div>
+          <div style="font:500 0.8125rem/1.3 'IBM Plex Mono',monospace;letter-spacing:0.06em;text-transform:uppercase;color:oklch(50% 0.012 65);margin-bottom:10px;">Afspraak in de agenda</div>
+          <div style="border:1px solid oklch(87% 0.008 75);border-radius:3px;padding:16px;font-size:0.875rem;line-height:1.6;background:oklch(97% 0.004 80);">
+            <div style="display:flex;justify-content:space-between;margin-bottom:6px;"><span style="color:oklch(50% 0.012 65);">Klant</span><span style="font-family:'IBM Plex Mono',monospace;">Piet Testpersoon</span></div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:6px;"><span style="color:oklch(50% 0.012 65);">Afspraak</span><span style="font-family:'IBM Plex Mono',monospace;">Morgen · 20:38</span></div>
+            <div style="display:flex;justify-content:space-between;"><span style="color:oklch(50% 0.012 65);">Status</span><span style="font-family:'IBM Plex Mono',monospace;">{{ apStatusLabel }}</span></div>
+          </div>
+          <div style="margin-top:12px;font-size:0.8125rem;color:oklch(50% 0.012 65);">24 uur vooraf stuurt het systeem automatisch een herinnering. Zegt de klant af, dan gaat de plek direct naar de wachtlijst.</div>
+          <button onClick="{{ runAfspraak }}" disabled="{{ apBusy }}" style="margin-top:16px;background:{{ apBtnBg }};color:oklch(99% 0.003 80);padding:11px 20px;border-radius:3px;font-weight:600;font-size:0.9375rem;font-family:'IBM Plex Sans',sans-serif;border:none;cursor:pointer;">Stuur herinnering →</button>
+        </div>
+        <div>
+          <div style="font:500 0.8125rem/1.3 'IBM Plex Mono',monospace;letter-spacing:0.06em;text-transform:uppercase;color:oklch(50% 0.012 65);margin-bottom:10px;">WhatsApp-gesprek</div>
+          <div aria-live="polite" style="border:1px solid oklch(87% 0.008 75);border-radius:3px;padding:16px;min-height:180px;background:oklch(97% 0.004 80);display:flex;flex-direction:column;gap:8px;">
+            <sc-if value="{{ apIdle }}" hint-placeholder-val="{{ true }}">
+              <div style="font-size:0.875rem;color:oklch(50% 0.012 65);">Klik "Stuur herinnering" om te starten.</div>
+            </sc-if>
+            <sc-if value="{{ apStep1 }}" hint-placeholder-val="{{ false }}">
+              <div style="max-width:85%;padding:9px 13px;border-radius:10px 10px 10px 3px;font-size:0.8125rem;line-height:1.5;background:#FFFFFF;border:1px solid oklch(87% 0.008 75);align-self:flex-start;">Hoi Piet, je hebt morgen om 20:38 een afspraak. Kom je? Antwoord JA of NEE.</div>
+            </sc-if>
+            <sc-if value="{{ apStep2 }}" hint-placeholder-val="{{ false }}">
+              <div style="padding:9px 16px;border-radius:10px 10px 3px 10px;font-size:0.8125rem;font-weight:600;background:oklch(93% 0.05 155);color:oklch(46% 0.13 155);align-self:flex-end;">JA</div>
+            </sc-if>
+            <sc-if value="{{ apStep3 }}" hint-placeholder-val="{{ false }}">
+              <div style="align-self:flex-end;font-family:'IBM Plex Mono',monospace;font-size:0.75rem;color:oklch(46% 0.13 155);">✓ bevestigd — agenda &amp; logboek bijgewerkt</div>
+            </sc-if>
+          </div>
+        </div>
+      </div>
+    </div>
+    </sc-if>
+  </div>
+</section>
+
+<!-- ══════════ NIEUWS ══════════ -->
+<section id="nieuws" data-screen-label="Nieuws" style="padding:88px 0;background:oklch(97% 0.004 80);border-top:1px solid oklch(87% 0.008 75);border-bottom:1px solid oklch(87% 0.008 75);">
+  <div style="max-width:1080px;margin:0 auto;padding:0 40px;">
+    <div style="font:500 0.8125rem/1.3 'IBM Plex Mono',monospace;letter-spacing:0.06em;text-transform:uppercase;color:oklch(50% 0.012 65);margin-bottom:16px;">Nieuws</div>
+    <div style="font:600 1.75rem/1.25 'IBM Plex Sans',sans-serif;margin-bottom:32px;">Wat we onderweg leren.</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;">
+      <article style="border:1px solid oklch(87% 0.008 75);border-radius:6px;padding:24px;background:oklch(99% 0.003 80);display:flex;flex-direction:column;gap:10px;">
+        <div style="font:500 0.8125rem/1.3 'IBM Plex Mono',monospace;color:oklch(50% 0.012 65);">JULI 2026</div>
+        <div style="font:600 1.25rem/1.35 'IBM Plex Sans',sans-serif;">Nieuw: afspraakopvolging via WhatsApp</div>
+        <div style="font:400 0.875rem/1.5 'IBM Plex Sans',sans-serif;color:oklch(50% 0.012 65);">Automatisch herinneren, bevestigen en lege plekken opvullen vanuit de wachtlijst.</div>
+        <a href="Workflow Presentatie.dc.html" style="font:500 0.8125rem/1.3 'IBM Plex Mono',monospace;color:oklch(46% 0.13 60);margin-top:auto;">Bekijk de presentatie →</a>
+      </article>
+      <article style="border:1px solid oklch(87% 0.008 75);border-radius:6px;padding:24px;background:oklch(99% 0.003 80);display:flex;flex-direction:column;gap:10px;">
+        <div style="font:500 0.8125rem/1.3 'IBM Plex Mono',monospace;color:oklch(50% 0.012 65);">PLACEHOLDER — DATUM</div>
+        <div style="font:600 1.25rem/1.35 'IBM Plex Sans',sans-serif;">Titel van bericht</div>
+        <div style="font:400 0.875rem/1.5 'IBM Plex Sans',sans-serif;color:oklch(50% 0.012 65);">Korte samenvatting — vervang met een echt bericht zodra beschikbaar.</div>
+      </article>
+      <article style="border:1px solid oklch(87% 0.008 75);border-radius:6px;padding:24px;background:oklch(99% 0.003 80);display:flex;flex-direction:column;gap:10px;">
+        <div style="font:500 0.8125rem/1.3 'IBM Plex Mono',monospace;color:oklch(50% 0.012 65);">PLACEHOLDER — DATUM</div>
+        <div style="font:600 1.25rem/1.35 'IBM Plex Sans',sans-serif;">Titel van bericht</div>
+        <div style="font:400 0.875rem/1.5 'IBM Plex Sans',sans-serif;color:oklch(50% 0.012 65);">Korte samenvatting — vervang met een echt bericht zodra beschikbaar.</div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ FAQ ══════════ -->
+<section id="faq" data-screen-label="FAQ" style="padding:88px 0;">
+  <div style="max-width:760px;margin:0 auto;padding:0 40px;">
+    <div style="font:500 0.8125rem/1.3 'IBM Plex Mono',monospace;letter-spacing:0.06em;text-transform:uppercase;color:oklch(50% 0.012 65);margin-bottom:16px;">Veelgestelde vragen</div>
+    <div style="font:600 1.75rem/1.25 'IBM Plex Sans',sans-serif;margin-bottom:24px;">Nog vragen?</div>
+    <sc-for list="{{ faqs }}" as="faq" hint-placeholder-count="5">
+      <div style="border-bottom:1px solid oklch(87% 0.008 75);">
+        <button onClick="{{ faq.toggle }}" aria-expanded="{{ faq.open }}" style="width:100%;display:flex;align-items:center;justify-content:space-between;gap:16px;background:none;border:none;text-align:left;padding:20px 0;font:600 1.25rem/1.35 'IBM Plex Sans',sans-serif;color:oklch(14% 0.008 45);cursor:pointer;">
+          <span>{{ faq.q }}</span>
+          <span style="flex:none;font-size:1.1em;color:oklch(50% 0.012 65);transform:{{ faq.chevRot }};transition:transform 160ms ease;">+</span>
+        </button>
+        <sc-if value="{{ faq.open }}" hint-placeholder-val="{{ false }}">
+          <div style="padding-bottom:20px;font:400 1rem/1.55 'IBM Plex Sans',sans-serif;color:oklch(50% 0.012 65);max-width:640px;">{{ faq.a }}</div>
+        </sc-if>
+      </div>
+    </sc-for>
+  </div>
+</section>
+
+<!-- ══════════ CONTACT ══════════ -->
+<section id="contact" data-screen-label="Contact" style="border-top:1px solid oklch(87% 0.008 75);background:oklch(14% 0.008 45);color:oklch(93% 0.006 75);padding:64px 0;">
+  <div style="max-width:1080px;margin:0 auto;padding:0 40px;display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start;">
+    <div>
+      <div style="font:600 1.75rem/1.25 'IBM Plex Sans',sans-serif;color:oklch(99% 0.003 80);margin-bottom:8px;">Een concreet probleem?</div>
+      <div style="font:400 1rem/1.55 'IBM Plex Sans',sans-serif;color:oklch(76% 0.01 75);margin-bottom:24px;">Laten we kijken of het op te lossen is.</div>
+      <div style="font:400 0.875rem/1.5 'IBM Plex Sans',sans-serif;color:oklch(76% 0.01 75);">Ayyoub Hamdoun<br>hallo@hamdoun.nl</div>
+    </div>
+    <form onSubmit="{{ verstuurContact }}" style="display:flex;flex-direction:column;gap:16px;">
+      <div>
+        <label for="cf-name" style="display:block;font:500 0.8125rem/1.3 'IBM Plex Mono',monospace;letter-spacing:0.06em;text-transform:uppercase;color:oklch(76% 0.01 75);margin-bottom:6px;">Naam</label>
+        <input id="cf-name" name="name" type="text" required="{{ true }}" style="width:100%;box-sizing:border-box;font:400 0.875rem/1.5 'IBM Plex Sans',sans-serif;padding:12px 14px;border-radius:3px;border:1px solid oklch(76% 0.01 75);color:oklch(14% 0.008 45);background:oklch(99% 0.003 80);">
+      </div>
+      <div>
+        <label for="cf-email" style="display:block;font:500 0.8125rem/1.3 'IBM Plex Mono',monospace;letter-spacing:0.06em;text-transform:uppercase;color:oklch(76% 0.01 75);margin-bottom:6px;">E-mail</label>
+        <input id="cf-email" name="email" type="email" required="{{ true }}" style="width:100%;box-sizing:border-box;font:400 0.875rem/1.5 'IBM Plex Sans',sans-serif;padding:12px 14px;border-radius:3px;border:1px solid oklch(76% 0.01 75);color:oklch(14% 0.008 45);background:oklch(99% 0.003 80);">
+      </div>
+      <div>
+        <label for="cf-message" style="display:block;font:500 0.8125rem/1.3 'IBM Plex Mono',monospace;letter-spacing:0.06em;text-transform:uppercase;color:oklch(76% 0.01 75);margin-bottom:6px;">Waar loop je tegenaan?</label>
+        <textarea id="cf-message" name="message" rows="4" required="{{ true }}" style="width:100%;box-sizing:border-box;font:400 0.875rem/1.5 'IBM Plex Sans',sans-serif;padding:12px 14px;border-radius:3px;border:1px solid oklch(76% 0.01 75);color:oklch(14% 0.008 45);background:oklch(99% 0.003 80);resize:vertical;"></textarea>
+      </div>
+      <button type="submit" style="align-self:flex-start;background:oklch(64% 0.15 65);color:oklch(14% 0.008 45);padding:11px 20px;border-radius:3px;font-weight:600;font-size:0.9375rem;font-family:'IBM Plex Sans',sans-serif;border:none;cursor:pointer;">Versturen →</button>
+      <div aria-live="polite" style="font:400 0.875rem/1.5 'IBM Plex Sans',sans-serif;color:oklch(76% 0.01 75);">{{ contactStatus }}</div>
+    </form>
+  </div>
+</section>
+</main></x-dc>
+</body>
+</html>

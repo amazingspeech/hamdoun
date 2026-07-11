@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  html, body { margin:0; padding:0; background:#F6F2E9; }
+  body { font-family:'IBM Plex Sans', sans-serif; color:#16241F; line-height:1.5; -webkit-font-smoothing:antialiased; }
+  a { color:#16241F; text-decoration:none; }
+  a:hover { color:#2C7A66; }
+  @keyframes rise { to { opacity:1; transform:translateY(0); } }
+  @media (prefers-reduced-motion: reduce) {
+    .anim-bubble { animation:none !important; opacity:1 !important; transform:none !important; }
+  }
+</style>
+</helmet>
+
+<!-- ══════════ HEADER ══════════ -->
+<header style="position:sticky;top:0;z-index:40;background:rgba(246,242,233,0.92);backdrop-filter:blur(8px);border-bottom:1px solid rgba(22,36,31,0.08);">
+  <div style="max-width:1120px;margin:0 auto;padding:18px 28px;display:flex;align-items:center;justify-content:space-between;gap:24px;">
+    <a href="#top" style="display:flex;align-items:center;gap:10px;">
+      <img src="assets/logo-mark.svg" alt="" style="width:26px;height:26px;display:block;">
+      <span style="font:600 18px/1 'IBM Plex Sans',sans-serif;color:#16241F;">Hamdoun</span>
+      <span style="font:500 11px/1 'IBM Plex Mono',monospace;letter-spacing:0.1em;color:#2C7A66;border-left:2px solid #3EA88B;padding-left:8px;">AFSPRAAKOPVOLGING</span>
+    </a>
+    <nav aria-label="Hoofdnavigatie" style="display:flex;align-items:center;gap:28px;font-size:15px;">
+      <a href="#flow" style="color:#4B5A52;" style-hover="color:#16241F;">Hoe het werkt</a>
+      <a href="#aanpak" style="color:#4B5A52;" style-hover="color:#16241F;">Aanpak</a>
+      <a href="#pricing" style="color:#4B5A52;" style-hover="color:#16241F;">Prijs</a>
+      <a href="Workflow Presentatie.dc.html" style="color:#4B5A52;" style-hover="color:#16241F;">Presentatie ↗</a>
+      <a href="#contact" style="background:#16241F;color:#F6F2E9;padding:10px 18px;border-radius:3px;font-weight:600;" style-hover="background:#2C4038;color:#F6F2E9;">Plan een gesprek</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ══════════ HERO ══════════ -->
+<section id="top" data-screen-label="Hero" style="background:#16241F;color:#F6F2E9;padding:96px 0 104px;position:relative;overflow:hidden;">
+  <div style="max-width:1120px;margin:0 auto;padding:0 28px;display:grid;grid-template-columns:1.1fr 0.9fr;gap:64px;align-items:center;">
+    <div>
+      <div style="display:inline-flex;align-items:center;gap:9px;font:500 12.5px/1 'IBM Plex Mono',monospace;letter-spacing:0.12em;text-transform:uppercase;color:#3EA88B;margin-bottom:24px;">
+        <span style="width:7px;height:7px;border-radius:50%;background:#3EA88B;box-shadow:0 0 0 4px rgba(62,168,139,0.18);"></span>
+        <span>Live · Google Agenda + WhatsApp</span>
+      </div>
+      <h1 style="font:600 clamp(40px,4.8vw,60px)/1.04 'Fraunces',serif;letter-spacing:-0.01em;margin:0;color:#FFFFFF;">Nooit meer een <em style="font-style:italic;color:#3EA88B;">lege stoel</em>.</h1>
+      <p style="margin:24px 0 0;font-size:18px;color:#B8C4BC;max-width:46ch;">Elke afspraak krijgt automatisch een WhatsApp-herinnering. Zegt iemand af, dan biedt het systeem de plek meteen aan de wachtlijst aan — voordat jij het zelf gemerkt hebt.</p>
+      <div style="display:flex;gap:14px;margin-top:36px;flex-wrap:wrap;">
+        <a href="#pricing" style="background:#3EA88B;color:#0C1712;font-weight:600;font-size:15px;padding:13px 22px;border-radius:3px;" style-hover="background:#4FC1A1;color:#0C1712;">Bekijk prijs &amp; opzet</a>
+        <a href="#flow" style="border:1px solid rgba(246,242,233,0.25);color:#F6F2E9;font-weight:600;font-size:15px;padding:13px 22px;border-radius:3px;" style-hover="border-color:#B8C4BC;color:#F6F2E9;">Hoe het werkt ↓</a>
+      </div>
+    </div>
+
+    <!-- Ticket met live chat-demo -->
+    <div style="background:#1D2F28;border:1px solid rgba(246,242,233,0.14);border-radius:10px;padding:26px 26px 22px;position:relative;box-shadow:0 30px 60px -20px rgba(0,0,0,0.55);">
+      <span style="position:absolute;left:50%;top:-13px;width:26px;height:26px;background:#16241F;border-radius:50%;transform:translateX(-50%);"></span>
+      <span style="position:absolute;left:50%;bottom:-13px;width:26px;height:26px;background:#16241F;border-radius:50%;transform:translateX(-50%);"></span>
+      <div style="display:flex;justify-content:space-between;font-size:13px;color:#B8C4BC;margin-bottom:6px;">
+        <span>Klant</span><span style="color:#F6F2E9;font-family:'IBM Plex Mono',monospace;">Piet Testpersoon</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:13px;color:#B8C4BC;">
+        <span>Afspraak</span><span style="color:#F6F2E9;font-family:'IBM Plex Mono',monospace;">Morgen · 20:38</span>
+      </div>
+      <hr style="border:none;border-top:2px dashed rgba(246,242,233,0.18);margin:18px 0;">
+      <div style="display:flex;flex-direction:column;gap:8px;min-height:92px;">
+        <div class="anim-bubble" style="max-width:82%;padding:9px 13px;border-radius:12px 12px 12px 3px;font-size:13.5px;background:#274238;color:#F6F2E9;align-self:flex-start;opacity:0;transform:translateY(6px);animation:rise 0.5s ease 0.2s forwards;">Hoi Piet, je hebt morgen om 20:38 een afspraak. Kom je? Antwoord JA of NEE.</div>
+        <div class="anim-bubble" style="max-width:82%;padding:9px 13px;border-radius:12px 12px 3px 12px;font-size:13.5px;font-weight:600;background:#3EA88B;color:#0C1712;align-self:flex-end;opacity:0;transform:translateY(6px);animation:rise 0.5s ease 2.1s forwards;">JA</div>
+        <div class="anim-bubble" style="align-self:flex-end;font:400 11px/1.4 'IBM Plex Mono',monospace;color:#3EA88B;opacity:0;transform:translateY(6px);animation:rise 0.4s ease 2.6s forwards;">✓ bevestigd — 20:41</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ COST STRIP ══════════ -->
+<section data-screen-label="Cijfers" style="background:#F6F2E9;padding:64px 0;border-bottom:1px solid rgba(22,36,31,0.08);">
+  <div style="max-width:1120px;margin:0 auto;padding:0 28px;display:grid;grid-template-columns:repeat(3,1fr);gap:0;">
+    <div style="padding-right:32px;">
+      <div style="font:600 46px/1 'Fraunces',serif;color:#E2572C;">20–30%</div>
+      <div style="margin-top:10px;font-size:14.5px;color:#4B5A52;max-width:28ch;">van alle afspraken bij lokale dienstverleners wordt afgezegd of gemist zonder herinnering.</div>
+    </div>
+    <div style="padding:0 32px;border-left:1px solid rgba(22,36,31,0.12);">
+      <div style="font:600 46px/1 'Fraunces',serif;color:#E2572C;">&lt; 24u</div>
+      <div style="margin-top:10px;font-size:14.5px;color:#4B5A52;max-width:28ch;">is het venster waarin een vrijgekomen plek nog aan iemand anders aangeboden kan worden.</div>
+    </div>
+    <div style="padding-left:32px;border-left:1px solid rgba(22,36,31,0.12);">
+      <div style="font:600 46px/1 'Fraunces',serif;color:#E2572C;">0 min</div>
+      <div style="margin-top:10px;font-size:14.5px;color:#4B5A52;max-width:28ch;">tijd die jij of je personeel eraan kwijt is — het loopt op de achtergrond.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ FLOW / TIMELINE ══════════ -->
+<section id="flow" data-screen-label="Hoe het werkt" style="padding:96px 0 88px;background:#F6F2E9;">
+  <div style="max-width:1120px;margin:0 auto;padding:0 28px;">
+    <div style="max-width:56ch;margin-bottom:56px;">
+      <div style="font:500 12.5px/1 'IBM Plex Mono',monospace;color:#2C7A66;text-transform:uppercase;letter-spacing:0.1em;">Het verloop</div>
+      <h2 style="font:600 clamp(28px,3vw,38px)/1.15 'Fraunces',serif;letter-spacing:-0.01em;margin:10px 0 0;">Vier stappen, automatisch, per afspraak.</h2>
+    </div>
+    <div style="position:relative;">
+      <span style="position:absolute;left:27px;top:8px;bottom:8px;width:1px;background:repeating-linear-gradient(to bottom, rgba(22,36,31,0.25) 0 6px, transparent 6px 12px);"></span>
+      <div style="display:grid;grid-template-columns:56px 1fr;gap:22px;padding:22px 0;">
+        <div style="font:500 13px/1 'IBM Plex Mono',monospace;color:#F6F2E9;background:#16241F;width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;position:relative;z-index:1;">01</div>
+        <div>
+          <h3 style="font:600 19px/1.3 'Fraunces',serif;margin:0;">24 uur vooraf → WhatsApp-herinnering</h3>
+          <p style="margin:6px 0 0;color:#4B5A52;font-size:15px;max-width:58ch;">Het systeem checkt elk uur de agenda en stuurt een kort bericht naar iedereen met een afspraak in het komende venster.</p>
+          <span style="display:inline-block;margin-top:10px;font:400 11px/1.3 'IBM Plex Mono',monospace;color:#2C7A66;background:rgba(62,168,139,0.1);padding:3px 8px;border-radius:3px;">Google Agenda → WhatsApp</span>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:56px 1fr;gap:22px;padding:22px 0;">
+        <div style="font:500 13px/1 'IBM Plex Mono',monospace;color:#F6F2E9;background:#16241F;width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;position:relative;z-index:1;">02</div>
+        <div>
+          <h3 style="font:600 19px/1.3 'Fraunces',serif;margin:0;">Antwoord "NEE" → plek direct vrijgegeven</h3>
+          <p style="margin:6px 0 0;color:#4B5A52;font-size:15px;max-width:58ch;">De afspraak wordt geannuleerd in de agenda en de eerste persoon op de wachtlijst krijgt automatisch een aanbod.</p>
+          <span style="display:inline-block;margin-top:10px;font:400 11px/1.3 'IBM Plex Mono',monospace;color:#2C7A66;background:rgba(62,168,139,0.1);padding:3px 8px;border-radius:3px;">Wachtlijst-matching</span>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:56px 1fr;gap:22px;padding:22px 0;">
+        <div style="font:500 13px/1 'IBM Plex Mono',monospace;color:#F6F2E9;background:#16241F;width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;position:relative;z-index:1;">03</div>
+        <div>
+          <h3 style="font:600 19px/1.3 'Fraunces',serif;margin:0;">Geen reactie → automatische herinnering</h3>
+          <p style="margin:6px 0 0;color:#4B5A52;font-size:15px;max-width:58ch;">Na een paar uur stilte krijgt de klant nog één herinnering. Reageert diegene dan nog niet, krijg jij een seintje om zelf te bellen.</p>
+          <span style="display:inline-block;margin-top:10px;font:400 11px/1.3 'IBM Plex Mono',monospace;color:#2C7A66;background:rgba(62,168,139,0.1);padding:3px 8px;border-radius:3px;">Escalatie na 3u</span>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:56px 1fr;gap:22px;padding:22px 0;">
+        <div style="font:500 13px/1 'IBM Plex Mono',monospace;color:#F6F2E9;background:#16241F;width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;position:relative;z-index:1;">04</div>
+        <div>
+          <h3 style="font:600 19px/1.3 'Fraunces',serif;margin:0;">Alles gelogd, niets dubbel</h3>
+          <p style="margin:6px 0 0;color:#4B5A52;font-size:15px;max-width:58ch;">Status van elke afspraak staat overzichtelijk in een spreadsheet — wie bevestigde, wie afzegde, wie is opgevuld.</p>
+          <span style="display:inline-block;margin-top:10px;font:400 11px/1.3 'IBM Plex Mono',monospace;color:#2C7A66;background:rgba(62,168,139,0.1);padding:3px 8px;border-radius:3px;">Eén overzicht</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ FOTO-BAND ══════════ -->
+<sc-if value="{{ toonFotoBand }}" hint-placeholder-val="{{ true }}">
+<section data-screen-label="Fotoband" style="position:relative;min-height:420px;display:flex;align-items:flex-end;background-image:url('uploads/DSC08075.jpg');background-size:cover;background-position:center 30%;">
+  <div style="position:absolute;inset:0;background:linear-gradient(to top, rgba(22,36,31,0.82) 0%, rgba(22,36,31,0.25) 55%, rgba(22,36,31,0.05) 100%);"></div>
+  <div style="position:relative;max-width:1120px;margin:0 auto;padding:64px 28px;width:100%;box-sizing:border-box;">
+    <div style="font:500 12.5px/1 'IBM Plex Mono',monospace;color:#3EA88B;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:14px;">Hamdoun</div>
+    <div style="font:600 clamp(26px,3vw,36px)/1.2 'Fraunces',serif;color:#F6F2E9;max-width:32ch;">Gerichte AI voor concrete problemen — geen platform voor "AI in het algemeen".</div>
+  </div>
+</section>
+</sc-if>
+
+<!-- ══════════ AANPAK ══════════ -->
+<section id="aanpak" data-screen-label="Aanpak" style="background:#EFEADD;border-top:1px solid rgba(22,36,31,0.08);border-bottom:1px solid rgba(22,36,31,0.08);padding:88px 0;">
+  <div style="max-width:1120px;margin:0 auto;padding:0 28px;">
+    <div style="font:500 12.5px/1 'IBM Plex Mono',monospace;color:#2C7A66;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:16px;">Aanpak</div>
+    <h2 style="font:600 clamp(28px,3vw,38px)/1.15 'Fraunces',serif;letter-spacing:-0.01em;margin:0 0 44px;max-width:30ch;">Eén knelpunt per keer. Op maat. Mens blijft aan zet.</h2>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:40px;">
+      <div>
+        <div style="font:500 13px/1 'IBM Plex Mono',monospace;color:#2C7A66;margin-bottom:12px;">01</div>
+        <h3 style="font:600 19px/1.3 'Fraunces',serif;margin:0 0 8px;">Eén knelpunt</h3>
+        <p style="margin:0;font-size:14.5px;color:#4B5A52;">We beginnen bij het concrete, vervelende probleem — niet bij een technologie die we willen verkopen.</p>
+      </div>
+      <div>
+        <div style="font:500 13px/1 'IBM Plex Mono',monospace;color:#2C7A66;margin-bottom:12px;">02</div>
+        <h3 style="font:600 19px/1.3 'Fraunces',serif;margin:0 0 8px;">Op maat gebouwd</h3>
+        <p style="margin:0;font-size:14.5px;color:#4B5A52;">Een gerichte workflow, precies afgestemd op jouw agenda, wachtlijst en manier van werken.</p>
+      </div>
+      <div>
+        <div style="font:500 13px/1 'IBM Plex Mono',monospace;color:#2C7A66;margin-bottom:12px;">03</div>
+        <h3 style="font:600 19px/1.3 'Fraunces',serif;margin:0 0 8px;">Mens blijft aan zet</h3>
+        <p style="margin:0;font-size:14.5px;color:#4B5A52;">Automatisering doet het voorwerk; belangrijke beslissingen blijven bij jou of je team.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ PRICING ══════════ -->
+<sc-if value="{{ toonPrijs }}" hint-placeholder-val="{{ true }}">
+<section id="pricing" data-screen-label="Prijs" style="background:#16241F;padding:88px 0;color:#F6F2E9;">
+  <div style="max-width:1120px;margin:0 auto;padding:0 28px;">
+    <div style="text-align:center;max-width:50ch;margin:0 auto 44px;">
+      <div style="font:500 12.5px/1 'IBM Plex Mono',monospace;color:#3EA88B;text-transform:uppercase;letter-spacing:0.1em;">Opzet &amp; kosten</div>
+      <h2 style="font:600 clamp(26px,3vw,34px)/1.2 'Fraunces',serif;color:#FFFFFF;margin:10px 0 0;">Eén keer ingericht, blijft draaien.</h2>
+    </div>
+    <div style="max-width:420px;margin:0 auto;background:#1D2F28;border:1px solid rgba(246,242,233,0.14);border-radius:10px;padding:34px 34px 30px;">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;">
+        <span style="font:600 40px/1 'Fraunces',serif;">€299</span>
+        <span style="color:#B8C4BC;font:400 13px/1.3 'IBM Plex Mono',monospace;">eenmalig · + €39/mnd</span>
+      </div>
+      <ul style="list-style:none;padding:0;margin:22px 0 0;">
+        <li style="display:flex;gap:10px;font-size:14.5px;color:#B8C4BC;padding:8px 0;"><span style="color:#3EA88B;font-weight:600;">✓</span><span>Koppeling met jouw agenda &amp; WhatsApp</span></li>
+        <li style="display:flex;gap:10px;font-size:14.5px;color:#B8C4BC;padding:8px 0;border-top:1px solid rgba(246,242,233,0.14);"><span style="color:#3EA88B;font-weight:600;">✓</span><span>Wachtlijst-afhandeling inbegrepen</span></li>
+        <li style="display:flex;gap:10px;font-size:14.5px;color:#B8C4BC;padding:8px 0;border-top:1px solid rgba(246,242,233,0.14);"><span style="color:#3EA88B;font-weight:600;">✓</span><span>Werkt met je bestaande boekingsproces</span></li>
+        <li style="display:flex;gap:10px;font-size:14.5px;color:#B8C4BC;padding:8px 0;border-top:1px solid rgba(246,242,233,0.14);"><span style="color:#3EA88B;font-weight:600;">✓</span><span>Onderhoud &amp; monitoring inbegrepen</span></li>
+      </ul>
+      <a href="#contact" style="display:block;text-align:center;background:#3EA88B;color:#0C1712;font-weight:600;font-size:15px;padding:13px 22px;border-radius:3px;margin-top:26px;" style-hover="background:#4FC1A1;color:#0C1712;">Vraag een demo aan</a>
+    </div>
+  </div>
+</section>
+</sc-if>
+
+<!-- ══════════ PRESENTATIE-LINK ══════════ -->
+<section data-screen-label="Presentatie" style="background:#F6F2E9;padding:72px 0;border-bottom:1px solid rgba(22,36,31,0.08);">
+  <div style="max-width:1120px;margin:0 auto;padding:0 28px;">
+    <a href="Workflow Presentatie.dc.html" style="display:flex;align-items:center;justify-content:space-between;gap:32px;border:1px solid rgba(22,36,31,0.15);border-radius:10px;padding:32px 36px;background:#FFFFFF;" style-hover="border-color:#2C7A66;color:#16241F;">
+      <span style="display:flex;flex-direction:column;gap:6px;">
+        <span style="font:500 12px/1 'IBM Plex Mono',monospace;color:#2C7A66;text-transform:uppercase;letter-spacing:0.1em;">Presentatie</span>
+        <span style="font:600 24px/1.2 'Fraunces',serif;">Bekijk deze workflow als slide-deck</span>
+        <span style="font-size:14.5px;color:#4B5A52;">Zeven slides — het probleem, het verloop en de opzet. Handig om intern te delen.</span>
+      </span>
+      <span style="font:600 28px/1 'Fraunces',serif;color:#2C7A66;flex:none;">→</span>
+    </a>
+  </div>
+</section>
+
+<!-- ══════════ CONTACT ══════════ -->
+<section id="contact" data-screen-label="Contact" style="padding:80px 0 88px;text-align:center;background:#F6F2E9;">
+  <div style="max-width:1120px;margin:0 auto;padding:0 28px;">
+    <img src="assets/logo-mark.svg" alt="" style="width:34px;height:34px;margin:0 auto 20px;display:block;">
+    <h2 style="font:600 clamp(24px,2.6vw,30px)/1.25 'Fraunces',serif;max-width:30ch;margin:0 auto;">Eén afspraak die je deze maand niet misloopt, betaalt dit al terug.</h2>
+    <p style="color:#4B5A52;margin:14px 0 0;">Stuur een bericht en we zetten 'm binnen een week live.</p>
+    <a href="mailto:hallo@hamdoun.nl" style="display:inline-block;background:#16241F;color:#F6F2E9;font-weight:600;font-size:15px;padding:13px 24px;border-radius:3px;margin-top:26px;" style-hover="background:#2C4038;color:#F6F2E9;">Neem contact op</a>
+    <div style="margin-top:40px;font:400 12px/1.6 'IBM Plex Mono',monospace;color:#4B5A52;">Hamdoun · Ayyoub Hamdoun · hallo@hamdoun.nl</div>
+  </div>
+</section>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;toonPrijs&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Secties&quot;},&quot;toonFotoBand&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Secties&quot;}}">
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      toonPrijs: this.props.toonPrijs ?? true,
+      toonFotoBand: this.props.toonFotoBand ?? true,
+    };
+  }
+}
+</script>
+</body>
+</html>
