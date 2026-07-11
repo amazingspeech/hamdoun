@@ -8,6 +8,12 @@
 <body>
 <x-dc>
 <helmet>
+<template id="__bundler_thumbnail" data-bg-color="#fdfcfa">
+  <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+    <rect width="120" height="120" fill="#fdfcfa"/>
+    <text x="60" y="70" font-family="Georgia, serif" font-size="40" font-weight="600" fill="#241f1a" text-anchor="middle">H</text>
+  </svg>
+</template>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   html, body { margin:0; padding:0; background:oklch(99% 0.003 80); }
@@ -23,14 +29,14 @@
 <header style="position:sticky;top:0;z-index:20;background:color-mix(in oklch, oklch(99% 0.003 80) 92%, transparent);backdrop-filter:blur(6px);">
   <div style="max-width:1080px;margin:0 auto;padding:20px 40px;display:flex;align-items:center;justify-content:space-between;">
     <div style="display:flex;align-items:center;gap:10px;">
-      <img src="assets/logo-mark.svg" style="width:26px;height:26px;display:block;" alt="">
+      <img src="./assets/logo-mark.svg" style="width:26px;height:26px;display:block;" alt="">
       <span style="font:600 18px/1 'IBM Plex Sans',sans-serif;">Hamdoun</span>
     </div>
     <nav aria-label="Hoofdnavigatie" style="display:flex;gap:32px;font-size:0.9375rem;color:oklch(50% 0.012 65);">
       <a href="#aanpak" style="color:oklch(50% 0.012 65);">Aanpak</a>
       <a href="#demo" style="color:oklch(50% 0.012 65);">Zie het in actie</a>
       <a href="#nieuws" style="color:oklch(50% 0.012 65);">Nieuws</a>
-      <a href="#faq" style="color:oklch(50% 0.012 65);">Veelgestelde vragen</a>
+      <a href="#faq" style="color:oklch(50% 0.012 65);">FAQ</a>
       <a href="#contact" style="color:oklch(50% 0.012 65);">Contact</a>
     </nav>
   </div>
@@ -43,7 +49,7 @@
     <div style="font:600 clamp(2.5rem,2rem + 2vw,4rem)/1.05 'IBM Plex Sans',sans-serif;max-width:720px;">Gerichte AI voor concrete problemen.</div>
     <div style="font:400 1.125rem/1.55 'IBM Plex Sans',sans-serif;color:oklch(50% 0.012 65);max-width:680px;">
       Geen platform voor "AI in het algemeen". Wij bouwen één werkende oplossing voor
-      één specifiek knelpunt — vaak ontstaan uit wetgeving, compliance of een tijdrovend
+      één specifiek knelpunt, vaak ontstaan uit wetgeving, compliance of een tijdrovend
       handmatig proces.
     </div>
     <div style="display:flex;gap:12px;margin-top:8px;">
@@ -60,7 +66,7 @@
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:40px;">
       <div>
         <div style="font:600 1.25rem/1.35 'IBM Plex Sans',sans-serif;margin-bottom:8px;">1. Eén knelpunt</div>
-        <div style="font:400 0.875rem/1.5 'IBM Plex Sans',sans-serif;color:oklch(50% 0.012 65);">We beginnen bij het concrete, vervelende probleem — niet bij een technologie die we willen verkopen.</div>
+        <div style="font:400 0.875rem/1.5 'IBM Plex Sans',sans-serif;color:oklch(50% 0.012 65);">We beginnen bij het concrete, vervelende probleem, niet bij een technologie die we willen verkopen.</div>
       </div>
       <div>
         <div style="font:600 1.25rem/1.35 'IBM Plex Sans',sans-serif;
@@ -80,12 +86,12 @@ margin-bottom:8px;">2. Op maat gebouwd</div>
   <div style="max-width:1080px;margin:0 auto;padding:0 40px;">
     <div style="font:500 0.8125rem/1.3 'IBM Plex Mono',monospace;letter-spacing:0.06em;text-transform:uppercase;color:oklch(50% 0.012 65);margin-bottom:16px;">Zie het in actie</div>
     <div style="font:600 1.75rem/1.25 'IBM Plex Sans',sans-serif;margin-bottom:12px;">Drie lopende voorbeelden, live te proberen.</div>
-    <div style="font:400 1rem/1.55 'IBM Plex Sans',sans-serif;color:oklch(50% 0.012 65);max-width:600px;margin-bottom:32px;">Geen mockup — dit zijn vereenvoudigde, echt werkende versies van de logica achter drie producten.</div>
+    <div style="font:400 1rem/1.55 'IBM Plex Sans',sans-serif;color:oklch(50% 0.012 65);max-width:600px;margin-bottom:32px;">Geen mockup. Dit zijn vereenvoudigde, echt werkende versies van de logica achter drie producten.</div>
 
     <div style="display:flex;gap:10px;margin-bottom:32px;flex-wrap:wrap;" role="tablist" aria-label="Kies demo">
-      <button onClick="{{ kiesMeldstroom }}" role="tab" aria-selected="{{ isMeldstroom }}" style="cursor:pointer;padding:10px 18px;border-radius:3px;font-weight:600;font-size:0.9375rem;font-family:'IBM Plex Sans',sans-serif;border:1px solid {{ tabMsBorder }};background:{{ tabMsBg }};color:{{ tabMsColor }};transition:all 120ms ease;">Meldstroom — HSE-melding</button>
-      <button onClick="{{ kiesZzp }}" role="tab" aria-selected="{{ isZzp }}" style="cursor:pointer;padding:10px 18px;border-radius:3px;font-weight:600;font-size:0.9375rem;font-family:'IBM Plex Sans',sans-serif;border:1px solid {{ tabZzpBorder }};background:{{ tabZzpBg }};color:{{ tabZzpColor }};transition:all 120ms ease;">Zzp-scan — vacaturecheck</button>
-      <button onClick="{{ kiesAfspraak }}" role="tab" aria-selected="{{ isAfspraak }}" style="cursor:pointer;padding:10px 18px;border-radius:3px;font-weight:600;font-size:0.9375rem;font-family:'IBM Plex Sans',sans-serif;border:1px solid {{ tabApBorder }};background:{{ tabApBg }};color:{{ tabApColor }};transition:all 120ms ease;">Afspraakopvolging — WhatsApp</button>
+      <button onClick="{{ kiesMeldstroom }}" role="tab" aria-selected="{{ isMeldstroom }}" style="cursor:pointer;padding:10px 18px;border-radius:3px;font-weight:600;font-size:0.9375rem;font-family:'IBM Plex Sans',sans-serif;border:1px solid {{ tabMsBorder }};background:{{ tabMsBg }};color:{{ tabMsColor }};transition:all 120ms ease;">Incidentrapportage: melding → conceptrapport</button>
+      <button onClick="{{ kiesZzp }}" role="tab" aria-selected="{{ isZzp }}" style="cursor:pointer;padding:10px 18px;border-radius:3px;font-weight:600;font-size:0.9375rem;font-family:'IBM Plex Sans',sans-serif;border:1px solid {{ tabZzpBorder }};background:{{ tabZzpBg }};color:{{ tabZzpColor }};transition:all 120ms ease;">Schijnzelfstandigheid-check</button>
+      <button onClick="{{ kiesAfspraak }}" role="tab" aria-selected="{{ isAfspraak }}" style="cursor:pointer;padding:10px 18px;border-radius:3px;font-weight:600;font-size:0.9375rem;font-family:'IBM Plex Sans',sans-serif;border:1px solid {{ tabApBorder }};background:{{ tabApBg }};color:{{ tabApColor }};transition:all 120ms ease;">Afspraakopvolging: herinnering &amp; wachtlijst</button>
     </div>
 
     <!-- MELDSTROOM DEMO -->
@@ -93,7 +99,7 @@ margin-bottom:8px;">2. Op maat gebouwd</div>
     <div style="border:1px solid oklch(87% 0.008 75);border-radius:6px;box-shadow:0 1px 0 oklch(20% 0.01 50 / 0.04), 0 8px 24px oklch(20% 0.01 50 / 0.06);overflow:hidden;">
       <div style="padding:16px 24px;border-bottom:1px solid oklch(87% 0.008 75);display:flex;align-items:baseline;gap:8px;background:oklch(97% 0.004 80);">
         <span style="font:600 15px/1 'IBM Plex Sans',sans-serif;">Hamdoun</span>
-        <span style="font:500 0.8125rem/1.3 'IBM Plex Mono',monospace;letter-spacing:0.06em;color:oklch(46% 0.13 60);border-left:2px solid oklch(64% 0.15 65);padding-left:8px;">MELDSTROOM</span>
+        <span style="font:500 0.8125rem/1.3 'IBM Plex Mono',monospace;letter-spacing:0.06em;color:oklch(46% 0.13 60);border-left:2px solid oklch(64% 0.15 65);padding-left:8px;">INCIDENTRAPPORTAGE</span>
       </div>
       <div style="padding:28px;display:grid;grid-template-columns:1fr 1fr;gap:28px;">
         <div>
@@ -115,9 +121,9 @@ margin-bottom:8px;">2. Op maat gebouwd</div>
             </sc-if>
             <sc-if value="{{ msDone }}" hint-placeholder-val="{{ false }}">
               <div style="font-size:0.875rem;">
-                <div style="margin-bottom:8px;"><b>Locatie</b> — Magazijn 3, Rotterdam</div>
-                <div style="margin-bottom:8px;"><b>Categorie</b> — Bijna-ongeval, vallend object</div>
-                <div style="margin-bottom:12px;"><b>Datum</b> — 17 april 2026, 08:14</div>
+                <div style="margin-bottom:8px;"><b>Locatie:</b> Magazijn 3, Rotterdam</div>
+                <div style="margin-bottom:8px;"><b>Categorie:</b> Bijna-ongeval, vallend object</div>
+                <div style="margin-bottom:12px;"><b>Datum:</b> 17 april 2026, 08:14</div>
                 <div style="background:oklch(93% 0.05 75);border-left:3px solid oklch(64% 0.15 65);border-radius:3px;padding:10px 12px;font-size:0.8125rem;color:oklch(46% 0.13 60);">⚠ Handmatige controle vereist — concept klaar voor review.</div>
               </div>
             </sc-if>
@@ -132,7 +138,7 @@ margin-bottom:8px;">2. Op maat gebouwd</div>
     <div style="border:1px solid oklch(87% 0.008 75);border-radius:6px;box-shadow:0 1px 0 oklch(20% 0.01 50 / 0.04), 0 8px 24px oklch(20% 0.01 50 / 0.06);overflow:hidden;">
       <div style="padding:16px 24px;border-bottom:1px solid oklch(87% 0.008 75);display:flex;align-items:baseline;gap:8px;background:oklch(97% 0.004 80);">
         <span style="font:600 15px/1 'IBM Plex Sans',sans-serif;">Hamdoun</span>
-        <span style="font:500 0.8125rem/1.3 'IBM Plex Mono',monospace;letter-spacing:0.06em;color:oklch(50% 0.15 200);border-left:2px solid oklch(64% 0.15 200);padding-left:8px;">ZZP-SCAN</span>
+        <span style="font:500 0.8125rem/1.3 'IBM Plex Mono',monospace;letter-spacing:0.06em;color:oklch(50% 0.15 200);border-left:2px solid oklch(64% 0.15 200);padding-left:8px;">SCHIJNZELFSTANDIGHEID-CHECK</span>
       </div>
       <div style="padding:28px;display:grid;grid-template-columns:1fr 1fr;gap:28px;">
         <div>
@@ -182,7 +188,7 @@ margin-bottom:8px;">2. Op maat gebouwd</div>
             <div style="display:flex;justify-content:space-between;margin-bottom:6px;"><span style="color:oklch(50% 0.012 65);">Afspraak</span><span style="font-family:'IBM Plex Mono',monospace;">Morgen · 20:38</span></div>
             <div style="display:flex;justify-content:space-between;"><span style="color:oklch(50% 0.012 65);">Status</span><span style="font-family:'IBM Plex Mono',monospace;">{{ apStatusLabel }}</span></div>
           </div>
-          <div style="margin-top:12px;font-size:0.8125rem;color:oklch(50% 0.012 65);">24 uur vooraf stuurt het systeem automatisch een herinnering. Zegt de klant af, dan gaat de plek direct naar de wachtlijst.</div>
+          <div style="margin-top:12px;font-size:0.8125rem;color:oklch(50% 0.012 65);">Voorkomt no-shows: 24 uur vooraf stuurt het systeem automatisch een WhatsApp-herinnering. Zegt de klant af, dan gaat de vrijgekomen plek direct naar de wachtlijst.</div>
           <button onClick="{{ runAfspraak }}" disabled="{{ apBusy }}" style="margin-top:16px;background:{{ apBtnBg }};color:oklch(99% 0.003 80);padding:11px 20px;border-radius:3px;font-weight:600;font-size:0.9375rem;font-family:'IBM Plex Sans',sans-serif;border:none;cursor:pointer;">Stuur herinnering →</button>
         </div>
         <div>
@@ -198,7 +204,7 @@ margin-bottom:8px;">2. Op maat gebouwd</div>
               <div style="padding:9px 16px;border-radius:10px 10px 3px 10px;font-size:0.8125rem;font-weight:600;background:oklch(93% 0.05 155);color:oklch(46% 0.13 155);align-self:flex-end;">JA</div>
             </sc-if>
             <sc-if value="{{ apStep3 }}" hint-placeholder-val="{{ false }}">
-              <div style="align-self:flex-end;font-family:'IBM Plex Mono',monospace;font-size:0.75rem;color:oklch(46% 0.13 155);">✓ bevestigd — agenda &amp; logboek bijgewerkt</div>
+              <div style="align-self:flex-end;font-family:'IBM Plex Mono',monospace;font-size:0.75rem;color:oklch(46% 0.13 155);">✓ bevestigd, agenda en logboek bijgewerkt</div>
             </sc-if>
           </div>
         </div>
@@ -221,14 +227,14 @@ margin-bottom:8px;">2. Op maat gebouwd</div>
         <a href="Workflow Presentatie.dc.html" style="font:500 0.8125rem/1.3 'IBM Plex Mono',monospace;color:oklch(46% 0.13 60);margin-top:auto;">Bekijk de presentatie →</a>
       </article>
       <article style="border:1px solid oklch(87% 0.008 75);border-radius:6px;padding:24px;background:oklch(99% 0.003 80);display:flex;flex-direction:column;gap:10px;">
-        <div style="font:500 0.8125rem/1.3 'IBM Plex Mono',monospace;color:oklch(50% 0.012 65);">PLACEHOLDER — DATUM</div>
-        <div style="font:600 1.25rem/1.35 'IBM Plex Sans',sans-serif;">Titel van bericht</div>
-        <div style="font:400 0.875rem/1.5 'IBM Plex Sans',sans-serif;color:oklch(50% 0.012 65);">Korte samenvatting — vervang met een echt bericht zodra beschikbaar.</div>
+        <div style="font:500 0.8125rem/1.3 'IBM Plex Mono',monospace;color:oklch(50% 0.012 65);">PLACEHOLDER · JUNI 2026</div>
+        <div style="font:600 1.25rem/1.35 'IBM Plex Sans',sans-serif;">EU AI Act: wat verandert er voor mkb-processen</div>
+        <div style="font:400 0.875rem/1.5 'IBM Plex Sans',sans-serif;color:oklch(50% 0.012 65);">Placeholder. Vervang met een eigen artikel over de gevolgen van de EU AI Act voor geautomatiseerde beslisprocessen.</div>
       </article>
       <article style="border:1px solid oklch(87% 0.008 75);border-radius:6px;padding:24px;background:oklch(99% 0.003 80);display:flex;flex-direction:column;gap:10px;">
-        <div style="font:500 0.8125rem/1.3 'IBM Plex Mono',monospace;color:oklch(50% 0.012 65);">PLACEHOLDER — DATUM</div>
-        <div style="font:600 1.25rem/1.35 'IBM Plex Sans',sans-serif;">Titel van bericht</div>
-        <div style="font:400 0.875rem/1.5 'IBM Plex Sans',sans-serif;color:oklch(50% 0.012 65);">Korte samenvatting — vervang met een echt bericht zodra beschikbaar.</div>
+        <div style="font:500 0.8125rem/1.3 'IBM Plex Mono',monospace;color:oklch(50% 0.012 65);">PLACEHOLDER · MEI 2026</div>
+        <div style="font:600 1.25rem/1.35 'IBM Plex Sans',sans-serif;">Agentic workflows: van chatbot naar handelende assistent</div>
+        <div style="font:400 0.875rem/1.5 'IBM Plex Sans',sans-serif;color:oklch(50% 0.012 65);">Placeholder. Vervang met een eigen artikel over waarom steeds meer bedrijven AI taken laten uitvoeren, niet alleen adviseren.</div>
       </article>
     </div>
   </div>
@@ -280,5 +286,161 @@ margin-bottom:8px;">2. Op maat gebouwd</div>
   </div>
 </section>
 </main></x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = {
+    tab: 'meldstroom',
+    ms: 'idle', zzpState: 'idle', ap: 'idle',
+    zzpText: 'Wij zoeken een zelfstandige interim projectleider voor 24 uur per week, op ZZP-basis, uurtarief in overleg. Start per direct, opdracht van 6 maanden.',
+    zzpResult: null,
+    apStatus: 'Wacht op reactie',
+    faqOpen: {},
+    contactStatus: '',
+  };
+
+  faqData = [
+    { q: 'Hoe snel kan een oplossing draaien?', a: 'Meestal 2 tot 6 weken vanaf de eerste kennismaking tot een werkende versie, afhankelijk van hoe duidelijk het knelpunt al is afgebakend.' },
+    { q: 'Blijft een mens de beslissingen nemen?', a: 'Ja. Onze workflows doen het voorwerk (classificeren, samenvatten, signaleren), maar de uiteindelijke beslissing blijft bij iemand in jullie team.' },
+    { q: 'Werkt dit met onze bestaande systemen?', a: 'We bouwen op maat rond wat er al staat, zoals e-mail, een CRM of een intern formulier, in plaats van een nieuw platform op te leggen.' },
+    { q: 'Wat gebeurt er met onze gegevens?', a: 'Gegevens blijven binnen de afgesproken omgeving; we delen niets met derden buiten wat nodig is om de oplossing te laten draaien. Details bespreken we per project.' },
+    { q: 'Wat kost dit ongeveer?', a: 'Afhankelijk van scope. Na een kort gesprek over het knelpunt volgt een vaste projectprijs, geen open-einde-uurtarief.' },
+  ];
+
+  // ---- Automatisering: koppel dit formulier aan Zapier / Make / n8n ----
+  // 1. Maak in Zapier/Make/n8n een "Webhook"-trigger aan (Catch Hook / Webhook node).
+  // 2. Plak de gegenereerde URL hieronder.
+  // 3. Bouw de gewenste actie erachter (mail, CRM-rij, Slack-melding, etc.)
+  //    in de automatiseringstool zelf — niet in deze pagina.
+  AUTOMATION_WEBHOOK_URL = '';
+
+  kiesMeldstroom = () => this.setState({ tab: 'meldstroom' });
+  kiesZzp = () => this.setState({ tab: 'zzp' });
+  kiesAfspraak = () => this.setState({ tab: 'afspraak' });
+
+  runMeldstroom = () => {
+    this.setState({ ms: 'loading' });
+    setTimeout(() => this.setState({ ms: 'done' }), 900);
+  };
+
+  zzpTextChange = (e) => this.setState({ zzpText: e.target.value });
+
+  runZzp = () => {
+    this.setState({ zzpState: 'loading' });
+    const text = this.state.zzpText.toLowerCase();
+    setTimeout(() => {
+      const zzpSignals = ['zzp', 'zelfstandige', 'freelance', 'uurtarief', 'opdracht', 'interim'];
+      const employeeSignals = ['in dienst', 'fulltime dienstverband', 'vast contract', 'salaris', 'cao', 'werknemer'];
+      const zzpHits = zzpSignals.filter(w => text.includes(w));
+      const empHits = employeeSignals.filter(w => text.includes(w));
+      let verdict, reason, tone;
+      if (zzpHits.length > empHits.length) {
+        verdict = '✓ ZZP-geschikt';
+        reason = 'Tekst bevat zzp-signalen (' + zzpHits.join(', ') + ') en geen contra-indicaties.';
+        tone = { bg: 'oklch(93% 0.05 155)', border: 'oklch(64% 0.15 155)', text: 'oklch(40% 0.13 155)' };
+      } else if (empHits.length > zzpHits.length) {
+        verdict = '✕ Waarschijnlijk dienstverband';
+        reason = 'Tekst bevat signalen voor een dienstverband (' + empHits.join(', ') + ').';
+        tone = { bg: 'oklch(95% 0.04 25)', border: 'oklch(55% 0.18 25)', text: 'oklch(45% 0.18 25)' };
+      } else {
+        verdict = '? Onduidelijk, handmatig checken';
+        reason = 'Geen duidelijke signalen in beide richtingen gevonden.';
+        tone = { bg: 'oklch(93% 0.05 75)', border: 'oklch(64% 0.15 65)', text: 'oklch(46% 0.13 60)' };
+      }
+      this.setState({
+        zzpState: 'done',
+        zzpResult: { verdict, reason, tone, scoreLine: 'zzp-signalen: ' + zzpHits.length + ' · dienstverband-signalen: ' + empHits.length },
+      });
+    }, 900);
+  };
+
+  runAfspraak = () => {
+    this.setState({ ap: 'step1' });
+    setTimeout(() => this.setState({ ap: 'step2', apStatus: 'Bevestigd' }), 900);
+    setTimeout(() => this.setState({ ap: 'step3' }), 1700);
+  };
+
+  toggleFaq = (i) => this.setState(s => ({ faqOpen: { ...s.faqOpen, [i]: !s.faqOpen[i] } }));
+
+  verstuurContact = (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const payload = {
+      name: form.name.value,
+      email: form.email.value,
+      message: form.message.value,
+      submitted_at: new Date().toISOString(),
+    };
+    if (!this.AUTOMATION_WEBHOOK_URL) {
+      this.setState({ contactStatus: 'Nog niet gekoppeld. Vul AUTOMATION_WEBHOOK_URL in de logic in om berichten naar Zapier/Make/n8n te sturen.' });
+      return;
+    }
+    this.setState({ contactStatus: 'Versturen…' });
+    fetch(this.AUTOMATION_WEBHOOK_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    })
+      .then(() => { this.setState({ contactStatus: 'Verstuurd, we nemen snel contact op.' }); form.reset(); })
+      .catch(() => this.setState({ contactStatus: 'Er ging iets mis. Probeer het later opnieuw of mail hallo@hamdoun.nl.' }));
+  };
+
+  renderVals() {
+    const ink = 'oklch(14% 0.008 45)', bg = 'oklch(99% 0.003 80)', muted = 'oklch(50% 0.012 65)', borderStrong = 'oklch(76% 0.01 75)';
+    const tabStyle = (active) => ({
+      Border: active ? ink : borderStrong,
+      Bg: active ? ink : 'transparent',
+      Color: active ? bg : muted,
+    });
+    const ms = tabStyle(this.state.tab === 'meldstroom');
+    const zz = tabStyle(this.state.tab === 'zzp');
+    const ap = tabStyle(this.state.tab === 'afspraak');
+    const faqs = this.faqData.map((f, i) => ({
+      q: f.q, a: f.a,
+      open: !!this.state.faqOpen[i],
+      chevRot: this.state.faqOpen[i] ? 'rotate(45deg)' : 'rotate(0deg)',
+      toggle: () => this.toggleFaq(i),
+    }));
+    return {
+      kiesMeldstroom: this.kiesMeldstroom, kiesZzp: this.kiesZzp, kiesAfspraak: this.kiesAfspraak,
+      isMeldstroom: this.state.tab === 'meldstroom', isZzp: this.state.tab === 'zzp', isAfspraak: this.state.tab === 'afspraak',
+      tabMsBorder: ms.Border, tabMsBg: ms.Bg, tabMsColor: ms.Color,
+      tabZzpBorder: zz.Border, tabZzpBg: zz.Bg, tabZzpColor: zz.Color,
+      tabApBorder: ap.Border, tabApBg: ap.Bg, tabApColor: ap.Color,
+
+      runMeldstroom: this.runMeldstroom,
+      msLoading: this.state.ms === 'loading',
+      msIdle: this.state.ms === 'idle',
+      msDone: this.state.ms === 'done',
+      msBtnBg: this.state.ms === 'loading' ? borderStrong : ink,
+
+      zzpText: this.state.zzpText, zzpTextChange: this.zzpTextChange, runZzp: this.runZzp,
+      zzpLoading: this.state.zzpState === 'loading',
+      zzpIdle: this.state.zzpState === 'idle',
+      zzpDone: this.state.zzpState === 'done',
+      zzpBtnBg: this.state.zzpState === 'loading' ? borderStrong : ink,
+      zzpVerdict: this.state.zzpResult ? this.state.zzpResult.verdict : '',
+      zzpReason: this.state.zzpResult ? this.state.zzpResult.reason : '',
+      zzpScoreLine: this.state.zzpResult ? this.state.zzpResult.scoreLine : '',
+      zzpToneBg: this.state.zzpResult ? this.state.zzpResult.tone.bg : bg,
+      zzpToneBorder: this.state.zzpResult ? this.state.zzpResult.tone.border : borderStrong,
+      zzpToneText: this.state.zzpResult ? this.state.zzpResult.tone.text : muted,
+
+      runAfspraak: this.runAfspraak,
+      apIdle: this.state.ap === 'idle',
+      apStep1: this.state.ap === 'step1',
+      apStep2: this.state.ap === 'step2',
+      apStep3: this.state.ap === 'step3',
+      apBusy: this.state.ap === 'step1' || this.state.ap === 'step2',
+      apBtnBg: (this.state.ap === 'step1' || this.state.ap === 'step2') ? borderStrong : ink,
+      apStatusLabel: this.state.apStatus,
+
+      faqs,
+      verstuurContact: this.verstuurContact,
+      contactStatus: this.state.contactStatus,
+    };
+  }
+}
+</script>
 </body>
 </html>
