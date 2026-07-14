@@ -1809,6 +1809,16 @@
       if (entry.host) return;
       const dw = this.designWidth, dh = this.designHeight;
       let clone = entry.slide.cloneNode(true);
+      // The clone participates in the document's flat tree, so the
+      // templates' position-based CSS page counters (.slide
+      // { counter-increment: page }) would count every materialized
+      // thumb before the real slides — folios print offset by the
+      // thumb count (slide 2 reading "7" on a five-slide deck).
+      // Neutralize the counter on the clone and drop its folio pill:
+      // a thumbnail's own page number is unreadable at thumb scale
+      // anyway, and the real slides' numbers stay truthful.
+      clone.style.counterIncrement = 'none';
+      clone.querySelectorAll('.page-foot').forEach((pf) => pf.remove());
       // Canvas bitmaps don't clone — swap each cloned canvas for an <img>
       // of the live pixels. Best-effort: tainted canvases throw (left
       // as-is); zero-size are skipped; WebGL without preserveDrawingBuffer
