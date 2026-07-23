@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://amazingspeech.github.io/hamdoun/sitemap.xml
