@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;family=IBM+Plex+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<link rel="icon" href="./assets/logo-icon-dark.png">
+<style>
+  html, body { margin:0; padding:0; background:oklch(98% 0.004 90); }
+  body { font-family:'IBM Plex Sans', -apple-system, 'Segoe UI', sans-serif; color:oklch(18% 0.012 150); line-height:1.55; -webkit-font-smoothing:antialiased; }
+  a { color:oklch(18% 0.012 150); text-decoration:none; }
+  a:hover { color:oklch(45% 0.08 160); }
+  @keyframes pulse { 0%,80%,100% { opacity:.25 } 40% { opacity:1 } }
+  @media (prefers-reduced-motion: reduce) { .demo-dot { animation:none !important; opacity:1 !important; } }
+</style>
+</helmet>
+
+<!-- ══════════ HEADER ══════════ -->
+<header style="position:sticky;top:0;z-index:30;background:color-mix(in oklch, oklch(98% 0.004 90) 88%, transparent);backdrop-filter:blur(10px);border-bottom:1px solid oklch(90% 0.006 90);">
+  <div style="max-width:1140px;margin:0 auto;padding:18px 40px;display:flex;align-items:center;justify-content:space-between;gap:24px;">
+    <a href="#top" style="display:flex;align-items:center;gap:9px;">
+      <img src="./assets/logo-icon-dark.png" alt="" style="height:23px;width:auto;display:block;">
+      <img src="./assets/logo-wordmark-dark.png" alt="BlackLarch" style="height:15px;width:auto;display:block;">
+    </a>
+    <nav aria-label="Hoofdnavigatie" style="display:flex;align-items:center;gap:30px;">
+      <a href="#aanpak" style="font-size:0.9375rem;color:oklch(46% 0.012 140);">{{ t.nav.aanpak }}</a>
+      <a href="#projecten" style="font-size:0.9375rem;color:oklch(46% 0.012 140);">{{ t.nav.projecten }}</a>
+      <a href="#nieuws" style="font-size:0.9375rem;color:oklch(46% 0.012 140);">{{ t.nav.nieuws }}</a>
+      <a href="#faq" style="font-size:0.9375rem;color:oklch(46% 0.012 140);">{{ t.nav.faq }}</a>
+      <a href="#contact" style="font-size:0.9375rem;color:oklch(46% 0.012 140);">{{ t.nav.contact }}</a>
+      <div style="display:flex;align-items:center;gap:2px;border:1px solid oklch(88% 0.006 90);border-radius:20px;padding:3px;font:500 0.75rem/1 'IBM Plex Mono',monospace;background:oklch(100% 0 0);">
+        <button onClick="{{ setLangNl }}" style="cursor:pointer;border:none;padding:6px 10px;border-radius:16px;background:{{ nlBg }};color:{{ nlColor }};font:500 0.75rem/1 'IBM Plex Mono',monospace;">NL</button>
+        <button onClick="{{ setLangEn }}" style="cursor:pointer;border:none;padding:6px 10px;border-radius:16px;background:{{ enBg }};color:{{ enColor }};font:500 0.75rem/1 'IBM Plex Mono',monospace;">EN</button>
+      </div>
+      <a href="#contact" style="background:oklch(18% 0.012 150);color:oklch(98% 0.004 90);padding:10px 20px;border-radius:8px;font-weight:600;font-size:0.9375rem;box-shadow:0 1px 2px oklch(18% 0.012 150 / 0.15), 0 6px 16px -6px oklch(18% 0.012 150 / 0.35);" style-hover="background:oklch(28% 0.02 155);color:oklch(98% 0.004 90);">{{ t.nav.cta }}</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<!-- ══════════ HERO ══════════ -->
+<section id="top" data-screen-label="Hero" style="position:relative;overflow:hidden;background:oklch(15% 0.015 155);color:oklch(97% 0.004 90);padding:120px 0 108px;">
+  <div style="position:absolute;top:-220px;left:-120px;width:640px;height:640px;border-radius:50%;background:radial-gradient(circle, oklch(45% 0.1 160 / 0.55), transparent 70%);filter:blur(40px);pointer-events:none;"></div>
+  <div style="position:absolute;bottom:-260px;right:-160px;width:680px;height:680px;border-radius:50%;background:radial-gradient(circle, oklch(38% 0.09 220 / 0.4), transparent 70%);filter:blur(50px);pointer-events:none;"></div>
+  <div style="position:absolute;inset:0;background-image:linear-gradient(oklch(97% 0.004 90 / 0.03) 1px, transparent 1px), linear-gradient(90deg, oklch(97% 0.004 90 / 0.03) 1px, transparent 1px);background-size:56px 56px;pointer-events:none;"></div>
+  <div style="position:relative;max-width:1140px;margin:0 auto;padding:0 40px;display:grid;grid-template-columns:1.15fr 0.85fr;gap:64px;align-items:center;">
+    <div style="display:flex;flex-direction:column;gap:24px;">
+      <div style="display:inline-flex;align-items:center;gap:9px;font:500 0.8125rem/1 'IBM Plex Mono',monospace;letter-spacing:0.08em;text-transform:uppercase;color:oklch(78% 0.09 165);width:fit-content;border:1px solid oklch(78% 0.09 165 / 0.4);background:oklch(78% 0.09 165 / 0.08);padding:7px 12px;border-radius:20px;">
+        <span style="width:6px;height:6px;border-radius:50%;background:oklch(78% 0.09 165);box-shadow:0 0 0 4px oklch(78% 0.09 165 / 0.18);"></span>
+        <span>{{ t.hero.badge }}</span>
+      </div>
+      <div style="font:600 clamp(2.75rem,2rem + 2.6vw,4.25rem)/1.05 'IBM Plex Sans',sans-serif;max-width:640px;letter-spacing:-0.02em;color:#FFFFFF;">{{ t.hero.title }}</div>
+      <div style="font:400 1.1875rem/1.6 'IBM Plex Sans',sans-serif;color:oklch(78% 0.012 140);max-width:560px;">{{ t.hero.desc }}</div>
+      <div style="display:flex;gap:14px;margin-top:8px;flex-wrap:wrap;">
+        <a href="#contact" style="background:oklch(97% 0.004 90);color:oklch(15% 0.015 155);padding:13px 24px;border-radius:8px;font-weight:600;font-size:0.9375rem;box-shadow:0 1px 2px oklch(0% 0 0 / 0.2), 0 10px 24px -8px oklch(0% 0 0 / 0.5);" style-hover="background:oklch(90% 0.01 90);">{{ t.hero.ctaPrimary }}</a>
+        <a href="#projecten" style="border:1px solid oklch(60% 0.012 140);color:oklch(97% 0.004 90);padding:13px 24px;border-radius:8px;font-weight:600;font-size:0.9375rem;">{{ t.hero.ctaSecondary }}</a>
+      </div>
+    </div>
+    <div style="position:relative;background:oklch(20% 0.018 155 / 0.7);backdrop-filter:blur(14px);border:1px solid oklch(97% 0.004 90 / 0.12);border-radius:16px;padding:22px;box-shadow:0 30px 70px -25px oklch(0% 0 0 / 0.6);">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;">
+        <span style="width:10px;height:10px;border-radius:50%;background:oklch(70% 0.15 30);"></span>
+        <span style="width:10px;height:10px;border-radius:50%;background:oklch(80% 0.13 90);"></span>
+        <span style="width:10px;height:10px;border-radius:50%;background:oklch(78% 0.09 165);"></span>
+        <span style="margin-left:8px;font:500 0.75rem/1 'IBM Plex Mono',monospace;color:oklch(70% 0.012 140);">{{ t.hero.proofLabel }}</span>
+      </div>
+      <sc-for list="{{ heroProof }}" as="p" hint-placeholder-count="3">
+        <div style="display:flex;align-items:center;gap:10px;padding:11px 0;border-top:1px solid oklch(97% 0.004 90 / 0.08);">
+          <span style="width:7px;height:7px;border-radius:50%;background:oklch(78% 0.09 165);flex:none;"></span>
+          <span style="font-size:0.875rem;color:oklch(90% 0.006 90);">{{ p }}</span>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ AANPAK ══════════ -->
+<section id="aanpak" data-screen-label="Aanpak" style="padding:92px 0;background:oklch(98% 0.004 90);">
+  <div style="max-width:1140px;margin:0 auto;padding:0 40px;">
+    <div style="font:500 0.8125rem/1.3 'IBM Plex Mono',monospace;letter-spacing:0.06em;text-transform:uppercase;color:oklch(45% 0.08 160);margin-bottom:16px;">{{ t.nav.aanpak }}</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;">
+      <sc-for list="{{ aanpakSteps }}" as="step" hint-placeholder-count="3">
+        <div style="background:#FFFFFF;border:1px solid oklch(91% 0.006 90);border-radius:14px;padding:28px;box-shadow:0 1px 2px oklch(20% 0.01 150 / 0.04), 0 16px 32px -20px oklch(20% 0.01 150 / 0.12);">
+          <div style="font:500 0.8125rem/1 'IBM Plex Mono',monospace;color:oklch(45% 0.08 160);margin-bottom:14px;">{{ step.n }}</div>
+          <div style="font:600 1.25rem/1.35 'IBM Plex Sans',sans-serif;margin-bottom:8px;letter-spacing:-0.01em;">{{ step.title }}</div>
+          <div style="font:400 0.9375rem/1.55 'IBM Plex Sans',sans-serif;color:oklch(46% 0.012 140);">{{ step.desc }}</div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ PROJECTEN / DEMO ══════════ -->
+<section id="projecten" data-screen-label="Projecten" style="padding:92px 0;background:oklch(96% 0.006 90);border-top:1px solid oklch(90% 0.006 90);border-bottom:1px solid oklch(90% 0.006 90);">
+  <div style="max-width:1140px;margin:0 auto;padding:0 40px;">
+    <div style="font:500 0.8125rem/1.3 'IBM Plex Mono',monospace;letter-spacing:0.06em;text-transform:uppercase;color:oklch(45% 0.08 160);margin-bottom:16px;">{{ t.demo.kicker }}</div>
+    <div style="font:600 1.875rem/1.25 'IBM Plex Sans',sans-serif;margin-bottom:12px;letter-spacing:-0.02em;">{{ t.demo.title }}</div>
+    <div style="font:400 1.0625rem/1.6 'IBM Plex Sans',sans-serif;color:oklch(46% 0.012 140);max-width:600px;margin-bottom:36px;">{{ t.demo.desc }}</div>
+
+    <div style="display:flex;gap:10px;margin-bottom:32px;flex-wrap:wrap;" role="tablist" aria-label="Kies project">
+      <sc-for list="{{ tabs }}" as="tabItem" hint-placeholder-count="5">
+        <button onClick="{{ tabItem.onClick }}" role="tab" aria-selected="{{ tabItem.active }}" style="cursor:pointer;padding:10px 18px;border-radius:22px;font-weight:600;font-size:0.9375rem;font-family:'IBM Plex Sans',sans-serif;border:1px solid {{ tabItem.border }};background:{{ tabItem.bg }};color:{{ tabItem.color }};box-shadow:{{ tabItem.shadow }};transition:all 150ms ease;">{{ tabItem.label }}</button>
+      </sc-for>
+    </div>
+
+    <!-- INCIDENT DEMO -->
+    <sc-if value="{{ isIncident }}" hint-placeholder-val="{{ true }}">
+    <div style="border:1px solid oklch(90% 0.006 90);border-radius:16px;box-shadow:0 1px 2px oklch(20% 0.01 150 / 0.04), 0 24px 48px -22px oklch(20% 0.01 150 / 0.18);overflow:hidden;">
+      <div style="padding:16px 24px;border-bottom:1px solid oklch(90% 0.006 90);display:flex;align-items:baseline;gap:8px;background:oklch(98% 0.004 90);">
+        <img src="./assets/logo-icon-dark.png" alt="" style="height:15px;width:auto;">
+        <span style="font:500 0.8125rem/1.3 'IBM Plex Mono',monospace;letter-spacing:0.06em;color:oklch(46% 0.13 60);border-left:2px solid oklch(64% 0.15 65);padding-left:8px;">{{ t.projects.incident.tag }}</span>
+      </div>
+      <div style="padding:28px;display:grid;grid-template-columns:1fr 1fr;gap:28px;background:#FFFFFF;">
+        <div>
+          <div style="font:500 0.8125rem/1.3 'IBM Plex Mono',monospace;letter-spacing:0.06em;text-transform:uppercase;color:oklch(46% 0.012 140);margin-bottom:10px;">{{ t.projects.incident.emailLabel }}</div>
+          <div style="border:1px solid oklch(90% 0.006 90);border-radius:10px;padding:16px;font-size:0.875rem;line-height:1.6;background:oklch(98% 0.004 90);">
+            <div style="color:oklch(46% 0.012 140);margin-bottom:8px;font-family:'IBM Plex Mono',monospace;font-size:0.75rem;">{{ t.projects.incident.emailMeta }}</div>
+            <span>{{ t.projects.incident.emailBody }}</span>
+          </div>
+          <button onClick="{{ runMs }}" disabled="{{ msLoading }}" style="margin-top:16px;background:{{ msBtnBg }};color:oklch(98% 0.004 90);padding:11px 20px;border-radius:8px;font-weight:600;font-size:0.9375rem;font-family:'IBM Plex Sans',sans-serif;border:none;cursor:pointer;box-shadow:0 8px 18px -8px oklch(18% 0.012 150 / 0.45);">{{ t.projects.incident.btn }}</button>
+        </div>
+        <div>
+          <div style="font:500 0.8125rem/1.3 'IBM Plex Mono',monospace;letter-spacing:0.06em;text-transform:uppercase;color:oklch(46% 0.012 140);margin-bottom:10px;">{{ t.projects.incident.resultLabel }}</div>
+          <div aria-live="polite" style="border:1px solid oklch(90% 0.006 90);border-radius:10px;padding:16px;min-height:180px;background:oklch(98% 0.004 90);">
+            <sc-if value="{{ msIdle }}" hint-placeholder-val="{{ true }}">
+              <div style="font-size:0.875rem;color:oklch(46% 0.012 140);">{{ t.projects.incident.idle }}</div>
+            </sc-if>
+            <sc-if value="{{ msLoading }}" hint-placeholder-val="{{ false }}">
+              <div style="font-size:0.875rem;color:oklch(46% 0.012 140);display:flex;align-items:center;gap:6px;"><span>{{ t.projects.incident.loading }}</span><span class="demo-dot" style="display:inline-block;width:6px;height:6px;border-radius:50%;background:oklch(46% 0.012 140);animation:pulse 1s infinite ease-in-out;"></span><span class="demo-dot" style="display:inline-block;width:6px;height:6px;border-radius:50%;background:oklch(46% 0.012 140);animation:pulse 1s infinite ease-in-out 0.15s;"></span><span class="demo-dot" style="display:inline-block;width:6px;height:6px;border-radius:50%;background:oklch(46% 0.012 140);animation:pulse 1s infinite ease-in-out 0.3s;"></span></div>
+            </sc-if>
+            <sc-if value="{{ msDone }}" hint-placeholder-val="{{ false }}">
+              <div style="font-size:0.875rem;">
+                <div style="margin-bottom:8px;"><b>{{ t.projects.incident.locLabel }}</b> {{ t.projects.incident.loc }}</div>
+                <div style="margin-bottom:8px;"><b>{{ t.projects.incident.catLabel }}</b> {{ t.projects.incident.cat }}</div>
+                <div style="margin-bottom:12px;"><b>{{ t.projects.incident.dateLabel }}</b> {{ t.projects.incident.date }}</div>
+                <div style="background:oklch(93% 0.05 75);border-left:3px solid oklch(64% 0.15 65);border-radius:8px;padding:10px 12px;font-size:0.8125rem;color:oklch(46% 0.13 60);">{{ t.projects.incident.warning }}</div>
+              </div>
+            </sc-if>
+          </div>
+        </div>
+      </div>
+    </div>
+    </sc-if>
+
+    <!-- ZZP DEMO -->
+    <sc-if value="{{ isZzp }}" hint-placeholder-val="{{ false }}">
+    <div style="border:1px solid oklch(90% 0.006 90);border-radius:16px;box-shadow:0 1px 2px oklch(20% 0.01 150 / 0.04), 0 24px 48px -22px oklch(20% 0.01 150 / 0.18);overflow:hidden;">
+      <div style="padding:16px 24px;border-bottom:1px solid oklch(90% 0.006 90);display:flex;align-items:baseline;gap:8px;background:oklch(98% 0.004 90);">
+        <img src="./assets/logo-icon-dark.png" alt="" style="height:15px;width:auto;">
+        <span style="font:500 0.8125rem/1.3 'IBM Plex Mono',monospace;letter-spacing:0.06em;color:oklch(50% 0.13 250);border-left:2px solid oklch(64% 0.13 250);padding-left:8px;">{{ t.projects.zzp.tag }}</span>
+      </div>
+      <div style="padding:28px;display:grid;grid-template-columns:1fr 1fr;gap:28px;background:#FFFFFF;">
+        <div>
+          <label for="zzp-input" style="display:block;font:500 0.8125rem/1.3 'IBM Plex Mono',monospace;letter-spacing:0.06em;text-transform:uppercase;color:oklch(46% 0.012 140);margin-bottom:10px;">{{ t.projects.zzp.inputLabel }}</label>
+          <textarea id="zzp-input" rows="7" value="{{ zzpText }}" onChange="{{ zzpTextChange }}" style="width:100%;box-sizing:border-box;font:400 0.875rem/1.5 'IBM Plex Sans',sans-serif;padding:14px;border-radius:10px;border:1px solid oklch(88% 0.006 90);resize:vertical;color:oklch(18% 0.012 150);background:oklch(98% 0.004 90);"></textarea>
+          <button onClick="{{ runZzp }}" disabled="{{ zzpLoading }}" style="margin-top:16px;background:{{ zzpBtnBg }};color:oklch(98% 0.004 90);padding:11px 20px;border-radius:8px;font-weight:600;font-size:0.9375rem;font-family:'IBM Plex Sans',sans-serif;border:none;cursor:pointer;box-shadow:0 8px 18px -8px oklch(18% 0.012 150 / 0.45);">{{ t.projects.zzp.btn }}</button>
+        </div>
+        <div>
+          <div style="font:500 0.8125rem/1.3 'IBM Plex Mono',monospace;letter-spacing:0.06em;text-transform:uppercase;color:oklch(46% 0.012 140);margin-bottom:10px;">{{ t.projects.zzp.resultLabel }}</div>
+          <div aria-live="polite" style="border:1px solid oklch(90% 0.006 90);border-radius:10px;padding:16px;min-height:180px;background:oklch(98% 0.004 90);">
+            <sc-if value="{{ zzpIdle }}" hint-placeholder-val="{{ true }}">
+              <div style="font-size:0.875rem;color:oklch(46% 0.012 140);">{{ t.projects.zzp.idle }}</div>
+            </sc-if>
+            <sc-if value="{{ zzpLoading }}" hint-placeholder-val="{{ false }}">
+              <div style="font-size:0.875rem;color:oklch(46% 0.012 140);display:flex;align-items:center;gap:6px;"><span>{{ t.projects.zzp.loading }}</span><span class="demo-dot" style="display:inline-block;width:6px;height:6px;border-radius:50%;background:oklch(46% 0.012 140);animation:pulse 1s infinite ease-in-out;"></span><span class="demo-dot" style="display:inline-block;width:6px;height:6px;border-radius:50%;background:oklch(46% 0.012 140);animation:pulse 1s infinite ease-in-out 0.15s;"></span><span class="demo-dot" style="display:inline-block;width:6px;height:6px;border-radius:50%;background:oklch(46% 0.012 140);animation:pulse 1s infinite ease-in-out 0.3s;"></span></div>
+            </sc-if>
+            <sc-if value="{{ zzpDone }}" hint-placeholder-val="{{ false }}">
+              <div style="font-size:0.875rem;">
+                <div style="background:{{ zzpToneBg }};border-left:3px solid {{ zzpToneBorder }};border-radius:8px;padding:12px 14px;margin-bottom:12px;">
+                  <div style="font-weight:600;color:{{ zzpToneText }};margin-bottom:4px;">{{ zzpVerdict }}</div>
+                  <div style="font-size:0.8125rem;color:oklch(46% 0.012 140);">{{ zzpReason }}</div>
+                </div>
+                <div style="font-family:'IBM Plex Mono',monospace;font-size:0.75rem;color:oklch(46% 0.012 140);">{{ zzpScoreLine }}</div>
+              </div>
+            </sc-if>
+          </div>
+        </div>
+      </div>
+    </div>
+    </sc-if>
+
+    <!-- AFSPRAAKOPVOLGING DEMO -->
+    <sc-if value="{{ isAfspraak }}" hint-placeholder-val="{{ false }}">
+    <div style="border:1px solid oklch(90% 0.006 90);border-radius:16px;box-shadow:0 1px 2px oklch(20% 0.01 150 / 0.04), 0 24px 48px -22px oklch(20% 0.01 150 / 0.18);overflow:hidden;">
+      <div style="padding:16px 24px;border-bottom:1px solid oklch(90% 0.006 90);display:flex;align-items:baseline;justify-content:space-between;gap:8px;background:oklch(98% 0.004 90);">
+        <div style="display:flex;align-items:baseline;gap:8px;">
+          <img src="./assets/logo-icon-dark.png" alt="" style="height:15px;width:auto;">
+          <span style="font:500 0.8125rem/1.3 'IBM Plex Mono',monospace;letter-spacing:0.06em;color:oklch(38% 0.09 160);border-left:2px solid oklch(58% 0.1 160);padding-left:8px;">{{ t.projects.afspraak.tag }}</span>
+        </div>
+        <a href="Workflow Presentatie.dc.html" style="font:500 0.8125rem/1.3 'IBM Plex Mono',monospace;color:oklch(46% 0.012 140);">{{ t.projects.afspraak.presentatieLink }}</a>
+      </div>
+      <div style="padding:28px;display:grid;grid-template-columns:1fr 1fr;gap:28px;background:#FFFFFF;">
+        <div>
+          <div style="font:500 0.8125rem/1.3 'IBM Plex Mono',monospace;letter-spacing:0.06em;text-transform:uppercase;color:oklch(46% 0.012 140);margin-bottom:10px;">{{ t.projects.afspraak.cardLabel }}</div>
+          <div style="border:1px solid oklch(90% 0.006 90);border-radius:10px;padding:16px;font-size:0.875rem;line-height:1.6;background:oklch(98% 0.004 90);">
+            <div style="display:flex;justify-content:space-between;margin-bottom:6px;"><span style="color:oklch(46% 0.012 140);">{{ t.projects.afspraak.klant }}</span><span style="font-family:'IBM Plex Mono',monospace;">{{ t.projects.afspraak.klantNaam }}</span></div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:6px;"><span style="color:oklch(46% 0.012 140);">{{ t.projects.afspraak.afspraakLabel }}</span><span style="font-family:'IBM Plex Mono',monospace;">{{ t.projects.afspraak.afspraakVal }}</span></div>
+            <div style="display:flex;justify-content:space-between;"><span style="color:oklch(46% 0.012 140);">{{ t.projects.afspraak.statusLabel }}</span><span style="font-family:'IBM Plex Mono',monospace;">{{ apStatusLabel }}</span></div>
+          </div>
+          <div style="margin-top:12px;font-size:0.8125rem;color:oklch(46% 0.012 140);">{{ t.projects.afspraak.desc }}</div>
+          <button onClick="{{ runAfspraak }}" disabled="{{ apBusy }}" style="margin-top:16px;background:{{ apBtnBg }};color:oklch(98% 0.004 90);padding:11px 20px;border-radius:8px;font-weight:600;font-size:0.9375rem;font-family:'IBM Plex Sans',sans-serif;border:none;cursor:pointer;box-shadow:0 8px 18px -8px oklch(18% 0.012 150 / 0.45);">{{ t.projects.afspraak.btn }}</button>
+        </div>
+        <div>
+          <div style="font:500 0.8125rem/1.3 'IBM Plex Mono',monospace;letter-spacing:0.06em;text-transform:uppercase;color:oklch(46% 0.012 140);margin-bottom:10px;">{{ t.projects.afspraak.chatLabel }}</div>
+          <div aria-live="polite" style="border:1px solid oklch(90% 0.006 90);border-radius:10px;padding:16px;min-height:180px;background:oklch(98% 0.004 90);display:flex;flex-direction:column;gap:8px;">
+            <sc-if value="{{ apIdle }}" hint-placeholder-val="{{ true }}">
+              <div style="font-size:0.875rem;color:oklch(46% 0.012 140);">{{ t.projects.afspraak.idle }}</div>
+            </sc-if>
+            <sc-if value="{{ apStep1 }}" hint-placeholder-val="{{ false }}">
+              <div style="max-width:85%;padding:9px 13px;border-radius:12px 12px 12px 4px;font-size:0.8125rem;line-height:1.5;background:#FFFFFF;border:1px solid oklch(88% 0.006 90);align-self:flex-start;box-shadow:0 1px 2px oklch(20% 0.01 150 / 0.06);">{{ t.projects.afspraak.msg1 }}</div>
+            </sc-if>
+            <sc-if value="{{ apStep2 }}" hint-placeholder-val="{{ false }}">
+              <div style="padding:9px 16px;border-radius:12px 12px 4px 12px;font-size:0.8125rem;font-weight:600;background:oklch(93% 0.045 160);color:oklch(35% 0.09 160);align-self:flex-end;">{{ t.projects.afspraak.msg2 }}</div>
+            </sc-if>
+            <sc-if value="{{ apStep3 }}" hint-placeholder-val="{{ false }}">
+              <div style="align-self:flex-end;font-family:'IBM Plex Mono',monospace;font-size:0.75rem;color:oklch(35% 0.09 160);">{{ t.projects.afspraak.msg3 }}</div>
+            </sc-if>
+          </div>
+        </div>
+      </div>
+    </div>
+    </sc-if>
+
+    <!-- BOEKINGSASSISTENT DEMO -->
+    <sc-if value="{{ isBoeking }}" hint-placeholder-val="{{ false }}">
+    <div style="border:1px solid oklch(90% 0.006 90);border-radius:16px;box-shadow:0 1px 2px oklch(20% 0.01 150 / 0.04), 0 24px 48px -22px oklch(20% 0.01 150 / 0.18);overflow:hidden;">
+      <div style="padding:16px 24px;border-bottom:1px solid oklch(90% 0.006 90);display:flex;align-items:baseline;gap:8px;background:oklch(98% 0.004 90);">
+        <img src="./assets/logo-icon-dark.png" alt="" style="height:15px;width:auto;">
+        <span style="font:500 0.8125rem/1.3 'IBM Plex Mono',monospace;letter-spacing:0.06em;color:oklch(38% 0.09 160);border-left:2px solid oklch(58% 0.1 160);padding-left:8px;">{{ t.projects.boeking.tag }}</span>
+      </div>
+      <div style="padding:28px;display:grid;grid-template-columns:1fr 1fr;gap:28px;background:#FFFFFF;">
+        <div>
+          <div style="font:500 0.8125rem/1.3 'IBM Plex Mono',monospace;letter-spacing:0.06em;text-transform:uppercase;color:oklch(46% 0.012 140);margin-bottom:10px;">{{ t.projects.boeking.introLabel }}</div>
+          <div style="border:1px solid oklch(90% 0.006 90);border-radius:10px;padding:16px;font-size:0.875rem;line-height:1.6;background:oklch(98% 0.004 90);">{{ t.projects.boeking.intro }}</div>
+          <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap;">
+            <button onClick="{{ boekAdvance }}" style="background:oklch(18% 0.012 150);color:oklch(98% 0.004 90);padding:11px 20px;border-radius:8px;font-weight:600;font-size:0.9375rem;font-family:'IBM Plex Sans',sans-serif;border:none;cursor:pointer;box-shadow:0 8px 18px -8px oklch(18% 0.012 150 / 0.45);">{{ boekBtnLabel }}</button>
+          </div>
+        </div>
+        <div>
+          <div style="font:500 0.8125rem/1.3 'IBM Plex Mono',monospace;letter-spacing:0.06em;text-transform:uppercase;color:oklch(46% 0.012 140);margin-bottom:10px;">{{ t.projects.boeking.chatLabel }}</div>
+          <div aria-live="polite" style="border:1px solid oklch(90% 0.006 90);border-radius:10px;padding:16px;min-height:220px;max-height:280px;overflow-y:auto;background:oklch(98% 0.004 90);display:flex;flex-direction:column;gap:8px;">
+            <sc-if value="{{ boekEmpty }}" hint-placeholder-val="{{ true }}">
+              <div style="font-size:0.875rem;color:oklch(46% 0.012 140);">{{ t.projects.boeking.idle }}</div>
+            </sc-if>
+            <sc-for list="{{ boekMessages }}" as="msg" hint-placeholder-count="0">
+              <sc-if value="{{ msg.isSystem }}" hint-placeholder-val="{{ false }}">
+                <div style="align-self:center;font:400 0.75rem/1.4 'IBM Plex Mono',monospace;color:oklch(46% 0.012 140);border:1px dashed oklch(80% 0.006 90);border-radius:10px;padding:5px 10px;max-width:95%;text-align:center;">{{ msg.text }}</div>
+              </sc-if>
+              <sc-if value="{{ msg.isBubble }}" hint-placeholder-val="{{ false }}">
+                <div style="max-width:85%;padding:9px 13px;border-radius:12px;font-size:0.8125rem;line-height:1.5;background:{{ msg.bg }};color:{{ msg.color }};align-self:{{ msg.align }};box-shadow:0 1px 2px oklch(20% 0.01 150 / 0.06);">{{ msg.text }}</div>
+              </sc-if>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </div>
+    </sc-if>
+
+    <!-- PROTOCOLCHECKER DEMO -->
+    <sc-if value="{{ isProtocol }}" hint-placeholder-val="{{ false }}">
+    <div style="border:1px solid oklch(90% 0.006 90);border-radius:16px;box-shadow:0 1px 2px oklch(20% 0.01 150 / 0.04), 0 24px 48px -22px oklch(20% 0.01 150 / 0.18);overflow:hidden;">
+      <div style="padding:16px 24px;border-bottom:1px solid oklch(90% 0.006 90);display:flex;align-items:baseline;gap:8px;background:oklch(98% 0.004 90);">
+        <img src="./assets/logo-icon-dark.png" alt="" style="height:15px;width:auto;">
+        <span style="font:500 0.8125rem/1.3 'IBM Plex Mono',monospace;letter-spacing:0.06em;color:oklch(45% 0.18 25);border-left:2px solid oklch(55% 0.18 25);padding-left:8px;">{{ t.projects.protocol.tag }}</span>
+      </div>
+      <div style="padding:28px;display:grid;grid-template-columns:1fr 1fr;gap:28px;background:#FFFFFF;">
+        <div>
+          <label for="proto-input" style="display:block;font:500 0.8125rem/1.3 'IBM Plex Mono',monospace;letter-spacing:0.06em;text-transform:uppercase;color:oklch(46% 0.012 140);margin-bottom:10px;">{{ t.projects.protocol.inputLabel }}</label>
+          <textarea id="proto-input" rows="3" value="{{ protoQuery }}" onChange="{{ protoQueryChange }}" style="width:100%;box-sizing:border-box;font:400 0.875rem/1.5 'IBM Plex Sans',sans-serif;padding:14px;border-radius:10px;border:1px solid oklch(88% 0.006 90);resize:vertical;color:oklch(18% 0.012 150);background:oklch(98% 0.004 90);"></textarea>
+          <div style="display:flex;gap:10px;margin-top:16px;flex-wrap:wrap;align-items:center;">
+            <button onClick="{{ runProto }}" disabled="{{ protoLoading }}" style="background:{{ protoBtnBg }};color:oklch(98% 0.004 90);padding:11px 20px;border-radius:8px;font-weight:600;font-size:0.9375rem;font-family:'IBM Plex Sans',sans-serif;border:none;cursor:pointer;box-shadow:0 8px 18px -8px oklch(18% 0.012 150 / 0.45);">{{ t.projects.protocol.btn }}</button>
+            <button onClick="{{ tryEscalation }}" style="background:none;border:none;color:oklch(45% 0.18 25);font-size:0.8125rem;font-family:'IBM Plex Sans',sans-serif;cursor:pointer;text-decoration:underline;">{{ t.projects.protocol.tryEscalation }}</button>
+          </div>
+        </div>
+        <div>
+          <div style="font:500 0.8125rem/1.3 'IBM Plex Mono',monospace;letter-spacing:0.06em;text-transform:uppercase;color:oklch(46% 0.012 140);margin-bottom:10px;">{{ t.projects.protocol.resultLabel }}</div>
+          <div aria-live="polite" style="border:1px solid oklch(90% 0.006 90);border-radius:10px;padding:16px;min-height:180px;background:oklch(98% 0.004 90);">
+            <sc-if value="{{ protoIdle }}" hint-placeholder-val="{{ true }}">
+              <div style="font-size:0.875rem;color:oklch(46% 0.012 140);">{{ t.projects.protocol.idle }}</div>
+            </sc-if>
+            <sc-if value="{{ protoLoading }}" hint-placeholder-val="{{ false }}">
+              <div style="font-size:0.875rem;color:oklch(46% 0.012 140);display:flex;align-items:center;gap:6px;"><span>{{ t.projects.protocol.loading }}</span><span class="demo-dot" style="display:inline-block;width:6px;height:6px;border-radius:50%;background:oklch(46% 0.012 140);animation:pulse 1s infinite ease-in-out;"></span><span class="demo-dot" style="display:inline-block;width:6px;height:6px;border-radius:50%;background:oklch(46% 0.012 140);animation:pulse 1s infinite ease-in-out 0.15s;"></span><span class="demo-dot" style="display:inline-block;width:6px;height:6px;border-radius:50%;background:oklch(46% 0.012 140);animation:pulse 1s infinite ease-in-out 0.3s;"></span></div>
+            </sc-if>
+            <sc-if value="{{ protoNormalDone }}" hint-placeholder-val="{{ false }}">
+              <div style="font-size:0.875rem;">
+                <div style="font-weight:600;margin-bottom:6px;">{{ t.projects.protocol.normalTitle }}</div>
+                <div style="color:oklch(46% 0.012 140);font-size:0.8125rem;margin-bottom:10px;">{{ t.projects.protocol.normalCategory }}</div>
+                <div style="margin-bottom:12px;">{{ t.projects.protocol.normalExcerpt }}</div>
+                <div style="font-family:'IBM Plex Mono',monospace;font-size:0.75rem;color:oklch(46% 0.012 140);">{{ t.projects.protocol.normalSource }}</div>
+              </div>
+            </sc-if>
+            <sc-if value="{{ protoEscalationDone }}" hint-placeholder-val="{{ false }}">
+              <div style="font-size:0.875rem;">
+                <div style="background:oklch(95% 0.04 25);border-left:3px solid oklch(55% 0.18 25);border-radius:8px;padding:12px 14px;margin-bottom:10px;color:oklch(45% 0.18 25);font-weight:600;">{{ t.projects.protocol.escalationBanner }}</div>
+                <div style="font-size:0.8125rem;color:oklch(46% 0.012 140);">{{ t.projects.protocol.escalationNote }}</div>
+              </div>
+            </sc-if>
+          </div>
+        </div>
+      </div>
+    </div>
+    </sc-if>
+  </div>
+</section>
+
+<!-- ══════════ NIEUWS ══════════ -->
+<section id="nieuws" data-screen-label="Nieuws" style="padding:92px 0;background:oklch(98% 0.004 90);">
+  <div style="max-width:1140px;margin:0 auto;padding:0 40px;">
+    <div style="font:500 0.8125rem/1.3 'IBM Plex Mono',monospace;letter-spacing:0.06em;text-transform:uppercase;color:oklch(45% 0.08 160);margin-bottom:16px;">{{ t.nav.nieuws }}</div>
+    <div style="font:600 1.875rem/1.25 'IBM Plex Sans',sans-serif;margin-bottom:32px;letter-spacing:-0.02em;">{{ t.nieuws.title }}</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:22px;">
+      <sc-for list="{{ newsItems }}" as="item" hint-placeholder-count="4">
+        <article style="border:1px solid oklch(90% 0.006 90);border-radius:14px;padding:24px;background:#FFFFFF;display:flex;flex-direction:column;gap:10px;box-shadow:0 1px 2px oklch(20% 0.01 150 / 0.04), 0 16px 32px -20px oklch(20% 0.01 150 / 0.12);">
+          <div style="font:500 0.8125rem/1.3 'IBM Plex Mono',monospace;color:oklch(46% 0.012 140);">{{ item.date }}</div>
+          <div style="font:600 1.125rem/1.35 'IBM Plex Sans',sans-serif;letter-spacing:-0.01em;">{{ item.title }}</div>
+          <div style="font:400 0.875rem/1.5 'IBM Plex Sans',sans-serif;color:oklch(46% 0.012 140);">{{ item.desc }}</div>
+          <sc-if value="{{ item.hasLink }}" hint-placeholder-val="{{ false }}">
+            <a href="Workflow Presentatie.dc.html" style="font:500 0.8125rem/1.3 'IBM Plex Mono',monospace;color:oklch(38% 0.09 160);margin-top:auto;">{{ item.linkLabel }}</a>
+          </sc-if>
+        </article>
+      </sc-for>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ FAQ ══════════ -->
+<section id="faq" data-screen-label="FAQ" style="padding:92px 0;background:oklch(96% 0.006 90);border-top:1px solid oklch(90% 0.006 90);">
+  <div style="max-width:760px;margin:0 auto;padding:0 40px;">
+    <div style="font:500 0.8125rem/1.3 'IBM Plex Mono',monospace;letter-spacing:0.06em;text-transform:uppercase;color:oklch(45% 0.08 160);margin-bottom:16px;">{{ t.faq.kicker }}</div>
+    <div style="font:600 1.875rem/1.25 'IBM Plex Sans',sans-serif;margin-bottom:24px;letter-spacing:-0.02em;">{{ t.faq.title }}</div>
+    <sc-for list="{{ faqs }}" as="faq" hint-placeholder-count="6">
+      <div style="border-bottom:1px solid oklch(90% 0.006 90);">
+        <button onClick="{{ faq.toggle }}" aria-expanded="{{ faq.open }}" style="width:100%;display:flex;align-items:center;justify-content:space-between;gap:16px;background:none;border:none;text-align:left;padding:20px 0;font:600 1.125rem/1.35 'IBM Plex Sans',sans-serif;color:oklch(18% 0.012 150);cursor:pointer;">
+          <span>{{ faq.q }}</span>
+          <span style="flex:none;font-size:1.1em;color:oklch(46% 0.012 140);transform:{{ faq.chevRot }};transition:transform 160ms ease;">+</span>
+        </button>
+        <sc-if value="{{ faq.open }}" hint-placeholder-val="{{ false }}">
+          <div style="padding-bottom:20px;font:400 1rem/1.55 'IBM Plex Sans',sans-serif;color:oklch(46% 0.012 140);max-width:640px;">{{ faq.a }}</div>
+        </sc-if>
+      </div>
+    </sc-for>
+  </div>
+</section>
+
+<!-- ══════════ CONTACT ══════════ -->
+<section id="contact" data-screen-label="Contact" style="position:relative;overflow:hidden;background:oklch(15% 0.015 155);color:oklch(93% 0.006 90);padding:88px 0;">
+  <div style="position:absolute;top:-200px;right:-140px;width:520px;height:520px;border-radius:50%;background:radial-gradient(circle, oklch(45% 0.1 160 / 0.4), transparent 70%);filter:blur(40px);pointer-events:none;"></div>
+  <div style="position:relative;max-width:1140px;margin:0 auto;padding:0 40px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:48px;align-items:start;">
+    <div>
+      <img src="./assets/logo-icon-light.png" alt="" style="height:26px;width:auto;margin-bottom:20px;display:block;">
+      <div style="font:600 1.875rem/1.25 'IBM Plex Sans',sans-serif;color:#FFFFFF;margin-bottom:8px;letter-spacing:-0.02em;">{{ t.contact.title }}</div>
+      <div style="font:400 1rem/1.55 'IBM Plex Sans',sans-serif;color:oklch(78% 0.012 140);margin-bottom:24px;">{{ t.contact.desc }}</div>
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div style="width:44px;height:44px;border-radius:50%;flex:none;background:repeating-linear-gradient(45deg, oklch(30% 0.015 155), oklch(30% 0.015 155) 4px, oklch(26% 0.015 155) 4px, oklch(26% 0.015 155) 8px);border:1px solid oklch(97% 0.004 90 / 0.15);"></div>
+        <div style="font:400 0.875rem/1.5 'IBM Plex Sans',sans-serif;color:oklch(78% 0.012 140);">{{ t.contact.founder }}<br>{{ t.contact.email }}</div>
+      </div>
+    </div>
+    <div></div>
+    <form onSubmit="{{ verstuurContact }}" style="display:flex;flex-direction:column;gap:16px;">
+      <div>
+        <label for="cf-name" style="display:block;font:500 0.8125rem/1.3 'IBM Plex Mono',monospace;letter-spacing:0.06em;text-transform:uppercase;color:oklch(78% 0.012 140);margin-bottom:6px;">{{ t.contact.nameLabel }}</label>
+        <input id="cf-name" name="name" type="text" required="{{ true }}" style="width:100%;box-sizing:border-box;font:400 0.875rem/1.5 'IBM Plex Sans',sans-serif;padding:12px 14px;border-radius:8px;border:1px solid oklch(97% 0.004 90 / 0.2);color:oklch(18% 0.012 150);background:oklch(98% 0.004 90);">
+      </div>
+      <div>
+        <label for="cf-email" style="display:block;font:500 0.8125rem/1.3 'IBM Plex Mono',monospace;letter-spacing:0.06em;text-transform:uppercase;color:oklch(78% 0.012 140);margin-bottom:6px;">{{ t.contact.emailLabel }}</label>
+        <input id="cf-email" name="email" type="email" required="{{ true }}" style="width:100%;box-sizing:border-box;font:400 0.875rem/1.5 'IBM Plex Sans',sans-serif;padding:12px 14px;border-radius:8px;border:1px solid oklch(97% 0.004 90 / 0.2);color:oklch(18% 0.012 150);background:oklch(98% 0.004 90);">
+      </div>
+      <div>
+        <label for="cf-message" style="display:block;font:500 0.8125rem/1.3 'IBM Plex Mono',monospace;letter-spacing:0.06em;text-transform:uppercase;color:oklch(78% 0.012 140);margin-bottom:6px;">{{ t.contact.messageLabel }}</label>
+        <textarea id="cf-message" name="message" rows="4" required="{{ true }}" style="width:100%;box-sizing:border-box;font:400 0.875rem/1.5 'IBM Plex Sans',sans-serif;padding:12px 14px;border-radius:8px;border:1px solid oklch(97% 0.004 90 / 0.2);color:oklch(18% 0.012 150);background:oklch(98% 0.004 90);resize:vertical;"></textarea>
+      </div>
+      <button type="submit" style="align-self:flex-start;background:#FFFFFF;color:oklch(15% 0.015 155);padding:11px 22px;border-radius:8px;font-weight:600;font-size:0.9375rem;font-family:'IBM Plex Sans',sans-serif;border:none;cursor:pointer;box-shadow:0 10px 24px -8px oklch(0% 0 0 / 0.5);">{{ t.contact.submit }}</button>
+      <div aria-live="polite" style="font:400 0.875rem/1.5 'IBM Plex Sans',sans-serif;color:oklch(78% 0.012 140);">{{ contactStatus }}</div>
+    </form>
+  </div>
+</section>
+</main>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = {
+    lang: 'nl',
+    tab: 'incident',
+    ms: 'idle',
+    zzpState: 'idle',
+    zzpText: null,
+    zzpTextEdited: false,
+    zzpResult: null,
+    ap: 'idle',
+    apStatus: 'wait',
+    boekIndex: 0,
+    protoState: 'idle',
+    protoQuery: null,
+    protoQueryEdited: false,
+    protoResult: null,
+    faqOpen: {},
+    contactStatus: '',
+  };
+
+  translations = {
+    nl: {
+      nav: { aanpak: 'Aanpak', projecten: 'Projecten', nieuws: 'Nieuws', faq: 'FAQ', contact: 'Contact', cta: 'Plan een gesprek' },
+      hero: {
+        badge: 'Vijf werkende projecten, geen mockups',
+        proofLabel: 'live_status.log',
+        title: 'Gerichte AI voor concrete problemen.',
+        desc: 'Geen platform voor "AI in het algemeen". BlackLarch bouwt één werkende oplossing voor één specifiek knelpunt — vaak ontstaan uit wetgeving, compliance of een tijdrovend handmatig proces.',
+        ctaPrimary: 'Plan een gesprek',
+        ctaSecondary: 'Bekijk de projecten ↓',
+      },
+      heroProof: ['Incidentrapportage — actief', 'Afspraakopvolging — actief', 'Protocolchecker — pilot'],
+      aanpak: [
+        { n: '01', title: 'Eén knelpunt', desc: 'We beginnen bij het concrete, vervelende probleem — niet bij een technologie die we willen verkopen.' },
+        { n: '02', title: 'Op maat gebouwd', desc: 'Een gerichte workflow of tool, precies afgestemd op jullie proces en verplichtingen.' },
+        { n: '03', title: 'Mens blijft aan zet', desc: 'Automatisering doet het voorwerk; belangrijke beslissingen blijven bij een mens.' },
+      ],
+      demo: {
+        kicker: 'Projecten',
+        title: 'Vijf lopende voorbeelden, live te proberen.',
+        desc: 'Geen mockup. Dit zijn vereenvoudigde, echt werkende versies van de logica achter vijf oplossingen.',
+      },
+      tabs: {
+        incident: 'Incidentrapportage: melding → conceptrapport',
+        zzp: 'ZZP Radar\n',
+        afspraak: 'Afspraakopvolging - herinnering & wachtlijst via Whatsapp\n',
+        boeking: 'AI Boekingsassistent: Service & afspraak',
+        protocol: 'Protocolchecker: draaiboek met AI integratie',
+      },
+      projects: {
+        incident: {
+          tag: 'INCIDENTRAPPORTAGE', emailLabel: 'Inkomende e-mail', emailMeta: 'van: j.devries@voorbeeldbedrijf.nl · 08:14',
+          emailBody: 'Tijdens het lossen van pallets in magazijn 3 viel een kratje van rek B-14. Geen persoonlijk letsel; rek is beveiligd met extra strap in afwachting van inspectie.',
+          btn: 'Verwerk melding →', resultLabel: 'Gegenereerd conceptrapport', idle: 'Klik "Verwerk melding" om te starten.', loading: 'Verwerken',
+          locLabel: 'Locatie:', loc: 'Magazijn 3, Rotterdam', catLabel: 'Categorie:', cat: 'Bijna-ongeval, vallend object', dateLabel: 'Datum:', date: '17 april 2026, 08:14',
+          warning: '⚠ Handmatige controle vereist — concept klaar voor review.',
+        },
+        zzp: {
+          tag: 'SCHIJNZELFSTANDIGHEID-CHECK', inputLabel: 'Vacaturetekst (bewerkbaar)',
+          defaultText: 'Wij zoeken een zelfstandige interim projectleider voor 24 uur per week, op ZZP-basis, uurtarief in overleg. Start per direct, opdracht van 6 maanden.',
+          btn: 'Check geschiktheid →', resultLabel: 'Beoordeling', idle: 'Klik "Check geschiktheid" om te starten.', loading: 'Analyseren',
+          verdictGeschikt: '✓ ZZP-geschikt', verdictDienst: '✕ Waarschijnlijk dienstverband', verdictOnduidelijk: '? Onduidelijk, handmatig checken',
+          reasonGeschikt: 'Tekst bevat zzp-signalen ({hits}) en geen contra-indicaties.',
+          reasonDienst: 'Tekst bevat signalen voor een dienstverband ({hits}).',
+          reasonOnduidelijk: 'Geen duidelijke signalen in beide richtingen gevonden.',
+          scoreLine: 'zzp-signalen: {a} · dienstverband-signalen: {b}',
+        },
+        afspraak: {
+          tag: 'AFSPRAAKOPVOLGING', presentatieLink: 'Bekijk als presentatie ↗', cardLabel: 'Afspraak in de agenda',
+          klant: 'Klant', klantNaam: 'Piet Testpersoon', afspraakLabel: 'Afspraak', afspraakVal: 'Morgen · 20:38', statusLabel: 'Status',
+          statusWait: 'Wacht op reactie', statusConfirmed: 'Bevestigd',
+          desc: 'Voorkomt no-shows: 24 uur vooraf stuurt het systeem automatisch een WhatsApp-herinnering. Zegt de klant af, dan gaat de vrijgekomen plek direct naar de wachtlijst.',
+          btn: 'Stuur herinnering →', chatLabel: 'WhatsApp-gesprek', idle: 'Klik "Stuur herinnering" om te starten.',
+          msg1: 'Hoi Piet, je hebt morgen om 20:38 een afspraak. Kom je? Antwoord JA of NEE.', msg2: 'JA', msg3: '✓ bevestigd, agenda en logboek bijgewerkt',
+        },
+        boeking: {
+          tag: 'BOEKINGSASSISTENT', introLabel: 'Scenario', chatLabel: 'WhatsApp-gesprek',
+          intro: 'Een nieuwe patiënt start een gesprek met de boekingsassistent van een kliniek om een afspraak te maken. Zodra het gesprek een medische vraag raakt, escaleert het systeem automatisch naar een medewerker.',
+          idle: 'Klik "Start gesprek" om te beginnen.',
+          startBtn: 'Start gesprek →', nextBtn: 'Volgende bericht →', restartBtn: '↻ Opnieuw afspelen',
+          script: [
+            { who: 'agent', text: 'Hoi! Ik ben de boekingsassistent (testversie). Ik help met boekingsvragen; bij medische vragen zet ik je door naar een medewerker.' },
+            { who: 'patient', text: 'hoi, ik wil graag een afspraak voor botox' },
+            { who: 'agent', text: 'Leuk dat je contact opneemt! Ben je al eerder bij ons geweest, en wanneer zou je willen komen?' },
+            { who: 'patient', text: 'ja, eerder geweest — volgende week woensdag rond 14:00 zou fijn zijn' },
+            { who: 'agent', text: 'Op woensdag zijn er nog plekken om 14:00 en 14:30. Mag ik je naam en telefoonnummer voor de bevestiging?' },
+            { who: 'patient', text: 'trouwens, mag ik sporten na de behandeling?' },
+            { who: 'system', text: '📨 escalatie verstuurd naar de balie — medische vraag' },
+            { who: 'agent', text: 'Die vraag beantwoord ik niet zelf — ik heb \u2019m doorgezet naar een medewerker. Zullen we ondertussen 14:00 vastzetten?' },
+            { who: 'patient', text: '14:00 is goed, ik mail m\u2019n naam en nummer na' },
+            { who: 'system', text: '✅ afspraak vastgelegd in het systeem' },
+          ],
+        },
+        protocol: {
+          tag: 'PROTOCOLCHECKER', inputLabel: 'Vraag van personeel',
+          defaultQuery: 'Hoe bereid ik een botoxbehandeling voor?',
+          escalationQuery: 'Patiënt heeft na de fillerbehandeling plotseling wazig zicht — wat moet ik doen?',
+          btn: 'Vraag het protocol →', tryEscalation: 'Probeer een spoedvraag →', resultLabel: 'Antwoord',
+          idle: 'Klik "Vraag het protocol" om te starten.', loading: 'Doorzoeken protocollen',
+          normalTitle: 'Botox — voorbereiding', normalCategory: 'Categorie: Behandelingen',
+          normalExcerpt: 'Controleer medische voorgeschiedenis en allergieën, markeer injectiepunten, en bevestig de gewenste dosering met de behandelaar vóór de sessie.',
+          normalSource: 'Bron: protocol "Botox-voorbereiding" geraadpleegd · geen spoedsignaal gevonden',
+          escalationBanner: '🚨 Spoedsignaal herkend — wazig zien na een filler kan wijzen op vasculaire occlusie. Stop, escaleer direct naar een leidinggevende en volg het spoedprotocol.',
+          escalationNote: 'Deze check gaat altijd vóór een AI-antwoord — vast in de code, niet afhankelijk van een taalmodel.',
+        },
+      },
+      faq: {
+        kicker: 'Veelgestelde vragen', title: 'Nog vragen?',
+        items: [
+          { q: 'Hoe snel kan een oplossing draaien?', a: 'Meestal 2 tot 6 weken vanaf de eerste kennismaking tot een werkende versie, afhankelijk van hoe duidelijk het knelpunt al is afgebakend.' },
+          { q: 'Blijft een mens de beslissingen nemen?', a: 'Ja. Onze workflows doen het voorwerk (classificeren, samenvatten, signaleren), maar de uiteindelijke beslissing blijft bij iemand in jullie team.' },
+          { q: 'Werkt dit met onze bestaande systemen?', a: 'We bouwen op maat rond wat er al staat, zoals e-mail, een CRM of een intern formulier, in plaats van een nieuw platform op te leggen.' },
+          { q: 'Wat gebeurt er met onze gegevens?', a: 'Gegevens blijven binnen de afgesproken omgeving; we delen niets met derden buiten wat nodig is om de oplossing te laten draaien. Details bespreken we per project.' },
+          { q: 'Hoe gaan jullie om met gevoelige of medische informatie?', a: 'Voor toepassingen met gezondheids- of privacygevoelige data geldt: geen AI-gegenereerde inhoud zonder controle, escalatie op vaste regels (niet op een taalmodel-inschatting), en een verwerkersovereenkomst zodra er patiënt- of praktijkdata doorheen gaat.' },
+          { q: 'Wat kost dit ongeveer?', a: 'Afhankelijk van scope. Na een kort gesprek over het knelpunt volgt een vaste projectprijs, geen open-einde-uurtarief.' },
+        ],
+      },
+      nieuws: {
+        title: 'Wat we onderweg leren.',
+        items: [
+          { date: 'JULI 2026', title: 'Nieuw: protocolchecker voor personeel', desc: 'Personeel checkt voorbereidingsprotocollen via een lokale AI-assistent die spoedsignalen altijd eerst herkent, los van het taalmodel.', hasLink: false },
+          { date: 'JULI 2026', title: 'Nieuw: boekingsassistent via WhatsApp', desc: 'Nieuwe afspraken inplannen via een gesprek, met automatische escalatie zodra een vraag medisch van aard wordt.', hasLink: false },
+          { date: 'JUNI 2026', title: 'Afspraakopvolging via WhatsApp live', desc: 'Automatisch herinneren, bevestigen en lege plekken opvullen vanuit de wachtlijst.', hasLink: true, linkLabel: 'Bekijk de presentatie →' },
+          { date: 'PLACEHOLDER · MEI 2026', title: 'EU AI Act: wat verandert er voor mkb-processen', desc: 'Placeholder. Vervang met een eigen artikel over de gevolgen van de EU AI Act voor geautomatiseerde beslisprocessen.', hasLink: false },
+        ],
+      },
+      contact: {
+        title: 'Een concreet probleem?', desc: 'Laten we kijken of het op te lossen is.',
+        founder: 'Ayyoub Hamdoun', email: 'hallo@blacklarch.nl',
+        nameLabel: 'Naam', emailLabel: 'E-mail', messageLabel: 'Waar loop je tegenaan?', submit: 'Versturen →',
+        notConnected: 'Nog niet gekoppeld. Vul AUTOMATION_WEBHOOK_URL in de logic in om berichten naar Zapier/Make/n8n te sturen.',
+        sending: 'Versturen…', sent: 'Verstuurd, we nemen snel contact op.', error: 'Er ging iets mis. Probeer het later opnieuw of mail hallo@blacklarch.nl.',
+      },
+    },
+    en: {
+      nav: { aanpak: 'Approach', projecten: 'Projects', nieuws: 'News', faq: 'FAQ', contact: 'Contact', cta: 'Book a call' },
+      hero: {
+        badge: 'Five working projects, no mockups',
+        proofLabel: 'live_status.log',
+        title: 'Focused AI for concrete problems.',
+        desc: 'Not a platform for "AI in general". BlackLarch builds one working solution for one specific bottleneck — often rooted in regulation, compliance, or a slow manual process.',
+        ctaPrimary: 'Book a call',
+        ctaSecondary: 'See the projects ↓',
+      },
+      heroProof: ['Incident reporting — live', 'Appointment follow-up — live', 'Protocol checker — pilot'],
+      aanpak: [
+        { n: '01', title: 'One bottleneck', desc: 'We start from the concrete, annoying problem — not from a technology we want to sell.' },
+        { n: '02', title: 'Built to fit', desc: 'A focused workflow or tool, matched exactly to your process and obligations.' },
+        { n: '03', title: 'A human stays in charge', desc: 'Automation does the groundwork; the decisions that matter stay with a person.' },
+      ],
+      demo: {
+        kicker: 'Projects',
+        title: 'Five live examples, working right now.',
+        desc: 'Not a mockup. These are simplified but genuinely functioning versions of the logic behind five solutions.',
+      },
+      tabs: {
+        incident: 'Incident reporting: report → draft',
+        zzp: 'Employment-status check',
+        afspraak: 'Appointment follow-up: reminders & waitlist',
+        boeking: 'Booking assistant: new appointment via WhatsApp',
+        protocol: 'Protocol checker: staff look up procedures',
+      },
+      projects: {
+        incident: {
+          tag: 'INCIDENT REPORTING', emailLabel: 'Incoming email', emailMeta: 'from: j.devries@example-company.nl · 08:14',
+          emailBody: 'While unloading pallets in warehouse 3, a crate fell off rack B-14. No injuries; the rack has been secured with an extra strap pending inspection.',
+          btn: 'Process report →', resultLabel: 'Generated draft report', idle: 'Click "Process report" to start.', loading: 'Processing',
+          locLabel: 'Location:', loc: 'Warehouse 3, Rotterdam', catLabel: 'Category:', cat: 'Near-miss, falling object', dateLabel: 'Date:', date: 'April 17 2026, 08:14',
+          warning: '⚠ Manual review required — draft ready for review.',
+        },
+        zzp: {
+          tag: 'EMPLOYMENT-STATUS CHECK', inputLabel: 'Job listing text (editable)',
+          defaultText: "We're looking for a self-employed interim project lead for 24 hours a week, freelance basis, rate negotiable. Starting immediately, 6-month assignment.",
+          btn: 'Check eligibility →', resultLabel: 'Assessment', idle: 'Click "Check eligibility" to start.', loading: 'Analyzing',
+          verdictGeschikt: '✓ Freelance-suitable', verdictDienst: '✕ Likely employment', verdictOnduidelijk: '? Unclear, needs manual check',
+          reasonGeschikt: 'Text contains freelance signals ({hits}) and no contra-indications.',
+          reasonDienst: 'Text contains employment signals ({hits}).',
+          reasonOnduidelijk: 'No clear signals found in either direction.',
+          scoreLine: 'freelance signals: {a} · employment signals: {b}',
+        },
+        afspraak: {
+          tag: 'APPOINTMENT FOLLOW-UP', presentatieLink: 'View as deck ↗', cardLabel: 'Appointment in the calendar',
+          klant: 'Client', klantNaam: 'Piet Testpersoon', afspraakLabel: 'Appointment', afspraakVal: 'Tomorrow · 20:38', statusLabel: 'Status',
+          statusWait: 'Awaiting reply', statusConfirmed: 'Confirmed',
+          desc: 'Prevents no-shows: 24 hours ahead, the system automatically sends a WhatsApp reminder. If the client cancels, the freed slot goes straight to the waitlist.',
+          btn: 'Send reminder →', chatLabel: 'WhatsApp conversation', idle: 'Click "Send reminder" to start.',
+          msg1: 'Hi Piet, you have an appointment tomorrow at 20:38. Will you make it? Reply YES or NO.', msg2: 'YES', msg3: '✓ confirmed, calendar and log updated',
+        },
+        boeking: {
+          tag: 'BOOKING ASSISTANT', introLabel: 'Scenario', chatLabel: 'WhatsApp conversation',
+          intro: 'A new patient starts a conversation with a clinic\u2019s booking assistant to make an appointment. As soon as the conversation touches a medical question, the system automatically escalates to a staff member.',
+          idle: 'Click "Start conversation" to begin.',
+          startBtn: 'Start conversation →', nextBtn: 'Next message →', restartBtn: '↻ Replay',
+          script: [
+            { who: 'agent', text: "Hi! I'm the booking assistant (test version). I can help with booking questions; medical questions get forwarded to a staff member." },
+            { who: 'patient', text: 'hi, I\u2019d like to book a botox appointment' },
+            { who: 'agent', text: 'Great to hear from you! Have you been to us before, and when would you like to come in?' },
+            { who: 'patient', text: 'yes, been before — next Wednesday around 2pm would be great' },
+            { who: 'agent', text: "We still have slots on Wednesday at 2:00 and 2:30pm. Could I get your name and phone number to confirm?" },
+            { who: 'patient', text: 'by the way, can I work out after the treatment?' },
+            { who: 'system', text: '📨 escalated to the front desk — medical question' },
+            { who: 'agent', text: "I don't answer that one myself — I've forwarded it to a staff member. Shall we lock in 2:00pm in the meantime?" },
+            { who: 'patient', text: '2:00pm works, I\u2019ll email my name and number' },
+            { who: 'system', text: '✅ appointment booked in the system' },
+          ],
+        },
+        protocol: {
+          tag: 'PROTOCOL CHECKER', inputLabel: 'Staff question',
+          defaultQuery: 'How do I prepare a botox treatment?',
+          escalationQuery: 'Patient suddenly has blurry vision after the filler treatment — what do I do?',
+          btn: 'Ask the protocol →', tryEscalation: 'Try an emergency question →', resultLabel: 'Answer',
+          idle: 'Click "Ask the protocol" to start.', loading: 'Searching protocols',
+          normalTitle: 'Botox — preparation', normalCategory: 'Category: Treatments',
+          normalExcerpt: 'Check medical history and allergies, mark injection points, and confirm the intended dosage with the practitioner before the session.',
+          normalSource: 'Source: protocol "Botox preparation" consulted · no emergency signal found',
+          escalationBanner: "🚨 Emergency signal recognized — blurry vision after a filler can indicate vascular occlusion. Stop, escalate to a supervisor immediately and follow the emergency protocol.",
+          escalationNote: 'This check always runs before any AI answer — hard-coded, not dependent on a language model.',
+        },
+      },
+      faq: {
+        kicker: 'Frequently asked questions', title: 'Still have questions?',
+        items: [
+          { q: 'How fast can a solution be running?', a: 'Usually 2 to 6 weeks from the first conversation to a working version, depending on how clearly the bottleneck is already scoped.' },
+          { q: 'Does a human still make the decisions?', a: 'Yes. Our workflows do the groundwork (classifying, summarizing, flagging), but the final decision stays with someone on your team.' },
+          { q: 'Does this work with our existing systems?', a: 'We build around what\u2019s already there — email, a CRM, an internal form — instead of imposing a new platform.' },
+          { q: 'What happens to our data?', a: 'Data stays within the agreed environment; we share nothing with third parties beyond what\u2019s needed to run the solution. Details are discussed per project.' },
+          { q: 'How do you handle sensitive or medical information?', a: 'For applications touching health or privacy-sensitive data: no AI-generated content without verification, escalation runs on fixed rules (not a language-model judgment call), and a data processing agreement once patient or practice data is involved.' },
+          { q: 'What does this cost, roughly?', a: 'Depends on scope. After a short conversation about the bottleneck, you get a fixed project price — no open-ended hourly rate.' },
+        ],
+      },
+      nieuws: {
+        title: 'What we\u2019re learning along the way.',
+        items: [
+          { date: 'JULY 2026', title: 'New: protocol checker for staff', desc: 'Staff look up preparation protocols through a local AI assistant that always recognizes emergency signals first, independent of the language model.', hasLink: false },
+          { date: 'JULY 2026', title: 'New: booking assistant via WhatsApp', desc: 'Scheduling new appointments through a conversation, with automatic escalation as soon as a question turns medical.', hasLink: false },
+          { date: 'JUNE 2026', title: 'Appointment follow-up via WhatsApp live', desc: 'Automatically reminding, confirming, and filling open slots from the waitlist.', hasLink: true, linkLabel: 'View the deck →' },
+          { date: 'PLACEHOLDER · MAY 2026', title: 'EU AI Act: what changes for SME processes', desc: 'Placeholder. Replace with your own article on how the EU AI Act affects automated decision processes.', hasLink: false },
+        ],
+      },
+      contact: {
+        title: 'Have a concrete problem?', desc: 'Let\u2019s see if it can be solved.',
+        founder: 'Ayyoub Hamdoun', email: 'hallo@blacklarch.nl',
+        nameLabel: 'Name', emailLabel: 'Email', messageLabel: 'What are you running into?', submit: 'Send →',
+        notConnected: 'Not connected yet. Set AUTOMATION_WEBHOOK_URL in the logic to send messages to Zapier/Make/n8n.',
+        sending: 'Sending…', sent: 'Sent, we\u2019ll be in touch soon.', error: 'Something went wrong. Try again later or email hallo@blacklarch.nl.',
+      },
+    },
+  };
+
+  AUTOMATION_WEBHOOK_URL = '';
+
+  get L() { return this.translations[this.state.lang]; }
+
+  setLangNl = () => this.setState({ lang: 'nl' });
+  setLangEn = () => this.setState({ lang: 'en' });
+
+  selectTab = (tab) => this.setState({ tab });
+
+  runMs = () => {
+    this.setState({ ms: 'loading' });
+    setTimeout(() => this.setState({ ms: 'done' }), 900);
+  };
+
+  zzpTextChange = (e) => this.setState({ zzpText: e.target.value, zzpTextEdited: true });
+
+  runZzp = () => {
+    this.setState({ zzpState: 'loading' });
+    const lang = this.state.lang;
+    const text = (this.state.zzpText ?? this.L.projects.zzp.defaultText).toLowerCase();
+    const zzpSignals = lang === 'nl'
+      ? ['zzp', 'zelfstandige', 'freelance', 'uurtarief', 'opdracht', 'interim']
+      : ['freelance', 'self-employed', 'contractor', 'rate negotiable', 'project', 'interim'];
+    const employeeSignals = lang === 'nl'
+      ? ['in dienst', 'fulltime dienstverband', 'vast contract', 'salaris', 'cao', 'werknemer']
+      : ['permanent contract', 'full-time employment', 'salaried', 'benefits', 'employee', 'payroll'];
+    setTimeout(() => {
+      const zzpHits = zzpSignals.filter(w => text.includes(w));
+      const empHits = employeeSignals.filter(w => text.includes(w));
+      let verdictKey, reasonKey, tone;
+      if (zzpHits.length > empHits.length) {
+        verdictKey = 'verdictGeschikt'; reasonKey = 'reasonGeschikt';
+        tone = { bg: 'oklch(93% 0.045 160)', border: 'oklch(58% 0.1 160)', text: 'oklch(35% 0.09 160)' };
+      } else if (empHits.length > zzpHits.length) {
+        verdictKey = 'verdictDienst'; reasonKey = 'reasonDienst';
+        tone = { bg: 'oklch(95% 0.04 25)', border: 'oklch(55% 0.18 25)', text: 'oklch(45% 0.18 25)' };
+      } else {
+        verdictKey = 'verdictOnduidelijk'; reasonKey = 'reasonOnduidelijk';
+        tone = { bg: 'oklch(93% 0.05 75)', border: 'oklch(64% 0.15 65)', text: 'oklch(46% 0.13 60)' };
+      }
+      this.setState({ zzpState: 'done', zzpResult: { verdictKey, reasonKey, tone, zzpHits, empHits } });
+    }, 900);
+  };
+
+  runAfspraak = () => {
+    this.setState({ ap: 'step1' });
+    setTimeout(() => this.setState({ ap: 'step2', apStatus: 'confirmed' }), 900);
+    setTimeout(() => this.setState({ ap: 'step3' }), 1700);
+  };
+
+  boekAdvance = () => {
+    const len = this.L.projects.boeking.script.length;
+    if (this.state.boekIndex >= len) { this.setState({ boekIndex: 0 }); return; }
+    this.setState(s => ({ boekIndex: s.boekIndex + 1 }));
+  };
+
+  protoQueryChange = (e) => this.setState({ protoQuery: e.target.value, protoQueryEdited: true });
+
+  tryEscalation = () => this.setState({ protoQuery: this.L.projects.protocol.escalationQuery, protoQueryEdited: true, protoState: 'idle' });
+
+  runProto = () => {
+    this.setState({ protoState: 'loading' });
+    const lang = this.state.lang;
+    const text = (this.state.protoQuery ?? this.L.projects.protocol.defaultQuery).toLowerCase();
+    const escalationWords = lang === 'nl'
+      ? ['wazig', 'visus', 'bloedverlies', 'ademhaling', 'bewusteloos', 'koorts', 'hevige pijn', 'abnormale zwelling']
+      : ['blurry', 'vision', 'bleeding', 'breathing', 'unconscious', 'fever', 'severe pain', 'abnormal swelling'];
+    setTimeout(() => {
+      const escalated = escalationWords.some(w => text.includes(w));
+      this.setState({ protoState: 'done', protoResult: { escalated } });
+    }, 900);
+  };
+
+  toggleFaq = (i) => this.setState(s => ({ faqOpen: { ...s.faqOpen, [i]: !s.faqOpen[i] } }));
+
+  verstuurContact = (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const payload = { name: form.name.value, email: form.email.value, message: form.message.value, submitted_at: new Date().toISOString() };
+    if (!this.AUTOMATION_WEBHOOK_URL) {
+      this.setState({ contactStatus: this.L.contact.notConnected });
+      return;
+    }
+    this.setState({ contactStatus: this.L.contact.sending });
+    fetch(this.AUTOMATION_WEBHOOK_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) })
+      .then(() => { this.setState({ contactStatus: this.L.contact.sent }); form.reset(); })
+      .catch(() => this.setState({ contactStatus: this.L.contact.error }));
+  };
+
+  renderVals() {
+    const L = this.L;
+    const ink = 'oklch(18% 0.012 150)', bg = 'oklch(98% 0.004 90)', muted = 'oklch(46% 0.012 140)', borderStrong = 'oklch(84% 0.006 90)';
+
+    const tabDef = (id, label) => {
+      const active = this.state.tab === id;
+      return {
+        id, label,
+        active,
+        border: active ? ink : borderStrong,
+        bg: active ? ink : '#FFFFFF',
+        color: active ? bg : muted,
+        shadow: active ? '0 8px 18px -8px oklch(18% 0.012 150 / 0.45)' : '0 1px 2px oklch(18% 0.012 150 / 0.04)',
+        onClick: () => this.selectTab(id),
+      };
+    };
+    const tabs = [
+      tabDef('incident', L.tabs.incident),
+      tabDef('zzp', L.tabs.zzp),
+      tabDef('afspraak', L.tabs.afspraak),
+      tabDef('boeking', L.tabs.boeking),
+      tabDef('protocol', L.tabs.protocol),
+    ];
+
+    const faqs = L.faq.items.map((f, i) => ({
+      q: f.q, a: f.a,
+      open: !!this.state.faqOpen[i],
+      chevRot: this.state.faqOpen[i] ? 'rotate(45deg)' : 'rotate(0deg)',
+      toggle: () => this.toggleFaq(i),
+    }));
+
+    const newsItems = L.nieuws.items.map(it => ({ ...it }));
+
+    // zzp derived
+    let zzpVerdict = '', zzpReason = '', zzpScoreLine = '', zzpToneBg = bg, zzpToneBorder = borderStrong, zzpToneText = muted;
+    if (this.state.zzpResult) {
+      const r = this.state.zzpResult;
+      const Z = L.projects.zzp;
+      zzpVerdict = Z[r.verdictKey];
+      zzpReason = Z[r.reasonKey].replace('{hits}', r.zzpHits.join(', ') || r.empHits.join(', '));
+      zzpScoreLine = Z.scoreLine.replace('{a}', r.zzpHits.length).replace('{b}', r.empHits.length);
+      zzpToneBg = r.tone.bg; zzpToneBorder = r.tone.border; zzpToneText = r.tone.text;
+    }
+
+    // boekingsassistent derived
+    const script = L.projects.boeking.script;
+    const boekMessages = script.slice(0, this.state.boekIndex).map(m => {
+      if (m.who === 'system') return { text: m.text, isSystem: true, isBubble: false };
+      if (m.who === 'patient') return { text: m.text, isSystem: false, isBubble: true, align: 'flex-end', bg: 'oklch(93% 0.045 160)', color: 'oklch(35% 0.09 160)' };
+      return { text: m.text, isSystem: false, isBubble: true, align: 'flex-start', bg: '#FFFFFF', color: ink };
+    });
+    const boekDone = this.state.boekIndex >= script.length;
+    const boekBtnLabel = this.state.boekIndex === 0 ? L.projects.boeking.startBtn : (boekDone ? L.projects.boeking.restartBtn : L.projects.boeking.nextBtn);
+
+    // protocolchecker derived
+    let protoNormalDone = false, protoEscalationDone = false;
+    if (this.state.protoResult) {
+      if (this.state.protoResult.escalated) protoEscalationDone = true; else protoNormalDone = true;
+    }
+
+    return {
+      t: L,
+      heroProof: L.heroProof,
+      setLangNl: this.setLangNl, setLangEn: this.setLangEn,
+      nlBg: this.state.lang === 'nl' ? ink : 'transparent', nlColor: this.state.lang === 'nl' ? bg : muted,
+      enBg: this.state.lang === 'en' ? ink : 'transparent', enColor: this.state.lang === 'en' ? bg : muted,
+
+      aanpakSteps: L.aanpak,
+      tabs,
+      isIncident: this.state.tab === 'incident', isZzp: this.state.tab === 'zzp', isAfspraak: this.state.tab === 'afspraak',
+      isBoeking: this.state.tab === 'boeking', isProtocol: this.state.tab === 'protocol',
+
+      runMs: this.runMs, msLoading: this.state.ms === 'loading', msIdle: this.state.ms === 'idle', msDone: this.state.ms === 'done',
+      msBtnBg: this.state.ms === 'loading' ? borderStrong : ink,
+
+      zzpText: this.state.zzpTextEdited ? this.state.zzpText : L.projects.zzp.defaultText,
+      zzpTextChange: this.zzpTextChange, runZzp: this.runZzp,
+      zzpLoading: this.state.zzpState === 'loading', zzpIdle: this.state.zzpState === 'idle', zzpDone: this.state.zzpState === 'done',
+      zzpBtnBg: this.state.zzpState === 'loading' ? borderStrong : ink,
+      zzpVerdict, zzpReason, zzpScoreLine, zzpToneBg, zzpToneBorder, zzpToneText,
+
+      runAfspraak: this.runAfspraak,
+      apIdle: this.state.ap === 'idle', apStep1: this.state.ap === 'step1', apStep2: this.state.ap === 'step2', apStep3: this.state.ap === 'step3',
+      apBusy: this.state.ap === 'step1' || this.state.ap === 'step2',
+      apBtnBg: (this.state.ap === 'step1' || this.state.ap === 'step2') ? borderStrong : ink,
+      apStatusLabel: this.state.apStatus === 'confirmed' ? L.projects.afspraak.statusConfirmed : L.projects.afspraak.statusWait,
+
+      boekAdvance: this.boekAdvance, boekMessages, boekEmpty: boekMessages.length === 0, boekBtnLabel,
+
+      protoQuery: this.state.protoQueryEdited ? this.state.protoQuery : L.projects.protocol.defaultQuery,
+      protoQueryChange: this.protoQueryChange, runProto: this.runProto, tryEscalation: this.tryEscalation,
+      protoLoading: this.state.protoState === 'loading', protoIdle: this.state.protoState === 'idle',
+      protoBtnBg: this.state.protoState === 'loading' ? borderStrong : ink,
+      protoNormalDone, protoEscalationDone,
+
+      faqs,
+      newsItems,
+      verstuurContact: this.verstuurContact, contactStatus: this.state.contactStatus,
+    };
+  }
+}
+
+</script>
+</body>
+</html>

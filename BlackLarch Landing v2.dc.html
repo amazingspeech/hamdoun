@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;family=IBM+Plex+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+  html, body { margin:0; padding:0; background:oklch(98% 0.004 90); }
+  body { font-family:'IBM Plex Sans', -apple-system, 'Segoe UI', sans-serif; color:oklch(18% 0.02 255); line-height:1.55; -webkit-font-smoothing:antialiased; }
+  a { color:oklch(18% 0.02 255); text-decoration:none; }
+  a:hover { color:oklch(48% 0.12 230); }
+  @keyframes floatCube {
+    0% { transform: translateY(0px) rotateX(0deg) rotateY(0deg); }
+    25% { transform: translateY(-8px) rotateX(15deg) rotateY(10deg); }
+    50% { transform: translateY(0px) rotateX(30deg) rotateY(25deg); }
+    75% { transform: translateY(-8px) rotateX(15deg) rotateY(10deg); }
+    100% { transform: translateY(0px) rotateX(0deg) rotateY(0deg); }
+  }
+  @keyframes orbitCube {
+    0% { transform: rotate(0deg) translateX(60px) rotateZ(0deg); }
+    50% { transform: rotate(180deg) translateX(60px) rotateZ(180deg); }
+    100% { transform: rotate(360deg) translateX(60px) rotateZ(360deg); }
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 0.8; }
+  }
+  @keyframes rotateCube3d {
+    0% { transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg); }
+    33% { transform: rotateX(20deg) rotateY(30deg) rotateZ(10deg); }
+    66% { transform: rotateX(-15deg) rotateY(-25deg) rotateZ(-8deg); }
+    100% { transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg); }
+  }
+  @keyframes floatHero {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-12px); }
+  }
+  @media (max-width: 768px) {
+    header { padding: 12px 20px !important; }
+    header nav { display: none; }
+    header .menu-toggle { display: flex !important; }
+  }
+</style>
+</helmet>
+
+<header style="position:sticky;top:0;z-index:30;background:color-mix(in oklch, oklch(98% 0.004 90) 88%, transparent);backdrop-filter:blur(10px);border-bottom:1px solid oklch(90% 0.006 90);padding:clamp(12px,2vw,18px) clamp(20px,5vw,40px);">
+  <div style="display:flex;align-items:center;justify-content:space-between;">
+    <a href="#top" style="display:flex;align-items:center;gap:10px;flex-shrink:0;">
+      <img src="./assets/tessar-icon.png" alt="" style="height:clamp(28px,6vw,36px);width:auto;">
+      <span style="font:700 clamp(0.875rem,2vw,1.125rem)/1 'IBM Plex Sans';letter-spacing:-0.015em;color:oklch(18% 0.02 255);">Tessar</span>
+    </a>
+    <nav style="display:flex;align-items:center;gap:clamp(20px,3vw,32px);">
+      <a href="#approach" style="font-size:clamp(0.8rem,1.5vw,0.9375rem);color:oklch(46% 0.012 140);transition:color 200ms ease;" style-hover="color:oklch(18% 0.02 255);">{{ nav1 }}</a>
+      <a href="#projects" style="font-size:clamp(0.8rem,1.5vw,0.9375rem);color:oklch(46% 0.012 140);transition:color 200ms ease;" style-hover="color:oklch(18% 0.02 255);">{{ nav2 }}</a>
+      <a href="/Blog.dc.html" style="font-size:clamp(0.8rem,1.5vw,0.9375rem);color:oklch(46% 0.012 140);transition:color 200ms ease;" style-hover="color:oklch(18% 0.02 255);">{{ nav3 }}</a>
+      <a href="#faq" style="font-size:clamp(0.8rem,1.5vw,0.9375rem);color:oklch(46% 0.012 140);transition:color 200ms ease;" style-hover="color:oklch(18% 0.02 255);">{{ nav4 }}</a>
+      <a href="/Pricing.dc.html" style="font-size:clamp(0.8rem,1.5vw,0.9375rem);color:oklch(46% 0.012 140);transition:color 200ms ease;" style-hover="color:oklch(18% 0.02 255);">Pricing</a>
+      <a href="/Team.dc.html" style="font-size:clamp(0.8rem,1.5vw,0.9375rem);color:oklch(46% 0.012 140);transition:color 200ms ease;" style-hover="color:oklch(18% 0.02 255);">{{ teamNav }}</a>
+      <a href="#contact" style="font-size:clamp(0.8rem,1.5vw,0.9375rem);color:oklch(46% 0.012 140);transition:color 200ms ease;" style-hover="color:oklch(18% 0.02 255);">{{ nav5 }}</a>
+      <div style="display:flex;gap:2px;border:1px solid oklch(88% 0.006 90);border-radius:20px;padding:3px;background:oklch(100% 0 0);">
+        <button onClick="{{ setLangNl }}" style="cursor:pointer;border:none;padding:6px 10px;border-radius:16px;background:{{ nlBg }};color:{{ nlColor }};font:500 0.75rem/1 'IBM Plex Mono';transition:all 200ms ease;">NL</button>
+        <button onClick="{{ setLangEn }}" style="cursor:pointer;border:none;padding:6px 10px;border-radius:16px;background:{{ enBg }};color:{{ enColor }};font:500 0.75rem/1 'IBM Plex Mono';transition:all 200ms ease;">EN</button>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<main>
+<section id="top" style="position:relative;overflow:hidden;background:linear-gradient(135deg, oklch(6% 0 0) 0%, oklch(12% 0.03 260) 100%);color:oklch(97% 0.004 90);padding:clamp(60px,8vw,100px) clamp(20px,5vw,40px);min-height:auto;display:flex;align-items:center;">
+  <div style="position:absolute;inset:0;opacity:0.18;pointer-events:none;overflow:hidden;">
+    <img src="Tessar-logo-symbol.png" style="position:absolute;top:-120px;right:-150px;width:clamp(400px,60vw,750px);height:auto;object-fit:contain;filter:drop-shadow(0 0 100px rgba(0, 212, 255, 0.2));">
+  </div>
+  <div style="position:absolute;top:5%;left:10%;width:clamp(150px,25vw,280px);height:clamp(150px,25vw,280px);background:radial-gradient(circle, rgba(0,212,255,0.08) 0%, transparent 70%);border-radius:50%;pointer-events:none;"></div>
+  <div style="position:absolute;bottom:15%;right:8%;width:clamp(120px,20vw,250px);height:clamp(120px,20vw,250px);background:radial-gradient(circle, rgba(0,150,255,0.07) 0%, transparent 70%);border-radius:50%;pointer-events:none;"></div>
+
+  <div style="max-width:1100px;width:100%;margin:0 auto;display:flex;flex-direction:column;gap:clamp(28px,4vw,52px);align-items:center;position:relative;z-index:1;text-align:center;">
+    <div style="display:flex;flex-direction:column;gap:clamp(18px,3vw,28px);">
+      <div style="display:inline-flex;align-items:center;justify-content:center;gap:9px;font:600 clamp(0.65rem,1.2vw,0.8rem)/1 'IBM Plex Mono';letter-spacing:0.12em;text-transform:uppercase;color:oklch(70% 0.14 220);width:fit-content;border:1px solid oklch(70% 0.14 220 / 0.3);background:oklch(70% 0.14 220 / 0.1);padding:clamp(8px,2vw,10px) clamp(12px,2vw,16px);border-radius:20px;margin:0 auto;">
+        <svg style="width:5px;height:5px;animation:pulse 2s ease-in-out infinite;" viewBox="0 0 5 5"><circle cx="2.5" cy="2.5" r="2.5" fill="oklch(70% 0.14 220)"/></svg>
+        <span>AI-POWERED</span>
+      </div>
+      <h1 style="font:800 clamp(1.75rem,4vw,4rem)/1.2 'IBM Plex Sans';letter-spacing:-0.02em;color:#FFF;margin:0;text-wrap:pretty;max-width:clamp(300px,90vw,600px);">{{ h1Text }}</h1>
+      <p style="font:400 clamp(0.95rem,2vw,1.125rem)/1.75 'IBM Plex Sans';color:oklch(72% 0.09 250);margin:0;max-width:clamp(280px,90vw,720px);">{{ taglineText }}</p>
+    </div>
+    
+    <div style="display:flex;gap:clamp(12px,2vw,18px);justify-content:center;flex-wrap:wrap;width:100%;">
+      <a href="#contact" style="background:linear-gradient(135deg, oklch(70% 0.14 220) 0%, oklch(60% 0.12 230) 100%);color:#001a2e;padding:clamp(13px,2.5vw,17px) clamp(28px,4vw,44px);border-radius:6px;font-weight:700;font-size:clamp(0.85rem,1.5vw,0.95rem);letter-spacing:0.4px;box-shadow:0 12px 32px rgba(0, 212, 255, 0.25);transition:all 280ms cubic-bezier(0.34, 1.56, 0.64, 1);text-decoration:none;border:none;cursor:pointer;white-space:nowrap;" style-hover="transform:translateY(-3px);box-shadow:0 16px 48px rgba(0, 212, 255, 0.35);">{{ ctaText }}</a>
+      <a href="#projects" style="color:oklch(72% 0.09 250);font-weight:700;font-size:clamp(0.85rem,1.5vw,0.95rem);letter-spacing:0.4px;display:inline-flex;align-items:center;gap:12px;transition:all 240ms ease;border:2px solid oklch(72% 0.14 220 / 0.4);padding:clamp(13px,2.5vw,15px) clamp(28px,4vw,42px);border-radius:6px;white-space:nowrap;" style-hover="color:#FFF;border-color:oklch(72% 0.14 220 / 0.8);">{{ secondaryCTA }} <span style="font-size:1.2em;">↓</span></a>
+    </div>
+
+    <div style="display:flex;justify-content:center;gap:clamp(24px,4vw,52px);padding:clamp(24px,4vw,36px) 0;border-top:1px solid oklch(70% 0.14 220 / 0.2);border-bottom:1px solid oklch(70% 0.14 220 / 0.2);font-size:clamp(0.75rem,1.5vw,0.85rem);color:oklch(68% 0.08 250);width:100%;flex-wrap:wrap;">
+      <div style="display:flex;align-items:center;gap:8px;"><span style="width:5px;height:5px;background:oklch(70% 0.14 220);border-radius:50%;flex-shrink:0;"></span><span>99.9% Uptime</span></div>
+      <div style="display:flex;align-items:center;gap:8px;"><span style="width:5px;height:5px;background:oklch(70% 0.14 220);border-radius:50%;flex-shrink:0;"></span><span>SOC 2 Type II</span></div>
+      <div style="display:flex;align-items:center;gap:8px;"><span style="width:5px;height:5px;background:oklch(70% 0.14 220);border-radius:50%;flex-shrink:0;"></span><span>Free Setup</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="approach" style="padding:clamp(60px,10vw,108px) clamp(20px,5vw,40px);background:oklch(98% 0.004 90);">
+  <div style="max-width:1200px;margin:0 auto;">
+    <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:clamp(32px,5vw,56px);">
+      <div style="font:500 clamp(0.7rem,1.2vw,0.8125rem)/1.3 'IBM Plex Mono';letter-spacing:0.06em;text-transform:uppercase;color:oklch(48% 0.12 230);">{{ approachLabel }}</div>
+      <h2 style="font:600 clamp(1.5rem,4vw,2.125rem)/1.2 'IBM Plex Sans';margin:0;letter-spacing:-0.02em;color:oklch(18% 0.02 255);">{{ approachHeading }}</h2>
+    </div>
+    <div style="position:relative;display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:clamp(24px,3vw,40px);margin-bottom:32px;">
+      <sc-for list="{{ approach }}" as="step" hint-placeholder-count="3">
+        <div style="position:relative;display:flex;flex-direction:column;gap:clamp(16px,2vw,24px);">
+          <div style="width:clamp(80px,15vw,120px);height:clamp(80px,15vw,120px);border-radius:50%;background:linear-gradient(135deg, oklch(48% 0.12 230 / 0.08), oklch(46% 0.15 200 / 0.06));border:2px solid oklch(48% 0.12 230);display:flex;align-items:center;justify-content:center;flex:none;box-shadow:0 0 0 8px oklch(48% 0.12 230 / 0.1);">
+            <div style="font:700 clamp(1.5rem,4vw,3rem)/1 'IBM Plex Mono';color:oklch(48% 0.12 230);">{{ step.n }}</div>
+          </div>
+          <div style="background:#FFF;border:1px solid oklch(91% 0.006 90);border-radius:12px;padding:clamp(20px,4vw,28px);box-shadow:0 1px 2px oklch(20% 0.02 255 / 0.04), 0 16px 32px -20px oklch(20% 0.02 255 / 0.12);transition:all 200ms ease;flex:1;" style-hover="border-color:oklch(48% 0.12 230 / 0.3);box-shadow:0 2px 4px oklch(20% 0.02 255 / 0.06), 0 20px 40px -16px oklch(48% 0.12 230 / 0.15);">
+            <h3 style="font:600 clamp(1rem,2vw,1.25rem)/1.35 'IBM Plex Sans';margin:0 0 14px;letter-spacing:-0.01em;color:oklch(18% 0.02 255);">{{ step.title }}</h3>
+            <p style="font:400 clamp(0.85rem,1.5vw,0.9375rem)/1.55 'IBM Plex Sans';color:oklch(46% 0.012 140);margin:0 0 20px;">{{ step.desc }}</p>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;">
+              <div style="background:oklch(96% 0.006 90);padding:clamp(7px,1vw,9px) clamp(10px,1.5vw,13px);border-radius:6px;font:500 clamp(0.65rem,1vw,0.75rem)/1.2 'IBM Plex Mono';color:oklch(48% 0.12 230);border:1px solid oklch(88% 0.006 90);">{{ step.widget1 }}</div>
+              <div style="background:oklch(96% 0.006 90);padding:clamp(7px,1vw,9px) clamp(10px,1.5vw,13px);border-radius:6px;font:500 clamp(0.65rem,1vw,0.75rem)/1.2 'IBM Plex Mono';color:oklch(48% 0.12 230);border:1px solid oklch(88% 0.006 90);">{{ step.widget2 }}</div>
+            </div>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+</section>
+
+<section id="projects" style="padding:clamp(60px,10vw,108px) clamp(20px,5vw,40px);background:oklch(98% 0.004 90);border-top:1px solid oklch(90% 0.006 90);">
+  <div style="max-width:1200px;margin:0 auto;">
+    <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:clamp(32px,5vw,48px);">
+      <div style="font:500 clamp(0.7rem,1.2vw,0.8125rem)/1.3 'IBM Plex Mono';letter-spacing:0.06em;text-transform:uppercase;color:oklch(48% 0.12 230);">{{ projectsLabel }}</div>
+      <h2 style="font:600 clamp(1.5rem,4vw,2.125rem)/1.2 'IBM Plex Sans';margin:0 0 8px;letter-spacing:-0.02em;color:oklch(18% 0.02 255);">{{ projectsHeading }}</h2>
+      <p style="font:400 clamp(0.9rem,1.5vw,1rem)/1.6 'IBM Plex Sans';color:oklch(46% 0.012 140);max-width:680px;margin:0;">{{ projectsDesc }}</p>
+    </div>
+    
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(clamp(250px,100%,500px),1fr));gap:clamp(20px,3vw,32px);margin-bottom:clamp(40px,6vw,56px);">
+      <sc-for list="{{ projects }}" as="proj" hint-placeholder-count="4">
+        <a href="/Project Detail.dc.html" style="background:#FFF;border:1px solid oklch(91% 0.006 90);border-radius:14px;padding:clamp(20px,4vw,32px);box-shadow:0 1px 2px oklch(20% 0.02 255 / 0.04), 0 16px 32px -20px oklch(20% 0.02 255 / 0.12);cursor:pointer;transition:all 220ms ease;display:flex;flex-direction:column;height:100%;" style-hover="border-color:{{ proj.color }};box-shadow:0 2px 4px oklch(20% 0.02 255 / 0.06), 0 20px 40px -16px {{ proj.color }} / 0.2;transform:translateY(-2px);">
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px;gap:12px;flex-wrap:wrap;">
+            <div style="font:500 clamp(0.65rem,1.2vw,0.8125rem)/1.3 'IBM Plex Mono';letter-spacing:0.06em;color:{{ proj.color }};background:{{ proj.bgLight }};padding:clamp(6px,1vw,8px) clamp(10px,1.5vw,12px);border-radius:6px;border:1px solid {{ proj.color }} / 0.2;">{{ proj.label }}</div>
+            <div style="font:500 clamp(0.65rem,1vw,0.75rem)/1 'IBM Plex Mono';color:{{ proj.color }};padding:clamp(5px,0.8vw,6px) clamp(8px,1.2vw,10px);background:{{ proj.bgLight }};border-radius:6px;">{{ proj.status }}</div>
+          </div>
+          <h3 style="font:600 clamp(1.1rem,2vw,1.375rem)/1.35 'IBM Plex Sans';margin:0 0 12px;letter-spacing:-0.01em;color:oklch(18% 0.02 255);">{{ proj.title }}</h3>
+          <p style="font:400 clamp(0.85rem,1.5vw,0.9375rem)/1.6 'IBM Plex Sans';color:oklch(46% 0.012 140);margin:0 0 24px;flex:1;">{{ proj.desc }}</p>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding-top:20px;border-top:1px solid oklch(91% 0.006 90);flex-wrap:wrap;gap:12px;">
+            <div>
+              <div style="font:500 clamp(0.65rem,1vw,0.75rem)/1 'IBM Plex Mono';letter-spacing:0.05em;text-transform:uppercase;color:oklch(46% 0.012 140);margin-bottom:8px;">{{ proj.metric_label }}</div>
+              <div style="font:700 clamp(1.25rem,3vw,1.75rem)/1 'IBM Plex Mono';color:{{ proj.color }};">{{ proj.metric }}</div>
+            </div>
+            <div style="font:500 clamp(0.75rem,1.2vw,0.85rem)/1 'IBM Plex Sans';color:oklch(48% 0.12 230);display:flex;align-items:center;gap:6px;">{{ proj.arrow }} →</div>
+          </div>
+        </a>
+      </sc-for>
+    </div>
+  </div>
+</section>
+
+<section id="services" style="padding:clamp(60px,10vw,108px) clamp(20px,5vw,40px);background:#FFF;border-top:1px solid oklch(90% 0.006 90);">
+  <div style="max-width:1200px;margin:0 auto;">
+    <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:clamp(32px,5vw,48px);">
+      <div style="font:500 clamp(0.7rem,1.2vw,0.8125rem)/1.3 'IBM Plex Mono';letter-spacing:0.06em;text-transform:uppercase;color:oklch(48% 0.12 230);">{{ servicesLabel }}</div>
+      <h2 style="font:600 clamp(1.5rem,4vw,2.125rem)/1.2 'IBM Plex Sans';margin:0 0 8px;letter-spacing:-0.02em;color:oklch(18% 0.02 255);">{{ servicesHeading }}</h2>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(clamp(280px,100%,350px),1fr));gap:clamp(24px,3vw,32px);">
+      <sc-for list="{{ services }}" as="svc" hint-placeholder-count="3">
+        <div style="background:oklch(98% 0.004 90);border:1px solid oklch(91% 0.006 90);border-radius:12px;padding:clamp(28px,4vw,36px);transition:all 220ms ease;" style-hover="border-color:{{ svc.color }};box-shadow:0 0 0 1px {{ svc.color }}/0.2, 0 20px 40px -16px {{ svc.color }}/0.15;">
+          <div style="width:clamp(50px,10vw,64px);height:clamp(50px,10vw,64px);background:{{ svc.color }}/0.1;border:2px solid {{ svc.color }};border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:20px;font-size:clamp(1.5rem,3vw,2rem);">{{ svc.icon }}</div>
+          <h3 style="font:600 clamp(1rem,2vw,1.25rem)/1.35 'IBM Plex Sans';margin:0 0 12px;color:oklch(18% 0.02 255);">{{ svc.title }}</h3>
+          <p style="font:400 clamp(0.85rem,1.5vw,0.9375rem)/1.6 'IBM Plex Sans';color:oklch(46% 0.012 140);margin:0;">{{ svc.desc }}</p>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+</section>
+
+<section id="stats" style="padding:clamp(60px,10vw,100px) clamp(20px,5vw,40px);background:linear-gradient(135deg, oklch(6% 0 0) 0%, oklch(12% 0.03 260) 100%);color:#FFF;">
+  <div style="max-width:1200px;margin:0 auto;">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(clamp(180px,100%,250px),1fr));gap:clamp(32px,4vw,48px);text-align:center;">
+      <sc-for list="{{ stats }}" as="stat" hint-placeholder-count="4">
+        <div style="display:flex;flex-direction:column;gap:12px;align-items:center;">
+          <div style="font:700 clamp(2rem,5vw,3.5rem)/1 'IBM Plex Mono';background:linear-gradient(135deg, oklch(70% 0.14 220), oklch(60% 0.15 170));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">{{ stat.num }}</div>
+          <div style="font:600 clamp(0.9rem,1.8vw,1.1rem)/1.4 'IBM Plex Sans';color:oklch(72% 0.09 250);">{{ stat.label }}</div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+</section>
+
+<section id="testimonials" style="padding:clamp(60px,10vw,108px) clamp(20px,5vw,40px);background:oklch(98% 0.004 90);border-top:1px solid oklch(90% 0.006 90);">
+  <div style="max-width:1000px;margin:0 auto;">
+    <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:clamp(40px,5vw,56px);text-align:center;">
+      <div style="font:500 clamp(0.7rem,1.2vw,0.8125rem)/1.3 'IBM Plex Mono';letter-spacing:0.06em;text-transform:uppercase;color:oklch(48% 0.12 230);">{{ testimonialsLabel }}</div>
+      <h2 style="font:600 clamp(1.5rem,4vw,2.125rem)/1.2 'IBM Plex Sans';margin:0;letter-spacing:-0.02em;color:oklch(18% 0.02 255);">{{ testimonialsHeading }}</h2>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(clamp(280px,100%,450px),1fr));gap:clamp(24px,3vw,32px);">
+      <sc-for list="{{ testimonials }}" as="test" hint-placeholder-count="3">
+        <div style="background:#FFF;border:1px solid oklch(91% 0.006 90);border-radius:12px;padding:clamp(28px,4vw,32px);box-shadow:0 1px 2px oklch(20% 0.02 255 / 0.04), 0 16px 32px -20px oklch(20% 0.02 255 / 0.12);">
+          <div style="display:flex;gap:4px;margin-bottom:18px;">
+            <sc-for list="{{ [1,2,3,4,5] }}" as="star" hint-placeholder-count="0">
+              <span style="color:{{ star <= test.rating ? 'oklch(70% 0.14 220)' : 'oklch(88% 0.006 90)' }};font-size:1.2em;">★</span>
+            </sc-for>
+          </div>
+          <p style="font:400 clamp(0.95rem,1.5vw,1rem)/1.7 'IBM Plex Sans';color:oklch(46% 0.012 140);margin:0 0 20px;font-style:italic;">{{ test.quote }}</p>
+          <div style="display:flex;align-items:center;gap:12px;padding-top:20px;border-top:1px solid oklch(91% 0.006 90);">
+            <div style="width:40px;height:40px;background:linear-gradient(135deg, {{ test.color }} 0%, {{ test.color2 }} 100%);border-radius:50%;flex-shrink:0;"></div>
+            <div>
+              <div style="font:600 clamp(0.85rem,1.5vw,0.95rem)/1.2 'IBM Plex Sans';color:oklch(18% 0.02 255);margin:0;">{{ test.name }}</div>
+              <div style="font:400 clamp(0.75rem,1.2vw,0.85rem)/1.2 'IBM Plex Sans';color:oklch(46% 0.012 140);margin:0;">{{ test.role }}</div>
+            </div>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+</section>
+
+<section id="contact" style="padding:clamp(60px,10vw,108px) clamp(20px,5vw,40px);background:linear-gradient(135deg, oklch(6% 0 0) 0%, oklch(12% 0.03 260) 100%);color:#FFF;">
+  <div style="max-width:600px;margin:0 auto;">
+    <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:clamp(40px,5vw,56px);text-align:center;">
+      <h2 style="font:600 clamp(1.5rem,4vw,2.125rem)/1.2 'IBM Plex Sans';margin:0;letter-spacing:-0.02em;">{{ contactHeading }}</h2>
+      <p style="font:400 clamp(0.9rem,1.5vw,1rem)/1.6 'IBM Plex Sans';color:oklch(72% 0.09 250);margin:0;">{{ contactSubtext }}</p>
+    </div>
+    <form style="display:flex;flex-direction:column;gap:18px;">
+      <input type="text" placeholder="{{ namePlaceholder }}" style="background:oklch(100% 0 0 / 0.95);border:1px solid oklch(70% 0.14 220 / 0.3);border-radius:6px;padding:clamp(12px,2vw,16px) clamp(16px,3vw,20px);font:400 clamp(0.9rem,1.5vw,1rem)/1.5 'IBM Plex Sans';color:oklch(18% 0.02 255);transition:all 200ms ease;" style-focus="border-color:oklch(70% 0.14 220);box-shadow:0 0 0 2px oklch(70% 0.14 220 / 0.1);outline:none;"/>
+      <input type="email" placeholder="{{ emailPlaceholder }}" style="background:oklch(100% 0 0 / 0.95);border:1px solid oklch(70% 0.14 220 / 0.3);border-radius:6px;padding:clamp(12px,2vw,16px) clamp(16px,3vw,20px);font:400 clamp(0.9rem,1.5vw,1rem)/1.5 'IBM Plex Sans';color:oklch(18% 0.02 255);transition:all 200ms ease;" style-focus="border-color:oklch(70% 0.14 220);box-shadow:0 0 0 2px oklch(70% 0.14 220 / 0.1);outline:none;"/>
+      <textarea placeholder="{{ messagePlaceholder }}" rows="5" style="background:oklch(100% 0 0 / 0.95);border:1px solid oklch(70% 0.14 220 / 0.3);border-radius:6px;padding:clamp(12px,2vw,16px) clamp(16px,3vw,20px);font:400 clamp(0.9rem,1.5vw,1rem)/1.5 'IBM Plex Sans';color:oklch(18% 0.02 255);resize:none;transition:all 200ms ease;" style-focus="border-color:oklch(70% 0.14 220);box-shadow:0 0 0 2px oklch(70% 0.14 220 / 0.1);outline:none;"></textarea>
+      <button type="submit" style="background:linear-gradient(135deg, oklch(70% 0.14 220) 0%, oklch(60% 0.12 230) 100%);color:#001a2e;padding:clamp(13px,2.5vw,17px) clamp(28px,4vw,44px);border-radius:6px;font-weight:700;font-size:clamp(0.85rem,1.5vw,0.95rem);letter-spacing:0.4px;border:none;cursor:pointer;transition:all 280ms cubic-bezier(0.34, 1.56, 0.64, 1);" style-hover="transform:translateY(-3px);box-shadow:0 16px 48px rgba(0, 212, 255, 0.35);">{{ contactCTA }}</button>
+    </form>
+    <p style="font:400 clamp(0.8rem,1.2vw,0.85rem)/1.5 'IBM Plex Sans';color:oklch(68% 0.08 250);text-align:center;margin:24px 0 0;padding-top:24px;border-top:1px solid oklch(70% 0.14 220 / 0.2);">{{ contactFooter }}</p>
+  </div>
+</section>
+</main>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;100%&quot;,&quot;height&quot;:&quot;100vh&quot;}}">
+class Component extends DCLogic {
+  state = {
+    lang: 'nl'
+  };
+
+  renderVals() {
+    const copy = this.state.lang === 'nl' ? {
+      badgeText: 'AI-POWERED',
+      h1Text: 'Focused AI voor concrete problemen',
+      taglineText: 'Wij bouwen AI-oplossingen die echt werken. Geen buzzwords, geen overengineering. Alleen resultaten die impact maken.',
+      ctaText: 'Laten we beginnen',
+      secondaryCTA: 'Bekijk werk',
+      nav1: 'Aanpak',
+      nav2: 'Projecten',
+      nav3: 'Blog',
+      nav4: 'FAQ',
+      nav5: 'Contact',
+      teamNav: 'Team',
+      approachLabel: 'HOE WE WERKEN',
+      approachHeading: 'Drie stappen naar AI-succes',
+      projectsLabel: 'PROJECTEN',
+      projectsHeading: 'Wat we hebben gebouwd',
+      projectsDesc: 'Van strategie tot live deployment. Hier zijn enkele projecten waar we trots op zijn.',
+      servicesLabel: 'SERVICES',
+      servicesHeading: 'Wat wij doen',
+      testimonialsLabel: 'TESTIMONIALS',
+      testimonialsHeading: 'Wat klanten zeggen',
+      contactHeading: 'Laten we beginnen',
+      contactSubtext: 'Stuur ons een bericht en wij nemen snel contact met je op.',
+      namePlaceholder: 'Je naam',
+      emailPlaceholder: 'je@email.com',
+      messagePlaceholder: 'Vertel ons over je project',
+      contactCTA: 'Verzend bericht',
+      contactFooter: 'We antwoorden meestal binnen 24 uur.',
+    } : {
+      badgeText: 'AI-POWERED',
+      h1Text: 'Focused AI for concrete problems',
+      taglineText: 'We build AI solutions that actually work. No buzzwords, no overengineering. Just results that move the needle.',
+      ctaText: 'Get started',
+      secondaryCTA: 'View work',
+      nav1: 'Approach',
+      nav2: 'Projects',
+      nav3: 'Blog',
+      nav4: 'FAQ',
+      nav5: 'Contact',
+      teamNav: 'Team',
+      approachLabel: 'HOW WE WORK',
+      approachHeading: 'Three steps to AI success',
+      projectsLabel: 'PROJECTS',
+      projectsHeading: 'What we have built',
+      projectsDesc: 'From strategy to live deployment. Here are some projects we are proud of.',
+      servicesLabel: 'SERVICES',
+      servicesHeading: 'What we do',
+      testimonialsLabel: 'TESTIMONIALS',
+      testimonialsHeading: 'What clients say',
+      contactHeading: 'Get in touch',
+      contactSubtext: 'Send us a message and we will get back to you shortly.',
+      namePlaceholder: 'Your name',
+      emailPlaceholder: 'you@email.com',
+      messagePlaceholder: 'Tell us about your project',
+      contactCTA: 'Send message',
+      contactFooter: 'We usually respond within 24 hours.',
+    };
+
+    return {
+      ...copy,
+      setLangNl: () => this.setState({ lang: 'nl' }),
+      setLangEn: () => this.setState({ lang: 'en' }),
+      nlBg: this.state.lang === 'nl' ? 'oklch(48% 0.12 230)' : 'oklch(100% 0 0)',
+      nlColor: this.state.lang === 'nl' ? '#FFF' : 'oklch(48% 0.12 230)',
+      enBg: this.state.lang === 'en' ? 'oklch(48% 0.12 230)' : 'oklch(100% 0 0)',
+      enColor: this.state.lang === 'en' ? '#FFF' : 'oklch(48% 0.12 230)',
+      approach: [
+        {
+          n: '1',
+          title: 'Discovery & Strategy',
+          desc: 'We analyze your challenges and design an AI strategy that fits your business.',
+          widget1: 'Workshops',
+          widget2: 'Roadmap'
+        },
+        {
+          n: '2',
+          title: 'Development & Training',
+          desc: 'Custom models, fine-tuning, and integration with your existing systems.',
+          widget1: 'ML Pipeline',
+          widget2: 'Optimization'
+        },
+        {
+          n: '3',
+          title: 'Deploy & Scale',
+          desc: 'Production-ready systems with monitoring, maintenance, and continuous improvement.',
+          widget1: 'Live Deployment',
+          widget2: 'Monitoring'
+        }
+      ],
+      projects: [
+        {
+          label: 'NLP',
+          status: 'Live',
+          title: 'Customer Intelligence Platform',
+          desc: 'Real-time sentiment analysis and customer intent detection for B2B SaaS companies.',
+          metric_label: 'Accuracy',
+          metric: '94.2%',
+          color: 'oklch(70% 0.14 220)',
+          bgLight: 'oklch(70% 0.14 220 / 0.08)',
+          arrow: 'View'
+        },
+        {
+          label: 'Computer Vision',
+          status: 'Live',
+          title: 'Defect Detection System',
+          desc: 'Automated quality control using computer vision to identify manufacturing defects in production.',
+          metric_label: 'Accuracy',
+          metric: '98.1%',
+          color: 'oklch(60% 0.15 170)',
+          bgLight: 'oklch(60% 0.15 170 / 0.08)',
+          arrow: 'View'
+        },
+        {
+          label: 'Forecasting',
+          status: 'Live',
+          title: 'Supply Chain Optimizer',
+          desc: 'Predictive analytics for inventory optimization and demand forecasting across distribution networks.',
+          metric_label: 'Cost Reduction',
+          metric: '23%',
+          color: 'oklch(75% 0.12 160)',
+          bgLight: 'oklch(75% 0.12 160 / 0.08)',
+          arrow: 'View'
+        },
+        {
+          label: 'LLM',
+          status: 'Live',
+          title: 'Document Processing Engine',
+          desc: 'Extract and classify data from unstructured documents using large language models and custom training.',
+          metric_label: 'Processing Speed',
+          metric: '2.3s',
+          color: 'oklch(68% 0.13 210)',
+          bgLight: 'oklch(68% 0.13 210 / 0.08)',
+          arrow: 'View'
+        }
+      ],
+      services: [
+        {
+          icon: '01',
+          title: 'AI Strategy',
+          desc: 'We analyze your business challenges and design a custom AI roadmap that delivers real ROI.',
+          color: 'oklch(70% 0.14 220)'
+        },
+        {
+          icon: '02',
+          title: 'Model Development',
+          desc: 'Custom LLMs, computer vision, forecasting and optimization tailored to your specific problem.',
+          color: 'oklch(60% 0.15 170)'
+        },
+        {
+          icon: '03',
+          title: 'Production Deployment',
+          desc: 'Scalable, secure systems that integrate seamlessly with your existing infrastructure.',
+          color: 'oklch(75% 0.12 160)'
+        }
+      ],
+      stats: [
+        { num: '50+', label: 'Projects delivered' },
+        { num: '98%', label: 'Client satisfaction' },
+        { num: '24h', label: 'Avg response time' },
+        { num: '8yrs', label: 'Combined expertise' }
+      ],
+      testimonials: [
+        {
+          quote: 'Tessar transformed our operations. Their AI solution reduced costs by 35% in the first year alone.',
+          name: 'Sarah Johnson',
+          role: 'CTO, TechCorp',
+          rating: 5,
+          color: 'oklch(70% 0.14 220)',
+          color2: 'oklch(60% 0.15 170)'
+        },
+        {
+          quote: 'Professional, innovative, and results-driven. Tessar is our go-to AI partner.',
+          name: 'Mark Chen',
+          role: 'CEO, Innovation Labs',
+          rating: 5,
+          color: 'oklch(60% 0.15 170)',
+          color2: 'oklch(75% 0.12 160)'
+        },
+        {
+          quote: 'The team understood our challenges immediately and delivered a solution that actually works.',
+          name: 'Emma Davis',
+          role: 'Operations Director, LogistiCo',
+          rating: 5,
+          color: 'oklch(75% 0.12 160)',
+          color2: 'oklch(70% 0.14 220)'
+        }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

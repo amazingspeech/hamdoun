@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  html, body { margin:0; padding:0; background:oklch(98% 0.004 90); }
+  body { font-family:'IBM Plex Sans', -apple-system, 'Segoe UI', sans-serif; color:oklch(18% 0.02 255); line-height:1.55; -webkit-font-smoothing:antialiased; }
+  a { color:oklch(18% 0.02 255); text-decoration:none; }
+  a:hover { color:oklch(48% 0.12 230); }
+</style>
+</helmet>
+
+<header style="position:sticky;top:0;z-index:30;background:color-mix(in oklch, oklch(98% 0.004 90) 92%, transparent);backdrop-filter:blur(12px);border-bottom:1px solid oklch(90% 0.006 90);padding:16px clamp(20px,5vw,40px);">
+  <div style="display:flex;align-items:center;justify-content:space-between;max-width:1400px;margin:0 auto;">
+    <a href="#top" style="display:flex;align-items:center;gap:10px;flex-shrink:0;">
+      <img src="./assets/tessar-icon.png" alt="" style="height:32px;width:auto;">
+      <span style="font:700 1rem/1 'IBM Plex Sans';letter-spacing:-0.015em;color:oklch(18% 0.02 255);">Tessar</span>
+    </a>
+    <nav style="display:flex;align-items:center;gap:clamp(16px,2vw,32px);font-size:0.9375rem;">
+      <a href="#industries" style="color:oklch(46% 0.012 140);transition:color 200ms ease;" style-hover="color:oklch(18% 0.02 255);">Industries</a>
+      <a href="#cases" style="color:oklch(46% 0.012 140);transition:color 200ms ease;" style-hover="color:oklch(18% 0.02 255);">Case Studies</a>
+      <a href="#how" style="color:oklch(46% 0.012 140);transition:color 200ms ease;" style-hover="color:oklch(18% 0.02 255);">How it works</a>
+      <a href="#pricing" style="color:oklch(46% 0.012 140);transition:color 200ms ease;" style-hover="color:oklch(18% 0.02 255);">Pricing</a>
+      <a href="#contact" style="background:oklch(70% 0.14 220);color:#001a2e;padding:10px 20px;border-radius:6px;font-weight:600;transition:all 200ms ease;" style-hover="transform:translateY(-2px);box-shadow:0 8px 24px rgba(0, 212, 255, 0.25);">Book call</a>
+    </nav>
+  </div>
+</header>
+
+<section id="top" style="position:relative;overflow:hidden;background:linear-gradient(135deg, oklch(6% 0 0) 0%, oklch(12% 0.03 260) 100%);color:#FFF;padding:clamp(80px,12vw,140px) clamp(20px,5vw,40px);text-align:center;">
+  <div style="position:absolute;inset:0;opacity:0.08;pointer-events:none;">
+    <img src="Tessar-logo-symbol.png" style="position:absolute;top:-100px;right:-120px;width:500px;height:auto;object-fit:contain;">
+  </div>
+  
+  <div style="max-width:900px;margin:0 auto;position:relative;z-index:1;">
+    <div style="display:inline-block;background:oklch(70% 0.14 220 / 0.15);border:1px solid oklch(70% 0.14 220 / 0.3);padding:10px 16px;border-radius:20px;margin-bottom:28px;font-size:0.8125rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:oklch(70% 0.14 220);">{{ badge }}</div>
+    
+    <h1 style="font:800 clamp(2rem,5vw,3.5rem)/1.2 'IBM Plex Sans';margin:0 0 20px;letter-spacing:-0.02em;text-wrap:pretty;">{{ heroHeading }}</h1>
+    
+    <p style="font:400 clamp(1rem,1.8vw,1.25rem)/1.7 'IBM Plex Sans';color:oklch(75% 0.10 250);margin:0 0 32px;max-width:700px;margin-left:auto;margin-right:auto;text-wrap:pretty;">{{ heroSubtext }}</p>
+    
+    <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
+      <a href="#contact" style="background:linear-gradient(135deg, oklch(70% 0.14 220), oklch(60% 0.12 230));color:#001a2e;padding:16px 36px;border-radius:6px;font-weight:700;font-size:0.95rem;box-shadow:0 12px 32px rgba(0, 212, 255, 0.25);transition:all 280ms ease;white-space:nowrap;" style-hover="transform:translateY(-3px);box-shadow:0 16px 48px rgba(0, 212, 255, 0.35);">{{ ctaPrimary }}</a>
+      <a href="#cases" style="border:2px solid oklch(75% 0.14 220 / 0.4);color:#FFF;padding:14px 32px;border-radius:6px;font-weight:700;font-size:0.95rem;transition:all 200ms ease;white-space:nowrap;" style-hover="border-color:oklch(75% 0.14 220);background:oklch(75% 0.14 220 / 0.1);">{{ ctaSecondary }}</a>
+    </div>
+    
+    <div style="display:flex;justify-content:center;gap:clamp(32px,5vw,52px);margin-top:56px;padding-top:40px;border-top:1px solid oklch(70% 0.14 220 / 0.2);font-size:0.875rem;color:oklch(70% 0.10 250);flex-wrap:wrap;">
+      <div style="display:flex;align-items:center;gap:8px;"><span style="width:6px;height:6px;background:oklch(70% 0.14 220);border-radius:50%;flex-shrink:0;"></span><span>EU AI Act compliant</span></div>
+      <div style="display:flex;align-items:center;gap:8px;"><span style="width:6px;height:6px;background:oklch(70% 0.14 220);border-radius:50%;flex-shrink:0;"></span><span>GDPR ready</span></div>
+      <div style="display:flex;align-items:center;gap:8px;"><span style="width:6px;height:6px;background:oklch(70% 0.14 220);border-radius:50%;flex-shrink:0;"></span><span>2-4 week delivery</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="industries" style="padding:clamp(80px,10vw,120px) clamp(20px,5vw,40px);background:#FFF;">
+  <div style="max-width:1200px;margin:0 auto;">
+    <div style="text-align:center;margin-bottom:clamp(48px,6vw,64px);">
+      <div style="font:500 clamp(0.7rem,1.2vw,0.8125rem)/1.3 'IBM Plex Mono';letter-spacing:0.06em;text-transform:uppercase;color:oklch(48% 0.12 230);margin-bottom:12px;">{{ industryLabel }}</div>
+      <h2 style="font:600 clamp(1.75rem,4vw,2.25rem)/1.2 'IBM Plex Sans';margin:0;letter-spacing:-0.02em;color:oklch(18% 0.02 255);">{{ industryHeading }}</h2>
+    </div>
+    
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(clamp(280px,100%,380px),1fr));gap:clamp(24px,3vw,36px);">
+      <sc-for list="{{ industries }}" as="ind" hint-placeholder-count="3">
+        <div style="background:oklch(99% 0.003 90);border:1px solid oklch(91% 0.006 90);border-radius:12px;padding:clamp(32px,4vw,40px);transition:all 220ms ease;text-align:center;" style-hover="border-color:{{ ind.color }};transform:translateY(-4px);box-shadow:0 12px 32px {{ ind.color }} / 0.15;">
+          <div style="font-size:2.5rem;margin-bottom:20px;">{{ ind.icon }}</div>
+          <h3 style="font:600 clamp(1.125rem,2vw,1.375rem)/1.35 'IBM Plex Sans';margin:0 0 12px;color:oklch(18% 0.02 255);">{{ ind.title }}</h3>
+          <p style="font:400 clamp(0.9rem,1.5vw,1rem)/1.6 'IBM Plex Sans';color:oklch(46% 0.012 140);margin:0 0 20px;">{{ ind.desc }}</p>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;">
+            <div style="background:{{ ind.color }}/0.1;border:1px solid {{ ind.color }}/0.2;padding:6px 12px;border-radius:6px;font:600 0.75rem/1.2 'IBM Plex Mono';color:{{ ind.color }};">{{ ind.tag1 }}</div>
+            <div style="background:{{ ind.color }}/0.1;border:1px solid {{ ind.color }}/0.2;padding:6px 12px;border-radius:6px;font:600 0.75rem/1.2 'IBM Plex Mono';color:{{ ind.color }};">{{ ind.tag2 }}</div>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+</section>
+
+<section id="cases" style="padding:clamp(80px,10vw,120px) clamp(20px,5vw,40px);background:oklch(98% 0.004 90);border-top:1px solid oklch(90% 0.006 90);">
+  <div style="max-width:1200px;margin:0 auto;">
+    <div style="text-align:center;margin-bottom:clamp(48px,6vw,64px);">
+      <div style="font:500 clamp(0.7rem,1.2vw,0.8125rem)/1.3 'IBM Plex Mono';letter-spacing:0.06em;text-transform:uppercase;color:oklch(48% 0.12 230);margin-bottom:12px;">{{ casesLabel }}</div>
+      <h2 style="font:600 clamp(1.75rem,4vw,2.25rem)/1.2 'IBM Plex Sans';margin:0;letter-spacing:-0.02em;color:oklch(18% 0.02 255);">{{ casesHeading }}</h2>
+      <p style="font:400 clamp(0.95rem,1.5vw,1.0625rem)/1.6 'IBM Plex Sans';color:oklch(46% 0.012 140);margin:20px auto 0;max-width:600px;">{{ casesSubtext }}</p>
+    </div>
+    
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(clamp(300px,100%,500px),1fr));gap:clamp(28px,3vw,40px);">
+      <sc-for list="{{ cases }}" as="cs" hint-placeholder-count="3">
+        <div style="background:#FFF;border:1px solid oklch(91% 0.006 90);border-radius:12px;padding:clamp(32px,4vw,40px);box-shadow:0 2px 4px oklch(20% 0.02 255 / 0.04);display:flex;flex-direction:column;">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:24px;">
+            <div style="width:48px;height:48px;background:{{ cs.color }}/0.15;border:2px solid {{ cs.color }};border-radius:8px;display:flex;align-items:center;justify-content:center;font:700 1.25rem/1 'IBM Plex Mono';color:{{ cs.color }};">{{ cs.num }}</div>
+            <div>
+              <div style="font:600 0.8125rem/1.2 'IBM Plex Mono';letter-spacing:0.05em;text-transform:uppercase;color:oklch(46% 0.012 140);">{{ cs.industry }}</div>
+              <div style="font:600 clamp(1rem,1.8vw,1.125rem)/1.2 'IBM Plex Sans';color:oklch(18% 0.02 255);">{{ cs.title }}</div>
+            </div>
+          </div>
+          
+          <p style="font:400 clamp(0.9rem,1.5vw,0.95rem)/1.6 'IBM Plex Sans';color:oklch(46% 0.012 140);margin:0 0 28px;flex:1;">{{ cs.desc }}</p>
+          
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:24px;background:oklch(99% 0.003 90);border-radius:8px;border:1px solid oklch(91% 0.006 90);">
+            <div>
+              <div style="font:600 0.75rem/1.2 'IBM Plex Mono';letter-spacing:0.05em;text-transform:uppercase;color:oklch(46% 0.012 140);margin-bottom:6px;">{{ cs.metric1Label }}</div>
+              <div style="font:700 clamp(1.5rem,3vw,2rem)/1 'IBM Plex Mono';color:{{ cs.color }};">{{ cs.metric1 }}</div>
+            </div>
+            <div>
+              <div style="font:600 0.75rem/1.2 'IBM Plex Mono';letter-spacing:0.05em;text-transform:uppercase;color:oklch(46% 0.012 140);margin-bottom:6px;">{{ cs.metric2Label }}</div>
+              <div style="font:700 clamp(1.5rem,3vw,2rem)/1 'IBM Plex Mono';color:{{ cs.color }};">{{ cs.metric2 }}</div>
+            </div>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+</section>
+
+<section id="how" style="padding:clamp(80px,10vw,120px) clamp(20px,5vw,40px);background:#FFF;border-top:1px solid oklch(90% 0.006 90);">
+  <div style="max-width:1000px;margin:0 auto;">
+    <div style="text-align:center;margin-bottom:clamp(48px,6vw,64px);">
+      <h2 style="font:600 clamp(1.75rem,4vw,2.25rem)/1.2 'IBM Plex Sans';margin:0 0 16px;letter-spacing:-0.02em;color:oklch(18% 0.02 255);">{{ processHeading }}</h2>
+      <p style="font:400 clamp(0.95rem,1.5vw,1rem)/1.6 'IBM Plex Sans';color:oklch(46% 0.012 140);max-width:600px;margin:0 auto;">{{ processSubtext }}</p>
+    </div>
+    
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(clamp(200px,100%,280px),1fr));gap:clamp(24px,3vw,32px);">
+      <sc-for list="{{ process }}" as="step" hint-placeholder-count="4">
+        <div style="display:flex;flex-direction:column;gap:16px;">
+          <div style="width:64px;height:64px;background:linear-gradient(135deg, oklch(48% 0.12 230 / 0.1), oklch(46% 0.15 200 / 0.06));border:2px solid oklch(48% 0.12 230);border-radius:50%;display:flex;align-items:center;justify-content:center;font:700 1.5rem/1 'IBM Plex Mono';color:oklch(48% 0.12 230);">{{ step.n }}</div>
+          <div>
+            <h3 style="font:600 clamp(1rem,1.8vw,1.125rem)/1.3 'IBM Plex Sans';margin:0 0 8px;color:oklch(18% 0.02 255);">{{ step.title }}</h3>
+            <p style="font:400 clamp(0.85rem,1.4vw,0.9375rem)/1.6 'IBM Plex Sans';color:oklch(46% 0.012 140);margin:0;">{{ step.desc }}</p>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+</section>
+
+<section id="pricing" style="padding:clamp(80px,10vw,120px) clamp(20px,5vw,40px);background:linear-gradient(135deg, oklch(6% 0 0 / 0.02), oklch(12% 0.03 260 / 0.02));border-top:1px solid oklch(90% 0.006 90);">
+  <div style="max-width:1000px;margin:0 auto;">
+    <div style="text-align:center;margin-bottom:clamp(48px,6vw,64px);">
+      <h2 style="font:600 clamp(1.75rem,4vw,2.25rem)/1.2 'IBM Plex Sans';margin:0 0 16px;letter-spacing:-0.02em;color:oklch(18% 0.02 255);">{{ pricingHeading }}</h2>
+      <p style="font:400 clamp(0.95rem,1.5vw,1rem)/1.6 'IBM Plex Sans';color:oklch(46% 0.012 140);max-width:600px;margin:0 auto;">{{ pricingSubtext }}</p>
+    </div>
+    
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(clamp(250px,100%,320px),1fr));gap:clamp(20px,2vw,28px);">
+      <sc-for list="{{ pricing }}" as="tier" hint-placeholder-count="3">
+        <div style="background:#FFF;border:1px solid oklch(91% 0.006 90);border-radius:12px;padding:clamp(28px,4vw,36px);display:flex;flex-direction:column;" style-hover="border-color:oklch(48% 0.12 230);box-shadow:0 8px 24px oklch(48% 0.12 230 / 0.15);">
+          <h3 style="font:600 clamp(1.0625rem,1.8vw,1.25rem)/1.3 'IBM Plex Sans';margin:0 0 8px;color:oklch(18% 0.02 255);">{{ tier.name }}</h3>
+          <p style="font:400 0.9375rem/1.6 'IBM Plex Sans';color:oklch(46% 0.012 140);margin:0 0 20px;">{{ tier.desc }}</p>
+          <div style="margin:20px 0;padding:20px;background:oklch(99% 0.003 90);border-radius:8px;border:1px solid oklch(91% 0.006 90);">
+            <div style="font:700 clamp(1.875rem,3vw,2.25rem)/1 'IBM Plex Mono';color:oklch(48% 0.12 230);">{{ tier.price }}</div>
+            <div style="font:400 0.875rem/1.5 'IBM Plex Sans';color:oklch(46% 0.012 140);margin-top:6px;">{{ tier.timeframe }}</div>
+          </div>
+          <ul style="list-style:none;margin:0 0 24px;padding:0;display:flex;flex-direction:column;gap:12px;flex:1;">
+            <sc-for list="{{ tier.includes }}" as="inc" hint-placeholder-count="0">
+              <li style="display:flex;gap:10px;align-items:flex-start;font:400 0.9375rem/1.5 'IBM Plex Sans';color:oklch(46% 0.012 140);"><span style="color:oklch(48% 0.12 230);font-weight:600;flex-shrink:0;">✓</span><span>{{ inc }}</span></li>
+            </sc-for>
+          </ul>
+          <a href="#contact" style="background:oklch(70% 0.14 220);color:#001a2e;padding:12px 20px;border-radius:6px;text-align:center;font-weight:600;font-size:0.9375rem;transition:all 200ms ease;white-space:nowrap;" style-hover="transform:translateY(-2px);box-shadow:0 8px 24px rgba(0, 212, 255, 0.25);">Learn more</a>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+</section>
+
+<section id="contact" style="padding:clamp(80px,10vw,120px) clamp(20px,5vw,40px);background:linear-gradient(135deg, oklch(6% 0 0) 0%, oklch(12% 0.03 260) 100%);color:#FFF;">
+  <div style="max-width:700px;margin:0 auto;">
+    <div style="text-align:center;margin-bottom:clamp(40px,6vw,56px);">
+      <h2 style="font:600 clamp(1.75rem,4vw,2.25rem)/1.2 'IBM Plex Sans';margin:0 0 16px;letter-spacing:-0.02em;">{{ contactHeading }}</h2>
+      <p style="font:400 clamp(0.95rem,1.5vw,1rem)/1.6 'IBM Plex Sans';color:oklch(75% 0.10 250);margin:0;">{{ contactSubtext }}</p>
+    </div>
+    
+    <form style="display:flex;flex-direction:column;gap:18px;">
+      <input type="text" placeholder="{{ formNamePlaceholder }}" style="background:oklch(100% 0 0 / 0.95);border:1px solid oklch(70% 0.14 220 / 0.3);border-radius:6px;padding:14px 18px;font:400 0.95rem/1.5 'IBM Plex Sans';color:oklch(18% 0.02 255);transition:all 200ms ease;" style-focus="border-color:oklch(70% 0.14 220);box-shadow:0 0 0 2px oklch(70% 0.14 220 / 0.1);outline:none;"/>
+      <input type="email" placeholder="{{ formEmailPlaceholder }}" style="background:oklch(100% 0 0 / 0.95);border:1px solid oklch(70% 0.14 220 / 0.3);border-radius:6px;padding:14px 18px;font:400 0.95rem/1.5 'IBM Plex Sans';color:oklch(18% 0.02 255);transition:all 200ms ease;" style-focus="border-color:oklch(70% 0.14 220);box-shadow:0 0 0 2px oklch(70% 0.14 220 / 0.1);outline:none;"/>
+      <select style="background:oklch(100% 0 0 / 0.95);border:1px solid oklch(70% 0.14 220 / 0.3);border-radius:6px;padding:14px 18px;font:400 0.95rem/1.5 'IBM Plex Sans';color:oklch(18% 0.02 255);transition:all 200ms ease;cursor:pointer;" style-focus="border-color:oklch(70% 0.14 220);outline:none;">
+        <option value="">{{ formIndustryPlaceholder }}</option>
+        <sc-for list="{{ industries }}" as="opt" hint-placeholder-count="0">
+          <option value="{{ opt.title }}">{{ opt.title }}</option>
+        </sc-for>
+      </select>
+      <textarea placeholder="{{ formMessagePlaceholder }}" rows="4" style="background:oklch(100% 0 0 / 0.95);border:1px solid oklch(70% 0.14 220 / 0.3);border-radius:6px;padding:14px 18px;font:400 0.95rem/1.5 'IBM Plex Sans';color:oklch(18% 0.02 255);resize:none;transition:all 200ms ease;" style-focus="border-color:oklch(70% 0.14 220);box-shadow:0 0 0 2px oklch(70% 0.14 220 / 0.1);outline:none;"></textarea>
+      <button type="submit" style="background:linear-gradient(135deg, oklch(70% 0.14 220), oklch(60% 0.12 230));color:#001a2e;padding:14px 28px;border:none;border-radius:6px;font-weight:700;font-size:0.95rem;cursor:pointer;transition:all 280ms ease;" style-hover="transform:translateY(-3px);box-shadow:0 16px 48px rgba(0, 212, 255, 0.35);">{{ contactCTA }}</button>
+    </form>
+    
+    <p style="font:400 clamp(0.8rem,1.2vw,0.85rem)/1.6 'IBM Plex Sans';color:oklch(70% 0.10 250);text-align:center;margin:28px 0 0;padding-top:28px;border-top:1px solid oklch(70% 0.14 220 / 0.2);">{{ contactFooter }}</p>
+  </div>
+</section>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { lang: 'en' };
+
+  renderVals() {
+    const copy = {
+      badge: 'Hands-on AI implementation',
+      heroHeading: 'AI that works. Fast.',
+      heroSubtext: 'Solo senior AI implementation for European mid-market. Measurable ROI in 90 days. No reports, just working systems.',
+      ctaPrimary: 'Schedule 30-min discovery',
+      ctaSecondary: 'View case studies',
+      
+      industryLabel: 'Industries',
+      industryHeading: 'Where we focus',
+      casesLabel: 'Case studies',
+      casesHeading: 'Real results from real projects',
+      casesSubtext: 'Anonymized by NDA. All metrics from live systems in production.',
+      
+      processHeading: 'How it works',
+      processSubtext: 'From discovery to deployment in 2-4 weeks.',
+      pricingHeading: 'Transparent pricing',
+      pricingSubtext: 'Fixed scope, fixed price. No surprises.',
+      
+      contactHeading: 'Ready to start',
+      contactSubtext: 'Book a 30-minute discovery call. We will map your AI opportunity and show you what is possible.',
+      formNamePlaceholder: 'Your name',
+      formEmailPlaceholder: 'your@email.com',
+      formIndustryPlaceholder: 'Your industry',
+      formMessagePlaceholder: 'Briefly describe your challenge...',
+      contactCTA: 'Schedule call',
+      contactFooter: 'Usually respond within 24 hours.',
+      
+      industries: [
+        {
+          icon: '📊',
+          title: 'Financial Services',
+          desc: 'Fraud detection, risk modeling, compliance automation.',
+          color: 'oklch(70% 0.14 220)',
+          tag1: 'Risk & Compliance',
+          tag2: 'Predictive'
+        },
+        {
+          icon: '⚙️',
+          title: 'Operations',
+          desc: 'Supply chain optimization, logistics automation, demand forecasting.',
+          color: 'oklch(60% 0.15 170)',
+          tag1: 'Efficiency',
+          tag2: 'Cost Reduction'
+        },
+        {
+          icon: '🏪',
+          title: 'Retail',
+          desc: 'Inventory optimization, customer segmentation, dynamic pricing.',
+          color: 'oklch(75% 0.12 160)',
+          tag1: 'Revenue',
+          tag2: 'Customer Data'
+        }
+      ],
+      
+      cases: [
+        {
+          num: '01',
+          title: 'Invoice Automation',
+          industry: 'Financial Services',
+          desc: 'Automated AP invoice processing for mid-market finance team. Eliminated manual data entry and reduced cycle time.',
+          color: 'oklch(70% 0.14 220)',
+          metric1Label: 'Cost Reduction',
+          metric1: '68%',
+          metric2Label: 'Time to Value',
+          metric2: '8 weeks'
+        },
+        {
+          num: '02',
+          title: 'Demand Forecasting',
+          industry: 'Operations',
+          desc: 'Predictive model for supply chain visibility. Improved inventory planning and reduced stockout risk.',
+          color: 'oklch(60% 0.15 170)',
+          metric1Label: 'Accuracy',
+          metric1: '92%',
+          metric2Label: 'Inventory Cost',
+          metric2: '-24%'
+        },
+        {
+          num: '03',
+          title: 'Customer Segmentation',
+          industry: 'Retail',
+          desc: 'ML-driven segmentation for personalized campaigns. Improved campaign ROI through better targeting.',
+          color: 'oklch(75% 0.12 160)',
+          metric1Label: 'ROI Uplift',
+          metric1: '+31%',
+          metric2Label: 'Engagement',
+          metric2: '+42%'
+        }
+      ],
+      
+      process: [
+        {
+          n: '1',
+          title: 'Discovery',
+          desc: 'Map your process. Understand data. Identify the ROI opportunity.'
+        },
+        {
+          n: '2',
+          title: 'Proof of Concept',
+          desc: 'Build and validate on real data. Show it works before full commitment.'
+        },
+        {
+          n: '3',
+          title: 'Implementation',
+          desc: 'Deploy to production. Integrate with your systems. Train your team.'
+        },
+        {
+          n: '4',
+          title: 'Support',
+          desc: 'Monitor performance. Iterate. Ensure measurable ROI.'
+        }
+      ],
+      
+      pricing: [
+        {
+          name: 'Discovery Call',
+          desc: 'Understand your opportunity',
+          price: 'Free',
+          timeframe: '30 minutes',
+          includes: ['AI readiness assessment', 'Identify high-ROI use cases', 'Realistic timeline & budget']
+        },
+        {
+          name: 'Proof of Concept',
+          desc: 'Validate the approach',
+          price: '€12-18k',
+          timeframe: '2-3 weeks',
+          includes: ['Prototype on your data', 'Initial accuracy metrics', 'Integration plan', 'Team training']
+        },
+        {
+          name: 'Full Implementation',
+          desc: 'Go live and scale',
+          price: '€20-28k',
+          timeframe: '2-4 weeks',
+          includes: ['Production deployment', 'System integration', 'Ongoing monitoring', '90-day support']
+        }
+      ]
+    };
+
+    return copy;
+  }
+}
+
+</script>
+</body>
+</html>

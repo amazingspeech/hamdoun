@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Protocolchecker — Van Dijk Clinic</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Lato:wght@400;600;700&family=Playfair+Display:wght@600;700&display=swap"
+  />
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <div class="banner">
+    ⚠️ VOORBEELDDATA — deze protocollen zijn placeholders, nog niet gecontroleerd of
+    goedgekeurd. Vervang elk bestand in <code>protocols/</code> door het echte,
+    goedgekeurde protocol voordat dit in de praktijk gebruikt wordt.
+  </div>
+
+  <header>
+    <h1>Protocolchecker</h1>
+    <button id="ai-button" class="ai-button">🤖 Vraag het AI</button>
+  </header>
+
+  <div id="ai-panel" class="ai-panel hidden">
+    <div class="ai-panel-header">
+      <span>AI-assistent — antwoordt alleen op basis van de geladen protocollen</span>
+      <button id="ai-close" class="ai-close" aria-label="Sluiten">✕</button>
+    </div>
+    <div id="ai-log" class="ai-log">
+      <p class="placeholder-msg">Stel een vraag over een protocol, bv. "Hoe bereid ik een botoxbehandeling voor?"</p>
+    </div>
+    <form id="ai-form" class="ai-form">
+      <input id="ai-input" type="text" placeholder="Stel je vraag…" autocomplete="off" />
+      <button type="submit">Verstuur</button>
+    </form>
+  </div>
+
+  <div class="layout">
+    <aside class="sidebar">
+      <input id="search" type="search" placeholder="Zoek een protocol…" autocomplete="off" />
+      <nav id="protocol-list" class="protocol-list"></nav>
+    </aside>
+
+    <main id="content" class="content">
+      <p class="placeholder-msg">Selecteer een protocol in de lijst.</p>
+    </main>
+  </div>
+
+  <script src="/app.js"></script>
+</body>
+</html>
