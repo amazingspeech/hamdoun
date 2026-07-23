@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Tessar — Hands-On AI Implementation & AI-Integrated Applications</title>
-<meta name="description" content="Solo senior AI implementation for European mid-market companies. We build AI automations and AI-integrated applications with measurable ROI in 90 days — no reports, just working systems.">
+<meta name="description" content="Solo senior AI implementation for European mid-market companies. We build AI automations and AI-integrated applications with measurable ROI in 90 days. No reports, just working systems.">
 <link rel="canonical" href="https://amazingspeech.github.io/hamdoun/">
 <meta name="theme-color" content="#0a0a0f">
 <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon-32.png">
@@ -14,11 +14,11 @@
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://amazingspeech.github.io/hamdoun/">
 <meta property="og:title" content="Tessar — Hands-On AI Implementation & AI-Integrated Applications">
-<meta property="og:description" content="Solo senior AI implementation for European mid-market companies. Measurable ROI in 90 days — no reports, just working systems.">
+<meta property="og:description" content="Solo senior AI implementation for European mid-market companies. Measurable ROI in 90 days. No reports, just working systems.">
 <meta property="og:image" content="https://amazingspeech.github.io/hamdoun/assets/logo-full-dark.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Tessar — Hands-On AI Implementation & AI-Integrated Applications">
-<meta name="twitter:description" content="Solo senior AI implementation for European mid-market companies. Measurable ROI in 90 days — no reports, just working systems.">
+<meta name="twitter:description" content="Solo senior AI implementation for European mid-market companies. Measurable ROI in 90 days. No reports, just working systems.">
 <meta name="twitter:image" content="https://amazingspeech.github.io/hamdoun/assets/logo-full-dark.png">
 
 <script type="application/ld+json">
@@ -52,9 +52,22 @@
   [data-reveal-grid] > [data-reveal]:nth-child(2) { transition-delay:90ms; }
   [data-reveal-grid] > [data-reveal]:nth-child(3) { transition-delay:180ms; }
   [data-reveal-grid] > [data-reveal]:nth-child(4) { transition-delay:270ms; }
+  .hero-orb { position:absolute; border-radius:50%; filter:blur(70px); pointer-events:none; }
+  .hero-orb-a { top:-120px; left:-80px; width:420px; height:420px; background:oklch(70% 0.14 220 / 0.22); animation:heroOrbA 16s ease-in-out infinite; }
+  .hero-orb-b { bottom:-160px; right:-60px; width:480px; height:480px; background:oklch(55% 0.15 200 / 0.16); animation:heroOrbB 20s ease-in-out infinite; }
+  .hero-orb-c { top:30%; left:50%; width:320px; height:320px; background:oklch(60% 0.12 230 / 0.12); animation:heroOrbC 24s ease-in-out infinite; }
+  @keyframes heroOrbA { 0%,100% { transform:translate(0,0) scale(1); } 50% { transform:translate(40px,30px) scale(1.12); } }
+  @keyframes heroOrbB { 0%,100% { transform:translate(0,0) scale(1); } 50% { transform:translate(-30px,-40px) scale(1.08); } }
+  @keyframes heroOrbC { 0%,100% { transform:translate(-50%,0) scale(1); } 50% { transform:translate(-50%,-25px) scale(1.15); } }
+  .hero-mark { animation:heroMarkFloat 12s ease-in-out infinite; }
+  @keyframes heroMarkFloat { 0%,100% { transform:translateY(0) rotate(0deg); } 50% { transform:translateY(-14px) rotate(4deg); } }
   @media (prefers-reduced-motion: reduce) {
     [data-reveal] { opacity:1; transform:none; transition:none; }
     html { scroll-behavior:auto; }
+    .hero-orb, .hero-mark { animation:none; }
+  }
+  @media (max-width: 680px) {
+    .nav-link { display:none; }
   }
 </style>
 </helmet>
@@ -66,19 +79,23 @@
       <span style="font:700 1rem/1 'IBM Plex Sans';letter-spacing:-0.015em;color:oklch(18% 0.02 255);">Tessar</span>
     </a>
     <nav style="display:flex;align-items:center;gap:clamp(16px,2vw,32px);font-size:0.9375rem;">
-      <a href="#capabilities" style="color:oklch(46% 0.012 140);transition:color 200ms ease;" style-hover="color:oklch(18% 0.02 255);">What we build</a>
-      <a href="#industries" style="color:oklch(46% 0.012 140);transition:color 200ms ease;" style-hover="color:oklch(18% 0.02 255);">Industries</a>
-      <a href="#cases" style="color:oklch(46% 0.012 140);transition:color 200ms ease;" style-hover="color:oklch(18% 0.02 255);">Case Studies</a>
-      <a href="#how" style="color:oklch(46% 0.012 140);transition:color 200ms ease;" style-hover="color:oklch(18% 0.02 255);">How it works</a>
-      <a href="#pricing" style="color:oklch(46% 0.012 140);transition:color 200ms ease;" style-hover="color:oklch(18% 0.02 255);">Pricing</a>
+      <a href="./services.html" class="nav-link" style="color:oklch(46% 0.012 140);transition:color 200ms ease;" style-hover="color:oklch(18% 0.02 255);">Services</a>
+      <a href="#capabilities" class="nav-link" style="color:oklch(46% 0.012 140);transition:color 200ms ease;" style-hover="color:oklch(18% 0.02 255);">What we build</a>
+      <a href="#industries" class="nav-link" style="color:oklch(46% 0.012 140);transition:color 200ms ease;" style-hover="color:oklch(18% 0.02 255);">Industries</a>
+      <a href="#cases" class="nav-link" style="color:oklch(46% 0.012 140);transition:color 200ms ease;" style-hover="color:oklch(18% 0.02 255);">Case Studies</a>
+      <a href="#how" class="nav-link" style="color:oklch(46% 0.012 140);transition:color 200ms ease;" style-hover="color:oklch(18% 0.02 255);">How it works</a>
+      <a href="#pricing" class="nav-link" style="color:oklch(46% 0.012 140);transition:color 200ms ease;" style-hover="color:oklch(18% 0.02 255);">Pricing</a>
       <a href="#contact" style="background:oklch(70% 0.14 220);color:#001a2e;padding:10px 20px;border-radius:6px;font-weight:600;transition:all 200ms ease;" style-hover="transform:translateY(-2px);box-shadow:0 8px 24px rgba(0, 212, 255, 0.25);">Book call</a>
     </nav>
   </div>
 </header>
 
 <section id="top" style="position:relative;overflow:hidden;background:linear-gradient(135deg, oklch(6% 0 0) 0%, oklch(12% 0.03 260) 100%);color:#FFF;padding:clamp(80px,12vw,140px) clamp(20px,5vw,40px);text-align:center;">
-  <div style="position:absolute;inset:0;opacity:0.08;pointer-events:none;">
-    <img src="./Tessar-logo-symbol.webp" width="500" height="500" alt="" style="position:absolute;top:-100px;right:-120px;width:500px;height:auto;object-fit:contain;">
+  <div style="position:absolute;inset:0;pointer-events:none;overflow:hidden;">
+    <div class="hero-orb hero-orb-a"></div>
+    <div class="hero-orb hero-orb-b"></div>
+    <div class="hero-orb hero-orb-c"></div>
+    <img class="hero-mark" src="./Tessar-logo-symbol.webp" width="500" height="500" alt="" style="position:absolute;top:-100px;right:-120px;width:500px;height:auto;object-fit:contain;opacity:0.08;">
   </div>
   
   <div style="max-width:900px;margin:0 auto;position:relative;z-index:1;">
@@ -291,13 +308,13 @@ class Component extends DCLogic {
         {
           icon: '⚡',
           title: 'AI Automations',
-          desc: 'Automate the manual, repetitive parts of your operation — data entry, reporting, document processing, decision support — with systems that plug into what you already use.',
+          desc: 'Automate the manual, repetitive parts of your operation: data entry, reporting, document processing, decision support. Systems that plug into what you already use.',
           color: 'oklch(70% 0.14 220)'
         },
         {
           icon: '🧩',
           title: 'AI-Integrated Applications',
-          desc: 'Full products with AI at the core, not bolted on — internal tools, customer-facing apps, and platforms built from the ground up around what modern models can do.',
+          desc: 'Full products with AI at the core, not bolted on. Internal tools, customer-facing apps and platforms built from the ground up around what modern models can do.',
           color: 'oklch(60% 0.15 170)'
         }
       ],
