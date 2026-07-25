@@ -75,9 +75,10 @@
   }
   .svc-card { display:grid; grid-template-columns:minmax(160px,220px) 1fr; }
   @media (max-width: 720px) { .svc-card { grid-template-columns:1fr; } }
+  .stack-row { grid-template-columns:repeat(2,1fr) !important; max-width:700px; margin-left:auto; margin-right:auto; }
   @media (max-width: 700px) {
     .about-grid { grid-template-columns:1fr !important; }
-    .stack-row { grid-template-columns:1fr !important; gap:10px !important; }
+    .stack-row { grid-template-columns:1fr !important; gap:10px !important; max-width:none; }
   }
   .faq-item[open] .faq-chevron { transform:rotate(180deg); }
   .faq-item summary::-webkit-details-marker { display:none; }
@@ -242,18 +243,12 @@
       <p style="font:400 clamp(0.95rem,1.5vw,1rem)/1.6 'IBM Plex Sans';color:oklch(46% 0.012 140);max-width:600px;margin:0 auto;">{{ stackSubtext }}</p>
     </div>
 
-    <div style="display:flex;flex-direction:column;gap:24px;">
-      <sc-for list="{{ stackGroups }}" as="grp" hint-placeholder-count="4">
-        <div class="stack-row" style="display:grid;grid-template-columns:minmax(140px,200px) 1fr;gap:20px;align-items:start;padding-bottom:20px;border-bottom:1px solid oklch(92% 0.006 90);">
-          <div style="display:flex;align-items:center;gap:10px;">
-            <div class="icon {{ grp.iconClass }}" style="width:18px;height:18px;color:oklch(48% 0.12 230);"></div>
-            <span style="font:600 0.8125rem/1.3 'IBM Plex Mono';letter-spacing:0.03em;color:oklch(30% 0.02 255);">{{ grp.name }}</span>
-          </div>
-          <div style="display:flex;flex-wrap:wrap;gap:8px;">
-            <sc-for list="{{ grp.tools }}" as="tool" hint-placeholder-count="4">
-              <span style="background:oklch(97% 0.006 90);border:1px solid oklch(90% 0.006 90);padding:6px 12px;border-radius:6px;font:500 0.8125rem/1.2 'IBM Plex Mono';color:oklch(35% 0.02 255);">{{ tool }}</span>
-            </sc-for>
-          </div>
+    <div data-reveal-grid class="stack-row" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(clamp(220px,100%,300px),1fr));gap:clamp(20px,3vw,28px);">
+      <sc-for list="{{ stackTools }}" as="tool" hint-placeholder-count="4">
+        <div data-reveal style="background:oklch(98% 0.004 90);border:1px solid oklch(91% 0.006 90);border-radius:12px;padding:clamp(24px,3vw,32px);transition:all 220ms ease, opacity 600ms ease, transform 600ms ease;" style-hover="border-color:oklch(48% 0.12 230);transform:translateY(-4px);">
+          <div class="icon {{ tool.iconClass }}" style="width:28px;height:28px;color:oklch(48% 0.12 230);margin-bottom:14px;"></div>
+          <div style="font:700 1rem/1.3 'IBM Plex Mono';color:oklch(18% 0.02 255);margin-bottom:8px;">{{ tool.name }}</div>
+          <p style="font:400 0.9rem/1.6 'IBM Plex Sans';color:oklch(46% 0.012 140);margin:0;">{{ tool.desc }}</p>
         </div>
       </sc-for>
     </div>
@@ -527,12 +522,12 @@ const copyNL = {
 
   stackLabel: 'Techniek',
   stackHeading: 'Techniek onder de motorkap',
-  stackSubtext: 'Geen black box. Dit zijn de bouwstenen die we inzetten, gekozen op wat het beste past bij jouw situatie.',
-  stackGroups: [
-    { iconClass: 'icon-bot', name: 'AI-modellen', tools: ['OpenAI GPT', 'Anthropic Claude', 'Google Gemini', 'Open-source (Llama, Mistral)'] },
-    { iconClass: 'icon-workflow', name: 'Automatisering', tools: ['n8n', 'Make', 'Zapier', 'Python-pipelines'] },
-    { iconClass: 'icon-database', name: 'Data & infrastructuur', tools: ['PostgreSQL', 'Supabase', 'AWS', 'Google Cloud', 'Azure'] },
-    { iconClass: 'icon-code-2', name: 'Development', tools: ['Python', 'TypeScript', 'React', 'Next.js', 'FastAPI'] }
+  stackSubtext: 'Geen black box, geen dertien-in-een-dozijn tool-lijstje. Een klein, bewust gekozen instrumentarium, diep beheerst in plaats van oppervlakkig overal een beetje van.',
+  stackTools: [
+    { iconClass: 'icon-workflow', name: 'n8n', desc: 'Het fundament van elke automatisering: workflows die je systemen, data en AI-modellen aan elkaar knopen, zonder vendor lock-in.' },
+    { iconClass: 'icon-code-2', name: 'Claude Code', desc: 'Voor het bouwen van maatwerk-applicaties en -logica die verder gaan dan een workflow-tool aankan. Van prototype tot productieklare code.' },
+    { iconClass: 'icon-bot', name: 'ChatGPT / OpenAI', desc: 'Voor taalverwerking, classificatie en besluitondersteuning binnen de systemen die we opleveren.' },
+    { iconClass: 'icon-network', name: 'Maatwerk integraties', desc: 'Elke organisatie werkt anders. Deze drie worden verbonden met wat jij al gebruikt: CRM, ERP, databases, interne API\'s.' }
   ],
 
   industryLabel: 'Sectoren',
@@ -659,12 +654,12 @@ const copyEN = {
 
   stackLabel: 'Technology',
   stackHeading: 'The technology behind it',
-  stackSubtext: 'No black box. These are the building blocks we work with, chosen based on what fits your situation best.',
-  stackGroups: [
-    { iconClass: 'icon-bot', name: 'AI models', tools: ['OpenAI GPT', 'Anthropic Claude', 'Google Gemini', 'Open source (Llama, Mistral)'] },
-    { iconClass: 'icon-workflow', name: 'Automation', tools: ['n8n', 'Make', 'Zapier', 'Python pipelines'] },
-    { iconClass: 'icon-database', name: 'Data & infrastructure', tools: ['PostgreSQL', 'Supabase', 'AWS', 'Google Cloud', 'Azure'] },
-    { iconClass: 'icon-code-2', name: 'Development', tools: ['Python', 'TypeScript', 'React', 'Next.js', 'FastAPI'] }
+  stackSubtext: 'No black box, and no laundry list of tools for the sake of looking thorough. A small, deliberately chosen toolset, mastered deeply rather than dabbled with broadly.',
+  stackTools: [
+    { iconClass: 'icon-workflow', name: 'n8n', desc: 'The backbone of every automation: workflows that connect your systems, data and AI models, without vendor lock-in.' },
+    { iconClass: 'icon-code-2', name: 'Claude Code', desc: 'For building custom applications and logic that go beyond what a workflow tool can handle. From prototype to production-ready code.' },
+    { iconClass: 'icon-bot', name: 'ChatGPT / OpenAI', desc: 'For language processing, classification and decision support inside the systems we deliver.' },
+    { iconClass: 'icon-network', name: 'Custom integrations', desc: 'Every organization works differently. These three connect to what you already use: CRM, ERP, databases, internal APIs.' }
   ],
 
   industryLabel: 'Industries',
