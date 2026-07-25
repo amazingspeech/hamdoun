@@ -1,0 +1,9 @@
+.venv/
+__pycache__/
+*.pyc
+.env
+data/*.csv
+models/*
+!models/.gitkeep
+api_keys.json
+audit.log
