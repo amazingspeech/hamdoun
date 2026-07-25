@@ -84,6 +84,34 @@
   .faq-item summary::-webkit-details-marker { display:none; }
   .faq-item summary { list-style:none; cursor:pointer; }
 
+  .flow-row { display:flex; align-items:flex-start; justify-content:center; flex-wrap:wrap; }
+  .flow-node { position:relative; display:flex; flex-direction:column; align-items:center; gap:8px; width:88px; }
+  .flow-node:not(:last-child) { margin-right:40px; }
+  .flow-node:not(:last-child)::after { content:''; position:absolute; top:25px; left:100%; width:40px; height:2px; background:linear-gradient(90deg, oklch(75% 0.05 230), oklch(90% 0.02 230)); }
+  .flow-node:not(:last-child)::before { content:''; position:absolute; top:22px; left:100%; width:6px; height:6px; border-radius:50%; background:oklch(60% 0.16 220); box-shadow:0 0 8px oklch(60% 0.16 220 / 0.7); animation:flowDot 2.2s linear infinite; opacity:0; }
+  .flow-node:nth-child(1)::before { animation-delay:0s; }
+  .flow-node:nth-child(2)::before { animation-delay:0.44s; }
+  .flow-node:nth-child(3)::before { animation-delay:0.88s; }
+  .flow-node:nth-child(4)::before { animation-delay:1.32s; }
+  .flow-node-icon { width:52px; height:52px; border-radius:50%; background:oklch(96% 0.01 230); border:1px solid oklch(85% 0.03 230); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .flow-node-icon .icon { width:22px; height:22px; color:oklch(48% 0.12 230); }
+  .flow-node-label { font:600 0.75rem/1.2 'IBM Plex Mono'; color:oklch(40% 0.02 250); text-align:center; }
+  @media (max-width: 700px) {
+    .flow-node { width:58px; }
+    .flow-node:not(:last-child) { margin-right:14px; }
+    .flow-node:not(:last-child)::after { width:14px; }
+    .flow-node-icon { width:40px; height:40px; }
+    .flow-node-icon .icon { width:17px; height:17px; }
+    .flow-node-label { font-size:0.6875rem; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .flow-node::before { animation:none !important; opacity:0.6 !important; }
+  }
+  @keyframes flowDot { 0%, 8% { opacity:0; transform:translateX(0); } 20% { opacity:1; } 80% { opacity:1; } 92%, 100% { opacity:0; transform:translateX(40px); } }
+  @media (max-width: 700px) {
+    @keyframes flowDot { 0%, 8% { opacity:0; transform:translateX(0); } 20% { opacity:1; } 80% { opacity:1; } 92%, 100% { opacity:0; transform:translateX(14px); } }
+  }
+
   .icon { display:inline-block; width:1em; height:1em; background-color:currentColor; -webkit-mask-repeat:no-repeat; mask-repeat:no-repeat; -webkit-mask-position:center; mask-position:center; -webkit-mask-size:contain; mask-size:contain; flex-shrink:0; }
 .icon-zap { -webkit-mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-zap' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Cpath d='M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z' /%3E%3C/svg%3E"); mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-zap' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Cpath d='M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z' /%3E%3C/svg%3E"); }
 .icon-puzzle { -webkit-mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-puzzle' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Cpath d='M15.39 4.39a1 1 0 0 0 1.68-.474 2.5 2.5 0 1 1 3.014 3.015 1 1 0 0 0-.474 1.68l1.683 1.682a2.414 2.414 0 0 1 0 3.414L19.61 15.39a1 1 0 0 1-1.68-.474 2.5 2.5 0 1 0-3.014 3.015 1 1 0 0 1 .474 1.68l-1.683 1.682a2.414 2.414 0 0 1-3.414 0L8.61 19.61a1 1 0 0 0-1.68.474 2.5 2.5 0 1 1-3.014-3.015 1 1 0 0 0 .474-1.68l-1.683-1.682a2.414 2.414 0 0 1 0-3.414L4.39 8.61a1 1 0 0 1 1.68.474 2.5 2.5 0 1 0 3.014-3.015 1 1 0 0 1-.474-1.68l1.683-1.682a2.414 2.414 0 0 1 3.414 0z' /%3E%3C/svg%3E"); mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-puzzle' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Cpath d='M15.39 4.39a1 1 0 0 0 1.68-.474 2.5 2.5 0 1 1 3.014 3.015 1 1 0 0 0-.474 1.68l1.683 1.682a2.414 2.414 0 0 1 0 3.414L19.61 15.39a1 1 0 0 1-1.68-.474 2.5 2.5 0 1 0-3.014 3.015 1 1 0 0 1 .474 1.68l-1.683 1.682a2.414 2.414 0 0 1-3.414 0L8.61 19.61a1 1 0 0 0-1.68.474 2.5 2.5 0 1 1-3.014-3.015 1 1 0 0 0 .474-1.68l-1.683-1.682a2.414 2.414 0 0 1 0-3.414L4.39 8.61a1 1 0 0 1 1.68.474 2.5 2.5 0 1 0 3.014-3.015 1 1 0 0 1-.474-1.68l1.683-1.682a2.414 2.414 0 0 1 3.414 0z' /%3E%3C/svg%3E"); }
@@ -235,6 +263,86 @@
   </div>
 </section>
 
+<section id="tools" style="padding:clamp(64px,8vw,96px) clamp(20px,5vw,40px);background:#FFF;border-top:1px solid oklch(90% 0.006 90);">
+  <div style="max-width:820px;margin:0 auto;">
+    <div style="text-align:center;margin-bottom:clamp(40px,5vw,48px);">
+      <div style="font:500 clamp(0.7rem,1.2vw,0.8125rem)/1.3 'IBM Plex Mono';letter-spacing:0.06em;text-transform:uppercase;color:oklch(48% 0.12 230);margin-bottom:12px;">{{ toolsLabel }}</div>
+      <h2 style="font:600 clamp(1.75rem,4vw,2.25rem)/1.2 'IBM Plex Sans';margin:0 0 16px;letter-spacing:-0.02em;color:oklch(18% 0.02 255);">{{ toolsHeading }}</h2>
+      <p style="font:400 clamp(0.95rem,1.5vw,1rem)/1.6 'IBM Plex Sans';color:oklch(46% 0.012 140);max-width:520px;margin:0 auto;">{{ toolsSubtext }}</p>
+    </div>
+
+    <div class="flow-row" data-reveal style="margin-bottom:clamp(44px,6vw,56px);transition:opacity 600ms ease, transform 600ms ease;">
+      <sc-for list="{{ flowNodes }}" as="node" hint-placeholder-count="5">
+        <div class="flow-node">
+          <div class="flow-node-icon"><div class="icon {{ node.iconClass }}"></div></div>
+          <div class="flow-node-label">{{ node.label }}</div>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="display:flex;justify-content:center;gap:8px;margin-bottom:28px;flex-wrap:wrap;">
+      <button onclick="{{ setToolTabScan }}" style="border:1px solid oklch(85% 0.02 250);background:{{ tabScanBg }};color:{{ tabScanColor }};font:600 0.875rem/1 'IBM Plex Sans';padding:11px 20px;border-radius:8px;cursor:pointer;transition:all 180ms ease;">{{ tabScanLabel }}</button>
+      <button onclick="{{ setToolTabCalc }}" style="border:1px solid oklch(85% 0.02 250);background:{{ tabCalcBg }};color:{{ tabCalcColor }};font:600 0.875rem/1 'IBM Plex Sans';padding:11px 20px;border-radius:8px;cursor:pointer;transition:all 180ms ease;">{{ tabCalcLabel }}</button>
+    </div>
+
+    <sc-if value="{{ isTabScan }}">
+      <div style="background:oklch(98% 0.004 90);border:1px solid oklch(91% 0.006 90);border-radius:14px;padding:clamp(28px,4vw,40px);min-height:280px;">
+        <sc-if value="{{ quizDone }}">
+          <div>
+            <div style="font:600 0.75rem/1.2 'IBM Plex Mono';letter-spacing:0.05em;text-transform:uppercase;color:oklch(48% 0.12 230);margin-bottom:14px;">{{ quizResultLabel }}</div>
+            <p style="font:500 clamp(1rem,1.6vw,1.125rem)/1.55 'IBM Plex Sans';color:oklch(18% 0.02 255);margin:0 0 14px;">{{ quizResultReadiness }}</p>
+            <p style="font:400 0.9375rem/1.6 'IBM Plex Sans';color:oklch(46% 0.012 140);margin:0 0 28px;">{{ quizResultService }}</p>
+            <div style="display:flex;gap:12px;flex-wrap:wrap;">
+              <a href="#contact" style="background:oklch(70% 0.14 220);color:#001a2e;padding:12px 22px;border-radius:6px;font-weight:700;font-size:0.9375rem;transition:all 200ms ease;white-space:nowrap;" style-hover="transform:translateY(-2px);box-shadow:0 8px 24px rgba(0, 212, 255, 0.25);">{{ quizCtaLabel }}</a>
+              <button onclick="{{ resetQuiz }}" style="border:1px solid oklch(85% 0.02 250);background:transparent;color:oklch(30% 0.02 250);padding:12px 22px;border-radius:6px;font-weight:600;font-size:0.9375rem;cursor:pointer;">{{ quizRestartLabel }}</button>
+            </div>
+          </div>
+        </sc-if>
+        <sc-if value="{{ quizNotDone }}">
+          <div>
+            <div style="font:600 0.8125rem/1.2 'IBM Plex Mono';color:oklch(46% 0.012 140);margin-bottom:16px;">{{ quizProgressText }}</div>
+            <h3 style="font:600 clamp(1.0625rem,2vw,1.25rem)/1.4 'IBM Plex Sans';margin:0 0 20px;color:oklch(18% 0.02 255);">{{ quizQuestion.q }}</h3>
+            <div style="display:flex;flex-direction:column;gap:10px;">
+              <sc-for list="{{ quizQuestion.options }}" as="opt" hint-placeholder-count="4">
+                <button onclick="{{ opt.onSelect }}" style="text-align:left;border:1px solid oklch(88% 0.006 90);background:#FFF;color:oklch(30% 0.02 250);font:400 0.9375rem/1.4 'IBM Plex Sans';padding:14px 18px;border-radius:8px;cursor:pointer;transition:all 160ms ease;" style-hover="border-color:oklch(48% 0.12 230);background:oklch(98% 0.02 230);">{{ opt.label }}</button>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isTabCalc }}">
+      <div style="background:oklch(98% 0.004 90);border:1px solid oklch(91% 0.006 90);border-radius:14px;padding:clamp(28px,4vw,40px);min-height:280px;">
+        <div style="margin-bottom:24px;">
+          <label style="display:block;font:600 0.9375rem/1.4 'IBM Plex Sans';color:oklch(18% 0.02 255);margin-bottom:10px;">{{ calcHoursLabel }} <span style="color:oklch(48% 0.12 230);">{{ roiHours }} u</span></label>
+          <input type="range" min="1" max="40" step="1" value="{{ roiHours }}" onchange="{{ setRoiHours }}" oninput="{{ setRoiHours }}" style="width:100%;accent-color:oklch(48% 0.12 230);">
+        </div>
+        <div style="margin-bottom:28px;">
+          <label style="display:block;font:600 0.9375rem/1.4 'IBM Plex Sans';color:oklch(18% 0.02 255);margin-bottom:10px;">{{ calcRateLabel }} <span style="color:oklch(48% 0.12 230);">€{{ roiRate }}/u</span></label>
+          <input type="range" min="20" max="150" step="5" value="{{ roiRate }}" onchange="{{ setRoiRate }}" oninput="{{ setRoiRate }}" style="width:100%;accent-color:oklch(48% 0.12 230);">
+        </div>
+        <div style="font:600 0.8125rem/1.2 'IBM Plex Mono';letter-spacing:0.03em;color:oklch(46% 0.012 140);margin-bottom:14px;">{{ calcResultIntro }}</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:14px;margin-bottom:20px;">
+          <div style="background:#FFF;border:1px solid oklch(91% 0.006 90);border-radius:8px;padding:16px;text-align:center;">
+            <div style="font:700 clamp(1.25rem,2.4vw,1.5rem)/1 'IBM Plex Mono';color:oklch(48% 0.12 230);">{{ roiWeeklyEuro }}</div>
+            <div style="font:400 0.8125rem/1.4 'IBM Plex Sans';color:oklch(46% 0.012 140);margin-top:6px;">{{ calcPerWeek }}</div>
+          </div>
+          <div style="background:#FFF;border:1px solid oklch(91% 0.006 90);border-radius:8px;padding:16px;text-align:center;">
+            <div style="font:700 clamp(1.25rem,2.4vw,1.5rem)/1 'IBM Plex Mono';color:oklch(48% 0.12 230);">{{ roiMonthlyEuro }}</div>
+            <div style="font:400 0.8125rem/1.4 'IBM Plex Sans';color:oklch(46% 0.012 140);margin-top:6px;">{{ calcPerMonth }}</div>
+          </div>
+          <div style="background:#FFF;border:1px solid oklch(91% 0.006 90);border-radius:8px;padding:16px;text-align:center;">
+            <div style="font:700 clamp(1.25rem,2.4vw,1.5rem)/1 'IBM Plex Mono';color:oklch(48% 0.12 230);">{{ roiYearlyEuro }}</div>
+            <div style="font:400 0.8125rem/1.4 'IBM Plex Sans';color:oklch(46% 0.012 140);margin-top:6px;">{{ calcPerYear }}</div>
+          </div>
+        </div>
+        <p style="font:400 0.8125rem/1.5 'IBM Plex Sans';color:oklch(55% 0.012 140);margin:0;">{{ calcDisclaimer }}</p>
+      </div>
+    </sc-if>
+  </div>
+</section>
+
 <section id="stack" style="padding:clamp(64px,8vw,88px) clamp(20px,5vw,40px);background:#FFF;border-top:1px solid oklch(90% 0.006 90);">
   <div style="max-width:1100px;margin:0 auto;">
     <div style="text-align:center;margin-bottom:clamp(40px,5vw,56px);">
@@ -355,14 +463,14 @@
 </section>
 
 <section id="pricing" style="padding:clamp(80px,10vw,120px) clamp(20px,5vw,40px);background:linear-gradient(135deg, oklch(6% 0 0 / 0.02), oklch(12% 0.03 260 / 0.02));border-top:1px solid oklch(90% 0.006 90);">
-  <div style="max-width:1000px;margin:0 auto;">
+  <div style="max-width:1240px;margin:0 auto;">
     <div style="text-align:center;margin-bottom:clamp(48px,6vw,64px);">
       <h2 style="font:600 clamp(1.75rem,4vw,2.25rem)/1.2 'IBM Plex Sans';margin:0 0 16px;letter-spacing:-0.02em;color:oklch(18% 0.02 255);">{{ pricingHeading }}</h2>
       <p style="font:400 clamp(0.95rem,1.5vw,1rem)/1.6 'IBM Plex Sans';color:oklch(46% 0.012 140);max-width:600px;margin:0 auto;">{{ pricingSubtext }}</p>
     </div>
 
-    <div data-reveal-grid style="display:grid;grid-template-columns:repeat(auto-fit,minmax(clamp(250px,100%,320px),1fr));gap:clamp(20px,2vw,28px);">
-      <sc-for list="{{ pricing }}" as="tier" hint-placeholder-count="3">
+    <div data-reveal-grid style="display:grid;grid-template-columns:repeat(auto-fit,minmax(clamp(240px,100%,280px),1fr));gap:clamp(16px,2vw,24px);">
+      <sc-for list="{{ pricing }}" as="tier" hint-placeholder-count="4">
         <div data-reveal style="background:#FFF;border:1px solid oklch(91% 0.006 90);border-radius:12px;padding:clamp(28px,4vw,36px);display:flex;flex-direction:column;transition:all 220ms ease, opacity 600ms ease, transform 600ms ease;" style-hover="border-color:oklch(48% 0.12 230);box-shadow:0 8px 24px oklch(48% 0.12 230 / 0.15);">
           <h3 style="font:600 clamp(1.0625rem,1.8vw,1.25rem)/1.3 'IBM Plex Sans';margin:0 0 8px;color:oklch(18% 0.02 255);">{{ tier.name }}</h3>
           <p style="font:400 0.9375rem/1.6 'IBM Plex Sans';color:oklch(46% 0.012 140);margin:0 0 20px;">{{ tier.desc }}</p>
@@ -520,6 +628,87 @@ const copyNL = {
     { iconClass: 'icon-puzzle', title: 'AI-geintegreerde applicaties', desc: 'Volwaardige producten met AI in de kern, niet als toevoeging achteraf. Interne tools, klantgerichte applicaties en platforms die vanaf de grond zijn opgebouwd rond wat moderne modellen kunnen.', color: 'oklch(60% 0.15 170)' }
   ],
 
+  flowNodes: [
+    { iconClass: 'icon-zap', label: 'Trigger' },
+    { iconClass: 'icon-workflow', label: 'n8n' },
+    { iconClass: 'icon-bot', label: 'AI-model' },
+    { iconClass: 'icon-check', label: 'Actie' },
+    { iconClass: 'icon-database', label: 'Jouw systeem' }
+  ],
+
+  toolsLabel: 'Probeer het zelf',
+  toolsHeading: 'Ontdek wat het voor jouw bedrijf betekent',
+  toolsSubtext: 'Twee kleine tools om je situatie scherp te krijgen voordat je een gesprek plant.',
+  tabScanLabel: 'AI-fit scan',
+  tabCalcLabel: 'Tijdsbesparing berekenen',
+
+  quizProgressLabel: 'Vraag',
+  quizOfLabel: 'van',
+  quizRestartLabel: 'Scan opnieuw doen',
+  quizCtaLabel: 'Plan gratis kennismaking',
+  quizResultLabel: 'Jouw resultaat',
+  quizQuestions: [
+    {
+      q: 'Wat kost je nu de meeste tijd?',
+      options: [
+        { label: 'Handmatig data overtypen tussen systemen', readiness: 3, lean: 2 },
+        { label: 'Rapportages en analyses samenstellen', readiness: 2, lean: 1 },
+        { label: 'Een tool of functionaliteit die simpelweg nog niet bestaat', readiness: 2, lean: -2 },
+        { label: 'Weet ik nog niet precies', readiness: 0, lean: 0 }
+      ]
+    },
+    {
+      q: 'Hoeveel systemen moeten met elkaar kunnen praten?',
+      options: [
+        { label: 'Geen, het gaat om één nieuw stuk software', readiness: 2, lean: -2 },
+        { label: '1-2 bestaande systemen', readiness: 2, lean: 1 },
+        { label: '3 of meer bestaande systemen', readiness: 3, lean: 2 },
+        { label: 'Nog niet in kaart gebracht', readiness: 0, lean: 0 }
+      ]
+    },
+    {
+      q: 'Heb je al met AI geexperimenteerd binnen je bedrijf?',
+      options: [
+        { label: 'Nee, nog niet', readiness: 1, lean: 0 },
+        { label: 'Ja, met losse tools zoals ChatGPT', readiness: 2, lean: 1 },
+        { label: 'Ja, en dat willen we nu structureel inbouwen in een product', readiness: 3, lean: -2 },
+        { label: 'Ja, maar het bleef bij een demo', readiness: 2, lean: 0 }
+      ]
+    },
+    {
+      q: 'Wat is het gewenste eindresultaat?',
+      options: [
+        { label: 'Een proces dat automatisch draait, zonder handwerk', readiness: 3, lean: 2 },
+        { label: 'Een nieuwe applicatie die klanten of collega\'s gebruiken', readiness: 3, lean: -2 },
+        { label: 'Eerst bewijzen dat het werkt, dan verder kijken', readiness: 2, lean: 0 },
+        { label: 'Nog niet concreet', readiness: 0, lean: 0 }
+      ]
+    },
+    {
+      q: 'Wanneer wil je hiermee live zijn?',
+      options: [
+        { label: 'Binnen 4 weken', readiness: 3, lean: 0 },
+        { label: 'Binnen 1 tot 3 maanden', readiness: 2, lean: 0 },
+        { label: 'Dit jaar, geen harde deadline', readiness: 1, lean: 0 },
+        { label: 'Nog aan het orienteren', readiness: 0, lean: 0 }
+      ]
+    }
+  ],
+  quizReadinessLow: 'Je staat aan het begin. Een Quick win (één proces automatiseren, vanaf €1.500) of een vrijblijvende kennismaking helpt om de kans scherp te krijgen.',
+  quizReadinessMid: 'Je bent klaar voor een proof of concept: een werkend prototype op jouw data, binnen 2 tot 3 weken.',
+  quizReadinessHigh: 'Je bent klaar voor een volledige implementatie. Tijd om dit in productie te zetten.',
+  quizServiceAutomation: 'Dit klinkt vooral naar AI-automatisering: een proces dat zelfstandig draait.',
+  quizServiceApp: 'Dit klinkt vooral naar een AI-geintegreerde applicatie: nieuwe software met AI in de kern.',
+  quizServiceBoth: 'Dit klinkt naar een combinatie van automatisering en een applicatie.',
+
+  calcHoursLabel: 'Hoeveel uur per week kost deze taak nu?',
+  calcRateLabel: 'Wat is dat uur ongeveer waard?',
+  calcResultIntro: 'Geschatte besparing bij automatisering:',
+  calcPerWeek: 'per week',
+  calcPerMonth: 'per maand',
+  calcPerYear: 'per jaar',
+  calcDisclaimer: 'Indicatieve schatting op basis van 70% tijdsbesparing bij een geslaagde automatisering. De werkelijke besparing hangt af van het proces.',
+
   stackLabel: 'Techniek',
   stackHeading: 'Techniek onder de motorkap',
   stackSubtext: 'Geen black box, geen dertien-in-een-dozijn tool-lijstje. Een klein, bewust gekozen instrumentarium, diep beheerst in plaats van oppervlakkig overal een beetje van.',
@@ -566,18 +755,19 @@ const copyNL = {
   ],
 
   pricingHeading: 'Transparante prijzen',
-  pricingSubtext: 'Vaste scope, vaste prijs. Geen verrassingen achteraf.',
+  pricingSubtext: 'Vaste scope, vaste prijs. Geen verrassingen achteraf. Klein beginnen kan, groot bouwen ook.',
   pricing: [
     { name: 'Kennismaking', desc: 'Je kans in kaart brengen', price: 'Gratis', timeframe: '30 minuten', cta: 'Plan gesprek', includes: ['AI-readiness assessment', 'Kansen met hoogste ROI identificeren', 'Realistische planning en budget'] },
-    { name: 'Proof of Concept', desc: 'De aanpak valideren', price: '€12.000 - €18.000', timeframe: '2-3 weken', cta: 'Meer info', includes: ['Prototype op jouw data', 'Eerste nauwkeurigheidscijfers', 'Integratieplan', 'Training van je team'] },
-    { name: 'Volledige implementatie', desc: 'Live en opschalen', price: '€20.000 - €28.000', timeframe: '2-4 weken', cta: 'Meer info', includes: ['Productie-implementatie', 'Systeemintegratie', 'Doorlopende monitoring', '90 dagen support'] }
+    { name: 'Quick win', desc: 'Eén proces automatiseren', price: '€1.500 - €3.500', timeframe: '1 week', cta: 'Meer info', includes: ['Eén concreet proces geautomatiseerd', 'Koppeling met 1-2 bestaande systemen', 'Overdracht en documentatie'] },
+    { name: 'Proof of Concept', desc: 'De aanpak valideren', price: '€8.000 - €14.000', timeframe: '2-3 weken', cta: 'Meer info', includes: ['Prototype op jouw data', 'Eerste nauwkeurigheidscijfers', 'Integratieplan', 'Training van je team'] },
+    { name: 'Volledige implementatie', desc: 'Live en opschalen', price: '€15.000 - €22.000', timeframe: '2-4 weken', cta: 'Meer info', includes: ['Productie-implementatie', 'Systeemintegratie', 'Doorlopende monitoring', '90 dagen support'] }
   ],
 
   faqLabel: 'Vragen',
   faqHeading: 'Veelgestelde vragen',
   faqs: [
-    { q: 'Wat kost een traject?', a: 'Een vrijblijvende kennismaking is gratis. Een proof of concept kost doorgaans €12.000 tot €18.000 en een volledige implementatie €20.000 tot €28.000, afhankelijk van scope. De prijs ligt vooraf vast, dus geen verrassingen achteraf.' },
-    { q: 'Hoe lang duurt een traject?', a: 'Een proof of concept duurt 2 tot 3 weken, een volledige implementatie 2 tot 4 weken. Daarna volgt 90 dagen support om te zorgen dat het systeem ook echt blijft werken.' },
+    { q: 'Wat kost een traject?', a: 'Een vrijblijvende kennismaking is gratis. Een quick win (één proces automatiseren) kost €1.500 tot €3.500. Een proof of concept kost doorgaans €8.000 tot €14.000 en een volledige implementatie €15.000 tot €22.000, afhankelijk van scope. De prijs ligt vooraf vast, dus geen verrassingen achteraf.' },
+    { q: 'Hoe lang duurt een traject?', a: 'Een quick win duurt ongeveer 1 week, een proof of concept 2 tot 3 weken en een volledige implementatie 2 tot 4 weken. Bij een volledige implementatie volgt daarna nog 90 dagen support om te zorgen dat het systeem ook echt blijft werken.' },
     { q: 'Werken jullie met onze bestaande systemen?', a: 'Ja. Automatiseringen en applicaties worden gebouwd rond wat je al gebruikt: je CRM, ERP, database of interne tools. Geen noodzaak om over te stappen naar nieuwe software.' },
     { q: 'Is onze data veilig?', a: 'Data wordt verwerkt volgens de AVG en, waar relevant, de EU AI Act. Waar jouw sector dat vereist, gaat de voorkeur uit naar Europese of on-premise dataopslag.' },
     { q: 'Voor wie is dit geschikt?', a: 'Voor mkb- en middelgrote bedrijven die AI concreet willen inzetten, niet alleen willen verkennen. Op zoek naar een adviestraject met een rapport als eindresultaat? Dan is dit niet de juiste plek: hier eindigt elk traject in een werkend systeem.' },
@@ -652,6 +842,87 @@ const copyEN = {
     { iconClass: 'icon-puzzle', title: 'AI-Integrated Applications', desc: 'Full products with AI at the core, not bolted on afterward. Internal tools, customer-facing applications and platforms built from the ground up around what modern models can do.', color: 'oklch(60% 0.15 170)' }
   ],
 
+  flowNodes: [
+    { iconClass: 'icon-zap', label: 'Trigger' },
+    { iconClass: 'icon-workflow', label: 'n8n' },
+    { iconClass: 'icon-bot', label: 'AI model' },
+    { iconClass: 'icon-check', label: 'Action' },
+    { iconClass: 'icon-database', label: 'Your system' }
+  ],
+
+  toolsLabel: 'Try it yourself',
+  toolsHeading: 'See what it means for your business',
+  toolsSubtext: 'Two small tools to sharpen your situation before you book a call.',
+  tabScanLabel: 'AI fit scan',
+  tabCalcLabel: 'Calculate time savings',
+
+  quizProgressLabel: 'Question',
+  quizOfLabel: 'of',
+  quizRestartLabel: 'Retake the scan',
+  quizCtaLabel: 'Schedule free discovery call',
+  quizResultLabel: 'Your result',
+  quizQuestions: [
+    {
+      q: 'What costs you the most time right now?',
+      options: [
+        { label: 'Manually re-typing data between systems', readiness: 3, lean: 2 },
+        { label: 'Putting together reports and analyses', readiness: 2, lean: 1 },
+        { label: 'A tool or feature that simply does not exist yet', readiness: 2, lean: -2 },
+        { label: 'Not sure yet', readiness: 0, lean: 0 }
+      ]
+    },
+    {
+      q: 'How many systems need to talk to each other?',
+      options: [
+        { label: 'None, this is one new piece of software', readiness: 2, lean: -2 },
+        { label: '1-2 existing systems', readiness: 2, lean: 1 },
+        { label: '3 or more existing systems', readiness: 3, lean: 2 },
+        { label: 'Not mapped out yet', readiness: 0, lean: 0 }
+      ]
+    },
+    {
+      q: 'Have you experimented with AI in your business already?',
+      options: [
+        { label: 'No, not yet', readiness: 1, lean: 0 },
+        { label: 'Yes, with standalone tools like ChatGPT', readiness: 2, lean: 1 },
+        { label: 'Yes, and we now want to build that into a product', readiness: 3, lean: -2 },
+        { label: 'Yes, but it stayed a demo', readiness: 2, lean: 0 }
+      ]
+    },
+    {
+      q: 'What is the outcome you want?',
+      options: [
+        { label: 'A process that runs automatically, no manual work', readiness: 3, lean: 2 },
+        { label: 'A new application customers or colleagues use', readiness: 3, lean: -2 },
+        { label: 'First prove it works, then decide next steps', readiness: 2, lean: 0 },
+        { label: 'Not concrete yet', readiness: 0, lean: 0 }
+      ]
+    },
+    {
+      q: 'When do you want this live?',
+      options: [
+        { label: 'Within 4 weeks', readiness: 3, lean: 0 },
+        { label: 'Within 1 to 3 months', readiness: 2, lean: 0 },
+        { label: 'This year, no hard deadline', readiness: 1, lean: 0 },
+        { label: 'Still exploring', readiness: 0, lean: 0 }
+      ]
+    }
+  ],
+  quizReadinessLow: 'You are at the starting point. A Quick Win (automating one process, from €1,500) or a no-obligation discovery call helps sharpen the opportunity.',
+  quizReadinessMid: 'You are ready for a proof of concept: a working prototype on your data, within 2 to 3 weeks.',
+  quizReadinessHigh: 'You are ready for a full implementation. Time to put this into production.',
+  quizServiceAutomation: 'This sounds like AI automation: a process that runs on its own.',
+  quizServiceApp: 'This sounds like an AI-integrated application: new software with AI at its core.',
+  quizServiceBoth: 'This sounds like a combination of automation and an application.',
+
+  calcHoursLabel: 'How many hours a week does this task cost now?',
+  calcRateLabel: 'What is that hour roughly worth?',
+  calcResultIntro: 'Estimated savings with automation:',
+  calcPerWeek: 'per week',
+  calcPerMonth: 'per month',
+  calcPerYear: 'per year',
+  calcDisclaimer: 'Indicative estimate based on 70% time savings for a successful automation. Actual savings depend on the process.',
+
   stackLabel: 'Technology',
   stackHeading: 'The technology behind it',
   stackSubtext: 'No black box, and no laundry list of tools for the sake of looking thorough. A small, deliberately chosen toolset, mastered deeply rather than dabbled with broadly.',
@@ -698,18 +969,19 @@ const copyEN = {
   ],
 
   pricingHeading: 'Transparent pricing',
-  pricingSubtext: 'Fixed scope, fixed price. No surprises.',
+  pricingSubtext: 'Fixed scope, fixed price. No surprises. Start small or build big.',
   pricing: [
     { name: 'Discovery Call', desc: 'Understand your opportunity', price: 'Free', timeframe: '30 minutes', cta: 'Book call', includes: ['AI readiness assessment', 'Identify high-ROI use cases', 'Realistic timeline & budget'] },
-    { name: 'Proof of Concept', desc: 'Validate the approach', price: '€12,000 - €18,000', timeframe: '2-3 weeks', cta: 'Learn more', includes: ['Prototype on your data', 'Initial accuracy metrics', 'Integration plan', 'Team training'] },
-    { name: 'Full Implementation', desc: 'Go live and scale', price: '€20,000 - €28,000', timeframe: '2-4 weeks', cta: 'Learn more', includes: ['Production deployment', 'System integration', 'Ongoing monitoring', '90-day support'] }
+    { name: 'Quick Win', desc: 'Automate one process', price: '€1,500 - €3,500', timeframe: '1 week', cta: 'Learn more', includes: ['One concrete process automated', 'Connects to 1-2 existing systems', 'Handover and documentation'] },
+    { name: 'Proof of Concept', desc: 'Validate the approach', price: '€8,000 - €14,000', timeframe: '2-3 weeks', cta: 'Learn more', includes: ['Prototype on your data', 'Initial accuracy metrics', 'Integration plan', 'Team training'] },
+    { name: 'Full Implementation', desc: 'Go live and scale', price: '€15,000 - €22,000', timeframe: '2-4 weeks', cta: 'Learn more', includes: ['Production deployment', 'System integration', 'Ongoing monitoring', '90-day support'] }
   ],
 
   faqLabel: 'FAQ',
   faqHeading: 'Frequently asked questions',
   faqs: [
-    { q: 'What does an engagement cost?', a: 'A no-obligation discovery call is free. A proof of concept typically costs €12,000 to €18,000, and a full implementation €20,000 to €28,000, depending on scope. Price is fixed upfront, so no surprises later.' },
-    { q: 'How long does an engagement take?', a: 'A proof of concept takes 2 to 3 weeks, a full implementation 2 to 4 weeks. That is followed by 90 days of support to make sure the system keeps working.' },
+    { q: 'What does an engagement cost?', a: 'A no-obligation discovery call is free. A quick win (automating one process) costs €1,500 to €3,500. A proof of concept typically costs €8,000 to €14,000, and a full implementation €15,000 to €22,000, depending on scope. Price is fixed upfront, so no surprises later.' },
+    { q: 'How long does an engagement take?', a: 'A quick win takes about 1 week, a proof of concept 2 to 3 weeks, a full implementation 2 to 4 weeks. A full implementation is followed by 90 days of support to make sure the system keeps working.' },
     { q: 'Do you work with our existing systems?', a: 'Yes. Automations and applications are built around what you already use: your CRM, ERP, database or internal tools. No need to switch to new software.' },
     { q: 'Is our data safe?', a: 'Data is processed in line with GDPR and, where relevant, the EU AI Act. Where your sector requires it, European or on-premise data storage is preferred.' },
     { q: 'Who is this a good fit for?', a: 'Mid-market and scale-up companies that want to actually deploy AI, not just explore it. Looking for a consulting engagement that ends in a report? This is not the right fit: every engagement here ends in a working system.' },
@@ -736,14 +1008,64 @@ const copyEN = {
   footerBuiltWith: 'Based in the Netherlands.'
 };
 
+function formatEuro(n) {
+  return '€' + Math.round(n).toLocaleString('nl-NL');
+}
+
 class Component extends DCLogic {
-  state = { lang: 'nl' };
+  state = {
+    lang: 'nl',
+    toolTab: 'scan',
+    quizStep: 0,
+    quizReadiness: 0,
+    quizLean: 0,
+    roiHours: 10,
+    roiRate: 40
+  };
 
   renderVals() {
     const lang = this.state.lang === 'en' ? 'en' : 'nl';
     const t = lang === 'nl' ? copyNL : copyEN;
     const active = { background: 'oklch(70% 0.14 220)', color: '#001a2e' };
     const inactive = { background: 'transparent', color: 'oklch(46% 0.012 140)' };
+    const s = this.state;
+
+    const isTabScan = s.toolTab !== 'calc';
+    const isTabCalc = s.toolTab === 'calc';
+    const totalQuestions = t.quizQuestions.length;
+    const quizDone = s.quizStep >= totalQuestions;
+    const quizNotDone = !quizDone;
+
+    let quizQuestion = null;
+    if (quizNotDone) {
+      const raw = t.quizQuestions[s.quizStep];
+      quizQuestion = {
+        q: raw.q,
+        options: raw.options.map((opt) => ({
+          label: opt.label,
+          onSelect: () => this.setState({
+            quizStep: s.quizStep + 1,
+            quizReadiness: s.quizReadiness + opt.readiness,
+            quizLean: s.quizLean + opt.lean
+          })
+        }))
+      };
+    }
+
+    let quizResultReadiness = '';
+    let quizResultService = '';
+    if (quizDone) {
+      quizResultReadiness = s.quizReadiness >= 12 ? t.quizReadinessHigh : s.quizReadiness >= 7 ? t.quizReadinessMid : t.quizReadinessLow;
+      quizResultService = s.quizLean > 2 ? t.quizServiceAutomation : s.quizLean < -2 ? t.quizServiceApp : t.quizServiceBoth;
+    }
+
+    const roiHours = s.roiHours;
+    const roiRate = s.roiRate;
+    const roiWeeklyHours = roiHours * 0.7;
+    const roiWeeklyEuroVal = roiWeeklyHours * roiRate;
+    const roiMonthlyEuroVal = roiWeeklyEuroVal * 4.33;
+    const roiYearlyEuroVal = roiWeeklyEuroVal * 52;
+
     return {
       ...t,
       lang,
@@ -752,7 +1074,33 @@ class Component extends DCLogic {
       langNlBg: lang === 'nl' ? active.background : inactive.background,
       langNlColor: lang === 'nl' ? active.color : inactive.color,
       langEnBg: lang === 'en' ? active.background : inactive.background,
-      langEnColor: lang === 'en' ? active.color : inactive.color
+      langEnColor: lang === 'en' ? active.color : inactive.color,
+
+      setToolTabScan: () => this.setState({ toolTab: 'scan' }),
+      setToolTabCalc: () => this.setState({ toolTab: 'calc' }),
+      isTabScan,
+      isTabCalc,
+      tabScanBg: isTabScan ? active.background : inactive.background,
+      tabScanColor: isTabScan ? active.color : inactive.color,
+      tabCalcBg: isTabCalc ? active.background : inactive.background,
+      tabCalcColor: isTabCalc ? active.color : inactive.color,
+
+      quizStep: s.quizStep,
+      quizDone,
+      quizNotDone,
+      quizQuestion,
+      quizProgressText: quizNotDone ? (t.quizProgressLabel + ' ' + (s.quizStep + 1) + ' ' + t.quizOfLabel + ' ' + totalQuestions) : '',
+      quizResultReadiness,
+      quizResultService,
+      resetQuiz: () => this.setState({ quizStep: 0, quizReadiness: 0, quizLean: 0 }),
+
+      roiHours,
+      roiRate,
+      setRoiHours: (e) => this.setState({ roiHours: Number(e.target.value) }),
+      setRoiRate: (e) => this.setState({ roiRate: Number(e.target.value) }),
+      roiWeeklyEuro: formatEuro(roiWeeklyEuroVal),
+      roiMonthlyEuro: formatEuro(roiMonthlyEuroVal),
+      roiYearlyEuro: formatEuro(roiYearlyEuroVal)
     };
   }
 }
