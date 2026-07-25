@@ -39,7 +39,13 @@ async function laadMetrics() {
   for (const [label, waarde] of items) {
     const kaart = document.createElement("div");
     kaart.className = "metric";
-    kaart.innerHTML = `<div class="label">${label}</div><div class="value">${waarde}</div>`;
+    const labelEl = document.createElement("div");
+    labelEl.className = "label";
+    labelEl.textContent = label;
+    const waardeEl = document.createElement("div");
+    waardeEl.className = "value";
+    waardeEl.textContent = waarde;
+    kaart.append(labelEl, waardeEl);
     container.appendChild(kaart);
   }
   return data;
