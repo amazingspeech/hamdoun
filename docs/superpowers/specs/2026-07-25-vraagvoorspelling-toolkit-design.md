@@ -85,14 +85,14 @@ Overwogen alternatieven:
 | Component | Taak |
 |---|---|
 | `pipeline/` | Inlezen ruwe CSV's, schemavalidatie, featureconstructie, tijd-geordende train/validatie/test-split |
-| `training/` | Traint p10/p50/p90 XGBoost-modellen via walk-forward CV, berekent RMSPE + coverage, slaat een geversied artefact op |
+| `training/` | Traint p10/p50/p90 XGBoost-modellen op één tijd-geordende holdout-split (geen k-fold CV — de validatieperiode is gereserveerd voor toekomstig gebruik, bv. early stopping), berekent RMSPE + coverage, slaat een geversied artefact op |
 | `serving/` (FastAPI) | Laadt een expliciet gepinde modelversie (`MODEL_VERSION`, hard-fail indien ontbrekend/onvindbaar); serveert `/forecast`, `/metrics`, `/health`; API-key-auth via gehashte keys, CORS-allowlist, rate limiting |
 | `security/` | AES-256-GCM-module (afgeleid van Certo's `encryptie.py`) voor optionele encryptie van audit-log, modelartefacten en client-data-at-rest; audit-logging zelf staat altijd aan, alleen de versleuteling ervan is toggle-baar |
 | `dashboard/` | Statische frontend in Tessar-stijl (IBM Plex Sans, oklch-kleuren), configureerbaar API-basisadres, winkel-selector + datumbereik (géén productselector — zie dataset), grafiek met p10–p90-band en p50-lijn, toont de gevalideerde RMSPE en coverage prominent |
 | `tests/` | Eén testbestand per module, Certo-conventie |
 
 **Dataflow:** ruwe CSV's → `pipeline` (validatie + features, tijd-geordend) →
-`training` (walk-forward CV, p10/p50/p90-modellen, RMSPE + coverage op
+`training` (één tijd-geordende holdout-split, p10/p50/p90-modellen, RMSPE + coverage op
 achtergehouden testperiode) → geversieerd artefact op schijf (model **+ de
 laatste N dagen historie per winkel**, nodig om lag-/rolling-features te
 reconstrueren bij een voorspellingsverzoek) → FastAPI laadt de gepinde versie
