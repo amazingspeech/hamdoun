@@ -34,6 +34,21 @@ patroon als Certo's `KNOWN-LIMITATIONS.md`.
 - **Geen CI-pipeline.** `pip-audit` en de testsuite zijn handmatige
   controles vóór oplevering, geen geautomatiseerde build-gate — die bestaat
   in deze fase niet.
+- **9 pip-audit-bevindingen, gebonden aan de lokale ontwikkelomgeving, niet
+  aan de toolkit-code.** `pip-audit` (uitgevoerd tijdens Task 20, finale
+  verificatie) vond 9 bekende kwetsbaarheden in `click`, `starlette` (x5),
+  `pyarrow`, `pytest` en `python-dotenv`. Elke gepatchte versie vereist
+  Python ≥3.10; deze lokale ontwikkelmachine heeft alleen Python 3.9.6
+  (Xcode's meegeleverde interpreter) beschikbaar, en een upgrade naar een
+  nieuwere Python via Homebrew bleek geblokkeerd: het vereist een Xcode-versie
+  die op zijn beurt een nieuwere macOS vereist dan deze machine draait (macOS
+  15.5) — een macOS-upgrade is disproportioneel voor het sluiten van
+  dependency-audit-bevindingen op een lokale toolkit. `requirements.in`
+  bevat alleen ondergrenzen (`>=`), dus een `pip install --upgrade` op een
+  machine met Python ≥3.10 lost dit direct op. De Docker-image (`Dockerfile`)
+  gebruikt `python:3.11-slim` en wordt niet door deze beperking geraakt —
+  bij de eerste live build daar zal `pip install` al de gepatchte versies
+  ophalen.
 - **Geen live deployment.** Draait lokaal via Docker Compose. Live
   deployment (bv. naast Certo, met een Caddy-reverse-proxy) en de
   daadwerkelijke website-demo-integratie zijn bewuste, losse
