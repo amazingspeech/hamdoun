@@ -64,7 +64,7 @@
   @keyframes heroOrbC { 0%,100% { transform:translate(-50%,0) scale(1); } 50% { transform:translate(-50%,-25px) scale(1.15); } }
   .hero-mark { animation:heroMarkFloat 12s ease-in-out infinite; }
   @keyframes heroMarkFloat { 0%,100% { transform:translateY(0) rotate(0deg); } 50% { transform:translateY(-14px) rotate(4deg); } }
-  #hero-canvas { position:absolute; inset:0; width:100%; height:100%; opacity:0.5; }
+  #hero-canvas { position:absolute; inset:0; width:100%; height:100%; opacity:0.9; }
   @media (prefers-reduced-motion: reduce) {
     [data-reveal] { opacity:1; transform:none; transition:none; }
     html { scroll-behavior:auto; }
@@ -821,92 +821,278 @@ class Component extends DCLogic {
     }).observe(document.body, { childList: true, subtree: true });
   }
 
-  // Lightweight network-node canvas for the hero background.
-  // Self-contained (no external particle library) to keep the page fast.
-  function initHeroCanvas() {
-    var canvas = document.getElementById("hero-canvas");
-    if (!canvas || reduceMotion) return;
+  // Self-contained 3D wireframe engine for the hero background: a slowly
+  // rotating icosahedron core with orbiting data-satellites and an ambient
+  // particle field, hand-rolled (no Three.js/WebGL dependency) so the page
+  // stays fast and has zero external runtime risk.
+  function initHeroCanvas(canvas) {
+    if (!canvas || reduceMotion) return null;
     var ctx = canvas.getContext("2d");
     var section = canvas.closest("section");
-    var nodes = [];
     var raf = null;
+    var destroyed = false;
     var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var W = 0, H = 0;
+
+    // --- Build an icosahedron: 12 vertices, edges derived from nearest-neighbor distance ---
+    var phi = (1 + Math.sqrt(5)) / 2;
+    var rawVerts = [
+      [-1, phi, 0], [1, phi, 0], [-1, -phi, 0], [1, -phi, 0],
+      [0, -1, phi], [0, 1, phi], [0, -1, -phi], [0, 1, -phi],
+      [phi, 0, -1], [phi, 0, 1], [-phi, 0, -1], [-phi, 0, 1]
+    ];
+    var vlen = Math.sqrt(1 + phi * phi);
+    var verts = rawVerts.map(function (v) { return [v[0] / vlen, v[1] / vlen, v[2] / vlen]; });
+    var edges = [];
+    (function buildEdges() {
+      var minD = Infinity;
+      for (var i = 0; i < verts.length; i++) {
+        for (var j = i + 1; j < verts.length; j++) {
+          var d = dist3(verts[i], verts[j]);
+          if (d < minD) minD = d;
+        }
+      }
+      for (var i = 0; i < verts.length; i++) {
+        for (var j = i + 1; j < verts.length; j++) {
+          if (dist3(verts[i], verts[j]) < minD * 1.05) edges.push([i, j]);
+        }
+      }
+    })();
+    function dist3(a, b) {
+      var dx = a[0] - b[0], dy = a[1] - b[1], dz = a[2] - b[2];
+      return Math.sqrt(dx * dx + dy * dy + dz * dz);
+    }
+
+    // Orbiting satellite points: small nodes tracing independent 3D circles around the core.
+    var satellites = [];
+    for (var s = 0; s < 7; s++) {
+      satellites.push({
+        r: 1.55 + Math.random() * 0.65,
+        speed: 0.15 + Math.random() * 0.22,
+        offset: Math.random() * Math.PI * 2,
+        tiltX: Math.random() * Math.PI,
+        tiltZ: Math.random() * Math.PI
+      });
+    }
+
+    // Faint ambient particle field behind the object, for depth.
+    var particles = [];
+
+    var rotY = 0.4, rotX = 0.5;
+    var targetTiltX = 0, targetTiltY = 0, tiltX = 0, tiltY = 0;
+    var pointerActive = false;
+    var t = 0;
 
     function size() {
       var rect = section.getBoundingClientRect();
-      canvas.width = rect.width * dpr;
-      canvas.height = rect.height * dpr;
-      canvas.style.width = rect.width + "px";
-      canvas.style.height = rect.height + "px";
+      W = rect.width; H = rect.height;
+      canvas.width = W * dpr;
+      canvas.height = H * dpr;
+      canvas.style.width = W + "px";
+      canvas.style.height = H + "px";
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      var count = Math.min(46, Math.round((rect.width * rect.height) / 26000));
-      nodes = [];
+      var count = Math.min(60, Math.round((W * H) / 24000));
+      particles = [];
       for (var i = 0; i < count; i++) {
-        nodes.push({
-          x: Math.random() * rect.width,
-          y: Math.random() * rect.height,
-          vx: (Math.random() - 0.5) * 0.18,
-          vy: (Math.random() - 0.5) * 0.18
+        particles.push({
+          x: Math.random() * W,
+          y: Math.random() * H,
+          z: Math.random(),
+          vx: (Math.random() - 0.5) * 0.12,
+          vy: (Math.random() - 0.5) * 0.12
         });
       }
     }
 
+    function rotatePoint(p, ax, ay) {
+      // rotate around X axis
+      var y1 = p[1] * Math.cos(ax) - p[2] * Math.sin(ax);
+      var z1 = p[1] * Math.sin(ax) + p[2] * Math.cos(ax);
+      // rotate around Y axis
+      var x2 = p[0] * Math.cos(ay) + z1 * Math.sin(ay);
+      var z2 = -p[0] * Math.sin(ay) + z1 * Math.cos(ay);
+      return [x2, y1, z2];
+    }
+
+    function project(p, cx, cy, scaleBase, camDist) {
+      var s = camDist / (camDist + p[2]);
+      return { x: cx + p[0] * s * scaleBase, y: cy + p[1] * s * scaleBase, z: p[2], s: s };
+    }
+
     function step() {
-      var rect = section.getBoundingClientRect();
-      ctx.clearRect(0, 0, rect.width, rect.height);
-      var linkDist = 130;
-      for (var i = 0; i < nodes.length; i++) {
-        var n = nodes[i];
-        n.x += n.vx;
-        n.y += n.vy;
-        if (n.x < 0 || n.x > rect.width) n.vx *= -1;
-        if (n.y < 0 || n.y > rect.height) n.vy *= -1;
+      t += 1;
+      // Self-heal: the DC/React runtime occasionally resets this canvas node's
+      // width/height back to browser defaults (300x150) mid-lifecycle without
+      // replacing the element itself, which would otherwise silently break the
+      // whole scene. Cheap check, corrects instantly if it ever happens.
+      var expectedW = Math.round(W * dpr), expectedH = Math.round(H * dpr);
+      if (canvas.width !== expectedW || canvas.height !== expectedH) {
+        size();
       }
-      for (var i = 0; i < nodes.length; i++) {
-        for (var j = i + 1; j < nodes.length; j++) {
-          var a = nodes[i], b = nodes[j];
-          var dx = a.x - b.x, dy = a.y - b.y;
-          var dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < linkDist) {
-            ctx.strokeStyle = "rgba(120, 210, 255," + (0.18 * (1 - dist / linkDist)) + ")";
-            ctx.lineWidth = 1;
-            ctx.beginPath();
-            ctx.moveTo(a.x, a.y);
-            ctx.lineTo(b.x, b.y);
-            ctx.stroke();
-          }
-        }
-      }
-      for (var i = 0; i < nodes.length; i++) {
-        ctx.fillStyle = "rgba(150, 220, 255, 0.55)";
+      ctx.clearRect(0, 0, W, H);
+
+      // ambient particles (subtle, behind the core)
+      for (var i = 0; i < particles.length; i++) {
+        var pt = particles[i];
+        pt.x += pt.vx; pt.y += pt.vy;
+        if (pt.x < 0 || pt.x > W) pt.vx *= -1;
+        if (pt.y < 0 || pt.y > H) pt.vy *= -1;
+        ctx.fillStyle = "rgba(140, 200, 255," + (0.10 + pt.z * 0.16) + ")";
         ctx.beginPath();
-        ctx.arc(nodes[i].x, nodes[i].y, 1.6, 0, Math.PI * 2);
+        ctx.arc(pt.x, pt.y, 0.8 + pt.z * 1.1, 0, Math.PI * 2);
         ctx.fill();
       }
+
+      var cx = W * 0.5, cy = H * 0.46;
+      var minSide = Math.min(W, H * 1.35);
+      var radius = Math.max(150, Math.min(320, minSide * 0.32));
+      var camDist = 3.6;
+
+      // slow continuous auto-rotation, gently eased toward pointer tilt
+      rotY += 0.0016;
+      rotX += 0.0005;
+      tiltX += (targetTiltX - tiltX) * 0.04;
+      tiltY += (targetTiltY - tiltY) * 0.04;
+
+      var ay = rotY + tiltY;
+      var ax = rotX + tiltX + Math.sin(t * 0.004) * 0.05;
+
+      // project core vertices
+      var proj = verts.map(function (v) { return project(rotatePoint(v, ax, ay), cx, cy, radius, camDist); });
+
+      // edges, depth-shaded
+      for (var e = 0; e < edges.length; e++) {
+        var a = proj[edges[e][0]], b = proj[edges[e][1]];
+        var avgZ = (a.z + b.z) / 2;
+        var depthT = (avgZ + 1) / 2; // 0 (far) .. 1 (near)
+        var alpha = 0.10 + depthT * 0.42;
+        ctx.strokeStyle = "rgba(110, 200, 255," + alpha.toFixed(3) + ")";
+        ctx.lineWidth = 0.6 + depthT * 1.3;
+        ctx.shadowColor = "rgba(90, 190, 255, 0.5)";
+        ctx.shadowBlur = 3 + depthT * 5;
+        ctx.beginPath();
+        ctx.moveTo(a.x, a.y);
+        ctx.lineTo(b.x, b.y);
+        ctx.stroke();
+      }
+      ctx.shadowBlur = 0;
+
+      // vertex nodes, depth-shaded with soft glow
+      for (var v = 0; v < proj.length; v++) {
+        var p = proj[v];
+        var depthT2 = (p.z + 1) / 2;
+        var rad = 1.6 + depthT2 * 2.2;
+        var grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, rad * 4);
+        grad.addColorStop(0, "rgba(170, 225, 255," + (0.35 + depthT2 * 0.4) + ")");
+        grad.addColorStop(1, "rgba(170, 225, 255, 0)");
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, rad * 4, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = "rgba(200, 235, 255," + (0.55 + depthT2 * 0.4) + ")";
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, rad, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // orbiting satellites with connector lines back to the core
+      for (var si = 0; si < satellites.length; si++) {
+        var sat = satellites[si];
+        var ang = t * 0.01 * sat.speed + sat.offset;
+        var raw = [Math.cos(ang) * sat.r, Math.sin(ang) * sat.r * 0.4, Math.sin(ang) * sat.r];
+        var tilted = rotatePoint(raw, sat.tiltX, sat.tiltZ);
+        var final = rotatePoint(tilted, ax, ay);
+        var sp = project(final, cx, cy, radius, camDist);
+        var sDepth = (sp.z + 1) / 2;
+        ctx.strokeStyle = "rgba(120, 210, 255," + (0.05 + sDepth * 0.14) + ")";
+        ctx.lineWidth = 0.6;
+        ctx.beginPath();
+        ctx.moveTo(cx, cy);
+        ctx.lineTo(sp.x, sp.y);
+        ctx.stroke();
+        ctx.fillStyle = "rgba(180, 230, 255," + (0.4 + sDepth * 0.5) + ")";
+        ctx.beginPath();
+        ctx.arc(sp.x, sp.y, 1.4 + sDepth * 1.6, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // bright pulsing core at center
+      var pulse = 0.5 + Math.sin(t * 0.02) * 0.5;
+      var coreR = 6 + pulse * 3;
+      var coreGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, coreR * 6);
+      coreGrad.addColorStop(0, "rgba(150, 220, 255," + (0.5 + pulse * 0.25) + ")");
+      coreGrad.addColorStop(1, "rgba(150, 220, 255, 0)");
+      ctx.fillStyle = coreGrad;
+      ctx.beginPath();
+      ctx.arc(cx, cy, coreR * 6, 0, Math.PI * 2);
+      ctx.fill();
+
       raf = requestAnimationFrame(step);
+    }
+
+    function onPointerMove(e) {
+      var rect = section.getBoundingClientRect();
+      var px = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+      var py = ((e.clientY - rect.top) / rect.height) * 2 - 1;
+      targetTiltY = Math.max(-1, Math.min(1, px)) * 0.35;
+      targetTiltX = Math.max(-1, Math.min(1, py)) * -0.22;
+      pointerActive = true;
+    }
+    function onPointerLeave() {
+      targetTiltX = 0; targetTiltY = 0;
+      pointerActive = false;
     }
 
     size();
     step();
+    section.addEventListener("pointermove", onPointerMove);
+    section.addEventListener("pointerleave", onPointerLeave);
     var resizeTimer;
-    window.addEventListener("resize", function () {
+    function onResize() {
       clearTimeout(resizeTimer);
       resizeTimer = setTimeout(size, 200);
-    });
-    document.addEventListener("visibilitychange", function () {
+    }
+    function onVisibility() {
       if (document.hidden) { cancelAnimationFrame(raf); }
-      else { raf = requestAnimationFrame(step); }
-    });
+      else if (!destroyed) { raf = requestAnimationFrame(step); }
+    }
+    window.addEventListener("resize", onResize);
+    document.addEventListener("visibilitychange", onVisibility);
+
+    return function destroy() {
+      destroyed = true;
+      cancelAnimationFrame(raf);
+      section.removeEventListener("pointermove", onPointerMove);
+      section.removeEventListener("pointerleave", onPointerLeave);
+      window.removeEventListener("resize", onResize);
+      document.removeEventListener("visibilitychange", onVisibility);
+    };
   }
 
+  // The DC/React runtime can re-render and swap in a fresh <canvas> node after
+  // the first paint (losing whatever we already drew to). Stay watchful: every
+  // time the element identity changes, tear down the old loop and reinit on
+  // the new node so the animation never gets stranded on a detached canvas.
   function whenCanvasReady() {
-    var el = document.getElementById("hero-canvas");
-    if (el) { initHeroCanvas(); return; }
-    var mo = new MutationObserver(function () {
-      var el2 = document.getElementById("hero-canvas");
-      if (el2) { mo.disconnect(); initHeroCanvas(); }
-    });
+    var current = null;
+    var destroy = null;
+    function tryInit() {
+      var el = document.getElementById("hero-canvas");
+      if (el && el !== current) {
+        if (destroy) destroy();
+        current = el;
+        destroy = initHeroCanvas(el);
+      }
+    }
+    tryInit();
+    var mo = new MutationObserver(tryInit);
     mo.observe(document.body, { childList: true, subtree: true });
+    // Catch late layout/replacement that doesn't trigger a body-level mutation.
+    var checks = 0;
+    (function pollFrame() {
+      tryInit();
+      if (++checks < 30) requestAnimationFrame(pollFrame);
+    })();
   }
   whenCanvasReady();
 })();
