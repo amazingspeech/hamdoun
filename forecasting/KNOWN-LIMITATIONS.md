@@ -45,10 +45,14 @@ patroon als Certo's `KNOWN-LIMITATIONS.md`.
   15.5) — een macOS-upgrade is disproportioneel voor het sluiten van
   dependency-audit-bevindingen op een lokale toolkit. `requirements.in`
   bevat alleen ondergrenzen (`>=`), dus een `pip install --upgrade` op een
-  machine met Python ≥3.10 lost dit direct op. De Docker-image (`Dockerfile`)
-  gebruikt `python:3.11-slim` en wordt niet door deze beperking geraakt —
-  bij de eerste live build daar zal `pip install` al de gepatchte versies
-  ophalen.
+  machine met Python ≥3.10 lost dit direct op — maar de Docker-image bouwt
+  uit `requirements.txt`, een exact-gepinde lock-file die hier onder Python
+  3.9 is gegenereerd en dus dezelfde kwetsbare versies bevat. `python:3.11-
+  slim` in de `Dockerfile` lost dit dus niet automatisch op: `requirements.txt`
+  moet eerst opnieuw gegenereerd worden (`pip install --upgrade -r
+  requirements.in && pip freeze > requirements.txt`) op een machine met
+  Python ≥3.10, en dat gecommit, vóórdat een Docker-build de patches
+  daadwerkelijk oppikt.
 - **Geen live deployment.** Draait lokaal via Docker Compose. Live
   deployment (bv. naast Certo, met een Caddy-reverse-proxy) en de
   daadwerkelijke website-demo-integratie zijn bewuste, losse
