@@ -44,3 +44,15 @@ def test_log_zet_chmod_600(tmp_path):
     pad = tmp_path / "audit.log"
     audit.log(pad, {"key": "klant-a"}, versleuteld=False)
     assert oct(pad.stat().st_mode)[-3:] == "600"
+
+
+def test_log_zet_chmod_600_ook_als_bestand_al_bestond(tmp_path):
+    # README.md §2 laat je `touch audit.log` aanmaken vóór de eerste
+    # `docker compose up` (om te voorkomen dat Docker het als directory
+    # bind-mount). Dat bestand krijgt de umask-default (vaak 644) — log()
+    # moet de permissies alsnog aanscherpen, niet alleen bij nieuwe bestanden.
+    pad = tmp_path / "audit.log"
+    pad.touch()
+    pad.chmod(0o644)
+    audit.log(pad, {"key": "klant-a"}, versleuteld=False)
+    assert oct(pad.stat().st_mode)[-3:] == "600"

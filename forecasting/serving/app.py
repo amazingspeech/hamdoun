@@ -24,7 +24,16 @@ from training.artifact import laad_artefact
 settings = laad_settings()
 artefact = laad_artefact(settings.models_dir, settings.model_version, versleuteld=settings.encrypt_at_rest)
 
-limiter = Limiter(key_func=get_remote_address, default_limits=[f"{settings.rate_limit_per_minute}/minute"])
+
+def _rate_limit_key(request: Request) -> str:
+    """Rate-limit per API-key, niet per bron-IP: meerdere klantsystemen achter
+    dezelfde NAT/proxy mogen niet dezelfde bucket delen. Valt terug op het
+    IP-adres alleen als slowapi deze functie aanroept vóórdat
+    vereis_api_key() draait (dus zonder geverifieerde key)."""
+    return request.headers.get("X-API-Key") or get_remote_address(request)
+
+
+limiter = Limiter(key_func=_rate_limit_key)
 
 app = FastAPI(title="Tessar Vraagvoorspelling")
 app.state.limiter = limiter

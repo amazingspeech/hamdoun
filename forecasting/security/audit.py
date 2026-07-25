@@ -19,15 +19,16 @@ def log(pad: Path, event: dict, versleuteld: bool) -> None:
     regel = {"tijdstip": time.time(), **event}
     plat = json.dumps(regel, ensure_ascii=False)
 
-    bestond_al = pad.exists()
     with pad.open("a", encoding="utf-8") as f:
         if versleuteld:
             f.write(base64.b64encode(encryptie.versleutel(plat.encode("utf-8"))).decode("ascii") + "\n")
         else:
             f.write(plat + "\n")
 
-    if not bestond_al:
-        try:
-            os.chmod(pad, 0o600)
-        except OSError:
-            pass
+    # Altijd chmod, ook als het bestand al bestond (bv. na `touch audit.log`
+    # vóór `docker compose up`, zoals README.md voorschrijft) — anders blijft
+    # het op de umask-default (meestal 644) staan i.p.v. verplicht 600.
+    try:
+        os.chmod(pad, 0o600)
+    except OSError:
+        pass

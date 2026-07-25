@@ -10,7 +10,7 @@ from security import api_keys
 from training import artifact, train
 
 
-def _bouw_test_omgeving(tmp_path, monkeypatch, cors_origins=""):
+def _bouw_test_omgeving(tmp_path, monkeypatch, cors_origins="", rate_limit_per_minuut="1000"):
     modellen = train.train_alle_kwantielen(pd.DataFrame({
         **{k: np.random.default_rng(1).uniform(0, 100, 200) for k in train.FEATURE_KOLOMMEN},
         "Sales": np.random.default_rng(1).uniform(500, 2000, 200),
@@ -38,7 +38,7 @@ def _bouw_test_omgeving(tmp_path, monkeypatch, cors_origins=""):
     monkeypatch.setenv("AUDIT_LOG_FILE", str(tmp_path / "audit.log"))
     monkeypatch.setenv("CORS_ALLOWED_ORIGINS", cors_origins)
     monkeypatch.setenv("FORECASTING_ENCRYPT_AT_REST", "false")
-    monkeypatch.setenv("RATE_LIMIT_PER_MINUUT", "1000")
+    monkeypatch.setenv("RATE_LIMIT_PER_MINUUT", rate_limit_per_minuut)
 
     if "serving.app" in sys.modules:
         del sys.modules["serving.app"]
@@ -132,3 +132,16 @@ def test_audit_log_bevat_verzoek_metadata(tmp_path, monkeypatch):
     assert regel["key"] == "test-klant"
     assert regel["statuscode"] == 200
     assert "store_id" in regel
+
+
+def test_forecast_boven_rate_limit_geeft_429(tmp_path, monkeypatch):
+    client = _bouw_test_omgeving(tmp_path, monkeypatch, rate_limit_per_minuut="2")
+    verzoek = {"store_id": 1, "start_datum": "2015-07-11", "horizon_dagen": 3}
+    headers = {"X-API-Key": "test-key-123"}
+
+    for _ in range(2):
+        resp = client.post("/forecast", json=verzoek, headers=headers)
+        assert resp.status_code == 200
+
+    resp = client.post("/forecast", json=verzoek, headers=headers)
+    assert resp.status_code == 429
