@@ -227,10 +227,11 @@ function toonSamenvatting(voorspellingen, storeId) {
   const dagLabel = n === 1 ? "1 dag" : `${n} dagen`;
   const betrouwbaarheid = modelMetrics ? Math.round(modelMetrics.coverage_p10_p90 * 100) : null;
 
-  document.getElementById("hero-label").textContent = `Verwachte omzet — komende ${dagLabel}`;
+  document.getElementById("hero-lead").textContent =
+    `Winkel ${storeId} verkoopt de komende ${dagLabel} waarschijnlijk ongeveer`;
   animeerGetal(document.getElementById("hero-waarde"), Math.round(totaalP50));
   document.getElementById("hero-sub").textContent =
-    `Winkel ${storeId} · ${formatDatumKort(voorspellingen[0].datum)} – ${formatDatumKort(voorspellingen[n - 1].datum)}`;
+    `${formatDatumKort(voorspellingen[0].datum)} – ${formatDatumKort(voorspellingen[n - 1].datum)}`;
 
   const secundairContainer = document.getElementById("secundair");
   secundairContainer.innerHTML = "";

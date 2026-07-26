@@ -32,13 +32,13 @@
   }
 
   :root[data-theme="dark"] {
-    --paper: oklch(16% 0.02 150);
-    --paper-raised: oklch(20% 0.022 150);
+    --paper: oklch(16% 0.02 55);
+    --paper-raised: oklch(20% 0.022 55);
     --ink: oklch(93% 0.012 95);
     --ink-soft: oklch(76% 0.015 95);
     --ink-faint: oklch(58% 0.012 95);
-    --line: oklch(32% 0.025 150);
-    --line-strong: oklch(40% 0.025 95);
+    --line: oklch(32% 0.025 55);
+    --line-strong: oklch(40% 0.025 55);
     --accent: oklch(74% 0.15 60);
     --accent-ink: oklch(84% 0.12 60);
     --band: oklch(30% 0.05 150);
@@ -51,13 +51,13 @@
 
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
-      --paper: oklch(16% 0.02 150);
-      --paper-raised: oklch(20% 0.022 150);
+      --paper: oklch(16% 0.02 55);
+      --paper-raised: oklch(20% 0.022 55);
       --ink: oklch(93% 0.012 95);
       --ink-soft: oklch(76% 0.015 95);
       --ink-faint: oklch(58% 0.012 95);
-      --line: oklch(32% 0.025 150);
-      --line-strong: oklch(40% 0.025 95);
+      --line: oklch(32% 0.025 55);
+      --line-strong: oklch(40% 0.025 55);
       --accent: oklch(74% 0.15 60);
       --accent-ink: oklch(84% 0.12 60);
       --band: oklch(30% 0.05 150);
@@ -77,14 +77,14 @@
   .wrap { max-width:900px; margin:0 auto; padding:clamp(24px,6vw,56px) clamp(16px,4vw,32px) 80px; }
 
   header.top { margin-bottom:clamp(28px,5vw,44px); }
-  .eyebrow { font:600 0.75rem/1.2 var(--font-mono); text-transform:uppercase; letter-spacing:0.08em; color:var(--accent-ink); margin:0 0 10px; }
+  .eyebrow { font:600 0.8125rem/1.2 var(--font-body); color:var(--accent-ink); margin:0 0 10px; }
   h1 { font:600 clamp(1.75rem,4vw,2.375rem)/1.15 var(--font-display); letter-spacing:-0.01em; text-wrap:balance; margin:0 0 8px; }
   .sub { font-size:0.9375rem; color:var(--ink-soft); margin:0; max-width:50ch; line-height:1.55; }
 
   .controls { display:flex; gap:14px; align-items:end; flex-wrap:wrap; margin-top:24px; padding:16px; background:var(--paper-raised); border:1px solid var(--line); border-radius:12px; }
   .veld { display:flex; flex-direction:column; gap:6px; }
   .veld-label-rij { display:flex; align-items:center; gap:5px; }
-  label { font:600 0.75rem/1.2 var(--font-mono); text-transform:uppercase; letter-spacing:0.05em; color:var(--ink-faint); }
+  label { font:600 0.8125rem/1.2 var(--font-body); color:var(--ink-soft); }
 
   /* Herbruikbaar "?"-knopje: een native <details> i.p.v. een handgebouwde
      tooltip-widget — gratis toetsenbord-/schermlezer-toegankelijkheid,
@@ -134,7 +134,7 @@
   #resultaat.zichtbaar { display:block; }
 
   .hero { padding:28px 0 8px; }
-  .hero .eyebrow { margin-bottom:8px; }
+  .hero .hero-lead { font-size:1.0625rem; line-height:1.4; color:var(--ink-soft); margin:0 0 6px; max-width:38ch; }
   .hero .waarde {
     font:600 clamp(2.75rem,9vw,4.5rem)/1 var(--font-display); letter-spacing:-0.02em;
     color:var(--ink); font-variant-numeric:tabular-nums; margin:0;
@@ -142,7 +142,7 @@
   .hero .sub-context { font-size:0.9375rem; color:var(--ink-soft); margin:10px 0 0; }
 
   .secundair { display:flex; gap:clamp(20px,4vw,40px); flex-wrap:wrap; margin:24px 0 28px; padding-top:20px; border-top:1px solid var(--line); }
-  .stat .label { font:600 0.6875rem/1.2 var(--font-mono); text-transform:uppercase; letter-spacing:0.05em; color:var(--ink-faint); margin-bottom:5px; }
+  .stat .label { font:600 0.8125rem/1.2 var(--font-body); color:var(--ink-soft); margin-bottom:5px; }
   .stat .waarde { font:600 1.125rem/1.3 var(--font-body); color:var(--ink); font-variant-numeric:tabular-nums; }
   .stat .toelichting { font-size:0.75rem; color:var(--ink-faint); margin-top:3px; max-width:28ch; line-height:1.4; }
 
@@ -191,7 +191,7 @@
   details.model-info summary::-webkit-details-marker { display:none; }
   .metrics { display:flex; gap:16px; margin:16px 0 0; flex-wrap:wrap; }
   .metric { flex:1 1 220px; border:1px solid var(--line); border-radius:10px; padding:14px 16px; background:var(--paper-raised); }
-  .metric .label { font:600 0.6875rem/1.2 var(--font-mono); text-transform:uppercase; letter-spacing:0.05em; color:var(--ink-faint); }
+  .metric .label { font:600 0.8125rem/1.2 var(--font-body); color:var(--ink-soft); }
   .metric .value { font:600 1.25rem/1.3 var(--font-body); color:var(--ink); margin-top:4px; }
   .metric .uitleg { font-size:0.75rem; color:var(--ink-faint); margin-top:6px; line-height:1.5; }
 
@@ -238,7 +238,7 @@
 
   <div id="resultaat">
     <div class="hero">
-      <p class="eyebrow" id="hero-label"></p>
+      <p class="hero-lead" id="hero-lead"></p>
       <p class="waarde" id="hero-waarde">€ 0</p>
       <p class="sub-context" id="hero-sub"></p>
     </div>
