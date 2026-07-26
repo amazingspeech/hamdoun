@@ -1,0 +1,24 @@
+# Toe te voegen aan de bestaande, gedeelde Caddyfile op de server
+# (naast de blokken voor vandijkprotocol.tessar.nl en n8n.tessar.nl).
+# Zelfde stijl/headers als Certo's blok — zie DEPLOY.md voor de precieze
+# toepas-stappen (caddy validate, dan caddy reload — nooit restart).
+
+forecasting-demo.tessar.nl {
+	reverse_proxy 127.0.0.1:8010
+
+	encode gzip
+
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		X-Frame-Options "DENY"
+		X-Content-Type-Options "nosniff"
+		Referrer-Policy "same-origin"
+		Content-Security-Policy "default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; script-src 'self'; connect-src 'self'"
+		-Server
+	}
+
+	log {
+		output file /var/log/caddy/forecasting-demo.log
+		format json
+	}
+}
