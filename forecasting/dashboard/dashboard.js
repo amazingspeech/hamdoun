@@ -9,6 +9,17 @@ const API_KEY = window.TESSAR_FORECAST_API_KEY || "";
 
 const WINKEL_IDS = [1, 2, 3, 4, 5, 10, 25, 50, 100, 250];
 
+let modelMetrics = null;
+
+const euro = new Intl.NumberFormat("nl-NL", {
+  style: "currency", currency: "EUR", maximumFractionDigits: 0,
+});
+
+function formatDatumKort(isoDatum) {
+  const d = new Date(isoDatum + "T00:00:00");
+  return d.toLocaleDateString("nl-NL", { day: "numeric", month: "short" });
+}
+
 function vulWinkelSelect() {
   const select = document.getElementById("store");
   for (const id of WINKEL_IDS) {
@@ -29,14 +40,24 @@ async function laadMetrics() {
   const resp = await fetch(`${API_BASIS}/metrics`, { headers: { "X-API-Key": API_KEY } });
   if (!resp.ok) throw new Error(`Kon nauwkeurigheidscijfers niet ophalen (${resp.status})`);
   const data = await resp.json();
+  modelMetrics = data;
+
   const container = document.getElementById("metrics");
   container.innerHTML = "";
   const items = [
-    ["RMSPE", (data.rmspe * 100).toFixed(1) + "%"],
-    ["Dekking p10–p90-band", (data.coverage_p10_p90 * 100).toFixed(0) + "%"],
-    ["Modelversie", data.model_versie],
+    [
+      "Nauwkeurigheid",
+      (data.rmspe * 100).toFixed(1) + "%",
+      "Gemiddelde afwijking tussen voorspelde en werkelijke omzet, gemeten op historische data. Lager is beter.",
+    ],
+    [
+      "Betrouwbaarheid van de bandbreedte",
+      (data.coverage_p10_p90 * 100).toFixed(0) + "%",
+      "Hoe vaak de werkelijke omzet historisch binnen de getoonde bandbreedte viel. Streefwaarde: ongeveer 80%.",
+    ],
+    ["Modelversie", data.model_versie, "Getraind tot en met " + formatDatumKort(data.trainingsperiode_eind) + "."],
   ];
-  for (const [label, waarde] of items) {
+  for (const [label, waarde, uitleg] of items) {
     const kaart = document.createElement("div");
     kaart.className = "metric";
     const labelEl = document.createElement("div");
@@ -45,7 +66,10 @@ async function laadMetrics() {
     const waardeEl = document.createElement("div");
     waardeEl.className = "value";
     waardeEl.textContent = waarde;
-    kaart.append(labelEl, waardeEl);
+    const uitlegEl = document.createElement("div");
+    uitlegEl.className = "uitleg";
+    uitlegEl.textContent = uitleg;
+    kaart.append(labelEl, waardeEl, uitlegEl);
     container.appendChild(kaart);
   }
   return data;
@@ -64,9 +88,15 @@ async function haalVoorspelling(storeId, startDatum, horizonDagen) {
   return resp.json();
 }
 
+function maakSVGEl(tag, attrs) {
+  const el = document.createElementNS("http://www.w3.org/2000/svg", tag);
+  for (const [naam, waarde] of Object.entries(attrs)) el.setAttribute(naam, waarde);
+  return el;
+}
+
 function tekenGrafiek(voorspellingen) {
   const svg = document.getElementById("chart");
-  const breedte = 920, hoogte = 360, marge = { boven: 20, rechts: 20, onder: 30, links: 50 };
+  const breedte = 920, hoogte = 360, marge = { boven: 20, rechts: 20, onder: 34, links: 70 };
   const plotBreedte = breedte - marge.links - marge.rechts;
   const plotHoogte = hoogte - marge.boven - marge.onder;
 
@@ -83,12 +113,97 @@ function tekenGrafiek(voorspellingen) {
   ].join(" ");
   const lijnPunten = voorspellingen.map((v, i) => `${x(i)},${y(v.p50)}`).join(" ");
 
-  svg.innerHTML = `
-    <polygon class="band" points="${bandPunten}"></polygon>
-    <polyline class="lijn" points="${lijnPunten}"></polyline>
-    <line class="as" x1="${marge.links}" y1="${marge.boven}" x2="${marge.links}" y2="${hoogte - marge.onder}"></line>
-    <line class="as" x1="${marge.links}" y1="${hoogte - marge.onder}" x2="${breedte - marge.rechts}" y2="${hoogte - marge.onder}"></line>
-  `;
+  svg.replaceChildren();
+
+  svg.appendChild(maakSVGEl("polygon", { class: "band", points: bandPunten }));
+  svg.appendChild(maakSVGEl("polyline", { class: "lijn", points: lijnPunten }));
+  svg.appendChild(maakSVGEl("line", {
+    class: "as", x1: marge.links, y1: marge.boven, x2: marge.links, y2: hoogte - marge.onder,
+  }));
+  svg.appendChild(maakSVGEl("line", {
+    class: "as", x1: marge.links, y1: hoogte - marge.onder, x2: breedte - marge.rechts, y2: hoogte - marge.onder,
+  }));
+
+  // Y-as: drie referentiepunten (min/midden/max) zodat de band niet zomaar
+  // "een vorm" is maar een af te lezen bedrag.
+  const yTicks = [minY, (minY + maxY) / 2, maxY];
+  for (const waarde of yTicks) {
+    const label = maakSVGEl("text", {
+      class: "as-label", x: marge.links - 10, y: y(waarde) + 4, "text-anchor": "end",
+    });
+    label.textContent = euro.format(Math.round(waarde));
+    svg.appendChild(label);
+    svg.appendChild(maakSVGEl("line", {
+      class: "as", x1: marge.links - 4, y1: y(waarde), x2: marge.links, y2: y(waarde),
+    }));
+  }
+
+  // X-as: eerste, middelste en laatste dag als datum — genoeg om de
+  // horizon te kunnen aflezen zonder de as vol te proppen.
+  const n = voorspellingen.length;
+  const xIndices = n > 2 ? [0, Math.floor((n - 1) / 2), n - 1] : [...Array(n).keys()];
+  for (const i of xIndices) {
+    const label = maakSVGEl("text", {
+      class: "as-label", x: x(i), y: hoogte - marge.onder + 20, "text-anchor": "middle",
+    });
+    label.textContent = formatDatumKort(voorspellingen[i].datum);
+    svg.appendChild(label);
+  }
+
+  // Laatste dag als eindpunt benadrukken, zodat de lijn duidelijk "landt".
+  const laatste = voorspellingen[n - 1];
+  svg.appendChild(maakSVGEl("circle", { class: "stip", cx: x(n - 1), cy: y(laatste.p50), r: 4 }));
+}
+
+function maakKaart(label, waarde, toelichting, hoofdKaart) {
+  const kaart = document.createElement("div");
+  kaart.className = hoofdKaart ? "kaart hoofd" : "kaart";
+  const labelEl = document.createElement("div");
+  labelEl.className = "label";
+  labelEl.textContent = label;
+  const waardeEl = document.createElement("div");
+  waardeEl.className = "waarde";
+  waardeEl.textContent = waarde;
+  const toelichtingEl = document.createElement("div");
+  toelichtingEl.className = "toelichting";
+  toelichtingEl.textContent = toelichting;
+  kaart.append(labelEl, waardeEl, toelichtingEl);
+  return kaart;
+}
+
+function toonSamenvatting(voorspellingen, storeId) {
+  const totaalP50 = voorspellingen.reduce((som, v) => som + v.p50, 0);
+  const totaalP10 = voorspellingen.reduce((som, v) => som + v.p10, 0);
+  const totaalP90 = voorspellingen.reduce((som, v) => som + v.p90, 0);
+  const n = voorspellingen.length;
+  const dagLabel = n === 1 ? "1 dag" : `${n} dagen`;
+  const betrouwbaarheid = modelMetrics ? Math.round(modelMetrics.coverage_p10_p90 * 100) : null;
+
+  const container = document.getElementById("samenvatting");
+  container.innerHTML = "";
+  container.appendChild(maakKaart(
+    `Verwachte omzet — komende ${dagLabel}`,
+    euro.format(Math.round(totaalP50)),
+    `Winkel ${storeId}, van ${formatDatumKort(voorspellingen[0].datum)} t/m ${formatDatumKort(voorspellingen[n - 1].datum)}.`,
+    true,
+  ));
+  container.appendChild(maakKaart(
+    "Meest waarschijnlijke bandbreedte",
+    `${euro.format(Math.round(totaalP10))} – ${euro.format(Math.round(totaalP90))}`,
+    betrouwbaarheid !== null
+      ? `De werkelijke omzet valt hier historisch in ongeveer ${betrouwbaarheid}% van de gevallen binnen.`
+      : "De omzet ligt hier meestal binnen.",
+    false,
+  ));
+  container.appendChild(maakKaart(
+    "Gemiddeld per dag",
+    euro.format(Math.round(totaalP50 / n)),
+    "Gebaseerd op vergelijkbare dagen uit het verleden.",
+    false,
+  ));
+
+  document.getElementById("chart-titel").textContent =
+    `Winkel ${storeId} — dagelijkse omzet, ${formatDatumKort(voorspellingen[0].datum)} t/m ${formatDatumKort(voorspellingen[n - 1].datum)}`;
 }
 
 async function voorspel() {
@@ -100,6 +215,9 @@ async function voorspel() {
     const startDatum = document.getElementById("start").value;
     const horizonDagen = Number(document.getElementById("horizon").value);
     const data = await haalVoorspelling(storeId, startDatum, horizonDagen);
+    document.getElementById("leeg").hidden = true;
+    document.getElementById("resultaat").classList.add("zichtbaar");
+    toonSamenvatting(data.voorspellingen, data.store_id);
     tekenGrafiek(data.voorspellingen);
   } catch (e) {
     toonFout(e.message);
