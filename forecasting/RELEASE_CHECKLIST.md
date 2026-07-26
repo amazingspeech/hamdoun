@@ -4,6 +4,13 @@ Herbruikbaar per release naar `forecasting-demo.tessar.nl`. Loop 'm van boven
 naar beneden af; sla geen stap over omdat "het toch wel goed zal zijn" — dat
 is precies waar dit document voor is.
 
+**Staging:** er is bewust geen aparte staging-omgeving. "Staging" betekent
+hier: stap 4 van `deploy/DEPLOY.md` (image lokaal op de server bouwen en
+handmatig opstarten vóór `docker compose up -d`) én lokaal verifiëren via
+`docker compose up api` (root `docker-compose.yml`) vóórdat je release-tagt.
+Pas dit uitgangspunt aan zodra er een tweede klant/omgeving bijkomt die een
+echte, losstaande staging rechtvaardigt.
+
 ## Pre-release
 
 - [ ] `git status` is schoon op de branch die je uitrolt — geen losse
