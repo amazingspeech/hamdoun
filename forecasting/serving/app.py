@@ -127,6 +127,7 @@ def metrics(key_naam: str = Depends(vereis_api_key)) -> MetricsResponse:
         coverage_p10_p90=m["metrics"]["coverage_p10_p90"],
         n_observaties=m["metrics"]["n_observaties"],
         gevalideerde_horizon_dagen=m["gevalideerde_horizon_dagen"],
+        trainingsperiode_eind=m["trainingsperiode_eind"][:10],
     )
 
 

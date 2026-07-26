@@ -32,3 +32,4 @@ class MetricsResponse(BaseModel):
     coverage_p10_p90: float
     n_observaties: int
     gevalideerde_horizon_dagen: int
+    trainingsperiode_eind: date

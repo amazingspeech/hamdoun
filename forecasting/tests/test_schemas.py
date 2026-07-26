@@ -33,5 +33,15 @@ def test_metrics_response_serialiseert():
     response = MetricsResponse(
         model_versie="20260101T000000Z", rmspe=0.12, coverage_p10_p90=0.81,
         n_observaties=1000, gevalideerde_horizon_dagen=48,
+        trainingsperiode_eind="2015-06-30",
     )
     assert response.model_dump()["rmspe"] == 0.12
+
+
+def test_metrics_response_bevat_trainingsperiode_eind():
+    response = MetricsResponse(
+        model_versie="20260101T000000Z", rmspe=0.12, coverage_p10_p90=0.81,
+        n_observaties=1000, gevalideerde_horizon_dagen=48,
+        trainingsperiode_eind="2015-06-30",
+    )
+    assert response.model_dump(mode="json")["trainingsperiode_eind"] == "2015-06-30"

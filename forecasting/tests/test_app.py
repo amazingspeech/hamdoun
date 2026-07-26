@@ -105,6 +105,7 @@ def test_metrics_geeft_gevalideerde_cijfers(tmp_path, monkeypatch):
     data = resp.json()
     assert data["rmspe"] == 0.15
     assert data["coverage_p10_p90"] == 0.79
+    assert data["trainingsperiode_eind"] == "2015-06-30"
 
 
 def test_cors_ontbrekende_config_staat_geen_enkele_origin_toe(tmp_path, monkeypatch):
