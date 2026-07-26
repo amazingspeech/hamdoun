@@ -1321,9 +1321,12 @@ class Component extends DCLogic {
     // source") out to whichever node is currently active. Everything else on
     // the shape is left untouched, exactly as requested.
     var WORKFLOW_PATH = [0, 5, 9, 3, 6];
+    // Benefit-first labels: what each step means for the person watching,
+    // not the tool names behind it (those live in the "Wat we bouwen"
+    // section further down, where the explanation is welcome).
     var WORKFLOW_LABELS = {
-      nl: ['Trigger', 'n8n', 'AI-model', 'Actie', 'Jouw systeem'],
-      en: ['Trigger', 'n8n', 'AI model', 'Action', 'Your system']
+      nl: ['Geen handmatig werk meer', 'Automatisch herkend', 'AI beslist razendsnel', 'Meteen uitgevoerd', 'Uren per week bespaard'],
+      en: ['No more manual work', 'Recognized automatically', 'AI decides instantly', 'Executed right away', 'Hours saved every week']
     };
     var workflowEdgeIdx = [];
     for (var wp = 0; wp < WORKFLOW_PATH.length - 1; wp++) {
