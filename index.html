@@ -90,9 +90,9 @@
   .hero-scroll-cue .icon { width:20px; height:20px; color:oklch(75% 0.10 250); }
   @keyframes scrollCue { 0%,100% { transform:translate(-50%,0); opacity:0.35; } 50% { transform:translate(-50%,7px); opacity:0.7; } }
 
-  .hero-node-bubble { position:absolute; left:0; top:0; transform:translate(-50%,-100%) scale(0.92); display:flex; align-items:center; gap:7px; background:oklch(20% 0.03 260 / 0.82); border:1px solid rgba(255,200,110,0.4); backdrop-filter:blur(8px); padding:7px 13px; border-radius:8px; font:600 0.75rem/1 'IBM Plex Mono'; letter-spacing:0.02em; color:#fff; white-space:nowrap; opacity:0; pointer-events:none; z-index:2; transition:opacity 450ms ease, transform 450ms cubic-bezier(0.16,1,0.3,1); box-shadow:0 8px 24px rgba(0,0,0,0.35); }
+  .hero-node-bubble { position:absolute; left:0; top:0; transform:translate(-50%,-100%) scale(0.92); display:flex; align-items:center; gap:7px; background:oklch(20% 0.03 260 / 0.82); border:1px solid rgba(30,140,255,0.4); backdrop-filter:blur(8px); padding:7px 13px; border-radius:8px; font:600 0.75rem/1 'IBM Plex Mono'; letter-spacing:0.02em; color:#fff; white-space:nowrap; opacity:0; pointer-events:none; z-index:2; transition:opacity 450ms ease, transform 450ms cubic-bezier(0.16,1,0.3,1); box-shadow:0 8px 24px rgba(0,0,0,0.35); }
   .hero-node-bubble.is-visible { opacity:1; transform:translate(-50%,-118%) scale(1); }
-  .hero-node-bubble-dot { width:6px; height:6px; border-radius:50%; background:rgb(255,200,110); box-shadow:0 0 8px rgba(255,200,110,0.85); flex-shrink:0; }
+  .hero-node-bubble-dot { width:6px; height:6px; border-radius:50%; background:rgb(30,140,255); box-shadow:0 0 8px rgba(30,140,255,0.85); flex-shrink:0; }
 
   @media (prefers-reduced-motion: reduce) {
     [data-reveal] { opacity:1; transform:none; transition:none; }
@@ -1420,8 +1420,8 @@ class Component extends DCLogic {
       var camDist = 3.6;
 
       // slow continuous auto-rotation, gently eased toward pointer tilt
-      rotY += 0.0026;
-      rotX += 0.0009;
+      rotY += 0.0011;
+      rotX += 0.0004;
       tiltX += (targetTiltX - tiltX) * 0.05;
       tiltY += (targetTiltY - tiltY) * 0.05;
 
@@ -1522,7 +1522,7 @@ class Component extends DCLogic {
         edgeHoverT[ue] += (targetE - edgeHoverT[ue]) * 0.18;
       }
 
-      var hoverRgb = "255, 200, 110";
+      var hoverRgb = "30, 140, 255";
 
       function drawEdges(p, rgb, widthMul, blurMul, hoverArr) {
         for (var e = 0; e < edges.length; e++) {
@@ -1655,7 +1655,7 @@ class Component extends DCLogic {
       // step is active.
       var pulse = 0.5 + Math.sin(t * 0.02) * 0.5;
       var coreR = 7 + pulse * 4;
-      var coreOuterRgb = lerpRgb([190, 150, 255], [255, 200, 110], coreEnergyT * 0.55);
+      var coreOuterRgb = lerpRgb([190, 150, 255], [30, 140, 255], coreEnergyT * 0.55);
       var coreGradOuter = ctx.createRadialGradient(cx, cy, 0, cx, cy, coreR * 9);
       coreGradOuter.addColorStop(0, "rgba(" + coreOuterRgb + "," + (0.22 + pulse * 0.12 + coreEnergyT * 0.1) + ")");
       coreGradOuter.addColorStop(1, "rgba(" + coreOuterRgb + ", 0)");
@@ -1664,7 +1664,7 @@ class Component extends DCLogic {
       ctx.arc(cx, cy, coreR * 9, 0, Math.PI * 2);
       ctx.fill();
       var coreInnerRgb = lerpRgb([180, 235, 255], [255, 210, 130], coreEnergyT * 0.5);
-      var coreMidRgb = lerpRgb([150, 220, 255], [255, 200, 120], coreEnergyT * 0.5);
+      var coreMidRgb = lerpRgb([150, 220, 255], [40, 150, 255], coreEnergyT * 0.5);
       var coreGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, coreR * 6);
       coreGrad.addColorStop(0, "rgba(" + coreInnerRgb + "," + (0.65 + pulse * 0.3) + ")");
       coreGrad.addColorStop(0.5, "rgba(" + coreMidRgb + "," + (0.4 + pulse * 0.2) + ")");
@@ -1750,5 +1750,46 @@ class Component extends DCLogic {
 })();
 </script>
 <script src="./tessar-concierge-widget.js" defer></script>
+<script>
+(function () {
+  var header = document.querySelector("header");
+  if (!header) return;
+  header.style.transition = "transform 280ms cubic-bezier(0.16,1,0.3,1)";
+  header.style.willChange = "transform";
+
+  var lastY = window.scrollY || window.pageYOffset || 0;
+  var hidden = false;
+  var revealThreshold = 12; // negeer kleine scroll-jitter
+  var topOffset = 80; // altijd zichtbaar dicht bij de top
+
+  function onScroll() {
+    var y = window.scrollY || window.pageYOffset || 0;
+    var delta = y - lastY;
+
+    if (y <= topOffset) {
+      if (hidden) { header.style.transform = "translateY(0)"; hidden = false; }
+      lastY = y;
+      return;
+    }
+
+    if (delta > revealThreshold && !hidden) {
+      header.style.transform = "translateY(-100%)";
+      hidden = true;
+    } else if (delta < -revealThreshold && hidden) {
+      header.style.transform = "translateY(0)";
+      hidden = false;
+    }
+    lastY = y;
+  }
+
+  var ticking = false;
+  window.addEventListener("scroll", function () {
+    if (!ticking) {
+      requestAnimationFrame(function () { onScroll(); ticking = false; });
+      ticking = true;
+    }
+  }, { passive: true });
+})();
+</script>
 </body>
 </html>
