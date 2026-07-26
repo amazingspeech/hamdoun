@@ -64,11 +64,38 @@
   @keyframes heroOrbC { 0%,100% { transform:translate(-50%,0) scale(1); } 50% { transform:translate(-50%,-25px) scale(1.15); } }
   .hero-mark { animation:heroMarkFloat 12s ease-in-out infinite; }
   @keyframes heroMarkFloat { 0%,100% { transform:translateY(0) rotate(0deg); } 50% { transform:translateY(-14px) rotate(4deg); } }
-  #hero-canvas { position:absolute; inset:0; width:100%; height:100%; opacity:0.9; }
+  #hero-canvas { position:absolute; inset:0; width:100%; height:100%; opacity:1; }
+
+  .hero-grain { position:absolute; inset:0; opacity:0.05; mix-blend-mode:overlay; pointer-events:none; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+
+  .grad-text { background:linear-gradient(135deg, oklch(80% 0.14 200), oklch(74% 0.17 230) 55%, oklch(78% 0.15 190)); background-size:200% auto; -webkit-background-clip:text; background-clip:text; color:transparent; animation:gradShift 6s ease-in-out infinite; }
+  @keyframes gradShift { 0%,100% { background-position:0% 50%; } 50% { background-position:100% 50%; } }
+
+  .hero-badge { display:inline-flex; align-items:center; gap:9px; background:oklch(70% 0.14 220 / 0.12); border:1px solid oklch(70% 0.14 220 / 0.35); backdrop-filter:blur(8px); padding:9px 18px 9px 14px; border-radius:24px; margin-bottom:30px; font:600 0.8125rem/1 'IBM Plex Mono'; letter-spacing:0.06em; text-transform:uppercase; color:oklch(78% 0.12 220); box-shadow:0 1px 0 oklch(100% 0 0 / 0.06) inset; }
+  .hero-badge-dot { width:6px; height:6px; border-radius:50%; background:oklch(75% 0.16 200); box-shadow:0 0 0 0 oklch(75% 0.16 200 / 0.6); flex-shrink:0; animation:badgePulse 2.2s ease-out infinite; }
+  @keyframes badgePulse { 0% { box-shadow:0 0 0 0 oklch(75% 0.16 200 / 0.55); } 70% { box-shadow:0 0 0 7px oklch(75% 0.16 200 / 0); } 100% { box-shadow:0 0 0 0 oklch(75% 0.16 200 / 0); } }
+
+  .hero-trust-pill { display:flex; align-items:center; gap:8px; background:oklch(100% 0 0 / 0.05); border:1px solid oklch(100% 0 0 / 0.1); backdrop-filter:blur(6px); padding:8px 16px; border-radius:20px; font:500 0.8125rem/1 'IBM Plex Sans'; color:oklch(82% 0.06 250); }
+  .hero-trust-pill .hero-badge-dot { background:oklch(70% 0.14 220); animation:none; box-shadow:none; }
+
+  .hero-cta-primary { position:relative; overflow:hidden; display:inline-block; background:linear-gradient(135deg, oklch(72% 0.15 210), oklch(62% 0.14 235)); color:#001a2e; padding:17px 38px; border-radius:8px; font-weight:700; font-size:0.9625rem; box-shadow:0 14px 36px rgba(0, 190, 255, 0.28), 0 1px 0 rgba(255,255,255,0.4) inset; transition:all 280ms ease; white-space:nowrap; }
+  .hero-cta-primary:hover { transform:translateY(-3px); box-shadow:0 20px 52px rgba(0, 190, 255, 0.4), 0 1px 0 rgba(255,255,255,0.4) inset; }
+  .hero-cta-primary::after { content:''; position:absolute; top:0; left:-60%; width:40%; height:100%; background:linear-gradient(115deg, transparent, rgba(255,255,255,0.55), transparent); transform:skewX(-20deg); animation:ctaShine 3.4s ease-in-out infinite; }
+  @keyframes ctaShine { 0% { left:-60%; } 35%, 100% { left:130%; } }
+
+  .hero-content { animation:heroContentIn 900ms cubic-bezier(0.16,1,0.3,1) both; }
+  @keyframes heroContentIn { 0% { opacity:0; transform:translateY(18px); } 100% { opacity:1; transform:translateY(0); } }
+
+  .hero-scroll-cue { position:absolute; left:50%; bottom:22px; transform:translateX(-50%); z-index:1; opacity:0.55; animation:scrollCue 2.2s ease-in-out infinite; }
+  .hero-scroll-cue .icon { width:20px; height:20px; color:oklch(75% 0.10 250); }
+  @keyframes scrollCue { 0%,100% { transform:translate(-50%,0); opacity:0.35; } 50% { transform:translate(-50%,7px); opacity:0.7; } }
+
   @media (prefers-reduced-motion: reduce) {
     [data-reveal] { opacity:1; transform:none; transition:none; }
     html { scroll-behavior:auto; }
     .hero-orb, .hero-mark { animation:none; }
+    .hero-content { animation:none; }
+    .hero-badge-dot, .hero-cta-primary::after, .hero-scroll-cue, .grad-text { animation:none; }
   }
   @media (max-width: 680px) {
     .nav-link { display:none; }
@@ -169,7 +196,8 @@
   </div>
 </header>
 
-<section id="top" style="position:relative;overflow:hidden;background:linear-gradient(135deg, oklch(6% 0 0) 0%, oklch(12% 0.03 260) 100%);color:#FFF;padding:clamp(80px,12vw,140px) clamp(20px,5vw,40px);text-align:center;">
+<section id="top" style="position:relative;overflow:hidden;background:linear-gradient(135deg, oklch(6% 0 0) 0%, oklch(12% 0.03 260) 100%);color:#FFF;padding:clamp(96px,13vw,156px) clamp(20px,5vw,40px);text-align:center;">
+  <div class="hero-grain"></div>
   <div style="position:absolute;inset:0;pointer-events:none;overflow:hidden;">
     <canvas id="hero-canvas"></canvas>
     <div class="hero-orb hero-orb-a"></div>
@@ -178,23 +206,29 @@
     <img class="hero-mark" src="./Tessar-logo-symbol.webp" width="500" height="500" alt="" style="position:absolute;top:-100px;right:-120px;width:500px;height:auto;object-fit:contain;opacity:0.08;">
   </div>
 
-  <div style="max-width:900px;margin:0 auto;position:relative;z-index:1;">
-    <div style="display:inline-block;background:oklch(70% 0.14 220 / 0.15);border:1px solid oklch(70% 0.14 220 / 0.3);padding:10px 16px;border-radius:20px;margin-bottom:28px;font-size:0.8125rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:oklch(70% 0.14 220);">{{ badge }}</div>
+  <div class="hero-content" style="max-width:920px;margin:0 auto;position:relative;z-index:1;">
+    <div class="hero-badge">
+      <span class="hero-badge-dot"></span>{{ badge }}
+    </div>
 
-    <h1 style="font:800 clamp(2rem,5vw,3.5rem)/1.2 'IBM Plex Sans';margin:0 0 20px;letter-spacing:-0.02em;text-wrap:pretty;">{{ heroHeading }}</h1>
+    <h1 style="font:800 clamp(2.25rem,5.6vw,4rem)/1.15 'IBM Plex Sans';margin:0 0 22px;letter-spacing:-0.025em;text-wrap:pretty;">{{ heroHeadingPre }}<span class="grad-text">{{ heroHeadingHi1 }}</span>{{ heroHeadingMid }}<span class="grad-text">{{ heroHeadingHi2 }}</span>{{ heroHeadingPost }}</h1>
 
-    <p style="font:400 clamp(1rem,1.8vw,1.25rem)/1.7 'IBM Plex Sans';color:oklch(75% 0.10 250);margin:0 0 32px;max-width:700px;margin-left:auto;margin-right:auto;text-wrap:pretty;">{{ heroSubtext }}</p>
+    <p style="font:400 clamp(1.0625rem,1.9vw,1.375rem)/1.7 'IBM Plex Sans';color:oklch(78% 0.09 250);margin:0 0 36px;max-width:720px;margin-left:auto;margin-right:auto;text-wrap:pretty;">{{ heroSubtext }}</p>
 
     <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
-      <a href="#contact" style="background:linear-gradient(135deg, oklch(70% 0.14 220), oklch(60% 0.12 230));color:#001a2e;padding:16px 36px;border-radius:6px;font-weight:700;font-size:0.95rem;box-shadow:0 12px 32px rgba(0, 212, 255, 0.25);transition:all 280ms ease;white-space:nowrap;" style-hover="transform:translateY(-3px);box-shadow:0 16px 48px rgba(0, 212, 255, 0.35);">{{ ctaPrimary }}</a>
-      <a href="#cases" style="border:2px solid oklch(75% 0.14 220 / 0.4);color:#FFF;padding:14px 32px;border-radius:6px;font-weight:700;font-size:0.95rem;transition:all 200ms ease;white-space:nowrap;" style-hover="border-color:oklch(75% 0.14 220);background:oklch(75% 0.14 220 / 0.1);">{{ ctaSecondary }}</a>
+      <a href="#contact" class="hero-cta-primary">{{ ctaPrimary }}</a>
+      <a href="#cases" style="border:2px solid oklch(75% 0.14 220 / 0.4);color:#FFF;padding:14px 32px;border-radius:8px;font-weight:700;font-size:0.95rem;transition:all 200ms ease;white-space:nowrap;" style-hover="border-color:oklch(75% 0.14 220);background:oklch(75% 0.14 220 / 0.1);">{{ ctaSecondary }}</a>
     </div>
 
-    <div style="display:flex;justify-content:center;gap:clamp(32px,5vw,52px);margin-top:56px;padding-top:40px;border-top:1px solid oklch(70% 0.14 220 / 0.2);font-size:0.875rem;color:oklch(70% 0.10 250);flex-wrap:wrap;">
-      <div style="display:flex;align-items:center;gap:8px;"><span style="width:6px;height:6px;background:oklch(70% 0.14 220);border-radius:50%;flex-shrink:0;"></span><span>{{ trustA }}</span></div>
-      <div style="display:flex;align-items:center;gap:8px;"><span style="width:6px;height:6px;background:oklch(70% 0.14 220);border-radius:50%;flex-shrink:0;"></span><span>{{ trustB }}</span></div>
-      <div style="display:flex;align-items:center;gap:8px;"><span style="width:6px;height:6px;background:oklch(70% 0.14 220);border-radius:50%;flex-shrink:0;"></span><span>{{ trustC }}</span></div>
+    <div style="display:flex;justify-content:center;gap:clamp(12px,2vw,16px);margin-top:60px;flex-wrap:wrap;">
+      <div class="hero-trust-pill"><span class="hero-badge-dot"></span>{{ trustA }}</div>
+      <div class="hero-trust-pill"><span class="hero-badge-dot"></span>{{ trustB }}</div>
+      <div class="hero-trust-pill"><span class="hero-badge-dot"></span>{{ trustC }}</div>
     </div>
+  </div>
+
+  <div class="hero-scroll-cue" aria-hidden="true">
+    <div class="icon icon-chevron-down"></div>
   </div>
 </section>
 
@@ -591,6 +625,11 @@ const copyNL = {
 
   badge: 'AI-automatisering & AI-applicaties',
   heroHeading: 'Van terugkerend werk naar automatisering. Van idee naar werkende AI-applicatie.',
+  heroHeadingPre: 'Van terugkerend werk naar ',
+  heroHeadingHi1: 'automatisering',
+  heroHeadingMid: '. Van idee naar werkende ',
+  heroHeadingHi2: 'AI-applicatie',
+  heroHeadingPost: '.',
   heroSubtext: 'Praktische AI voor het Nederlandse mkb: automatiseringen die processen versnellen en applicaties met AI in de kern. Vaste scope, vaste prijs, geen rapporten: wel werkende systemen.',
   ctaPrimary: 'Plan gratis kennismaking',
   ctaSecondary: 'Bekijk cases',
@@ -805,6 +844,11 @@ const copyEN = {
 
   badge: 'AI Automation & AI Applications',
   heroHeading: 'From repetitive work to automation. From idea to working AI application.',
+  heroHeadingPre: 'From repetitive work to ',
+  heroHeadingHi1: 'automation',
+  heroHeadingMid: '. From idea to working ',
+  heroHeadingHi2: 'AI application',
+  heroHeadingPost: '.',
   heroSubtext: 'Practical AI for the Dutch mid-market: automations that speed up processes and applications with AI at their core. Fixed scope, fixed price, no reports: just working systems.',
   ctaPrimary: 'Schedule free discovery call',
   ctaSecondary: 'View case studies',
@@ -1213,14 +1257,21 @@ class Component extends DCLogic {
 
     // Orbiting satellite points: small nodes tracing independent 3D circles around the core.
     var satellites = [];
-    for (var s = 0; s < 7; s++) {
+    for (var s = 0; s < 14; s++) {
       satellites.push({
-        r: 1.55 + Math.random() * 0.65,
-        speed: 0.15 + Math.random() * 0.22,
+        r: 1.5 + Math.random() * 1.0,
+        speed: 0.12 + Math.random() * 0.24,
         offset: Math.random() * Math.PI * 2,
         tiltX: Math.random() * Math.PI,
-        tiltZ: Math.random() * Math.PI
+        tiltZ: Math.random() * Math.PI,
+        violet: s % 2 === 1
       });
+    }
+
+    // A handful of edges get a traveling "data pulse" streak for extra motion.
+    var pulseEdges = [];
+    for (var pe = 0; pe < Math.min(5, edges.length); pe++) {
+      pulseEdges.push({ edge: edges[(pe * 7) % edges.length], speed: 0.35 + Math.random() * 0.3, offset: Math.random() });
     }
 
     // Faint ambient particle field behind the object, for depth.
@@ -1230,6 +1281,23 @@ class Component extends DCLogic {
     var targetTiltX = 0, targetTiltY = 0, tiltX = 0, tiltY = 0;
     var pointerActive = false;
     var t = 0;
+
+    // Hover interactivity (outer shape only): raw pointer position + per-element
+    // eased "hover intensity" that rises on hover and eases back down on leave.
+    var mouseX = null, mouseY = null;
+    var vertexHoverT = verts.map(function () { return 0; });
+    var edgeHoverT = edges.map(function () { return 0; });
+    var hoverVertex = -1, hoverEdge = -1;
+
+    function distToSegment(px, py, ax, ay, bx, by) {
+      var vx = bx - ax, vy = by - ay;
+      var wx = px - ax, wy = py - ay;
+      var len2 = vx * vx + vy * vy;
+      var t2 = len2 > 0 ? Math.max(0, Math.min(1, (wx * vx + wy * vy) / len2)) : 0;
+      var cx2 = ax + vx * t2, cy2 = ay + vy * t2;
+      var dx = px - cx2, dy = py - cy2;
+      return Math.sqrt(dx * dx + dy * dy);
+    }
 
     function size() {
       var rect = section.getBoundingClientRect();
@@ -1293,53 +1361,136 @@ class Component extends DCLogic {
 
       var cx = W * 0.5, cy = H * 0.46;
       var minSide = Math.min(W, H * 1.35);
-      var radius = Math.max(150, Math.min(320, minSide * 0.32));
+      var radius = Math.max(180, Math.min(420, minSide * 0.37));
+      var innerRadius = radius * 0.42;
       var camDist = 3.6;
 
       // slow continuous auto-rotation, gently eased toward pointer tilt
-      rotY += 0.0016;
-      rotX += 0.0005;
-      tiltX += (targetTiltX - tiltX) * 0.04;
-      tiltY += (targetTiltY - tiltY) * 0.04;
+      rotY += 0.0026;
+      rotX += 0.0009;
+      tiltX += (targetTiltX - tiltX) * 0.05;
+      tiltY += (targetTiltY - tiltY) * 0.05;
 
       var ay = rotY + tiltY;
       var ax = rotX + tiltX + Math.sin(t * 0.004) * 0.05;
 
-      // project core vertices
+      // counter-rotating inner core, offset hue for depth
+      var ay2 = -ay * 1.8;
+      var ax2 = ax * 1.4 + Math.sin(t * 0.006) * 0.1;
+
+      // faint outer HUD ring beneath the object
+      ctx.save();
+      ctx.strokeStyle = "rgba(120, 200, 255, 0.14)";
+      ctx.setLineDash([3, 9]);
+      ctx.lineDashOffset = -t * 0.12;
+      ctx.beginPath();
+      ctx.ellipse(cx, cy, radius * 1.28, radius * 1.28 * 0.4, 0.18, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.strokeStyle = "rgba(190, 150, 255, 0.10)";
+      ctx.lineDashOffset = t * 0.09;
+      ctx.beginPath();
+      ctx.ellipse(cx, cy, radius * 1.4, radius * 1.4 * 0.36, -0.22, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.restore();
+
+      // project core + inner-shape vertices
       var proj = verts.map(function (v) { return project(rotatePoint(v, ax, ay), cx, cy, radius, camDist); });
+      var proj2 = verts.map(function (v) { return project(rotatePoint(v, ax2, ay2), cx, cy, innerRadius, camDist); });
 
-      // edges, depth-shaded
-      for (var e = 0; e < edges.length; e++) {
-        var a = proj[edges[e][0]], b = proj[edges[e][1]];
-        var avgZ = (a.z + b.z) / 2;
-        var depthT = (avgZ + 1) / 2; // 0 (far) .. 1 (near)
-        var alpha = 0.10 + depthT * 0.42;
-        ctx.strokeStyle = "rgba(110, 200, 255," + alpha.toFixed(3) + ")";
-        ctx.lineWidth = 0.6 + depthT * 1.3;
-        ctx.shadowColor = "rgba(90, 190, 255, 0.5)";
-        ctx.shadowBlur = 3 + depthT * 5;
-        ctx.beginPath();
-        ctx.moveTo(a.x, a.y);
-        ctx.lineTo(b.x, b.y);
-        ctx.stroke();
+      // Hit-test the pointer against the outer shape only: nearest vertex wins
+      // within a generous radius, otherwise the nearest edge within a tighter
+      // radius. Vertices take priority since they're the more "grabbable" target.
+      hoverVertex = -1; hoverEdge = -1;
+      if (mouseX !== null) {
+        var bestVD = 20, bestV = -1;
+        for (var hv = 0; hv < proj.length; hv++) {
+          var dvx = mouseX - proj[hv].x, dvy = mouseY - proj[hv].y;
+          var dv = Math.sqrt(dvx * dvx + dvy * dvy);
+          if (dv < bestVD) { bestVD = dv; bestV = hv; }
+        }
+        if (bestV !== -1) {
+          hoverVertex = bestV;
+        } else {
+          var bestED = 9, bestE = -1;
+          for (var he = 0; he < edges.length; he++) {
+            var ea = proj[edges[he][0]], eb = proj[edges[he][1]];
+            var de = distToSegment(mouseX, mouseY, ea.x, ea.y, eb.x, eb.y);
+            if (de < bestED) { bestED = de; bestE = he; }
+          }
+          if (bestE !== -1) hoverEdge = bestE;
+        }
       }
-      ctx.shadowBlur = 0;
+      for (var uv = 0; uv < vertexHoverT.length; uv++) {
+        var targetV = uv === hoverVertex ? 1 : 0;
+        vertexHoverT[uv] += (targetV - vertexHoverT[uv]) * 0.18;
+      }
+      for (var ue = 0; ue < edgeHoverT.length; ue++) {
+        var targetE = ue === hoverEdge ? 1 : 0;
+        edgeHoverT[ue] += (targetE - edgeHoverT[ue]) * 0.18;
+      }
 
-      // vertex nodes, depth-shaded with soft glow
-      for (var v = 0; v < proj.length; v++) {
-        var p = proj[v];
-        var depthT2 = (p.z + 1) / 2;
-        var rad = 1.6 + depthT2 * 2.2;
-        var grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, rad * 4);
-        grad.addColorStop(0, "rgba(170, 225, 255," + (0.35 + depthT2 * 0.4) + ")");
-        grad.addColorStop(1, "rgba(170, 225, 255, 0)");
-        ctx.fillStyle = grad;
+      var hoverRgb = "255, 200, 110";
+
+      function drawEdges(p, rgb, widthMul, blurMul, hoverArr) {
+        for (var e = 0; e < edges.length; e++) {
+          var a = p[edges[e][0]], b = p[edges[e][1]];
+          var avgZ = (a.z + b.z) / 2;
+          var depthT = (avgZ + 1) / 2;
+          var hoverAmt = hoverArr ? hoverArr[e] : 0;
+          var alpha = 0.10 + depthT * 0.42 + hoverAmt * 0.5;
+          var col = hoverAmt > 0.01 ? hoverRgb : rgb;
+          ctx.strokeStyle = "rgba(" + col + "," + Math.min(1, alpha).toFixed(3) + ")";
+          ctx.lineWidth = (0.6 + depthT * 1.3) * widthMul + hoverAmt * 1.8;
+          ctx.shadowColor = "rgba(" + col + ",0.7)";
+          ctx.shadowBlur = (3 + depthT * 5) * blurMul + hoverAmt * 12;
+          ctx.beginPath();
+          ctx.moveTo(a.x, a.y);
+          ctx.lineTo(b.x, b.y);
+          ctx.stroke();
+        }
+        ctx.shadowBlur = 0;
+      }
+      drawEdges(proj2, "190, 150, 255", 0.75, 0.8);
+      drawEdges(proj, "110, 200, 255", 1, 1, edgeHoverT);
+
+      function drawVertices(p, rgbCore, rgbGlow, sizeMul, hoverArr) {
+        for (var v = 0; v < p.length; v++) {
+          var pt = p[v];
+          var depthT2 = (pt.z + 1) / 2;
+          var pulse = 0.75 + Math.sin(t * 0.05 + v * 1.7) * 0.25;
+          var hoverAmt2 = hoverArr ? hoverArr[v] : 0;
+          var rad = (1.6 + depthT2 * 2.2) * sizeMul * pulse + hoverAmt2 * 3.2;
+          var coreCol = hoverAmt2 > 0.01 ? hoverRgb : rgbCore;
+          var glowCol = hoverAmt2 > 0.01 ? hoverRgb : rgbGlow;
+          var grad = ctx.createRadialGradient(pt.x, pt.y, 0, pt.x, pt.y, rad * (4 + hoverAmt2 * 2.5));
+          grad.addColorStop(0, "rgba(" + glowCol + "," + Math.min(1, 0.35 + depthT2 * 0.4 + hoverAmt2 * 0.5) + ")");
+          grad.addColorStop(1, "rgba(" + glowCol + ",0)");
+          ctx.fillStyle = grad;
+          ctx.beginPath();
+          ctx.arc(pt.x, pt.y, rad * (4 + hoverAmt2 * 2.5), 0, Math.PI * 2);
+          ctx.fill();
+          ctx.fillStyle = "rgba(" + coreCol + "," + Math.min(1, 0.55 + depthT2 * 0.4 + hoverAmt2 * 0.45) + ")";
+          ctx.beginPath();
+          ctx.arc(pt.x, pt.y, rad, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+      drawVertices(proj2, "215, 190, 255", "190, 150, 255", 0.8);
+      drawVertices(proj, "200, 235, 255", "170, 225, 255", 1, vertexHoverT);
+
+      // traveling data pulses along a few outer edges
+      for (var pi = 0; pi < pulseEdges.length; pi++) {
+        var pu = pulseEdges[pi];
+        var frac = (t * 0.006 * pu.speed + pu.offset) % 1;
+        var pa = proj[pu.edge[0]], pb = proj[pu.edge[1]];
+        var px = pa.x + (pb.x - pa.x) * frac;
+        var py = pa.y + (pb.y - pa.y) * frac;
+        var pglow = ctx.createRadialGradient(px, py, 0, px, py, 7);
+        pglow.addColorStop(0, "rgba(255, 255, 255, 0.9)");
+        pglow.addColorStop(1, "rgba(140, 220, 255, 0)");
+        ctx.fillStyle = pglow;
         ctx.beginPath();
-        ctx.arc(p.x, p.y, rad * 4, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.fillStyle = "rgba(200, 235, 255," + (0.55 + depthT2 * 0.4) + ")";
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, rad, 0, Math.PI * 2);
+        ctx.arc(px, py, 7, 0, Math.PI * 2);
         ctx.fill();
       }
 
@@ -1352,23 +1503,32 @@ class Component extends DCLogic {
         var final = rotatePoint(tilted, ax, ay);
         var sp = project(final, cx, cy, radius, camDist);
         var sDepth = (sp.z + 1) / 2;
-        ctx.strokeStyle = "rgba(120, 210, 255," + (0.05 + sDepth * 0.14) + ")";
+        var satRgb = sat.violet ? "200, 160, 255" : "120, 210, 255";
+        ctx.strokeStyle = "rgba(" + satRgb + "," + (0.05 + sDepth * 0.14) + ")";
         ctx.lineWidth = 0.6;
         ctx.beginPath();
         ctx.moveTo(cx, cy);
         ctx.lineTo(sp.x, sp.y);
         ctx.stroke();
-        ctx.fillStyle = "rgba(180, 230, 255," + (0.4 + sDepth * 0.5) + ")";
+        ctx.fillStyle = "rgba(" + (sat.violet ? "215, 185, 255" : "180, 230, 255") + "," + (0.4 + sDepth * 0.5) + ")";
         ctx.beginPath();
         ctx.arc(sp.x, sp.y, 1.4 + sDepth * 1.6, 0, Math.PI * 2);
         ctx.fill();
       }
 
-      // bright pulsing core at center
+      // bright pulsing core at center, blended cyan + violet energy glow
       var pulse = 0.5 + Math.sin(t * 0.02) * 0.5;
-      var coreR = 6 + pulse * 3;
+      var coreR = 7 + pulse * 4;
+      var coreGradOuter = ctx.createRadialGradient(cx, cy, 0, cx, cy, coreR * 9);
+      coreGradOuter.addColorStop(0, "rgba(190, 150, 255," + (0.22 + pulse * 0.12) + ")");
+      coreGradOuter.addColorStop(1, "rgba(190, 150, 255, 0)");
+      ctx.fillStyle = coreGradOuter;
+      ctx.beginPath();
+      ctx.arc(cx, cy, coreR * 9, 0, Math.PI * 2);
+      ctx.fill();
       var coreGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, coreR * 6);
-      coreGrad.addColorStop(0, "rgba(150, 220, 255," + (0.5 + pulse * 0.25) + ")");
+      coreGrad.addColorStop(0, "rgba(180, 235, 255," + (0.65 + pulse * 0.3) + ")");
+      coreGrad.addColorStop(0.5, "rgba(150, 220, 255," + (0.4 + pulse * 0.2) + ")");
       coreGrad.addColorStop(1, "rgba(150, 220, 255, 0)");
       ctx.fillStyle = coreGrad;
       ctx.beginPath();
@@ -1382,13 +1542,17 @@ class Component extends DCLogic {
       var rect = section.getBoundingClientRect();
       var px = ((e.clientX - rect.left) / rect.width) * 2 - 1;
       var py = ((e.clientY - rect.top) / rect.height) * 2 - 1;
-      targetTiltY = Math.max(-1, Math.min(1, px)) * 0.35;
-      targetTiltX = Math.max(-1, Math.min(1, py)) * -0.22;
+      targetTiltY = Math.max(-1, Math.min(1, px)) * 0.5;
+      targetTiltX = Math.max(-1, Math.min(1, py)) * -0.32;
       pointerActive = true;
+      // raw local pixel position, for hover hit-testing against projected geometry
+      mouseX = e.clientX - rect.left;
+      mouseY = e.clientY - rect.top;
     }
     function onPointerLeave() {
       targetTiltX = 0; targetTiltY = 0;
       pointerActive = false;
+      mouseX = null; mouseY = null;
     }
 
     size();
