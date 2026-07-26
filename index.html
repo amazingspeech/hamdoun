@@ -1764,7 +1764,6 @@ class Component extends DCLogic {
 
   function onScroll() {
     var y = window.scrollY || window.pageYOffset || 0;
-    var delta = y - lastY;
 
     if (y <= topOffset) {
       if (hidden) { header.style.transform = "translateY(0)"; hidden = false; }
@@ -1772,14 +1771,19 @@ class Component extends DCLogic {
       return;
     }
 
-    if (delta > revealThreshold && !hidden) {
-      header.style.transform = "translateY(-100%)";
-      hidden = true;
-    } else if (delta < -revealThreshold && hidden) {
-      header.style.transform = "translateY(0)";
-      hidden = false;
+    var delta = y - lastY;
+    // Alleen reageren (en de basislijn verzetten) zodra de opgebouwde
+    // scrollafstand de drempel overschrijdt - anders wordt lastY bij elke
+    // frame gelijkgezet en komt een langzame/vloeiende scroll (kleine
+    // stapjes per frame) nooit boven de drempel uit, in geen van beide
+    // richtingen.
+    if (delta > revealThreshold) {
+      if (!hidden) { header.style.transform = "translateY(-100%)"; hidden = true; }
+      lastY = y;
+    } else if (delta < -revealThreshold) {
+      if (hidden) { header.style.transform = "translateY(0)"; hidden = false; }
+      lastY = y;
     }
-    lastY = y;
   }
 
   var ticking = false;
