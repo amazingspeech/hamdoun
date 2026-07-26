@@ -3,7 +3,6 @@ import sys
 
 import numpy as np
 import pandas as pd
-import pytest
 from fastapi.testclient import TestClient
 
 from security import api_keys

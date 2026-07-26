@@ -1,5 +1,4 @@
 import base64
-import os
 
 import pytest
 from cryptography.exceptions import InvalidTag

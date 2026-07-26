@@ -1,0 +1,47 @@
+name: Forecasting CI
+
+on:
+  push:
+    paths:
+      - "forecasting/**"
+      - ".github/workflows/forecasting-ci.yml"
+  pull_request:
+    paths:
+      - "forecasting/**"
+      - ".github/workflows/forecasting-ci.yml"
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: forecasting
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      # XGBoost's compiled extension needs the OpenMP runtime; python:3.11-slim
+      # (the Dockerfile's base image) doesn't ship it by default either.
+      - name: Install libgomp1 (XGBoost's OpenMP runtime on Linux)
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends libgomp1
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt -r requirements-dev.txt
+
+      - name: Lint
+        run: ruff check .
+
+      - name: Test
+        run: pytest -v
+
+  build:
+    runs-on: ubuntu-latest
+    needs: lint-and-test
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: docker build -t forecasting-ci-build ./forecasting

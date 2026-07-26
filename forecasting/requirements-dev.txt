@@ -1,0 +1,4 @@
+# Alleen voor lokale ontwikkeling en CI (lint) — nooit in het Docker-image
+# (zie forecasting/.dockerignore), dus geen invloed op de productie-lockfile
+# requirements.txt.
+ruff>=0.16

@@ -1,0 +1,9 @@
+[tool.ruff]
+line-length = 125
+
+[tool.ruff.lint]
+# Pyflakes (echte bugs: ongebruikte imports/variabelen, undefined names),
+# pycodestyle-errors, en import-sortering. Bewust geen stijl-only regels
+# (bv. quotes, docstrings) die de bestaande, werkende code zouden dwingen
+# tot een grote cosmetische refactor los van deze CI-introductie.
+select = ["E", "F", "I"]
