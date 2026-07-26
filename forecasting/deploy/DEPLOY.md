@@ -41,6 +41,17 @@ nano .env
 # Zet MODEL_VERSION op de versie uit stap 2.
 ```
 
+Maak eerst lege `api_keys.json`- en `audit.log`-bestanden aan op de server,
+vóór de eerste `docker compose`-aanroep hieronder. `docker-compose.yml`
+bind-mount deze twee bestanden vanaf de host; als ze nog niet bestaan maakt
+Docker er in plaats daarvan een **directory** van, wat zowel het aanmaken
+van de API-key hieronder als elke latere audit-log-write in de app breekt
+(zelfde reden als `touch audit.log` in `forecasting/README.md` sectie 2):
+```bash
+cd /home/job/forecasting-demo
+touch api_keys.json audit.log
+```
+
 API-key genereren (dezelfde key komt in stap 7 in het dashboard-JS):
 ```bash
 cd /home/job/forecasting-demo/deploy
@@ -98,13 +109,23 @@ Controleer meteen dat Certo (`vandijkprotocol.tessar.nl`) en n8n
 ## 7. Dashboard-API-key invullen
 
 Het dashboard verwacht de key als globale JS-variabele, gezet vóór
-`dashboard.js` laadt. Voeg in
-`/home/job/forecasting-demo/dashboard/index.html`, vlak vóór de regel
-`<script src="./dashboard.js"></script>`, dit toe:
-```html
-<script>
-  window.TESSAR_FORECAST_API_KEY = "ZELFDE-KEY-ALS-STAP-3";
-</script>
+`dashboard.js` laadt. `index.html` laadt hiervoor al een `config.js` vóór
+`dashboard.js` (zie `dashboard/index.html`) — dat bestand bestaat lokaal
+niet (harmless 404, `window.TESSAR_FORECAST_API_KEY` blijft undefined) en
+moet op de server aangemaakt worden.
+
+**Niet** rechtstreeks in `index.html` plakken: `Caddyfile-snippet` zet een
+strikte `Content-Security-Policy` met `script-src 'self'` en zonder
+`'unsafe-inline'`, dus een inline `<script>`-blok in `index.html` wordt
+door de browser stilzwijgend geblokkeerd — `window.TESSAR_FORECAST_API_KEY`
+blijft dan undefined en elke `/forecast`/`/metrics`-aanroep faalt met 401,
+zonder enige foutmelding die daar direct naar wijst. Een los, same-origin
+bestand valt wél binnen `script-src 'self'`.
+
+Maak op de server `/home/job/forecasting-demo/dashboard/config.js` aan
+(nieuw bestand, niet `index.html` bewerken) met als inhoud:
+```javascript
+window.TESSAR_FORECAST_API_KEY = "ZELFDE-KEY-ALS-STAP-3";
 ```
 Geen rebuild of restart nodig: `dashboard/` is bind-gemount (zie
 `deploy/docker-compose.yml`), dus de container serveert dit bestand direct
