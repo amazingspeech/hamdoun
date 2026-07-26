@@ -65,10 +65,37 @@
   .hero-mark { animation:heroMarkFloat 12s ease-in-out infinite; }
   @keyframes heroMarkFloat { 0%,100% { transform:translateY(0) rotate(0deg); } 50% { transform:translateY(-14px) rotate(4deg); } }
   #hero-canvas { position:absolute; inset:0; width:100%; height:100%; opacity:0.9; }
+
+  .hero-grain { position:absolute; inset:0; opacity:0.05; mix-blend-mode:overlay; pointer-events:none; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+
+  .grad-text { background:linear-gradient(135deg, oklch(80% 0.14 200), oklch(74% 0.17 230) 55%, oklch(78% 0.15 190)); background-size:200% auto; -webkit-background-clip:text; background-clip:text; color:transparent; animation:gradShift 6s ease-in-out infinite; }
+  @keyframes gradShift { 0%,100% { background-position:0% 50%; } 50% { background-position:100% 50%; } }
+
+  .hero-badge { display:inline-flex; align-items:center; gap:9px; background:oklch(70% 0.14 220 / 0.12); border:1px solid oklch(70% 0.14 220 / 0.35); backdrop-filter:blur(8px); padding:9px 18px 9px 14px; border-radius:24px; margin-bottom:30px; font:600 0.8125rem/1 'IBM Plex Mono'; letter-spacing:0.06em; text-transform:uppercase; color:oklch(78% 0.12 220); box-shadow:0 1px 0 oklch(100% 0 0 / 0.06) inset; }
+  .hero-badge-dot { width:6px; height:6px; border-radius:50%; background:oklch(75% 0.16 200); box-shadow:0 0 0 0 oklch(75% 0.16 200 / 0.6); flex-shrink:0; animation:badgePulse 2.2s ease-out infinite; }
+  @keyframes badgePulse { 0% { box-shadow:0 0 0 0 oklch(75% 0.16 200 / 0.55); } 70% { box-shadow:0 0 0 7px oklch(75% 0.16 200 / 0); } 100% { box-shadow:0 0 0 0 oklch(75% 0.16 200 / 0); } }
+
+  .hero-trust-pill { display:flex; align-items:center; gap:8px; background:oklch(100% 0 0 / 0.05); border:1px solid oklch(100% 0 0 / 0.1); backdrop-filter:blur(6px); padding:8px 16px; border-radius:20px; font:500 0.8125rem/1 'IBM Plex Sans'; color:oklch(82% 0.06 250); }
+  .hero-trust-pill .hero-badge-dot { background:oklch(70% 0.14 220); animation:none; box-shadow:none; }
+
+  .hero-cta-primary { position:relative; overflow:hidden; display:inline-block; background:linear-gradient(135deg, oklch(72% 0.15 210), oklch(62% 0.14 235)); color:#001a2e; padding:17px 38px; border-radius:8px; font-weight:700; font-size:0.9625rem; box-shadow:0 14px 36px rgba(0, 190, 255, 0.28), 0 1px 0 rgba(255,255,255,0.4) inset; transition:all 280ms ease; white-space:nowrap; }
+  .hero-cta-primary:hover { transform:translateY(-3px); box-shadow:0 20px 52px rgba(0, 190, 255, 0.4), 0 1px 0 rgba(255,255,255,0.4) inset; }
+  .hero-cta-primary::after { content:''; position:absolute; top:0; left:-60%; width:40%; height:100%; background:linear-gradient(115deg, transparent, rgba(255,255,255,0.55), transparent); transform:skewX(-20deg); animation:ctaShine 3.4s ease-in-out infinite; }
+  @keyframes ctaShine { 0% { left:-60%; } 35%, 100% { left:130%; } }
+
+  .hero-content { animation:heroContentIn 900ms cubic-bezier(0.16,1,0.3,1) both; }
+  @keyframes heroContentIn { 0% { opacity:0; transform:translateY(18px); } 100% { opacity:1; transform:translateY(0); } }
+
+  .hero-scroll-cue { position:absolute; left:50%; bottom:22px; transform:translateX(-50%); z-index:1; opacity:0.55; animation:scrollCue 2.2s ease-in-out infinite; }
+  .hero-scroll-cue .icon { width:20px; height:20px; color:oklch(75% 0.10 250); }
+  @keyframes scrollCue { 0%,100% { transform:translate(-50%,0); opacity:0.35; } 50% { transform:translate(-50%,7px); opacity:0.7; } }
+
   @media (prefers-reduced-motion: reduce) {
     [data-reveal] { opacity:1; transform:none; transition:none; }
     html { scroll-behavior:auto; }
     .hero-orb, .hero-mark { animation:none; }
+    .hero-content { animation:none; }
+    .hero-badge-dot, .hero-cta-primary::after, .hero-scroll-cue, .grad-text { animation:none; }
   }
   @media (max-width: 680px) {
     .nav-link { display:none; }
@@ -169,7 +196,8 @@
   </div>
 </header>
 
-<section id="top" style="position:relative;overflow:hidden;background:linear-gradient(135deg, oklch(6% 0 0) 0%, oklch(12% 0.03 260) 100%);color:#FFF;padding:clamp(80px,12vw,140px) clamp(20px,5vw,40px);text-align:center;">
+<section id="top" style="position:relative;overflow:hidden;background:linear-gradient(135deg, oklch(6% 0 0) 0%, oklch(12% 0.03 260) 100%);color:#FFF;padding:clamp(96px,13vw,156px) clamp(20px,5vw,40px);text-align:center;">
+  <div class="hero-grain"></div>
   <div style="position:absolute;inset:0;pointer-events:none;overflow:hidden;">
     <canvas id="hero-canvas"></canvas>
     <div class="hero-orb hero-orb-a"></div>
@@ -178,23 +206,29 @@
     <img class="hero-mark" src="./Tessar-logo-symbol.webp" width="500" height="500" alt="" style="position:absolute;top:-100px;right:-120px;width:500px;height:auto;object-fit:contain;opacity:0.08;">
   </div>
 
-  <div style="max-width:900px;margin:0 auto;position:relative;z-index:1;">
-    <div style="display:inline-block;background:oklch(70% 0.14 220 / 0.15);border:1px solid oklch(70% 0.14 220 / 0.3);padding:10px 16px;border-radius:20px;margin-bottom:28px;font-size:0.8125rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:oklch(70% 0.14 220);">{{ badge }}</div>
+  <div class="hero-content" style="max-width:920px;margin:0 auto;position:relative;z-index:1;">
+    <div class="hero-badge">
+      <span class="hero-badge-dot"></span>{{ badge }}
+    </div>
 
-    <h1 style="font:800 clamp(2rem,5vw,3.5rem)/1.2 'IBM Plex Sans';margin:0 0 20px;letter-spacing:-0.02em;text-wrap:pretty;">{{ heroHeading }}</h1>
+    <h1 style="font:800 clamp(2.25rem,5.6vw,4rem)/1.15 'IBM Plex Sans';margin:0 0 22px;letter-spacing:-0.025em;text-wrap:pretty;">{{ heroHeadingPre }}<span class="grad-text">{{ heroHeadingHi1 }}</span>{{ heroHeadingMid }}<span class="grad-text">{{ heroHeadingHi2 }}</span>{{ heroHeadingPost }}</h1>
 
-    <p style="font:400 clamp(1rem,1.8vw,1.25rem)/1.7 'IBM Plex Sans';color:oklch(75% 0.10 250);margin:0 0 32px;max-width:700px;margin-left:auto;margin-right:auto;text-wrap:pretty;">{{ heroSubtext }}</p>
+    <p style="font:400 clamp(1.0625rem,1.9vw,1.375rem)/1.7 'IBM Plex Sans';color:oklch(78% 0.09 250);margin:0 0 36px;max-width:720px;margin-left:auto;margin-right:auto;text-wrap:pretty;">{{ heroSubtext }}</p>
 
     <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
-      <a href="#contact" style="background:linear-gradient(135deg, oklch(70% 0.14 220), oklch(60% 0.12 230));color:#001a2e;padding:16px 36px;border-radius:6px;font-weight:700;font-size:0.95rem;box-shadow:0 12px 32px rgba(0, 212, 255, 0.25);transition:all 280ms ease;white-space:nowrap;" style-hover="transform:translateY(-3px);box-shadow:0 16px 48px rgba(0, 212, 255, 0.35);">{{ ctaPrimary }}</a>
-      <a href="#cases" style="border:2px solid oklch(75% 0.14 220 / 0.4);color:#FFF;padding:14px 32px;border-radius:6px;font-weight:700;font-size:0.95rem;transition:all 200ms ease;white-space:nowrap;" style-hover="border-color:oklch(75% 0.14 220);background:oklch(75% 0.14 220 / 0.1);">{{ ctaSecondary }}</a>
+      <a href="#contact" class="hero-cta-primary">{{ ctaPrimary }}</a>
+      <a href="#cases" style="border:2px solid oklch(75% 0.14 220 / 0.4);color:#FFF;padding:14px 32px;border-radius:8px;font-weight:700;font-size:0.95rem;transition:all 200ms ease;white-space:nowrap;" style-hover="border-color:oklch(75% 0.14 220);background:oklch(75% 0.14 220 / 0.1);">{{ ctaSecondary }}</a>
     </div>
 
-    <div style="display:flex;justify-content:center;gap:clamp(32px,5vw,52px);margin-top:56px;padding-top:40px;border-top:1px solid oklch(70% 0.14 220 / 0.2);font-size:0.875rem;color:oklch(70% 0.10 250);flex-wrap:wrap;">
-      <div style="display:flex;align-items:center;gap:8px;"><span style="width:6px;height:6px;background:oklch(70% 0.14 220);border-radius:50%;flex-shrink:0;"></span><span>{{ trustA }}</span></div>
-      <div style="display:flex;align-items:center;gap:8px;"><span style="width:6px;height:6px;background:oklch(70% 0.14 220);border-radius:50%;flex-shrink:0;"></span><span>{{ trustB }}</span></div>
-      <div style="display:flex;align-items:center;gap:8px;"><span style="width:6px;height:6px;background:oklch(70% 0.14 220);border-radius:50%;flex-shrink:0;"></span><span>{{ trustC }}</span></div>
+    <div style="display:flex;justify-content:center;gap:clamp(12px,2vw,16px);margin-top:60px;flex-wrap:wrap;">
+      <div class="hero-trust-pill"><span class="hero-badge-dot"></span>{{ trustA }}</div>
+      <div class="hero-trust-pill"><span class="hero-badge-dot"></span>{{ trustB }}</div>
+      <div class="hero-trust-pill"><span class="hero-badge-dot"></span>{{ trustC }}</div>
     </div>
+  </div>
+
+  <div class="hero-scroll-cue" aria-hidden="true">
+    <div class="icon icon-chevron-down"></div>
   </div>
 </section>
 
@@ -591,6 +625,11 @@ const copyNL = {
 
   badge: 'AI-automatisering & AI-applicaties',
   heroHeading: 'Van terugkerend werk naar automatisering. Van idee naar werkende AI-applicatie.',
+  heroHeadingPre: 'Van terugkerend werk naar ',
+  heroHeadingHi1: 'automatisering',
+  heroHeadingMid: '. Van idee naar werkende ',
+  heroHeadingHi2: 'AI-applicatie',
+  heroHeadingPost: '.',
   heroSubtext: 'Praktische AI voor het Nederlandse mkb: automatiseringen die processen versnellen en applicaties met AI in de kern. Vaste scope, vaste prijs, geen rapporten: wel werkende systemen.',
   ctaPrimary: 'Plan gratis kennismaking',
   ctaSecondary: 'Bekijk cases',
@@ -805,6 +844,11 @@ const copyEN = {
 
   badge: 'AI Automation & AI Applications',
   heroHeading: 'From repetitive work to automation. From idea to working AI application.',
+  heroHeadingPre: 'From repetitive work to ',
+  heroHeadingHi1: 'automation',
+  heroHeadingMid: '. From idea to working ',
+  heroHeadingHi2: 'AI application',
+  heroHeadingPost: '.',
   heroSubtext: 'Practical AI for the Dutch mid-market: automations that speed up processes and applications with AI at their core. Fixed scope, fixed price, no reports: just working systems.',
   ctaPrimary: 'Schedule free discovery call',
   ctaSecondary: 'View case studies',
