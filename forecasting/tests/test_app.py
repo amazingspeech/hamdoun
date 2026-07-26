@@ -134,6 +134,20 @@ def test_audit_log_bevat_verzoek_metadata(tmp_path, monkeypatch):
     assert "store_id" in regel
 
 
+def test_docs_niet_bereikbaar_zonder_expliciete_opt_in(tmp_path, monkeypatch):
+    client = _bouw_test_omgeving(tmp_path, monkeypatch)
+    assert client.get("/docs").status_code == 404
+    assert client.get("/redoc").status_code == 404
+    assert client.get("/openapi.json").status_code == 404
+
+
+def test_docs_bereikbaar_met_expliciete_opt_in(tmp_path, monkeypatch):
+    monkeypatch.setenv("EXPOSE_API_DOCS", "true")
+    client = _bouw_test_omgeving(tmp_path, monkeypatch)
+    assert client.get("/docs").status_code == 200
+    assert client.get("/openapi.json").status_code == 200
+
+
 def test_forecast_boven_rate_limit_geeft_429(tmp_path, monkeypatch):
     client = _bouw_test_omgeving(tmp_path, monkeypatch, rate_limit_per_minuut="2")
     verzoek = {"store_id": 1, "start_datum": "2015-07-11", "horizon_dagen": 3}

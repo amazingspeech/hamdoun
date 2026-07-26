@@ -17,6 +17,7 @@ class Settings:
     cors_allowed_origins: list[str]
     encrypt_at_rest: bool
     rate_limit_per_minute: int
+    expose_docs: bool
 
 
 def laad_settings() -> Settings:
@@ -53,6 +54,12 @@ def laad_settings() -> Settings:
 
     rate_limit = int(os.environ.get("RATE_LIMIT_PER_MINUUT", "60"))
 
+    # Standaard uit: /docs, /redoc en /openapi.json geven ongeauthenticeerd
+    # het volledige API-schema prijs. Zelfde "ontbrekende config = dicht"
+    # patroon als CORS hierboven — een publieke demo-deployment hoeft dit
+    # nooit aan te zetten, alleen bewust voor intern/ontwikkelgebruik.
+    expose_docs = os.environ.get("EXPOSE_API_DOCS", "false").lower() == "true"
+
     return Settings(
         model_version=model_version,
         models_dir=models_dir,
@@ -61,4 +68,5 @@ def laad_settings() -> Settings:
         cors_allowed_origins=cors_allowed_origins,
         encrypt_at_rest=encrypt_at_rest,
         rate_limit_per_minute=rate_limit,
+        expose_docs=expose_docs,
     )

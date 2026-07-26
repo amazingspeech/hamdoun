@@ -56,3 +56,16 @@ def test_laad_settings_defaults_toegepast(monkeypatch, tmp_path):
     settings = config.laad_settings()
     assert settings.encrypt_at_rest is False
     assert settings.rate_limit_per_minute == 60
+
+
+def test_laad_settings_docs_staan_standaard_uit(monkeypatch, tmp_path):
+    _basis_env(monkeypatch, tmp_path)
+    monkeypatch.delenv("EXPOSE_API_DOCS", raising=False)
+    settings = config.laad_settings()
+    assert settings.expose_docs is False
+
+
+def test_laad_settings_docs_aan_via_expliciete_opt_in(monkeypatch, tmp_path):
+    _basis_env(monkeypatch, tmp_path, EXPOSE_API_DOCS="true")
+    settings = config.laad_settings()
+    assert settings.expose_docs is True
