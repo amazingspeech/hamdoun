@@ -23,6 +23,7 @@
     --band-line: oklch(55% 0.09 150);
     --warn: oklch(55% 0.17 32);
     --warn-soft: oklch(94% 0.035 32);
+    --accent-soft: oklch(94% 0.035 60);
     --fout: oklch(52% 0.19 25);
 
     --font-display: 'Bricolage Grotesque', -apple-system, sans-serif;
@@ -44,6 +45,7 @@
     --band-line: oklch(62% 0.08 150);
     --warn: oklch(70% 0.15 35);
     --warn-soft: oklch(28% 0.06 35);
+    --accent-soft: oklch(28% 0.06 60);
     --fout: oklch(70% 0.17 25);
   }
 
@@ -62,6 +64,7 @@
       --band-line: oklch(62% 0.08 150);
       --warn: oklch(70% 0.15 35);
       --warn-soft: oklch(28% 0.06 35);
+      --accent-soft: oklch(28% 0.06 60);
       --fout: oklch(70% 0.17 25);
     }
   }
@@ -80,7 +83,35 @@
 
   .controls { display:flex; gap:14px; align-items:end; flex-wrap:wrap; margin-top:24px; padding:16px; background:var(--paper-raised); border:1px solid var(--line); border-radius:12px; }
   .veld { display:flex; flex-direction:column; gap:6px; }
+  .veld-label-rij { display:flex; align-items:center; gap:5px; }
   label { font:600 0.75rem/1.2 var(--font-mono); text-transform:uppercase; letter-spacing:0.05em; color:var(--ink-faint); }
+
+  /* Herbruikbaar "?"-knopje: een native <details> i.p.v. een handgebouwde
+     tooltip-widget — gratis toetsenbord-/schermlezer-toegankelijkheid,
+     zelfde patroon als de bestaande details.model-info hieronder. */
+  .info { position:relative; display:inline-flex; }
+  .info summary {
+    list-style:none; cursor:pointer; display:grid; place-items:center;
+    width:15px; height:15px; border-radius:50%; border:1px solid var(--line-strong);
+    color:var(--ink-faint); font:600 0.625rem/1 var(--font-mono); background:var(--paper-raised);
+  }
+  .info summary::-webkit-details-marker { display:none; }
+  .info summary:hover, .info[open] > summary { color:var(--accent-ink); border-color:var(--accent); }
+  .info .info-inhoud {
+    position:absolute; z-index:5; top:calc(100% + 8px); left:0; width:max-content; max-width:230px;
+    background:var(--ink); color:var(--paper); font:400 0.75rem/1.5 var(--font-body);
+    padding:9px 12px; border-radius:8px; margin:0; box-shadow:0 6px 20px oklch(0% 0 0 / 0.18);
+  }
+
+  .aanbeveling {
+    display:flex; gap:10px; align-items:flex-start;
+    background:var(--accent-soft); border-radius:8px; padding:12px 16px; margin:24px 0 0;
+    font-size:0.875rem; line-height:1.55; color:var(--ink);
+  }
+  .aanbeveling::before {
+    content:"→"; flex:none; display:grid; place-items:center; width:18px; height:18px; border-radius:50%;
+    background:var(--accent); color:oklch(15% 0.02 60); font:700 0.8125rem var(--font-mono); margin-top:1px;
+  }
   select, input {
     font:400 0.9375rem/1.4 var(--font-body); padding:9px 12px; border:1px solid var(--line-strong);
     border-radius:8px; background:var(--paper-raised); color:var(--ink);
@@ -178,7 +209,7 @@
   <header class="top">
     <p class="eyebrow">Vraagvoorspelling</p>
     <h1>Wat gaat deze winkel de komende dagen verkopen?</h1>
-    <p class="sub">Op basis van historische verkoopdata — met een eerlijke bandbreedte in plaats van één te precies getal.</p>
+    <p class="sub" id="sub-basis">Op basis van historische verkoopdata — met een eerlijke bandbreedte in plaats van één te precies getal.</p>
 
     <div class="controls">
       <div class="veld">
@@ -190,7 +221,13 @@
         <input type="date" id="start">
       </div>
       <div class="veld">
-        <label for="horizon">Horizon (dagen)</label>
+        <div class="veld-label-rij">
+          <label for="horizon">Horizon (dagen)</label>
+          <details class="info">
+            <summary aria-label="Wat betekent horizon?">?</summary>
+            <p class="info-inhoud">Hoeveel dagen vooruit je een voorspelling wilt zien, vanaf de startdatum.</p>
+          </details>
+        </div>
         <input type="number" id="horizon" value="14" min="1">
       </div>
       <button id="voorspel" disabled>Laden…</button>
@@ -208,12 +245,26 @@
 
     <div class="secundair" id="secundair"></div>
 
+    <p class="aanbeveling" id="aanbeveling"></p>
+
     <div id="chart-container">
       <p class="chart-titel" id="chart-titel"></p>
       <svg id="chart" width="920" height="360"></svg>
       <div class="legenda">
-        <span><i class="zwatch lijn"></i> Verwachte omzet (meest waarschijnlijke waarde)</span>
-        <span><i class="zwatch band"></i> Bandbreedte — de omzet valt hier meestal binnen</span>
+        <span>
+          <i class="zwatch lijn"></i> Verwachte omzet
+          <details class="info">
+            <summary aria-label="Wat is de verwachte omzet?">?</summary>
+            <p class="info-inhoud">De meest waarschijnlijke waarde per dag — geen garantie, wel de beste inschatting.</p>
+          </details>
+        </span>
+        <span>
+          <i class="zwatch band"></i> Bandbreedte
+          <details class="info">
+            <summary aria-label="Wat is de bandbreedte?">?</summary>
+            <p class="info-inhoud">De omzet valt hier meestal binnen — een ruime, eerlijke marge in plaats van één te precies getal.</p>
+          </details>
+        </span>
       </div>
     </div>
 

@@ -61,6 +61,11 @@ async function laadMetrics() {
   const data = await resp.json();
   modelMetrics = data;
 
+  document.getElementById("sub-basis").textContent =
+    `Gebaseerd op ${data.n_observaties.toLocaleString("nl-NL")} historische verkoopdagen, ` +
+    `getraind t/m ${formatDatumKort(data.trainingsperiode_eind)} — met een eerlijke bandbreedte ` +
+    `in plaats van één te precies getal.`;
+
   const container = document.getElementById("metrics");
   container.innerHTML = "";
   const items = [
@@ -244,6 +249,11 @@ function toonSamenvatting(voorspellingen, storeId) {
 
   document.getElementById("chart-titel").textContent =
     `Winkel ${storeId} — dagelijkse omzet, ${formatDatumKort(voorspellingen[0].datum)} t/m ${formatDatumKort(voorspellingen[n - 1].datum)}`;
+
+  document.getElementById("aanbeveling").textContent =
+    `Plan voorraad voor circa ${euro.format(Math.round(totaalP50))} omzet deze periode. ` +
+    `Houd rekening met pieken tot ${euro.format(Math.round(totaalP90))} bij drukte, en met minder ` +
+    `verkoop tot ${euro.format(Math.round(totaalP10))} als het rustiger is dan verwacht.`;
 }
 
 async function voorspel() {
@@ -292,9 +302,28 @@ function eenDagNa(isoDatum) {
   return `${jaar}-${maand}-${dag}`;
 }
 
+function sluitAndereInfoKnopjes(event) {
+  for (const details of document.querySelectorAll(".info[open]")) {
+    if (!details.contains(event.target)) details.open = false;
+  }
+}
+
+function initInfoKnopjes() {
+  for (const details of document.querySelectorAll(".info")) {
+    details.addEventListener("toggle", () => {
+      if (!details.open) return;
+      for (const ander of document.querySelectorAll(".info[open]")) {
+        if (ander !== details) ander.open = false;
+      }
+    });
+  }
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   const knop = document.getElementById("voorspel");
   vulWinkelSelect();
+  document.addEventListener("click", sluitAndereInfoKnopjes);
+  initInfoKnopjes();
   document.getElementById("start").value = vandaagPlusEen();
   knop.addEventListener("click", voorspel);
 
