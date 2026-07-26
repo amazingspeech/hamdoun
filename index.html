@@ -90,6 +90,10 @@
   .hero-scroll-cue .icon { width:20px; height:20px; color:oklch(75% 0.10 250); }
   @keyframes scrollCue { 0%,100% { transform:translate(-50%,0); opacity:0.35; } 50% { transform:translate(-50%,7px); opacity:0.7; } }
 
+  .hero-node-bubble { position:absolute; left:0; top:0; transform:translate(-50%,-100%) scale(0.92); display:flex; align-items:center; gap:7px; background:oklch(20% 0.03 260 / 0.82); border:1px solid rgba(255,200,110,0.4); backdrop-filter:blur(8px); padding:7px 13px; border-radius:8px; font:600 0.75rem/1 'IBM Plex Mono'; letter-spacing:0.02em; color:#fff; white-space:nowrap; opacity:0; pointer-events:none; z-index:2; transition:opacity 450ms ease, transform 450ms cubic-bezier(0.16,1,0.3,1); box-shadow:0 8px 24px rgba(0,0,0,0.35); }
+  .hero-node-bubble.is-visible { opacity:1; transform:translate(-50%,-118%) scale(1); }
+  .hero-node-bubble-dot { width:6px; height:6px; border-radius:50%; background:rgb(255,200,110); box-shadow:0 0 8px rgba(255,200,110,0.85); flex-shrink:0; }
+
   @media (prefers-reduced-motion: reduce) {
     [data-reveal] { opacity:1; transform:none; transition:none; }
     html { scroll-behavior:auto; }
@@ -630,7 +634,7 @@ const copyNL = {
   heroHeadingMid: '. Van idee naar werkende ',
   heroHeadingHi2: 'AI-applicatie',
   heroHeadingPost: '.',
-  heroSubtext: 'Praktische AI voor het Nederlandse mkb: automatiseringen die processen versnellen en applicaties met AI in de kern. Vaste scope, vaste prijs, geen rapporten: wel werkende systemen.',
+  heroSubtext: 'Praktische AI voor het Nederlandse mkb: van trigger tot actie. Automatiseringen die processen versnellen en applicaties met AI in de kern. Vaste scope, vaste prijs, geen rapporten: wel werkende systemen.',
   ctaPrimary: 'Plan gratis kennismaking',
   ctaSecondary: 'Bekijk cases',
   trustA: 'EU AI Act-proof',
@@ -849,7 +853,7 @@ const copyEN = {
   heroHeadingMid: '. From idea to working ',
   heroHeadingHi2: 'AI application',
   heroHeadingPost: '.',
-  heroSubtext: 'Practical AI for the Dutch mid-market: automations that speed up processes and applications with AI at their core. Fixed scope, fixed price, no reports: just working systems.',
+  heroSubtext: 'Practical AI for the Dutch mid-market: from trigger to action. Automations that speed up processes and applications with AI at their core. Fixed scope, fixed price, no reports: just working systems.',
   ctaPrimary: 'Schedule free discovery call',
   ctaSecondary: 'View case studies',
   trustA: 'EU AI Act ready',
@@ -1056,6 +1060,10 @@ function formatEuro(n) {
   return '€' + Math.round(n).toLocaleString('nl-NL');
 }
 
+// Exposed for the vanilla-JS hero canvas (outside React state) so its
+// workflow-step labels can follow the current language without a re-init.
+window.__dcLang = 'nl';
+
 class Component extends DCLogic {
   state = {
     lang: 'nl',
@@ -1113,8 +1121,8 @@ class Component extends DCLogic {
     return {
       ...t,
       lang,
-      setLangNl: () => this.setState({ lang: 'nl' }),
-      setLangEn: () => this.setState({ lang: 'en' }),
+      setLangNl: () => { window.__dcLang = 'nl'; this.setState({ lang: 'nl' }); },
+      setLangEn: () => { window.__dcLang = 'en'; this.setState({ lang: 'en' }); },
       langNlBg: lang === 'nl' ? active.background : inactive.background,
       langNlColor: lang === 'nl' ? active.color : inactive.color,
       langEnBg: lang === 'en' ? active.background : inactive.background,
@@ -1288,6 +1296,13 @@ class Component extends DCLogic {
     var vertexHoverT = verts.map(function () { return 0; });
     var edgeHoverT = edges.map(function () { return 0; });
     var hoverVertex = -1, hoverEdge = -1;
+    var coreEnergyT = 0;
+
+    function lerpRgb(a, b, mixT) {
+      return Math.round(a[0] + (b[0] - a[0]) * mixT) + ", " +
+        Math.round(a[1] + (b[1] - a[1]) * mixT) + ", " +
+        Math.round(a[2] + (b[2] - a[2]) * mixT);
+    }
 
     function distToSegment(px, py, ax, ay, bx, by) {
       var vx = bx - ax, vy = by - ay;
@@ -1298,6 +1313,39 @@ class Component extends DCLogic {
       var dx = px - cx2, dy = py - cy2;
       return Math.sqrt(dx * dx + dy * dy);
     }
+
+    // Figurative workflow: an ever-looping automatic animation (independent of
+    // hover) that lights up a connected chain of real edges/vertices one step
+    // at a time -- Trigger -> n8n -> AI-model -> Actie -> Jouw systeem, mirroring
+    // the actual product flow -- plus a radial line from the core (the "AI
+    // source") out to whichever node is currently active. Everything else on
+    // the shape is left untouched, exactly as requested.
+    var WORKFLOW_PATH = [0, 5, 9, 3, 6];
+    var WORKFLOW_LABELS = {
+      nl: ['Trigger', 'n8n', 'AI-model', 'Actie', 'Jouw systeem'],
+      en: ['Trigger', 'n8n', 'AI model', 'Action', 'Your system']
+    };
+    var workflowEdgeIdx = [];
+    for (var wp = 0; wp < WORKFLOW_PATH.length - 1; wp++) {
+      var wa = WORKFLOW_PATH[wp], wb = WORKFLOW_PATH[wp + 1];
+      for (var we = 0; we < edges.length; we++) {
+        if ((edges[we][0] === wa && edges[we][1] === wb) || (edges[we][0] === wb && edges[we][1] === wa)) {
+          workflowEdgeIdx.push(we);
+          break;
+        }
+      }
+    }
+    var WORKFLOW_STEP_FRAMES = 150;
+    var WORKFLOW_PAUSE_FRAMES = 130;
+    var WORKFLOW_CYCLE = WORKFLOW_PATH.length * WORKFLOW_STEP_FRAMES + WORKFLOW_PAUSE_FRAMES;
+    var lastWorkflowStep = -1;
+
+    var bubble = document.createElement("div");
+    bubble.className = "hero-node-bubble";
+    bubble.innerHTML = '<span class="hero-node-bubble-dot"></span><span class="hero-node-bubble-text"></span>';
+    bubble.setAttribute("aria-hidden", "true");
+    section.appendChild(bubble);
+    var bubbleTextEl = bubble.querySelector(".hero-node-bubble-text");
 
     function size() {
       var rect = section.getBoundingClientRect();
@@ -1420,12 +1468,51 @@ class Component extends DCLogic {
           if (bestE !== -1) hoverEdge = bestE;
         }
       }
+      // Automatic looping workflow: cumulatively lights up WORKFLOW_PATH one
+      // node/edge at a time, holds the full chain briefly, then clears and
+      // repeats. workflowStep is the index of the node currently being drawn
+      // in (0-based); stepEase is its eased 0->1 draw-in progress.
+      var wCyclePos = t % WORKFLOW_CYCLE;
+      var workflowActiveCount = 0;
+      var workflowStep = -1;
+      var stepEase = 1;
+      if (wCyclePos < WORKFLOW_PATH.length * WORKFLOW_STEP_FRAMES) {
+        workflowActiveCount = Math.floor(wCyclePos / WORKFLOW_STEP_FRAMES) + 1;
+        workflowStep = workflowActiveCount - 1;
+        var stepFrac = Math.min(1, (wCyclePos % WORKFLOW_STEP_FRAMES) / (WORKFLOW_STEP_FRAMES * 0.4));
+        stepEase = 1 - Math.pow(1 - stepFrac, 3);
+      }
+      var workflowVerts = WORKFLOW_PATH.slice(0, workflowActiveCount);
+      var workflowEdgesActive = workflowEdgeIdx.slice(0, Math.max(0, workflowActiveCount - 1));
+
+      if (workflowStep !== lastWorkflowStep) {
+        lastWorkflowStep = workflowStep;
+        if (workflowStep >= 0 && W > 900) {
+          var lang = window.__dcLang === "en" ? "en" : "nl";
+          var anchorV = proj[WORKFLOW_PATH[workflowStep]];
+          var bx = anchorV.x, by = anchorV.y - 26;
+          var safeMinX = W * 0.16, safeMaxX = W * 0.84;
+          var safeMinY = H * 0.12, safeMaxY = H * 0.8;
+          if (bx > safeMinX && bx < safeMaxX && by > safeMinY && by < safeMaxY) {
+            bx = anchorV.x < cx ? W * 0.08 : W * 0.92;
+          }
+          bx = Math.max(60, Math.min(W - 60, bx));
+          by = Math.max(36, Math.min(H - 24, by));
+          bubbleTextEl.textContent = (workflowStep + 1) + ". " + WORKFLOW_LABELS[lang][workflowStep];
+          bubble.style.left = bx + "px";
+          bubble.style.top = by + "px";
+          bubble.classList.add("is-visible");
+        } else {
+          bubble.classList.remove("is-visible");
+        }
+      }
+
       for (var uv = 0; uv < vertexHoverT.length; uv++) {
-        var targetV = uv === hoverVertex ? 1 : 0;
+        var targetV = (uv === hoverVertex || workflowVerts.indexOf(uv) !== -1) ? 1 : 0;
         vertexHoverT[uv] += (targetV - vertexHoverT[uv]) * 0.18;
       }
       for (var ue = 0; ue < edgeHoverT.length; ue++) {
-        var targetE = ue === hoverEdge ? 1 : 0;
+        var targetE = (ue === hoverEdge || workflowEdgesActive.indexOf(ue) !== -1) ? 1 : 0;
         edgeHoverT[ue] += (targetE - edgeHoverT[ue]) * 0.18;
       }
 
@@ -1516,20 +1603,66 @@ class Component extends DCLogic {
         ctx.fill();
       }
 
-      // bright pulsing core at center, blended cyan + violet energy glow
+      // Radial "source" connectors: the core is the AI the workflow runs on,
+      // so each active step gets a line drawn outward from the core to it.
+      // The newest one grows in (stepEase) as if it's being laid in real time;
+      // earlier ones stay put at full length, faded by their own hover intensity.
+      var coreEnergyTarget = workflowActiveCount > 0 ? 1 : 0;
+      coreEnergyT += (coreEnergyTarget - coreEnergyT) * 0.05;
+      for (var cw = 0; cw < workflowVerts.length; cw++) {
+        var cwv = workflowVerts[cw];
+        var cwLenFrac = cw === workflowVerts.length - 1 ? stepEase : 1;
+        var cwp = proj[cwv];
+        var ctx2x = cx + (cwp.x - cx) * cwLenFrac;
+        var ctx2y = cy + (cwp.y - cy) * cwLenFrac;
+        var connAlpha = 0.4 * vertexHoverT[cwv];
+        ctx.strokeStyle = "rgba(" + hoverRgb + "," + connAlpha.toFixed(3) + ")";
+        ctx.lineWidth = 1.1;
+        ctx.shadowColor = "rgba(" + hoverRgb + ",0.6)";
+        ctx.shadowBlur = 7;
+        ctx.beginPath();
+        ctx.moveTo(cx, cy);
+        ctx.lineTo(ctx2x, ctx2y);
+        ctx.stroke();
+      }
+      // The currently-forming path edge (node -> node) draws itself in over
+      // the same window, on top of the normal edge rendering below.
+      if (workflowStep >= 1) {
+        var fa = proj[WORKFLOW_PATH[workflowStep - 1]];
+        var fb = proj[WORKFLOW_PATH[workflowStep]];
+        var fx = fa.x + (fb.x - fa.x) * stepEase;
+        var fy = fa.y + (fb.y - fa.y) * stepEase;
+        ctx.strokeStyle = "rgba(" + hoverRgb + ",0.85)";
+        ctx.lineWidth = 2.2;
+        ctx.shadowColor = "rgba(" + hoverRgb + ",0.8)";
+        ctx.shadowBlur = 10;
+        ctx.beginPath();
+        ctx.moveTo(fa.x, fa.y);
+        ctx.lineTo(fx, fy);
+        ctx.stroke();
+      }
+      ctx.shadowBlur = 0;
+
+      // bright pulsing core at center, blended cyan + violet energy glow --
+      // this is the "AI source" the workflow connects out to, so it warms
+      // toward the same amber accent (smoothly, via coreEnergyT) whenever a
+      // step is active.
       var pulse = 0.5 + Math.sin(t * 0.02) * 0.5;
       var coreR = 7 + pulse * 4;
+      var coreOuterRgb = lerpRgb([190, 150, 255], [255, 200, 110], coreEnergyT * 0.55);
       var coreGradOuter = ctx.createRadialGradient(cx, cy, 0, cx, cy, coreR * 9);
-      coreGradOuter.addColorStop(0, "rgba(190, 150, 255," + (0.22 + pulse * 0.12) + ")");
-      coreGradOuter.addColorStop(1, "rgba(190, 150, 255, 0)");
+      coreGradOuter.addColorStop(0, "rgba(" + coreOuterRgb + "," + (0.22 + pulse * 0.12 + coreEnergyT * 0.1) + ")");
+      coreGradOuter.addColorStop(1, "rgba(" + coreOuterRgb + ", 0)");
       ctx.fillStyle = coreGradOuter;
       ctx.beginPath();
       ctx.arc(cx, cy, coreR * 9, 0, Math.PI * 2);
       ctx.fill();
+      var coreInnerRgb = lerpRgb([180, 235, 255], [255, 210, 130], coreEnergyT * 0.5);
+      var coreMidRgb = lerpRgb([150, 220, 255], [255, 200, 120], coreEnergyT * 0.5);
       var coreGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, coreR * 6);
-      coreGrad.addColorStop(0, "rgba(180, 235, 255," + (0.65 + pulse * 0.3) + ")");
-      coreGrad.addColorStop(0.5, "rgba(150, 220, 255," + (0.4 + pulse * 0.2) + ")");
-      coreGrad.addColorStop(1, "rgba(150, 220, 255, 0)");
+      coreGrad.addColorStop(0, "rgba(" + coreInnerRgb + "," + (0.65 + pulse * 0.3) + ")");
+      coreGrad.addColorStop(0.5, "rgba(" + coreMidRgb + "," + (0.4 + pulse * 0.2) + ")");
+      coreGrad.addColorStop(1, "rgba(" + coreMidRgb + ", 0)");
       ctx.fillStyle = coreGrad;
       ctx.beginPath();
       ctx.arc(cx, cy, coreR * 6, 0, Math.PI * 2);
@@ -1578,6 +1711,7 @@ class Component extends DCLogic {
       section.removeEventListener("pointerleave", onPointerLeave);
       window.removeEventListener("resize", onResize);
       document.removeEventListener("visibilitychange", onVisibility);
+      if (bubble && bubble.parentNode) bubble.parentNode.removeChild(bubble);
     };
   }
 
