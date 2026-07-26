@@ -42,7 +42,15 @@
     inputPlaceholder: "Vraag het aan de Tessar-concierge...",
     panelTitle: "Tessar",
     panelSubtitle: "AI-concierge",
-    launcherLabel: "Chat met Tessar"
+    launcherLabel: "Chat met Tessar",
+    // Kostenbeheersing: maximum aantal berichten dat 1 bezoeker in 1 browsersessie
+    // mag versturen (telt door na een pagina-refresh, via sessionStorage, zolang
+    // dezelfde tab/sessie openstaat). Dit is een client-side softcap - iemand die
+    // echt wil, kan 'm omzeilen door sessionStorage te wissen of de webhook direct
+    // aan te roepen. De echte backstop hoort op edge-niveau (zie opmerking bij
+    // CONFIG.webhookUrl hierboven) en/of een spend-limit in de Anthropic Console.
+    maxMessagesPerSession: 20,
+    limitReachedMessage: "Je hebt de meeste vragen die ik nu kan beantwoorden wel gehad. Wil je verder praten over jouw situatie? Plan dan een gratis kennismaking van 30 minuten, of mail ons via het contactformulier onderaan de pagina."
   };
 
   // ----------------------- STYLES -----------------------
@@ -249,9 +257,27 @@
     return text;
   }
 
+  function getMessageCount() {
+    try { return parseInt(sessionStorage.getItem("tsc_msg_count") || "0", 10) || 0; } catch (e) { return 0; }
+  }
+  function incrementMessageCount() {
+    try { sessionStorage.setItem("tsc_msg_count", String(getMessageCount() + 1)); } catch (e) {}
+  }
+
   async function sendMessage(text) {
     text = (text || inputEl.value).trim();
     if (!text) return;
+
+    if (getMessageCount() >= CONFIG.maxMessagesPerSession) {
+      hasSentFirstMessage = true;
+      addMessage("user", text);
+      inputEl.value = "";
+      startersEl.style.display = "none";
+      addMessage("bot", CONFIG.limitReachedMessage);
+      return;
+    }
+    incrementMessageCount();
+
     hasSentFirstMessage = true;
     addMessage("user", text);
     inputEl.value = "";
@@ -322,4 +348,28 @@
     inputEl.style.height = "auto";
     inputEl.style.height = Math.min(inputEl.scrollHeight, 120) + "px";
   });
+
+  // ----------------------- AUTO-OPEN NA 10 SECONDEN -----------------------
+  // Opent het paneel vanzelf 10s na binnenkomst, zodat direct duidelijk is
+  // dat dit een AI-concierge is en geen standaard chat-widget die wacht tot
+  // je 'm zelf ontdekt. Gebeurt maar 1x per browsersessie (sessionStorage),
+  // zodat het niet bij elke paginanavigatie binnen dezelfde site opnieuw
+  // opduikt, en niet als de bezoeker het paneel intussen al zelf heeft
+  // geopend of gesloten.
+  var AUTO_OPEN_DELAY_MS = 10000;
+  var userInteractedManually = false;
+  launcher.addEventListener("click", function () { userInteractedManually = true; }, { once: true });
+  closeBtn.addEventListener("click", function () { userInteractedManually = true; }, { once: true });
+
+  var alreadyAutoOpened = false;
+  try { alreadyAutoOpened = sessionStorage.getItem("tsc_auto_opened") === "1"; } catch (e) {}
+
+  if (!alreadyAutoOpened) {
+    setTimeout(function () {
+      if (!userInteractedManually && !isOpen) {
+        openPanel();
+        try { sessionStorage.setItem("tsc_auto_opened", "1"); } catch (e) {}
+      }
+    }, AUTO_OPEN_DELAY_MS);
+  }
 })();
