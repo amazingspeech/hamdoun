@@ -31,6 +31,18 @@ class LoginVerzoek(BaseModel):
     wachtwoord: str = Field(..., min_length=1)
 
 
+class GebruikerAanmakenVerzoek(BaseModel):
+    email: str
+    wachtwoord: str = Field(..., min_length=1)
+
+
+class GebruikerResponse(BaseModel):
+    id: int
+    email: str
+    rol: str
+    actief: bool
+
+
 class MetricsResponse(BaseModel):
     model_versie: str
     rmspe: float

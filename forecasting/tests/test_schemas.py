@@ -1,7 +1,15 @@
 import pytest
 from pydantic import ValidationError
 
-from serving.schemas import DagVoorspelling, ForecastResponse, ForecastVerzoek, LoginVerzoek, MetricsResponse
+from serving.schemas import (
+    DagVoorspelling,
+    ForecastResponse,
+    ForecastVerzoek,
+    GebruikerAanmakenVerzoek,
+    GebruikerResponse,
+    LoginVerzoek,
+    MetricsResponse,
+)
 
 
 def test_forecast_verzoek_accepteert_geldige_input():
@@ -55,3 +63,13 @@ def test_login_verzoek_accepteert_geldige_input():
 def test_login_verzoek_verwerpt_leeg_wachtwoord():
     with pytest.raises(ValidationError):
         LoginVerzoek(email="eigenaar@klant.nl", wachtwoord="")
+
+
+def test_gebruiker_aanmaken_verzoek_verwerpt_leeg_wachtwoord():
+    with pytest.raises(ValidationError):
+        GebruikerAanmakenVerzoek(email="lid@klant.nl", wachtwoord="")
+
+
+def test_gebruiker_response_serialiseert():
+    response = GebruikerResponse(id=1, email="lid@klant.nl", rol="lid", actief=True)
+    assert response.model_dump()["rol"] == "lid"

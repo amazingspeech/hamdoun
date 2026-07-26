@@ -15,6 +15,7 @@ from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
 from slowapi.util import get_remote_address
 from sqlalchemy import select
+from sqlalchemy.exc import IntegrityError
 
 from db import api_keys as db_api_keys
 from db import gebruikers as db_gebruikers
@@ -25,7 +26,15 @@ from db.schema import maak_database
 from security import audit
 from serving.config import laad_settings
 from serving.forecast import HorizonBuitenBereik, OnbekendeWinkel, voorspel_periode
-from serving.schemas import DagVoorspelling, ForecastResponse, ForecastVerzoek, LoginVerzoek, MetricsResponse
+from serving.schemas import (
+    DagVoorspelling,
+    ForecastResponse,
+    ForecastVerzoek,
+    GebruikerAanmakenVerzoek,
+    GebruikerResponse,
+    LoginVerzoek,
+    MetricsResponse,
+)
 from training.artifact import laad_artefact
 
 settings = laad_settings()
@@ -80,14 +89,31 @@ def vereis_api_key(sleutel: Optional[str] = Security(api_key_header)) -> Geauthe
 SESSIE_COOKIE_NAAM = "sessie"
 
 
-def vereis_sessie(request: Request) -> int:
+class GeauthenticeerdeGebruiker(NamedTuple):
+    gebruiker_id: int
+    organisatie_id: int
+    rol: str
+    email: str
+
+
+def vereis_sessie(request: Request) -> GeauthenticeerdeGebruiker:
     token = request.cookies.get(SESSIE_COOKIE_NAAM)
     if not token:
         raise HTTPException(status_code=401, detail="Niet ingelogd.")
     gebruiker_id = db_sessies.vind_gebruiker_voor_sessie(tenants_db, token)
     if gebruiker_id is None:
         raise HTTPException(status_code=401, detail="Sessie ongeldig of verlopen.")
-    return gebruiker_id
+    with tenants_db.connect() as conn:
+        rij = conn.execute(select(gebruikers_tabel).where(gebruikers_tabel.c.id == gebruiker_id)).one()
+    return GeauthenticeerdeGebruiker(
+        gebruiker_id=rij.id, organisatie_id=rij.organisatie_id, rol=rij.rol, email=rij.email
+    )
+
+
+def vereis_eigenaar(gebruiker: GeauthenticeerdeGebruiker = Depends(vereis_sessie)) -> GeauthenticeerdeGebruiker:
+    if gebruiker.rol != "eigenaar":
+        raise HTTPException(status_code=403, detail="Alleen de eigenaar van de organisatie mag dit.")
+    return gebruiker
 
 
 @app.get("/health")
@@ -124,10 +150,33 @@ def logout(request: Request, response: Response) -> dict:
 
 
 @app.get("/me")
-def me(gebruiker_id: int = Depends(vereis_sessie)) -> dict:
+def me(gebruiker: GeauthenticeerdeGebruiker = Depends(vereis_sessie)) -> dict:
+    return {"email": gebruiker.email, "rol": gebruiker.rol, "organisatie_id": gebruiker.organisatie_id}
+
+
+@app.post("/gebruikers", response_model=GebruikerResponse, status_code=201)
+def gebruiker_aanmaken(
+    verzoek: GebruikerAanmakenVerzoek, eigenaar: GeauthenticeerdeGebruiker = Depends(vereis_eigenaar)
+) -> GebruikerResponse:
+    # Een zelf-aangemaakte gebruiker is altijd "lid" — een tweede eigenaar
+    # toevoegen kan alleen via db/gebruikers_cli.py (operatorhandeling),
+    # om onbedoelde privilege-escalatie via dit endpoint uit te sluiten.
+    try:
+        gebruiker_id = db_gebruikers.maak_gebruiker(
+            tenants_db, organisatie_id=eigenaar.organisatie_id, email=verzoek.email, wachtwoord=verzoek.wachtwoord
+        )
+    except IntegrityError:
+        raise HTTPException(status_code=409, detail=f"E-mailadres {verzoek.email} is al in gebruik.")
+    return GebruikerResponse(id=gebruiker_id, email=verzoek.email, rol="lid", actief=True)
+
+
+@app.get("/gebruikers", response_model=list[GebruikerResponse])
+def gebruikers_lijst(gebruiker: GeauthenticeerdeGebruiker = Depends(vereis_sessie)) -> list[GebruikerResponse]:
     with tenants_db.connect() as conn:
-        rij = conn.execute(select(gebruikers_tabel).where(gebruikers_tabel.c.id == gebruiker_id)).one()
-    return {"email": rij.email, "rol": rij.rol, "organisatie_id": rij.organisatie_id}
+        rijen = conn.execute(
+            select(gebruikers_tabel).where(gebruikers_tabel.c.organisatie_id == gebruiker.organisatie_id)
+        ).all()
+    return [GebruikerResponse(id=r.id, email=r.email, rol=r.rol, actief=r.actief) for r in rijen]
 
 
 @app.post("/forecast", response_model=ForecastResponse)

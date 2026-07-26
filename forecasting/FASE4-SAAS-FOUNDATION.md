@@ -149,7 +149,25 @@ Elke stap is op zichzelf shipbaar en testbaar — geen big-bang-migratie.
    133/133 tests groen, ruff schoon.
 4. **Wachtwoord-resetflow.** Geblokkeerd op beslissing 7 (mailprovider moet
    nog gekozen/opgezet worden).
-5. **Meerdere gebruikers per organisatie.** Simpel rolmodel (eigenaar/lid).
+5. **✅ Meerdere gebruikers per organisatie — gedaan 2026-07-27.**
+   Rolonderscheid (eigenaar/lid) wordt nu daadwerkelijk afgedwongen, niet
+   meer alleen een inert kolomveld. `POST /gebruikers` (alleen bereikbaar
+   voor een ingelogde `eigenaar` — `vereis_eigenaar()`, 403 bij een `lid`,
+   401 zonder sessie) maakt een nieuwe gebruiker aan in de eigen
+   organisatie van de aanroeper, altijd met rol `lid` — een tweede eigenaar
+   toevoegen kan bewust alleen via `db/gebruikers_cli.py` (operator-
+   handeling), om privilege-escalatie via dit endpoint uit te sluiten. Een
+   dubbel e-mailadres geeft 409, niet een 500 (`gebruikers.email` had al
+   een unique-constraint uit Stap 3, nu voor het eerst via de API
+   bereikbaar). `GET /gebruikers` toont de teamlijst, org-scoped, voor elke
+   ingelogde gebruiker (eigenaar én lid). `vereis_sessie()` geeft nu een
+   `GeauthenticeerdeGebruiker`-NamedTuple terug (gebruiker_id,
+   organisatie_id, rol, email) in plaats van alleen een id — zelfde patroon
+   als `GeauthenticeerdeKey` bij de API-key-auth — zodat `/me` en de nieuwe
+   endpoints niet elk apart de gebruikersrij hoeven op te zoeken. Getest via
+   `tests/test_gebruikers_endpoint.py` (eigenaar mag, lid mag niet, geen
+   sessie geeft 401, dubbel e-mailadres geeft 409, teamlijst blijft
+   org-gescheiden tussen twee klanten). 142/142 tests groen, ruff schoon.
 6. **Zelfbediening van API-keys.** Gebruikers beheren eigen keys.
 7. **Rate limiting per organisatie.** Pas relevant zodra een organisatie
    meerdere keys deelt.
