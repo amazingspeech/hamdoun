@@ -95,8 +95,18 @@ Elke stap is op zichzelf shipbaar en testbaar — geen big-bang-migratie.
    nog niet — de API is functioneel ongewijzigd, precies zoals bedoeld.
    Getest via TDD (`tests/test_db_schema.py`, `tests/test_db_bootstrap.py`,
    `tests/test_db_cli.py`), 96/96 tests groen.
-1. **API-keys naar de database, zelfde gedrag.** `api_keys.json` → tabel,
-   hash/salt 1-op-1 gemigreerd. Nog geen isolatie-afdwinging.
+1. **✅ API-keys naar de database, zelfde gedrag — gedaan 2026-07-26.**
+   `api_keys`-tabel in `db/schema.py` (organisatie_id, naam, hash, salt,
+   verlopen_op, actief). `db/api_keys.py` bevat `migreer_bestaande_key()`
+   die alleen al-gehashte waarden overzet (nooit een ruwe key opnieuw
+   hashen). `db/migreer_keys_cli.py` migreert een echte `api_keys.json`
+   naar één organisatie (op slug): `python3 -m db.migreer_keys_cli
+   --api-keys-json api_keys.json --database-pad tenants.db
+   --organisatie-slug <slug>`. **Nog niet gewijzigd:** `serving/app.py`
+   leest nog steeds `api_keys.json`, niet de database — bewust, want Stap 2
+   is expliciet de eerste stap die gedrag verandert, niet Stap 1. Getest
+   via TDD (`tests/test_db_api_keys.py`, `tests/test_db_migreer_keys_cli.py`),
+   99/99 tests groen.
 2. **Klantisolatie daadwerkelijk afdwingen.** Eerste stap die gedrag
    verandert — eigen release met regressietest op de live demo.
 3. **Accounts + login/sessiebeheer.** Nog geen self-service-registratie

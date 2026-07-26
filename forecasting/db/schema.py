@@ -52,6 +52,22 @@ winkels = Table(
     Column("aangemaakt_op", DateTime, nullable=False),
 )
 
+api_keys = Table(
+    "api_keys",
+    metadata,
+    Column("id", Integer, primary_key=True),
+    Column("organisatie_id", Integer, ForeignKey("organisaties.id"), nullable=False),
+    Column("naam", String, nullable=False),
+    # hash/salt: exact dezelfde PBKDF2-HMAC-SHA256-waarden als
+    # security/api_keys.py produceert — deze tabel hergebruikt die
+    # hash-functies, verzint geen nieuw formaat.
+    Column("hash", String, nullable=False),
+    Column("salt", String, nullable=False),
+    Column("verlopen_op", DateTime, nullable=True),
+    Column("actief", Boolean, nullable=False, default=True),
+    Column("aangemaakt_op", DateTime, nullable=False),
+)
+
 
 def maak_database(database_pad: Path) -> Engine:
     """Maakt (indien nog niet aanwezig) de database aan op database_pad en
