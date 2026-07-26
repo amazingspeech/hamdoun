@@ -64,9 +64,15 @@ docker compose up api
 Dashboard: `http://localhost:8000/`. API: `http://localhost:8000/forecast`,
 `http://localhost:8000/metrics` (beide vereisen de `X-API-Key`-header).
 
-Hertrainen zonder rebuild:
+Hertrainen zonder rebuild. De `training`-service deelt dezelfde niet-root
+container-gebruiker als `api` (zie `Dockerfile`) en schrijft een nieuwe
+versiemap onder `models/` — die map moet dus ook voor die gebruiker
+beschrijfbaar zijn, met het execute-bit erbij (nodig om nieuwe submappen
+aan te maken, chmod 666 alleen volstaat hier niet zoals bij een los
+bestand):
 
 ```bash
+chmod 777 models
 docker compose run --rm training --train data/train.csv --winkels data/store.csv
 ```
 
