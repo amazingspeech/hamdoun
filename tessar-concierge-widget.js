@@ -29,20 +29,23 @@
     webhookUrl: "https://PLACEHOLDER-jouw-n8n-domein.example.com/webhook/PLACEHOLDER/chat",
     clientId: "tessar",
     brandName: "Tessar",
+    assistantName: "Tess",
+    assistantInitial: "T",
     greetingRotation: [
-      "Vragen over AI-automatisering of AI-applicaties? Ik help je verder.",
-      "Benieuwd of dit iets voor jouw bedrijf is? Vraag het gerust.",
-      "Wil je weten hoe een traject eruitziet? Ik leg het uit."
+      "Hoi, ik ben Tess. Vragen over AI-automatisering of AI-applicaties?",
+      "Benieuwd of dit iets voor jouw bedrijf is? Vraag het me gerust.",
+      "Wil je weten hoe een traject eruitziet? Ik leg het je uit."
     ],
     starterQuestions: [
       "Wat kost een traject?",
       "Is dit iets voor mijn bedrijf?",
       "Hoe lang duurt een traject?"
     ],
-    inputPlaceholder: "Vraag het aan de Tessar-concierge...",
-    panelTitle: "Tessar",
-    panelSubtitle: "AI-concierge",
-    launcherLabel: "Chat met Tessar",
+    inputPlaceholder: "Vraag het aan Tess...",
+    panelTitle: "Tess",
+    panelSubtitle: "AI-concierge bij Tessar",
+    launcherLabel: "Chat met Tess van Tessar",
+    greetingMessage: "Hoi, ik ben Tess — de AI-concierge van Tessar. Stel gerust een vraag, of kies een van de opties hieronder.",
     // Kostenbeheersing: maximum aantal berichten dat 1 bezoeker in 1 browsersessie
     // mag versturen (telt door na een pagina-refresh, via sessionStorage, zolang
     // dezelfde tab/sessie openstaat). Dit is een client-side softcap - iemand die
@@ -67,11 +70,16 @@
     + "opacity:0;transform:translateY(6px);transition:opacity 320ms ease, transform 320ms ease;pointer-events:none;}"
     + ".tsc-bubble-hint.tsc-show{opacity:1;transform:translateY(0);}"
     + ".tsc-panel{position:fixed;bottom:24px;right:24px;width:380px;max-width:calc(100vw - 32px);height:600px;max-height:calc(100vh - 48px);"
+    + "z-index:2147483000;"
     + "background:#fff;border-radius:18px;box-shadow:0 24px 64px -12px rgba(15,15,20,0.35);display:none;flex-direction:column;overflow:hidden;"
     + "border:1px solid oklch(90% 0.01 250);}"
     + ".tsc-panel.tsc-open{display:flex;}"
-    + ".tsc-header{padding:18px 18px 16px;background:oklch(18% 0.02 255);color:#fff;display:flex;align-items:center;gap:12px;flex:none;}"
-    + ".tsc-header-dot{width:9px;height:9px;border-radius:50%;background:oklch(70% 0.18 150);box-shadow:0 0 0 3px oklch(70% 0.18 150 / 0.25);flex:none;}"
+    + ".tsc-header{padding:18px 18px 16px;background:oklch(18% 0.02 255);color:#fff;display:flex;align-items:center;gap:12px;flex:none;cursor:grab;touch-action:none;user-select:none;}"
+    + ".tsc-header.tsc-dragging{cursor:grabbing;}"
+    + ".tsc-header-avatar{position:relative;width:36px;height:36px;flex:none;}"
+    + ".tsc-header-avatar-circle{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg, oklch(70% 0.14 220), oklch(60% 0.15 170));"
+    + "display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:0.9375rem;font-family:'IBM Plex Sans',sans-serif;}"
+    + ".tsc-header-dot{position:absolute;right:-1px;bottom:-1px;width:10px;height:10px;border-radius:50%;background:oklch(70% 0.18 150);border:2px solid oklch(18% 0.02 255);flex:none;}"
     + ".tsc-header-text{flex:1;min-width:0;}"
     + ".tsc-header-title{font-weight:700;font-size:0.9375rem;letter-spacing:-0.01em;}"
     + ".tsc-header-sub{font-size:0.75rem;color:oklch(78% 0.06 250);margin-top:1px;}"
@@ -134,7 +142,10 @@
   panel.className = "tsc-panel";
   panel.innerHTML =
     '<div class="tsc-header">' +
-      '<span class="tsc-header-dot"></span>' +
+      '<div class="tsc-header-avatar">' +
+        '<div class="tsc-header-avatar-circle">' + CONFIG.assistantInitial + '</div>' +
+        '<span class="tsc-header-dot"></span>' +
+      '</div>' +
       '<div class="tsc-header-text">' +
         '<div class="tsc-header-title">' + CONFIG.panelTitle + '</div>' +
         '<div class="tsc-header-sub">' + CONFIG.panelSubtitle + '</div>' +
@@ -162,6 +173,7 @@
   var inputEl = panel.querySelector("[data-tsc-input]");
   var sendBtn = panel.querySelector("[data-tsc-send]");
   var closeBtn = panel.querySelector(".tsc-close");
+  var headerEl = panel.querySelector(".tsc-header");
 
   // ----------------------- IDLE HINT ROTATION -----------------------
   var hintIndex = 0;
@@ -205,7 +217,7 @@
     hint.classList.remove("tsc-show");
     clearInterval(hintTimer);
     if (!hasSentFirstMessage) {
-      addMessage("bot", "Hoi! Ik ben de AI-concierge van Tessar. Stel gerust een vraag, of kies een van de opties hieronder.");
+      addMessage("bot", CONFIG.greetingMessage);
     }
     inputEl.focus();
   }
@@ -216,6 +228,55 @@
   }
   launcher.addEventListener("click", function () { isOpen ? closePanel() : openPanel(); });
   closeBtn.addEventListener("click", closePanel);
+
+  // ----------------------- SLEPEN (header als handvat) -----------------------
+  // Zet het paneel bij het eerste sleepmoment om van rechts/onder-verankerd
+  // naar een vaste links/boven-positie in pixels, zodat het daarna vrij
+  // over het scherm te verplaatsen is. Blijft altijd binnen de viewport.
+  (function enableDragging() {
+    var dragging = false;
+    var startX, startY, startLeft, startTop;
+
+    function switchToLeftTopPositioning() {
+      var rect = panel.getBoundingClientRect();
+      panel.style.left = rect.left + "px";
+      panel.style.top = rect.top + "px";
+      panel.style.right = "auto";
+      panel.style.bottom = "auto";
+    }
+
+    headerEl.addEventListener("pointerdown", function (e) {
+      if (e.target === closeBtn || closeBtn.contains(e.target)) return;
+      dragging = true;
+      switchToLeftTopPositioning();
+      startX = e.clientX;
+      startY = e.clientY;
+      startLeft = parseFloat(panel.style.left);
+      startTop = parseFloat(panel.style.top);
+      headerEl.classList.add("tsc-dragging");
+      headerEl.setPointerCapture(e.pointerId);
+    });
+
+    headerEl.addEventListener("pointermove", function (e) {
+      if (!dragging) return;
+      var rect = panel.getBoundingClientRect();
+      var newLeft = startLeft + (e.clientX - startX);
+      var newTop = startTop + (e.clientY - startY);
+      newLeft = Math.max(0, Math.min(newLeft, window.innerWidth - rect.width));
+      newTop = Math.max(0, Math.min(newTop, window.innerHeight - rect.height));
+      panel.style.left = newLeft + "px";
+      panel.style.top = newTop + "px";
+    });
+
+    function stopDragging(e) {
+      if (!dragging) return;
+      dragging = false;
+      headerEl.classList.remove("tsc-dragging");
+      try { headerEl.releasePointerCapture(e.pointerId); } catch (err) {}
+    }
+    headerEl.addEventListener("pointerup", stopDragging);
+    headerEl.addEventListener("pointercancel", stopDragging);
+  })();
 
   // ----------------------- MESSAGES -----------------------
   function addMessage(role, text) {
