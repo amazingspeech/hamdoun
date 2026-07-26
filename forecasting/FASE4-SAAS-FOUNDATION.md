@@ -121,8 +121,32 @@ Elke stap is op zichzelf shipbaar en testbaar — geen big-bang-migratie.
    tests groen. Live gedemonstreerd: de lokale demo-server draait nu op
    deze code, met de echte klant ("Tessar demo") en alle 1115 winkels
    gebootstrapt via `db.cli` + `db.migreer_keys_cli`.
-3. **Accounts + login/sessiebeheer.** Nog geen self-service-registratie
-   (beslissing 1) — gebruikers worden handmatig aangemaakt.
+3. **✅ Accounts + login/sessiebeheer — gedaan 2026-07-27.**
+   `gebruikers`- en `sessies`-tabellen in `db/schema.py`. `db/gebruikers.py`
+   hergebruikt `security.api_keys.hash_key()`/`verifieer_key()` voor
+   wachtwoorden (zelfde PBKDF2-HMAC-SHA256, geen tweede hashformaat);
+   `verifieer_inloggegevens()` lekt nooit of een e-mailadres bestaat (fout
+   wachtwoord en onbekend e-mailadres geven allebei `None`). `db/sessies.py`
+   hasht sessietokens met SHA-256, niet PBKDF2 — bewust, want een
+   `secrets.token_urlsafe`-token is al hoge-entropie, geen mensgekozen
+   geheim. Nog steeds geen self-service-registratie (beslissing 1) —
+   gebruikers worden handmatig aangemaakt via `db/gebruikers_cli.py`
+   (`python3 -m db.gebruikers_cli --database-pad tenants.db
+   --organisatie-slug <slug> --email ... --wachtwoord ...`), zelfde patroon
+   als `db/migreer_keys_cli.py`. HTTP-laag in `serving/app.py`: `POST
+   /login` (zet een HttpOnly-sessiecookie, `Secure`-vlag via de nieuwe
+   `SESSIE_COOKIE_SECURE`-instelling — standaard aan, net als
+   `EXPOSE_API_DOCS` standaard uit staat, expliciete opt-out i.p.v.
+   impliciete onveilige default), `POST /logout` (verwijdert de sessie
+   server-side), `GET /me` (bevestigt dat een sessie geldig is — nodig om
+   de hele flow end-to-end te kunnen testen en voor toekomstig
+   dashboardgebruik). `/login` deelt dezelfde rate-limit-instelling als
+   `/forecast`, maar per bron-IP (er is nog geen API-key op het moment van
+   inloggen) — bescherming tegen wachtwoord-bruteforcing. Getest via TDD
+   (`tests/test_db_schema.py`, `tests/test_db_gebruikers.py`,
+   `tests/test_db_sessies.py`, `tests/test_db_gebruikers_cli.py`,
+   `tests/test_config.py`, `tests/test_schemas.py`, `tests/test_login.py`),
+   133/133 tests groen, ruff schoon.
 4. **Wachtwoord-resetflow.** Geblokkeerd op beslissing 7 (mailprovider moet
    nog gekozen/opgezet worden).
 5. **Meerdere gebruikers per organisatie.** Simpel rolmodel (eigenaar/lid).

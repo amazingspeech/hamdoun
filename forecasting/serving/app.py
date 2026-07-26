@@ -7,21 +7,25 @@ import time
 from pathlib import Path
 from typing import NamedTuple, Optional
 
-from fastapi import Depends, FastAPI, HTTPException, Request, Security
+from fastapi import Depends, FastAPI, HTTPException, Request, Response, Security
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import APIKeyHeader
 from fastapi.staticfiles import StaticFiles
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
 from slowapi.util import get_remote_address
+from sqlalchemy import select
 
 from db import api_keys as db_api_keys
+from db import gebruikers as db_gebruikers
+from db import sessies as db_sessies
 from db import winkels as db_winkels
+from db.schema import gebruikers as gebruikers_tabel
 from db.schema import maak_database
 from security import audit
 from serving.config import laad_settings
 from serving.forecast import HorizonBuitenBereik, OnbekendeWinkel, voorspel_periode
-from serving.schemas import DagVoorspelling, ForecastResponse, ForecastVerzoek, MetricsResponse
+from serving.schemas import DagVoorspelling, ForecastResponse, ForecastVerzoek, LoginVerzoek, MetricsResponse
 from training.artifact import laad_artefact
 
 settings = laad_settings()
@@ -73,9 +77,57 @@ def vereis_api_key(sleutel: Optional[str] = Security(api_key_header)) -> Geauthe
     return GeauthenticeerdeKey(naam=naam, organisatie_id=organisatie_id)
 
 
+SESSIE_COOKIE_NAAM = "sessie"
+
+
+def vereis_sessie(request: Request) -> int:
+    token = request.cookies.get(SESSIE_COOKIE_NAAM)
+    if not token:
+        raise HTTPException(status_code=401, detail="Niet ingelogd.")
+    gebruiker_id = db_sessies.vind_gebruiker_voor_sessie(tenants_db, token)
+    if gebruiker_id is None:
+        raise HTTPException(status_code=401, detail="Sessie ongeldig of verlopen.")
+    return gebruiker_id
+
+
 @app.get("/health")
 def health() -> dict:
     return {"status": "ok", "model_versie": settings.model_version}
+
+
+@app.post("/login")
+@limiter.limit(f"{settings.rate_limit_per_minute}/minute", key_func=get_remote_address)
+def login(request: Request, response: Response, verzoek: LoginVerzoek) -> dict:
+    gebruiker_id = db_gebruikers.verifieer_inloggegevens(tenants_db, email=verzoek.email, wachtwoord=verzoek.wachtwoord)
+    if gebruiker_id is None:
+        raise HTTPException(status_code=401, detail="Ongeldige inloggegevens.")
+
+    token = db_sessies.maak_sessie(tenants_db, gebruiker_id=gebruiker_id)
+    response.set_cookie(
+        SESSIE_COOKIE_NAAM,
+        token,
+        httponly=True,
+        secure=settings.sessie_cookie_secure,
+        samesite="lax",
+        max_age=int(db_sessies.STANDAARD_GELDIGHEIDSDUUR.total_seconds()),
+    )
+    return {"status": "ok"}
+
+
+@app.post("/logout")
+def logout(request: Request, response: Response) -> dict:
+    token = request.cookies.get(SESSIE_COOKIE_NAAM)
+    if token:
+        db_sessies.verwijder_sessie(tenants_db, token)
+    response.delete_cookie(SESSIE_COOKIE_NAAM)
+    return {"status": "ok"}
+
+
+@app.get("/me")
+def me(gebruiker_id: int = Depends(vereis_sessie)) -> dict:
+    with tenants_db.connect() as conn:
+        rij = conn.execute(select(gebruikers_tabel).where(gebruikers_tabel.c.id == gebruiker_id)).one()
+    return {"email": rij.email, "rol": rij.rol, "organisatie_id": rij.organisatie_id}
 
 
 @app.post("/forecast", response_model=ForecastResponse)

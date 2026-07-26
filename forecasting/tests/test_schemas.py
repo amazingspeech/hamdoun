@@ -1,7 +1,7 @@
 import pytest
 from pydantic import ValidationError
 
-from serving.schemas import DagVoorspelling, ForecastResponse, ForecastVerzoek, MetricsResponse
+from serving.schemas import DagVoorspelling, ForecastResponse, ForecastVerzoek, LoginVerzoek, MetricsResponse
 
 
 def test_forecast_verzoek_accepteert_geldige_input():
@@ -45,3 +45,13 @@ def test_metrics_response_bevat_trainingsperiode_eind():
         trainingsperiode_eind="2015-06-30",
     )
     assert response.model_dump(mode="json")["trainingsperiode_eind"] == "2015-06-30"
+
+
+def test_login_verzoek_accepteert_geldige_input():
+    verzoek = LoginVerzoek(email="eigenaar@klant.nl", wachtwoord="een-goed-wachtwoord")
+    assert verzoek.email == "eigenaar@klant.nl"
+
+
+def test_login_verzoek_verwerpt_leeg_wachtwoord():
+    with pytest.raises(ValidationError):
+        LoginVerzoek(email="eigenaar@klant.nl", wachtwoord="")

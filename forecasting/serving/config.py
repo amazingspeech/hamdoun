@@ -19,6 +19,7 @@ class Settings:
     rate_limit_per_minute: int
     expose_docs: bool
     tenants_db_pad: Path
+    sessie_cookie_secure: bool
 
 
 def laad_settings() -> Settings:
@@ -68,6 +69,12 @@ def laad_settings() -> Settings:
     # stil beveiligingsgat.
     tenants_db_pad = Path(os.environ.get("TENANTS_DB_PAD", "tenants.db"))
 
+    # Standaard aan: sessiecookies horen nooit onversleuteld over http te
+    # gaan. Alleen expliciet uitzetten voor lokale ontwikkeling zonder TLS
+    # (zelfde "expliciete opt-out" patroon als hierboven, maar dan
+    # omgekeerd — hier is de veilige default WEL aan).
+    sessie_cookie_secure = os.environ.get("SESSIE_COOKIE_SECURE", "true").lower() == "true"
+
     return Settings(
         model_version=model_version,
         models_dir=models_dir,
@@ -78,4 +85,5 @@ def laad_settings() -> Settings:
         rate_limit_per_minute=rate_limit,
         expose_docs=expose_docs,
         tenants_db_pad=tenants_db_pad,
+        sessie_cookie_secure=sessie_cookie_secure,
     )

@@ -82,3 +82,16 @@ def test_laad_settings_tenants_db_pad_expliciet(monkeypatch, tmp_path):
     _basis_env(monkeypatch, tmp_path, TENANTS_DB_PAD=str(tmp_path / "eigen.db"))
     settings = config.laad_settings()
     assert str(settings.tenants_db_pad) == str(tmp_path / "eigen.db")
+
+
+def test_laad_settings_sessie_cookie_secure_staat_standaard_aan(monkeypatch, tmp_path):
+    _basis_env(monkeypatch, tmp_path)
+    monkeypatch.delenv("SESSIE_COOKIE_SECURE", raising=False)
+    settings = config.laad_settings()
+    assert settings.sessie_cookie_secure is True
+
+
+def test_laad_settings_sessie_cookie_secure_expliciet_uit(monkeypatch, tmp_path):
+    _basis_env(monkeypatch, tmp_path, SESSIE_COOKIE_SECURE="false")
+    settings = config.laad_settings()
+    assert settings.sessie_cookie_secure is False

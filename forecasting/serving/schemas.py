@@ -26,6 +26,11 @@ class ForecastResponse(BaseModel):
     voorspellingen: list[DagVoorspelling]
 
 
+class LoginVerzoek(BaseModel):
+    email: str
+    wachtwoord: str = Field(..., min_length=1)
+
+
 class MetricsResponse(BaseModel):
     model_versie: str
     rmspe: float

@@ -10,7 +10,7 @@ from db.schema import maak_database, organisaties, winkels
 def test_maak_database_maakt_organisaties_en_winkels_tabellen(tmp_path):
     engine = maak_database(tmp_path / "tenants.db")
     tabellen = set(inspect(engine).get_table_names())
-    assert {"organisaties", "winkels", "api_keys"} <= tabellen
+    assert {"organisaties", "winkels", "api_keys", "gebruikers", "sessies"} <= tabellen
 
 
 def test_extern_store_id_moet_uniek_zijn(tmp_path):
