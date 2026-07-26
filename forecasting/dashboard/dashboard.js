@@ -114,9 +114,19 @@ function vandaagPlusEen() {
   return morgen.toISOString().slice(0, 10);
 }
 
+function eenDagNa(isoDatum) {
+  const d = new Date(isoDatum + "T00:00:00");
+  d.setDate(d.getDate() + 1);
+  return d.toISOString().slice(0, 10);
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   vulWinkelSelect();
   document.getElementById("start").value = vandaagPlusEen();
   document.getElementById("voorspel").addEventListener("click", voorspel);
-  laadMetrics().catch((e) => toonFout(e.message));
+  laadMetrics()
+    .then((data) => {
+      document.getElementById("start").value = eenDagNa(data.trainingsperiode_eind);
+    })
+    .catch((e) => toonFout(e.message));
 });
