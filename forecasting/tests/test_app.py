@@ -5,6 +5,9 @@ import numpy as np
 import pandas as pd
 from fastapi.testclient import TestClient
 
+from db.api_keys import migreer_bestaande_key
+from db.bootstrap import bootstrap_organisatie
+from db.schema import maak_database
 from security import api_keys
 from training import artifact, train
 
@@ -28,13 +31,28 @@ def _bouw_test_omgeving(tmp_path, monkeypatch, cors_origins="", rate_limit_per_m
         gevalideerde_horizon_dagen=30, versleuteld=False,
     )
 
+    # api_keys.json blijft nodig omdat serving/config.py 'm nog vereist
+    # (bewust nog niet opgeruimd in Stap 2, zie FASE4-SAAS-FOUNDATION.md),
+    # maar de daadwerkelijke auth loopt via de database hieronder — de
+    # hash/salt worden er direct uit overgenomen, niet opnieuw gehasht,
+    # exact zoals db/migreer_keys_cli.py dat in het echt ook doet.
     keys_pad = tmp_path / "api_keys.json"
     api_keys.voeg_key_toe(keys_pad, "test-klant", "test-key-123")
+    opgeslagen_key = api_keys.laad_keys(keys_pad)["test-klant"]
+
+    tenants_db_pad = tmp_path / "tenants.db"
+    engine = maak_database(tenants_db_pad)
+    org_id = bootstrap_organisatie(engine, naam="Test organisatie", slug="test-organisatie", store_ids=[1])
+    migreer_bestaande_key(
+        engine, organisatie_id=org_id, naam="test-klant",
+        hash=opgeslagen_key["hash"], salt=opgeslagen_key["salt"],
+    )
 
     monkeypatch.setenv("MODEL_VERSION", versie)
     monkeypatch.setenv("MODELS_DIR", str(tmp_path / "models"))
     monkeypatch.setenv("API_KEYS_FILE", str(keys_pad))
     monkeypatch.setenv("AUDIT_LOG_FILE", str(tmp_path / "audit.log"))
+    monkeypatch.setenv("TENANTS_DB_PAD", str(tenants_db_pad))
     monkeypatch.setenv("CORS_ALLOWED_ORIGINS", cors_origins)
     monkeypatch.setenv("FORECASTING_ENCRYPT_AT_REST", "false")
     monkeypatch.setenv("RATE_LIMIT_PER_MINUUT", rate_limit_per_minuut)

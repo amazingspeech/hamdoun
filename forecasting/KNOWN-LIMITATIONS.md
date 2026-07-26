@@ -54,12 +54,16 @@ patroon als Certo's `KNOWN-LIMITATIONS.md`.
   de API-response al klemmen) is bewust niet gedaan — dat raakt de
   training-/serving-pijplijn en hoort bij Fase 3 (Forecast Intelligence),
   niet bij een cosmetische dashboard-fix.
-- **`db/` bestaat, maar wordt nog niet gebruikt door de API.** Fase 4 Stap 0
-  (zie `FASE4-SAAS-FOUNDATION.md`) legt organisaties/winkels vast in een
-  losse SQLite-database — puur voorbereidend. `serving/app.py` kent nog
-  geen organisatiebegrip: elke geldige API-key mag nog steeds elk
-  `store_id` opvragen. Klantisolatie komt pas met Stap 2. Concludeer dus
-  niet uit het bestaan van `db/` dat er al multi-tenant scheiding is.
+- **Klantisolatie is nu afgedwongen (Fase 4 Stap 2), maar er is nog maar
+  één klant.** `serving/app.py` checkt sinds Stap 2 per `/forecast`-verzoek
+  of het gevraagde `store_id` bij de organisatie van de gebruikte API-key
+  hoort (zie `FASE4-SAAS-FOUNDATION.md`). Op dit moment is er precies één
+  gebootstrapte organisatie ("Tessar demo") die alle 1115 winkels uit het
+  modelartefact bezit, dus dit is in de praktijk nog niet getoetst tegen
+  een echte tweede klant — alleen in de testsuite
+  (`tests/test_tenant_isolatie.py`). Accounts/self-service (Stap 3+) zijn
+  nog niet gebouwd; nieuwe organisaties/klanten worden nu handmatig via
+  `db.cli`/`db.migreer_keys_cli` aangemaakt.
 - **Geen live deployment.** Draait lokaal via Docker Compose. Live
   deployment (bv. naast Certo, met een Caddy-reverse-proxy) en de
   daadwerkelijke website-demo-integratie zijn bewuste, losse

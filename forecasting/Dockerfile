@@ -13,6 +13,7 @@ COPY pipeline/ ./pipeline/
 COPY training/ ./training/
 COPY serving/ ./serving/
 COPY dashboard/ ./dashboard/
+COPY db/ ./db/
 
 # Niet als root draaien: het proces heeft geen root-rechten nodig (het
 # schrijft alleen naar bind-gemounte bestanden/mappen die het al via de

@@ -11,6 +11,7 @@ services:
       - ../dashboard:/app/dashboard
       - ../api_keys.json:/app/api_keys.json
       - ../audit.log:/app/audit.log
+      - ../tenants.db:/app/tenants.db
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "python3", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health', timeout=3)"]

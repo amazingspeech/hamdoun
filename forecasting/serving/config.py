@@ -18,6 +18,7 @@ class Settings:
     encrypt_at_rest: bool
     rate_limit_per_minute: int
     expose_docs: bool
+    tenants_db_pad: Path
 
 
 def laad_settings() -> Settings:
@@ -60,6 +61,13 @@ def laad_settings() -> Settings:
     # nooit aan te zetten, alleen bewust voor intern/ontwikkelgebruik.
     expose_docs = os.environ.get("EXPOSE_API_DOCS", "false").lower() == "true"
 
+    # Geen fail-hard-op-ontbrekend hier zoals bij API_KEYS_FILE: een
+    # ontbrekend databasebestand wordt door db.schema.maak_database()
+    # automatisch aangemaakt als lege database (geen organisaties/keys),
+    # wat elke aanvraag laat 401'en — een luide, veilige faalstand, geen
+    # stil beveiligingsgat.
+    tenants_db_pad = Path(os.environ.get("TENANTS_DB_PAD", "tenants.db"))
+
     return Settings(
         model_version=model_version,
         models_dir=models_dir,
@@ -69,4 +77,5 @@ def laad_settings() -> Settings:
         encrypt_at_rest=encrypt_at_rest,
         rate_limit_per_minute=rate_limit,
         expose_docs=expose_docs,
+        tenants_db_pad=tenants_db_pad,
     )

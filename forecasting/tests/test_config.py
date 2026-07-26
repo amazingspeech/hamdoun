@@ -69,3 +69,16 @@ def test_laad_settings_docs_aan_via_expliciete_opt_in(monkeypatch, tmp_path):
     _basis_env(monkeypatch, tmp_path, EXPOSE_API_DOCS="true")
     settings = config.laad_settings()
     assert settings.expose_docs is True
+
+
+def test_laad_settings_tenants_db_pad_default(monkeypatch, tmp_path):
+    _basis_env(monkeypatch, tmp_path)
+    monkeypatch.delenv("TENANTS_DB_PAD", raising=False)
+    settings = config.laad_settings()
+    assert str(settings.tenants_db_pad) == "tenants.db"
+
+
+def test_laad_settings_tenants_db_pad_expliciet(monkeypatch, tmp_path):
+    _basis_env(monkeypatch, tmp_path, TENANTS_DB_PAD=str(tmp_path / "eigen.db"))
+    settings = config.laad_settings()
+    assert str(settings.tenants_db_pad) == str(tmp_path / "eigen.db")

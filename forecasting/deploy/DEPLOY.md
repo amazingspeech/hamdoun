@@ -57,8 +57,8 @@ UID 10001 eigenaarschap (`chown`) in plaats van de bestanden
 wereldschrijfbaar te maken:
 ```bash
 cd /home/job/forecasting-demo
-touch api_keys.json audit.log
-sudo chown 10001:10001 api_keys.json audit.log
+touch api_keys.json audit.log tenants.db
+sudo chown 10001:10001 api_keys.json audit.log tenants.db
 ```
 
 API-key genereren (dezelfde key komt in stap 7 in het dashboard-JS):
@@ -70,6 +70,24 @@ from security import api_keys
 api_keys.voeg_key_toe(Path('/app/api_keys.json'), 'publieke-demo', 'ZET-HIER-EEN-EIGEN-WILLEKEURIGE-KEY-NEER')
 "
 ```
+
+Sinds Fase 4 Stap 2 verifieert de server keys via de database, niet meer
+via `api_keys.json` — dat bestand blijft verplicht aanwezig (zie
+`serving/config.py`), maar de key hierboven moet ook naar `tenants.db`.
+Eén organisatie bootstrappen (koppelt alle store-ID's uit het
+modelartefact eraan) en de zojuist aangemaakte key overzetten:
+```bash
+docker compose run --rm api python3 -m db.cli \
+  --models-dir /app/models --model-version <versie uit stap 2> \
+  --database-pad /app/tenants.db \
+  --organisatie-naam "Publieke demo" --organisatie-slug publieke-demo
+docker compose run --rm api python3 -m db.migreer_keys_cli \
+  --api-keys-json /app/api_keys.json --database-pad /app/tenants.db \
+  --organisatie-slug publieke-demo
+```
+Zonder deze twee stappen faalt elke `/forecast`/`/metrics`-aanroep met
+401, ook met een geldige key in `api_keys.json`.
+
 (`--rm api` bouwt en start de container kort om het commando uit te voeren
 en verwijdert 'm daarna weer — dit is dezelfde image die straks ook live
 draait, dus dit is meteen een eerste rooktest dat de image kan bouwen.)

@@ -40,11 +40,24 @@ Dit print de RMSPE en coverage, en schrijft een geversieerd artefact naar
 MODEL_VERSION=<versie uit de output>
 ```
 
-Voeg minimaal één API-key toe voordat je de server start:
+Voeg minimaal één API-key toe voordat je de server start. Sinds Fase 4
+Stap 2 verifieert de server keys via de database, niet meer via
+`api_keys.json` — dat bestand blijft nog wel verplicht aanwezig (zie
+`serving/config.py`), maar de daadwerkelijke authenticatie/isolatie loopt
+via `tenants.db`:
 
 ```bash
 python3 -c "from pathlib import Path; from security import api_keys; api_keys.voeg_key_toe(Path('api_keys.json'), 'lokaal-testen', 'kies-een-eigen-key')"
+python3 -m db.cli --models-dir models --model-version <versie uit stap 2> \
+  --organisatie-naam "Lokaal testen" --organisatie-slug lokaal-testen
+python3 -m db.migreer_keys_cli --api-keys-json api_keys.json \
+  --database-pad tenants.db --organisatie-slug lokaal-testen
 ```
+
+(`db.cli` bootstrapt één organisatie en koppelt er alle store-ID's uit het
+modelartefact aan; `db.migreer_keys_cli` zet de zojuist aangemaakte key
+over. Zonder deze twee stappen faalt elke `/forecast`/`/metrics`-aanroep
+met 401, ook met een geldige key in `api_keys.json`.)
 
 Maak een lege `audit.log`-bestand aan; Docker zou dit anders als directory aanmaken, wat de app breekt.
 De container draait als een niet-root gebruiker (zie `Dockerfile`) die dit host-bestand niet bezit, dus

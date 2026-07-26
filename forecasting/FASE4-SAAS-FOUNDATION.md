@@ -107,8 +107,20 @@ Elke stap is op zichzelf shipbaar en testbaar — geen big-bang-migratie.
    is expliciet de eerste stap die gedrag verandert, niet Stap 1. Getest
    via TDD (`tests/test_db_api_keys.py`, `tests/test_db_migreer_keys_cli.py`),
    99/99 tests groen.
-2. **Klantisolatie daadwerkelijk afdwingen.** Eerste stap die gedrag
-   verandert — eigen release met regressietest op de live demo.
+2. **✅ Klantisolatie daadwerkelijk afdwingen — gedaan 2026-07-26.**
+   `serving/app.py` leest nu de database (`db_api_keys.vind_organisatie_voor_key`)
+   in plaats van `api_keys.json`, en checkt vóór elke `/forecast`-aanroep
+   via `db_winkels.hoort_store_bij_organisatie()` of het gevraagde
+   `store_id` bij de organisatie van de key hoort — bij een mismatch 404
+   (nooit 403, zie boven), en dat wordt net als een geslaagd verzoek in de
+   audit-log gezet (met `organisatie_id`) zodat probeerpogingen op
+   andermans winkels zichtbaar zijn. `api_keys.json` blijft vooralsnog
+   vereist door `serving/config.py` (bewust nog niet opgeruimd). Getest
+   via `tests/test_tenant_isolatie.py` (het letterlijke org-A/org-B-
+   kruisscenario) plus een bijgewerkte `tests/test_app.py`-fixture — 112/112
+   tests groen. Live gedemonstreerd: de lokale demo-server draait nu op
+   deze code, met de echte klant ("Tessar demo") en alle 1115 winkels
+   gebootstrapt via `db.cli` + `db.migreer_keys_cli`.
 3. **Accounts + login/sessiebeheer.** Nog geen self-service-registratie
    (beslissing 1) — gebruikers worden handmatig aangemaakt.
 4. **Wachtwoord-resetflow.** Geblokkeerd op beslissing 7 (mailprovider moet
