@@ -31,28 +31,19 @@ patroon als Certo's `KNOWN-LIMITATIONS.md`.
   met eigen gebruiksvoorwaarden — geverifieerd tijdens implementatie, zie
   README.md sectie 1. Deze toolkit toont er nooit ruwe cijfers uit op een
   publiek kanaal; alleen afgeleide, gevalideerde nauwkeurigheidscijfers.
-- **Geen CI-pipeline.** `pip-audit` en de testsuite zijn handmatige
-  controles vóór oplevering, geen geautomatiseerde build-gate — die bestaat
-  in deze fase niet.
-- **9 pip-audit-bevindingen, gebonden aan de lokale ontwikkelomgeving, niet
-  aan de toolkit-code.** `pip-audit` (uitgevoerd tijdens Task 20, finale
-  verificatie) vond 9 bekende kwetsbaarheden in `click`, `starlette` (x5),
-  `pyarrow`, `pytest` en `python-dotenv`. Elke gepatchte versie vereist
-  Python ≥3.10; deze lokale ontwikkelmachine heeft alleen Python 3.9.6
-  (Xcode's meegeleverde interpreter) beschikbaar, en een upgrade naar een
-  nieuwere Python via Homebrew bleek geblokkeerd: het vereist een Xcode-versie
-  die op zijn beurt een nieuwere macOS vereist dan deze machine draait (macOS
-  15.5) — een macOS-upgrade is disproportioneel voor het sluiten van
-  dependency-audit-bevindingen op een lokale toolkit. `requirements.in`
-  bevat alleen ondergrenzen (`>=`), dus een `pip install --upgrade` op een
-  machine met Python ≥3.10 lost dit direct op — maar de Docker-image bouwt
-  uit `requirements.txt`, een exact-gepinde lock-file die hier onder Python
-  3.9 is gegenereerd en dus dezelfde kwetsbare versies bevat. `python:3.11-
-  slim` in de `Dockerfile` lost dit dus niet automatisch op: `requirements.txt`
-  moet eerst opnieuw gegenereerd worden (`pip install --upgrade -r
-  requirements.in && pip freeze > requirements.txt`) op een machine met
-  Python ≥3.10, en dat gecommit, vóórdat een Docker-build de patches
-  daadwerkelijk oppikt.
+- **CI-pipeline (2026-07-26).** `.github/workflows/forecasting-ci.yml` draait
+  lint (`ruff`) + de testsuite + een Docker-build-verificatie bij elke
+  push/PR die `forecasting/**` raakt. Nog geen CD-stap naar een staging-
+  omgeving — die bestaat momenteel niet als apart concept naast de ene
+  productieserver (zie DEPLOY.md).
+- **Pip-audit: schoon per 2026-07-26** (`pip-audit -r requirements.txt`,
+  0 kwetsbaarheden). De eerder hier gedocumenteerde 9 bevindingen
+  (`click`, `starlette` x5, `pyarrow`, `pytest`, `python-dotenv`) komen niet
+  meer terug bij een herrun — of dat komt doordat `requirements.txt` tussentijds
+  is bijgewerkt of doordat de kwetsbaarheidsdatabase sindsdien is aangepast is
+  niet met zekerheid vastgesteld, alleen de huidige uitkomst. Blijf dit
+  periodiek herhalen; er is geen geautomatiseerde dependency-scan in de
+  CI-pipeline (alleen lint+tests+build).
 - **Geen live deployment.** Draait lokaal via Docker Compose. Live
   deployment (bv. naast Certo, met een Caddy-reverse-proxy) en de
   daadwerkelijke website-demo-integratie zijn bewuste, losse
