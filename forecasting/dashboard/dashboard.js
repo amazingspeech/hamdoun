@@ -143,8 +143,13 @@ function tekenGrafiek(voorspellingen) {
   const n = voorspellingen.length;
   const xIndices = n > 2 ? [0, Math.floor((n - 1) / 2), n - 1] : [...Array(n).keys()];
   for (const i of xIndices) {
+    // Label bij het meest linkse punt groeit naar rechts (start), bij het
+    // meest rechtse naar links (end) — anders kan gecentreerde tekst over
+    // de vaste 920px-breedte heen steken bij het laatste punt (slechts
+    // 20px marge rechts).
+    const anker = i === 0 ? "start" : i === n - 1 ? "end" : "middle";
     const label = maakSVGEl("text", {
-      class: "as-label", x: x(i), y: hoogte - marge.onder + 20, "text-anchor": "middle",
+      class: "as-label", x: x(i), y: hoogte - marge.onder + 20, "text-anchor": anker,
     });
     label.textContent = formatDatumKort(voorspellingen[i].datum);
     svg.appendChild(label);
@@ -265,6 +270,13 @@ document.addEventListener("DOMContentLoaded", () => {
   laadMetrics()
     .then((data) => {
       document.getElementById("start").value = eenDagNa(data.trainingsperiode_eind);
+      // Voorkomt de servergegenereerde 422-foutmelding voor het gangbare
+      // geval: het veld kan nu al niet verder dan wat het model dekt.
+      const horizonVeld = document.getElementById("horizon");
+      horizonVeld.max = String(data.gevalideerde_horizon_dagen);
+      if (Number(horizonVeld.value) > data.gevalideerde_horizon_dagen) {
+        horizonVeld.value = String(data.gevalideerde_horizon_dagen);
+      }
     })
     .catch((e) => toonFout(e.message))
     .finally(() => {
