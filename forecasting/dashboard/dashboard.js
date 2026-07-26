@@ -215,10 +215,21 @@ async function voorspel() {
     const startDatum = document.getElementById("start").value;
     const horizonDagen = Number(document.getElementById("horizon").value);
     const data = await haalVoorspelling(storeId, startDatum, horizonDagen);
+    // Het model heeft geen ondergrens van 0 op voorspelde omzet (zie
+    // KNOWN-LIMITATIONS.md) — hier, en alleen hier voor weergave, geklemd
+    // op 0 zodat een winkelier nooit een letterlijk negatief omzetbedrag
+    // te zien krijgt. Klemt p10/p50/p90 elk apart, wat p10 <= p50 <= p90
+    // intact laat.
+    const voorspellingen = data.voorspellingen.map((v) => ({
+      ...v,
+      p10: Math.max(0, v.p10),
+      p50: Math.max(0, v.p50),
+      p90: Math.max(0, v.p90),
+    }));
     document.getElementById("leeg").hidden = true;
     document.getElementById("resultaat").classList.add("zichtbaar");
-    toonSamenvatting(data.voorspellingen, data.store_id);
-    tekenGrafiek(data.voorspellingen);
+    toonSamenvatting(voorspellingen, data.store_id);
+    tekenGrafiek(voorspellingen);
   } catch (e) {
     toonFout(e.message);
   } finally {

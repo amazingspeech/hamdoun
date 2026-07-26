@@ -44,6 +44,16 @@ patroon als Certo's `KNOWN-LIMITATIONS.md`.
   niet met zekerheid vastgesteld, alleen de huidige uitkomst. Blijf dit
   periodiek herhalen; er is geen geautomatiseerde dependency-scan in de
   CI-pipeline (alleen lint+tests+build).
+- **Geen ondergrens van 0 op voorspelde omzet.** Kwantielregressie legt
+  geen niet-negativiteit af — bij lage-omzet winkels of lange horizons kan
+  een p10 (of in theorie zelfs p50/p90) negatief uitkomen. De API
+  (`/forecast`) geeft dat ongewijzigd terug; alleen het dashboard klemt
+  weergavewaarden op 0 (`dashboard.js`, in `voorspel()`), puur cosmetisch.
+  Een andere consument van de API kan dus nog steeds een negatief getal
+  krijgen. Structureel oplossen (het model zelf een ondergrens geven, of
+  de API-response al klemmen) is bewust niet gedaan — dat raakt de
+  training-/serving-pijplijn en hoort bij Fase 3 (Forecast Intelligence),
+  niet bij een cosmetische dashboard-fix.
 - **Geen live deployment.** Draait lokaal via Docker Compose. Live
   deployment (bv. naast Certo, met een Caddy-reverse-proxy) en de
   daadwerkelijke website-demo-integratie zijn bewuste, losse
