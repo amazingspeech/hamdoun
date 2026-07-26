@@ -417,7 +417,7 @@
   // zodat het niet bij elke paginanavigatie binnen dezelfde site opnieuw
   // opduikt, en niet als de bezoeker het paneel intussen al zelf heeft
   // geopend of gesloten.
-  var AUTO_OPEN_DELAY_MS = 10000;
+  var AUTO_OPEN_DELAY_MS = 5000;
   var userInteractedManually = false;
   launcher.addEventListener("click", function () { userInteractedManually = true; }, { once: true });
   closeBtn.addEventListener("click", function () { userInteractedManually = true; }, { once: true });
