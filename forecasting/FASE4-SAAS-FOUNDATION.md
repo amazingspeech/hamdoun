@@ -83,9 +83,18 @@ audit-log met het juiste `organisatie_id` terechtkomt.
 
 Elke stap is op zichzelf shipbaar en testbaar — geen big-bang-migratie.
 
-0. **Database-fundament, geen gedragsverandering.** Schema voor organisaties
-   + winkels, één bootstrap-organisatie met alle bestaande store-ID's. API
-   blijft functioneel identiek.
+0. **✅ Database-fundament, geen gedragsverandering — gedaan 2026-07-26.**
+   Schema voor organisaties + winkels in `db/schema.py` (SQLAlchemy Core,
+   SQLite), bootstrap-functie in `db/bootstrap.py`, en een operator-CLI
+   (`python3 -m db.cli --models-dir models --model-version <versie>
+   --organisatie-naam ... --organisatie-slug ...`) die alle store-ID's uit
+   een modelartefact aan één organisatie koppelt. Nog geen Alembic —
+   bewust uitgesteld tot de eerste echte schemawijziging na Stap 0 (zie
+   `db/schema.py`'s docstring); `create_all()` volstaat voor de allereerste
+   tabellen. **Nog niet gewijzigd:** `serving/app.py` gebruikt deze database
+   nog niet — de API is functioneel ongewijzigd, precies zoals bedoeld.
+   Getest via TDD (`tests/test_db_schema.py`, `tests/test_db_bootstrap.py`,
+   `tests/test_db_cli.py`), 96/96 tests groen.
 1. **API-keys naar de database, zelfde gedrag.** `api_keys.json` → tabel,
    hash/salt 1-op-1 gemigreerd. Nog geen isolatie-afdwinging.
 2. **Klantisolatie daadwerkelijk afdwingen.** Eerste stap die gedrag

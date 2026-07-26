@@ -54,6 +54,12 @@ patroon als Certo's `KNOWN-LIMITATIONS.md`.
   de API-response al klemmen) is bewust niet gedaan — dat raakt de
   training-/serving-pijplijn en hoort bij Fase 3 (Forecast Intelligence),
   niet bij een cosmetische dashboard-fix.
+- **`db/` bestaat, maar wordt nog niet gebruikt door de API.** Fase 4 Stap 0
+  (zie `FASE4-SAAS-FOUNDATION.md`) legt organisaties/winkels vast in een
+  losse SQLite-database — puur voorbereidend. `serving/app.py` kent nog
+  geen organisatiebegrip: elke geldige API-key mag nog steeds elk
+  `store_id` opvragen. Klantisolatie komt pas met Stap 2. Concludeer dus
+  niet uit het bestaan van `db/` dat er al multi-tenant scheiding is.
 - **Geen live deployment.** Draait lokaal via Docker Compose. Live
   deployment (bv. naast Certo, met een Caddy-reverse-proxy) en de
   daadwerkelijke website-demo-integratie zijn bewuste, losse

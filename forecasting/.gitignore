@@ -8,3 +8,4 @@ models/*
 api_keys.json
 audit.log
 dashboard/config.js
+*.db
