@@ -52,8 +52,8 @@
     // echt wil, kan 'm omzeilen door sessionStorage te wissen of de webhook direct
     // aan te roepen. De echte backstop hoort op edge-niveau (zie opmerking bij
     // CONFIG.webhookUrl hierboven) en/of een spend-limit in de Anthropic Console.
-    maxMessagesPerSession: 20,
-    limitReachedMessage: "Je hebt de meeste vragen die ik nu kan beantwoorden wel gehad. Wil je verder praten over jouw situatie? Plan dan een gratis kennismaking van 30 minuten, of mail ons via het contactformulier onderaan de pagina."
+    maxMessagesPerSession: 5,
+    limitReachedMessage: "Ik denk dat ik je al goed op weg kan helpen, en het scherpste vervolg is nu een gratis kennismaking van 30 minuten — daar bespreken we jouw situatie echt concreet. Plan die hierboven in, of mail ons via het contactformulier onderaan de pagina."
   };
 
   // ----------------------- STYLES -----------------------
