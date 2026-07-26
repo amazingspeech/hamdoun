@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<title>Team — Vraagvoorspelling</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="kop">
+      <p class="eyebrow">Vraagvoorspelling</p>
+      <h1>Je team</h1>
+      <p class="sub" id="wie-ben-ik">Bezig met laden…</p>
+    </div>
+    <p class="account-nav"><a href="./index.html">← Voorspelling</a> · <a href="#" id="uitloggen">Uitloggen</a></p>
+  </header>
+
+  <div class="kaart" id="nieuw-lid-kaart" hidden>
+    <p class="sub" style="margin:0;">Als eigenaar kun je teamleden toevoegen. Zij loggen in met dit e-mailadres en tijdelijke wachtwoord.</p>
+    <form id="nieuw-lid-form" style="display:flex; gap:14px; align-items:end; flex-wrap:wrap;">
+      <div class="veld">
+        <label for="nieuw-email">E-mailadres</label>
+        <input type="email" id="nieuw-email" required>
+      </div>
+      <div class="veld">
+        <label for="nieuw-wachtwoord">Tijdelijk wachtwoord</label>
+        <input type="password" id="nieuw-wachtwoord" required minlength="8">
+      </div>
+      <button type="submit" class="btn" id="nieuw-lid-knop">Toevoegen</button>
+    </form>
+    <p class="fout" id="nieuw-lid-fout" hidden></p>
+  </div>
+
+  <div class="kaart">
+    <div class="teamlijst" id="teamlijst"></div>
+  </div>
+
+  <p class="fout" id="fout" hidden></p>
+</div>
+<script src="./config.js"></script>
+<script src="./account.js"></script>
+</body>
+</html>

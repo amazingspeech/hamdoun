@@ -8,208 +8,17 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --paper: oklch(97% 0.012 95);
-    --paper-raised: oklch(100% 0 0);
-    --ink: oklch(21% 0.025 150);
-    --ink-soft: oklch(46% 0.02 150);
-    --ink-faint: oklch(60% 0.015 150);
-    --line: oklch(89% 0.012 95);
-    --line-strong: oklch(80% 0.015 95);
-    --accent: oklch(66% 0.17 60);
-    --accent-ink: oklch(38% 0.14 60);
-    --band: oklch(88% 0.05 150);
-    --band-line: oklch(55% 0.09 150);
-    --warn: oklch(55% 0.17 32);
-    --warn-soft: oklch(94% 0.035 32);
-    --accent-soft: oklch(94% 0.035 60);
-    --fout: oklch(52% 0.19 25);
-
-    --font-display: 'Bricolage Grotesque', -apple-system, sans-serif;
-    --font-body: 'IBM Plex Sans', -apple-system, sans-serif;
-    --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
-  }
-
-  :root[data-theme="dark"] {
-    --paper: oklch(16% 0.02 55);
-    --paper-raised: oklch(20% 0.022 55);
-    --ink: oklch(93% 0.012 95);
-    --ink-soft: oklch(76% 0.015 95);
-    --ink-faint: oklch(58% 0.012 95);
-    --line: oklch(32% 0.025 55);
-    --line-strong: oklch(40% 0.025 55);
-    --accent: oklch(74% 0.15 60);
-    --accent-ink: oklch(84% 0.12 60);
-    --band: oklch(30% 0.05 150);
-    --band-line: oklch(62% 0.08 150);
-    --warn: oklch(70% 0.15 35);
-    --warn-soft: oklch(28% 0.06 35);
-    --accent-soft: oklch(28% 0.06 60);
-    --fout: oklch(70% 0.17 25);
-  }
-
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) {
-      --paper: oklch(16% 0.02 55);
-      --paper-raised: oklch(20% 0.022 55);
-      --ink: oklch(93% 0.012 95);
-      --ink-soft: oklch(76% 0.015 95);
-      --ink-faint: oklch(58% 0.012 95);
-      --line: oklch(32% 0.025 55);
-      --line-strong: oklch(40% 0.025 55);
-      --accent: oklch(74% 0.15 60);
-      --accent-ink: oklch(84% 0.12 60);
-      --band: oklch(30% 0.05 150);
-      --band-line: oklch(62% 0.08 150);
-      --warn: oklch(70% 0.15 35);
-      --warn-soft: oklch(28% 0.06 35);
-      --accent-soft: oklch(28% 0.06 60);
-      --fout: oklch(70% 0.17 25);
-    }
-  }
-
-  * { box-sizing: border-box; }
-  html, body { margin:0; padding:0; background:var(--paper); color:var(--ink); font-family:var(--font-body); }
-  body { overflow-x:hidden; }
-  ::selection { background:oklch(85% 0.08 60 / 0.4); }
-
-  .wrap { max-width:900px; margin:0 auto; padding:clamp(24px,6vw,56px) clamp(16px,4vw,32px) 80px; }
-
-  header.top { margin-bottom:clamp(28px,5vw,44px); }
-  .eyebrow { font:600 0.8125rem/1.2 var(--font-body); color:var(--accent-ink); margin:0 0 10px; }
-  h1 { font:600 clamp(1.75rem,4vw,2.375rem)/1.15 var(--font-display); letter-spacing:-0.01em; text-wrap:balance; margin:0 0 8px; }
-  .sub { font-size:0.9375rem; color:var(--ink-soft); margin:0; max-width:50ch; line-height:1.55; }
-
-  .controls { display:flex; gap:14px; align-items:end; flex-wrap:wrap; margin-top:24px; padding:16px; background:var(--paper-raised); border:1px solid var(--line); border-radius:12px; }
-  .veld { display:flex; flex-direction:column; gap:6px; }
-  .veld-label-rij { display:flex; align-items:center; gap:5px; }
-  label { font:600 0.8125rem/1.2 var(--font-body); color:var(--ink-soft); }
-
-  /* Herbruikbaar "?"-knopje: een native <details> i.p.v. een handgebouwde
-     tooltip-widget — gratis toetsenbord-/schermlezer-toegankelijkheid,
-     zelfde patroon als de bestaande details.model-info hieronder. */
-  .info { position:relative; display:inline-flex; }
-  .info summary {
-    list-style:none; cursor:pointer; display:grid; place-items:center;
-    width:15px; height:15px; border-radius:50%; border:1px solid var(--line-strong);
-    color:var(--ink-faint); font:600 0.625rem/1 var(--font-mono); background:var(--paper-raised);
-  }
-  .info summary::-webkit-details-marker { display:none; }
-  .info summary:hover, .info[open] > summary { color:var(--accent-ink); border-color:var(--accent); }
-  .info .info-inhoud {
-    position:absolute; z-index:5; top:calc(100% + 8px); left:0; width:max-content; max-width:230px;
-    background:var(--ink); color:var(--paper); font:400 0.75rem/1.5 var(--font-body);
-    padding:9px 12px; border-radius:8px; margin:0; box-shadow:0 6px 20px oklch(0% 0 0 / 0.18);
-  }
-
-  .aanbeveling {
-    display:flex; gap:10px; align-items:flex-start;
-    background:var(--accent-soft); border-radius:8px; padding:12px 16px; margin:24px 0 0;
-    font-size:0.875rem; line-height:1.55; color:var(--ink);
-  }
-  .aanbeveling::before {
-    content:"→"; flex:none; display:grid; place-items:center; width:18px; height:18px; border-radius:50%;
-    background:var(--accent); color:oklch(15% 0.02 60); font:700 0.8125rem var(--font-mono); margin-top:1px;
-  }
-  select, input {
-    font:400 0.9375rem/1.4 var(--font-body); padding:9px 12px; border:1px solid var(--line-strong);
-    border-radius:8px; background:var(--paper-raised); color:var(--ink);
-  }
-  select:focus-visible, input:focus-visible, button:focus-visible, summary:focus-visible {
-    outline:2px solid var(--accent); outline-offset:2px;
-  }
-  button#voorspel {
-    font:600 0.9375rem/1.4 var(--font-body); padding:10px 20px; border:none; border-radius:8px;
-    background:var(--accent); color:oklch(15% 0.02 60); cursor:pointer;
-    transition:transform 0.12s ease, box-shadow 0.12s ease;
-  }
-  button#voorspel:hover:not(:disabled) { box-shadow:0 3px 10px oklch(50% 0.15 60 / 0.35); }
-  button#voorspel:active:not(:disabled) { transform:translateY(1px); }
-  button#voorspel:disabled { opacity:0.5; cursor:not-allowed; }
-
-  .leeg { border:1px dashed var(--line-strong); border-radius:12px; padding:48px 20px; text-align:center; color:var(--ink-faint); font-size:0.9375rem; margin-top:24px; }
-
-  #resultaat { display:none; margin-top:8px; }
-  #resultaat.zichtbaar { display:block; }
-
-  .hero { padding:28px 0 8px; }
-  .hero .hero-lead { font-size:1.0625rem; line-height:1.4; color:var(--ink-soft); margin:0 0 6px; max-width:38ch; }
-  .hero .waarde {
-    font:600 clamp(2.75rem,9vw,4.5rem)/1 var(--font-display); letter-spacing:-0.02em;
-    color:var(--ink); font-variant-numeric:tabular-nums; margin:0;
-  }
-  .hero .sub-context { font-size:0.9375rem; color:var(--ink-soft); margin:10px 0 0; }
-
-  .secundair { display:flex; gap:clamp(20px,4vw,40px); flex-wrap:wrap; margin:24px 0 28px; padding-top:20px; border-top:1px solid var(--line); }
-  .stat .label { font:600 0.8125rem/1.2 var(--font-body); color:var(--ink-soft); margin-bottom:5px; }
-  .stat .waarde { font:600 1.125rem/1.3 var(--font-body); color:var(--ink); font-variant-numeric:tabular-nums; }
-  .stat .toelichting { font-size:0.75rem; color:var(--ink-faint); margin-top:3px; max-width:28ch; line-height:1.4; }
-
-  #chart-container { border:1px solid var(--line); border-radius:14px; background:var(--paper-raised); padding:clamp(14px,4vw,24px); overflow-x:auto; }
-  /* Bewust GEEN width:100%/height:auto zonder viewBox: de SVG-inhoud
-     gebruikt vaste 920x360-coördinaten inclusief tekst (as-labels) — met
-     alleen CSS-schaling zonder viewBox wordt de content geclipt i.p.v.
-     geschaald; mét viewBox zou tekst evenredig mee krimpen tot onleesbaar
-     op smalle schermen. Vaste grootte + horizontaal scrollen op de
-     container is hier de bewuste, veilige keuze (zie ook FASE2-notities). */
-  #chart { display:block; }
-  .chart-titel { font:600 0.9375rem/1.3 var(--font-body); margin:0 0 14px; color:var(--ink); }
-  .legenda { display:flex; gap:20px; flex-wrap:wrap; margin-top:14px; font-size:0.8125rem; color:var(--ink-soft); }
-  .legenda span { display:inline-flex; align-items:center; gap:7px; }
-  .legenda .zwatch { width:13px; height:13px; border-radius:3px; display:inline-block; }
-  .legenda .zwatch.band { background:var(--band); border:1px solid var(--band-line); }
-  .legenda .zwatch.lijn { background:var(--accent); border-radius:50%; width:9px; height:9px; }
-
-  .band { fill:var(--band); }
-  .lijn { fill:none; stroke:var(--accent); stroke-width:2.5; stroke-linecap:round; stroke-linejoin:round; }
-  .stip { fill:var(--accent); }
-  .as { stroke:var(--line); stroke-width:1; }
-  .as-label { font:400 0.6875rem var(--font-mono); fill:var(--ink-faint); }
-
-  @media (prefers-reduced-motion: no-preference) {
-    .lijn { transition:stroke-dashoffset 1.1s cubic-bezier(0.16,1,0.3,1); }
-  }
-
-  .kanttekening {
-    display:flex; gap:10px; align-items:flex-start;
-    background:var(--warn-soft); border-radius:8px; padding:12px 16px; margin:20px 0 0;
-    font-size:0.8125rem; line-height:1.55; color:var(--ink);
-  }
-  .kanttekening::before {
-    content:"!"; flex:none; display:grid; place-items:center; width:18px; height:18px; border-radius:50%;
-    background:var(--warn); color:var(--paper-raised); font:700 0.75rem var(--font-mono); margin-top:1px;
-  }
-
-  details.model-info { margin-top:32px; border-top:1px solid var(--line); padding-top:16px; }
-  details.model-info summary {
-    cursor:pointer; font:600 0.875rem/1.4 var(--font-body); color:var(--ink-soft);
-    list-style:none; display:flex; align-items:center; gap:6px;
-  }
-  details.model-info summary::before { content:"›"; display:inline-block; transition:transform 0.15s ease; font-family:var(--font-mono); }
-  details.model-info[open] summary::before { transform:rotate(90deg); }
-  details.model-info summary::-webkit-details-marker { display:none; }
-  .metrics { display:flex; gap:16px; margin:16px 0 0; flex-wrap:wrap; }
-  .metric { flex:1 1 220px; border:1px solid var(--line); border-radius:10px; padding:14px 16px; background:var(--paper-raised); }
-  .metric .label { font:600 0.8125rem/1.2 var(--font-body); color:var(--ink-soft); }
-  .metric .value { font:600 1.25rem/1.3 var(--font-body); color:var(--ink); margin-top:4px; }
-  .metric .uitleg { font-size:0.75rem; color:var(--ink-faint); margin-top:6px; line-height:1.5; }
-
-  .fout { color:var(--fout); margin-top:16px; font-size:0.9375rem; }
-
-  @media (max-width: 560px) {
-    .controls { flex-direction:column; align-items:stretch; }
-    .veld, button#voorspel { width:100%; }
-    .secundair { gap:20px; }
-  }
-</style>
+<link rel="stylesheet" href="./styles.css">
 </head>
 <body>
 <div class="wrap">
   <header class="top">
-    <p class="eyebrow">Vraagvoorspelling</p>
-    <h1>Wat gaat deze winkel de komende dagen verkopen?</h1>
-    <p class="sub" id="sub-basis">Op basis van historische verkoopdata — met een eerlijke bandbreedte in plaats van één te precies getal.</p>
+    <div class="kop">
+      <p class="eyebrow">Vraagvoorspelling</p>
+      <h1>Wat gaat deze winkel de komende dagen verkopen?</h1>
+      <p class="sub" id="sub-basis">Op basis van historische verkoopdata — met een eerlijke bandbreedte in plaats van één te precies getal.</p>
+    </div>
+    <p class="account-nav"><a href="./team.html">Team beheren</a></p>
 
     <div class="controls">
       <div class="veld">
@@ -230,7 +39,7 @@
         </div>
         <input type="number" id="horizon" value="14" min="1">
       </div>
-      <button id="voorspel" disabled>Laden…</button>
+      <button id="voorspel" class="btn" disabled>Laden…</button>
     </div>
   </header>
 
