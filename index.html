@@ -287,17 +287,22 @@
   <div style="max-width:1200px;margin:0 auto;">
     <div style="text-align:center;margin-bottom:clamp(40px,5vw,56px);">
       <div style="font:500 clamp(0.7rem,1.2vw,0.8125rem)/1.3 'IBM Plex Mono';letter-spacing:0.06em;text-transform:uppercase;color:oklch(48% 0.12 230);margin-bottom:12px;">{{ capabilitiesLabel }}</div>
-      <h2 style="font:600 clamp(1.75rem,4vw,2.25rem)/1.2 'IBM Plex Sans';margin:0;letter-spacing:-0.02em;color:oklch(18% 0.02 255);">{{ capabilitiesHeading }}</h2>
+      <h2 style="font:600 clamp(1.75rem,4vw,2.25rem)/1.2 'IBM Plex Sans';margin:0 0 16px;letter-spacing:-0.02em;color:oklch(18% 0.02 255);">{{ capabilitiesHeading }}</h2>
+      <p style="font:400 clamp(0.95rem,1.5vw,1rem)/1.6 'IBM Plex Sans';color:oklch(46% 0.012 140);max-width:560px;margin:0 auto;">{{ capabilitiesSubtext }}</p>
     </div>
 
     <div data-reveal-grid style="display:grid;grid-template-columns:repeat(auto-fit,minmax(clamp(280px,100%,420px),1fr));gap:clamp(24px,3vw,32px);">
-      <sc-for list="{{ capabilities }}" as="cap" hint-placeholder-count="2">
+      <sc-for list="{{ capabilities }}" as="cap" hint-placeholder-count="5">
         <div data-reveal style="background:#FFF;border:1px solid oklch(91% 0.006 90);border-radius:12px;padding:clamp(32px,4vw,44px);transition:all 220ms ease, opacity 600ms ease, transform 600ms ease;" style-hover="border-color:{{ cap.color }};transform:translateY(-4px);box-shadow:0 12px 32px {{ cap.color }} / 0.15;">
           <div class="icon {{ cap.iconClass }}" style="width:34px;height:34px;color:{{ cap.color }};margin-bottom:18px;"></div>
           <h3 style="font:600 clamp(1.125rem,2vw,1.375rem)/1.35 'IBM Plex Sans';margin:0 0 10px;color:oklch(18% 0.02 255);">{{ cap.title }}</h3>
           <p style="font:400 clamp(0.9rem,1.5vw,1rem)/1.65 'IBM Plex Sans';color:oklch(46% 0.012 140);margin:0;">{{ cap.desc }}</p>
         </div>
       </sc-for>
+    </div>
+
+    <div style="text-align:center;margin-top:clamp(32px,4vw,40px);">
+      <a href="./services.html" style="font:600 0.9375rem/1 'IBM Plex Sans';color:oklch(48% 0.12 230);">{{ capabilitiesCta }} &rarr;</a>
     </div>
   </div>
 </section>
@@ -667,10 +672,15 @@ const copyNL = {
   ],
 
   capabilitiesLabel: 'Wat we bouwen',
-  capabilitiesHeading: 'Twee manieren waarop we AI inzetten',
+  capabilitiesHeading: 'Vijf manieren waarop we AI inzetten',
+  capabilitiesSubtext: 'Van kleine procesautomatisering tot een volwaardig AI-product. Elk van deze vijf diensten is ook los in te huren, met een eigen vaste prijs.',
+  capabilitiesCta: 'Bekijk alle diensten',
   capabilities: [
-    { iconClass: 'icon-zap', title: 'AI-automatisering', desc: 'Automatiseer het handmatige, repetitieve deel van je organisatie: data-invoer, rapportages, documentverwerking, besluitondersteuning. Systemen die aansluiten op wat je al gebruikt.', color: 'oklch(70% 0.14 220)' },
-    { iconClass: 'icon-puzzle', title: 'AI-geintegreerde applicaties', desc: 'Volwaardige producten met AI in de kern, niet als toevoeging achteraf. Interne tools, klantgerichte applicaties en platforms die vanaf de grond zijn opgebouwd rond wat moderne modellen kunnen.', color: 'oklch(60% 0.15 170)' }
+    { iconClass: 'icon-workflow', title: 'AI-procesautomatisering', desc: 'Automatiseer het handmatige, repetitieve deel van je organisatie: data-invoer, rapportages, documentverwerking, besluitondersteuning. Systemen die aansluiten op wat je al gebruikt.', color: 'oklch(70% 0.14 220)' },
+    { iconClass: 'icon-trending-up', title: 'Voorspellende modellen & besluitondersteuning', desc: 'Modellen op jouw eigen data om vraag te voorspellen, risico\'s te scoren of afwijkingen te detecteren, met nauwkeurigheidscijfers die je kan controleren.', color: 'oklch(60% 0.15 170)' },
+    { iconClass: 'icon-puzzle', title: 'AI-geintegreerde applicaties', desc: 'Volwaardige producten met AI in de kern, niet als toevoeging achteraf. Interne tools, klantgerichte applicaties en platforms die vanaf de grond zijn opgebouwd rond wat moderne modellen kunnen.', color: 'oklch(70% 0.14 220)' },
+    { iconClass: 'icon-network', title: 'Systeemintegratie & datapipelines', desc: 'Koppelt je CRM, ERP, databases en interne tools zodat informatie automatisch stroomt, in plaats van via handmatige exports en copy-paste.', color: 'oklch(60% 0.15 170)' },
+    { iconClass: 'icon-scan-search', title: 'AI-readiness & advies', desc: 'Een kort, gericht traject om te bepalen waar AI echt waarde toevoegt in jouw organisatie, met een geprioriteerd plan op basis van ROI en haalbaarheid.', color: 'oklch(70% 0.14 220)' }
   ],
 
   flowNodes: [
@@ -887,10 +897,15 @@ const copyEN = {
   ],
 
   capabilitiesLabel: 'What we build',
-  capabilitiesHeading: 'Two ways we put AI to work',
+  capabilitiesHeading: 'Five ways we put AI to work',
+  capabilitiesSubtext: 'From small process automations to a full AI product. Each of these five services can also be hired on its own, with its own fixed price.',
+  capabilitiesCta: 'See all services',
   capabilities: [
-    { iconClass: 'icon-zap', title: 'AI Automation', desc: 'Automate the manual, repetitive parts of your operation: data entry, reporting, document processing, decision support. Systems that plug into what you already use.', color: 'oklch(70% 0.14 220)' },
-    { iconClass: 'icon-puzzle', title: 'AI-Integrated Applications', desc: 'Full products with AI at the core, not bolted on afterward. Internal tools, customer-facing applications and platforms built from the ground up around what modern models can do.', color: 'oklch(60% 0.15 170)' }
+    { iconClass: 'icon-workflow', title: 'AI Process Automation', desc: 'Automate the manual, repetitive parts of your operation: data entry, reporting, document processing, decision support. Systems that plug into what you already use.', color: 'oklch(70% 0.14 220)' },
+    { iconClass: 'icon-trending-up', title: 'Predictive Models & Decision Support', desc: 'Models trained on your own data to forecast demand, score risk, or detect anomalies, with accuracy figures you can check against reality.', color: 'oklch(60% 0.15 170)' },
+    { iconClass: 'icon-puzzle', title: 'AI-Integrated Applications', desc: 'Full products with AI at the core, not bolted on afterward. Internal tools, customer-facing applications and platforms built from the ground up around what modern models can do.', color: 'oklch(70% 0.14 220)' },
+    { iconClass: 'icon-network', title: 'Systems Integration & Data Pipelines', desc: 'Connects your CRM, ERP, databases and internal tools so information flows automatically instead of through manual exports and copy-pasting.', color: 'oklch(60% 0.15 170)' },
+    { iconClass: 'icon-scan-search', title: 'AI Readiness & Advisory', desc: 'A short, focused engagement to pinpoint where AI actually adds value in your organization, resulting in a prioritized plan based on ROI and feasibility.', color: 'oklch(70% 0.14 220)' }
   ],
 
   flowNodes: [
