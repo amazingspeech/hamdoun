@@ -242,12 +242,22 @@ function eenDagNa(isoDatum) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  const knop = document.getElementById("voorspel");
   vulWinkelSelect();
   document.getElementById("start").value = vandaagPlusEen();
-  document.getElementById("voorspel").addEventListener("click", voorspel);
+  knop.addEventListener("click", voorspel);
+
+  // Knop blijft uit tot /metrics geladen is: anders kan een snelle klik een
+  // voorspelling opvragen met de kalenderdatum van vandaag in plaats van een
+  // datum die bij de trainingsperiode van het model past, zonder dat de
+  // gebruiker iets fout ziet gaan.
   laadMetrics()
     .then((data) => {
       document.getElementById("start").value = eenDagNa(data.trainingsperiode_eind);
     })
-    .catch((e) => toonFout(e.message));
+    .catch((e) => toonFout(e.message))
+    .finally(() => {
+      knop.disabled = false;
+      knop.textContent = "Voorspel";
+    });
 });

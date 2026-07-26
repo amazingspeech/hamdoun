@@ -27,7 +27,8 @@
   .kaart .waarde { font:700 1.625rem/1.3 'IBM Plex Sans'; color:oklch(18% 0.02 255); font-variant-numeric:tabular-nums; }
   .kaart .toelichting { font-size:0.8125rem; color:oklch(46% 0.012 140); margin-top:6px; line-height:1.5; }
 
-  #chart-container { border:1px solid oklch(91% 0.006 90); border-radius:12px; background:#fff; padding:20px; overflow-x:auto; }
+  #chart-container { border:1px solid oklch(91% 0.006 90); border-radius:12px; background:#fff; padding:clamp(12px,4vw,20px); overflow-x:auto; }
+  #chart { display:block; }
   .chart-titel { font:600 0.9375rem/1.3 'IBM Plex Sans'; margin:0 0 12px; color:oklch(30% 0.015 255); }
   .legenda { display:flex; gap:20px; flex-wrap:wrap; margin-top:10px; font-size:0.8125rem; color:oklch(40% 0.012 140); }
   .legenda span { display:inline-flex; align-items:center; gap:7px; }
@@ -51,6 +52,14 @@
   .leeg { border:1px dashed oklch(85% 0.006 90); border-radius:12px; padding:40px 20px; text-align:center; color:oklch(46% 0.012 140); }
   .kanttekening { background:oklch(97% 0.03 80); border-left:3px solid oklch(65% 0.12 80); border-radius:6px; padding:10px 14px; margin:16px 0 0; font-size:0.8125rem; line-height:1.5; color:oklch(33% 0.03 80); }
   .fout { color:oklch(50% 0.18 25); margin-top:12px; }
+
+  /* Onder 480px: gecontroleerd één-koloms formulier i.p.v. een
+     onvoorspelbare flex-wrap-uitkomst tussen select/date/number/button. */
+  @media (max-width: 480px) {
+    .controls { flex-direction:column; align-items:stretch; }
+    .controls > div { width:100%; }
+    select, input, button { width:100%; box-sizing:border-box; }
+  }
 </style>
 </head>
 <body>
@@ -72,7 +81,7 @@
       <input type="number" id="horizon" value="14" min="1">
     </div>
     <div>
-      <button id="voorspel">Voorspel</button>
+      <button id="voorspel" disabled>Laden…</button>
     </div>
   </div>
 
