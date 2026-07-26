@@ -1,0 +1,14 @@
+services:
+  api:
+    build:
+      context: ..
+    ports:
+      - "8010:8000"
+    env_file:
+      - .env
+    volumes:
+      - ../models:/app/models
+      - ../dashboard:/app/dashboard
+      - ../api_keys.json:/app/api_keys.json
+      - ../audit.log:/app/audit.log
+    restart: unless-stopped
