@@ -46,10 +46,16 @@ vóór de eerste `docker compose`-aanroep hieronder. `docker-compose.yml`
 bind-mount deze twee bestanden vanaf de host; als ze nog niet bestaan maakt
 Docker er in plaats daarvan een **directory** van, wat zowel het aanmaken
 van de API-key hieronder als elke latere audit-log-write in de app breekt
-(zelfde reden als `touch audit.log` in `forecasting/README.md` sectie 2):
+(zelfde reden als `touch audit.log` in `forecasting/README.md` sectie 2).
+De container draait als een niet-root gebruiker (zie `Dockerfile`) die deze
+host-bestanden niet bezit (ze staan op naam van `job`), dus moeten ze
+schrijfbaar zijn voor die container-gebruiker vóór de eerste `docker compose
+run`/`up` hieronder — anders faalt zowel de key-aanmaak in stap 3 als elke
+audit-log-write met een permission-fout:
 ```bash
 cd /home/job/forecasting-demo
 touch api_keys.json audit.log
+chmod 666 api_keys.json audit.log
 ```
 
 API-key genereren (dezelfde key komt in stap 7 in het dashboard-JS):

@@ -46,10 +46,13 @@ Voeg minimaal één API-key toe voordat je de server start:
 python3 -c "from pathlib import Path; from security import api_keys; api_keys.voeg_key_toe(Path('api_keys.json'), 'lokaal-testen', 'kies-een-eigen-key')"
 ```
 
-Maak een lege `audit.log`-bestand aan; Docker zou dit anders als directory aanmaken, wat de app breekt:
+Maak een lege `audit.log`-bestand aan; Docker zou dit anders als directory aanmaken, wat de app breekt.
+De container draait als een niet-root gebruiker (zie `Dockerfile`) die dit host-bestand niet bezit, dus
+moet het schrijfbaar zijn voor die gebruiker:
 
 ```bash
 touch audit.log
+chmod 666 audit.log
 ```
 
 ## 3. Lokaal draaien

@@ -14,6 +14,13 @@ COPY training/ ./training/
 COPY serving/ ./serving/
 COPY dashboard/ ./dashboard/
 
+# Niet als root draaien: het proces heeft geen root-rechten nodig (het
+# schrijft alleen naar bind-gemounte bestanden/mappen die het al via de
+# hostzijde rechten krijgt), en een gecompromitteerd proces in de container
+# hoeft dan niet ook nog eens root te zijn.
+RUN useradd --no-create-home --shell /usr/sbin/nologin forecasting
+USER forecasting
+
 ENV PORT=8000
 EXPOSE 8000
 
