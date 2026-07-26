@@ -20,6 +20,25 @@ function formatDatumKort(isoDatum) {
   return d.toLocaleDateString("nl-NL", { day: "numeric", month: "short" });
 }
 
+function wilGeenAnimatie() {
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
+
+function animeerGetal(el, doelwaarde, duurMs = 700) {
+  if (wilGeenAnimatie()) {
+    el.textContent = euro.format(doelwaarde);
+    return;
+  }
+  const start = performance.now();
+  function stap(nu) {
+    const voortgang = Math.min(1, (nu - start) / duurMs);
+    const uitEase = 1 - Math.pow(1 - voortgang, 3);
+    el.textContent = euro.format(Math.round(doelwaarde * uitEase));
+    if (voortgang < 1) requestAnimationFrame(stap);
+  }
+  requestAnimationFrame(stap);
+}
+
 function vulWinkelSelect() {
   const select = document.getElementById("store");
   for (const id of WINKEL_IDS) {
@@ -116,7 +135,8 @@ function tekenGrafiek(voorspellingen) {
   svg.replaceChildren();
 
   svg.appendChild(maakSVGEl("polygon", { class: "band", points: bandPunten }));
-  svg.appendChild(maakSVGEl("polyline", { class: "lijn", points: lijnPunten }));
+  const lijnEl = maakSVGEl("polyline", { class: "lijn", points: lijnPunten });
+  svg.appendChild(lijnEl);
   svg.appendChild(maakSVGEl("line", {
     class: "as", x1: marge.links, y1: marge.boven, x2: marge.links, y2: hoogte - marge.onder,
   }));
@@ -158,11 +178,29 @@ function tekenGrafiek(voorspellingen) {
   // Laatste dag als eindpunt benadrukken, zodat de lijn duidelijk "landt".
   const laatste = voorspellingen[n - 1];
   svg.appendChild(maakSVGEl("circle", { class: "stip", cx: x(n - 1), cy: y(laatste.p50), r: 4 }));
+
+  // De lijn "tekent" zichzelf in via stroke-dasharray/-dashoffset. Twee
+  // geneste rAF's: de eerste laat de browser de startstand (volledig
+  // ingekort) daadwerkelijk schilderen vóórdat de tweede 'm naar 0
+  // overgangt — anders wordt de overgang soms samengevoegd met de
+  // beginstand en is er niets te zien. Zonder voorkeur voor animatie
+  // bestaat de CSS-transition niet (zie stylesheet), dus dan is dit een
+  // no-op sprong naar het eindbeeld.
+  if (!wilGeenAnimatie()) {
+    const lengte = lijnEl.getTotalLength();
+    lijnEl.style.strokeDasharray = `${lengte}`;
+    lijnEl.style.strokeDashoffset = `${lengte}`;
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        lijnEl.style.strokeDashoffset = "0";
+      });
+    });
+  }
 }
 
-function maakKaart(label, waarde, toelichting, hoofdKaart) {
-  const kaart = document.createElement("div");
-  kaart.className = hoofdKaart ? "kaart hoofd" : "kaart";
+function maakStat(label, waarde, toelichting) {
+  const stat = document.createElement("div");
+  stat.className = "stat";
   const labelEl = document.createElement("div");
   labelEl.className = "label";
   labelEl.textContent = label;
@@ -172,8 +210,8 @@ function maakKaart(label, waarde, toelichting, hoofdKaart) {
   const toelichtingEl = document.createElement("div");
   toelichtingEl.className = "toelichting";
   toelichtingEl.textContent = toelichting;
-  kaart.append(labelEl, waardeEl, toelichtingEl);
-  return kaart;
+  stat.append(labelEl, waardeEl, toelichtingEl);
+  return stat;
 }
 
 function toonSamenvatting(voorspellingen, storeId) {
@@ -184,27 +222,24 @@ function toonSamenvatting(voorspellingen, storeId) {
   const dagLabel = n === 1 ? "1 dag" : `${n} dagen`;
   const betrouwbaarheid = modelMetrics ? Math.round(modelMetrics.coverage_p10_p90 * 100) : null;
 
-  const container = document.getElementById("samenvatting");
-  container.innerHTML = "";
-  container.appendChild(maakKaart(
-    `Verwachte omzet — komende ${dagLabel}`,
-    euro.format(Math.round(totaalP50)),
-    `Winkel ${storeId}, van ${formatDatumKort(voorspellingen[0].datum)} t/m ${formatDatumKort(voorspellingen[n - 1].datum)}.`,
-    true,
-  ));
-  container.appendChild(maakKaart(
-    "Meest waarschijnlijke bandbreedte",
+  document.getElementById("hero-label").textContent = `Verwachte omzet — komende ${dagLabel}`;
+  animeerGetal(document.getElementById("hero-waarde"), Math.round(totaalP50));
+  document.getElementById("hero-sub").textContent =
+    `Winkel ${storeId} · ${formatDatumKort(voorspellingen[0].datum)} – ${formatDatumKort(voorspellingen[n - 1].datum)}`;
+
+  const secundairContainer = document.getElementById("secundair");
+  secundairContainer.innerHTML = "";
+  secundairContainer.appendChild(maakStat(
+    "Bandbreedte",
     `${euro.format(Math.round(totaalP10))} – ${euro.format(Math.round(totaalP90))}`,
     betrouwbaarheid !== null
-      ? `De werkelijke omzet valt hier historisch in ongeveer ${betrouwbaarheid}% van de gevallen binnen.`
+      ? `De werkelijke omzet valt hier historisch in ~${betrouwbaarheid}% van de gevallen binnen.`
       : "De omzet ligt hier meestal binnen.",
-    false,
   ));
-  container.appendChild(maakKaart(
+  secundairContainer.appendChild(maakStat(
     "Gemiddeld per dag",
     euro.format(Math.round(totaalP50 / n)),
     "Gebaseerd op vergelijkbare dagen uit het verleden.",
-    false,
   ));
 
   document.getElementById("chart-titel").textContent =
