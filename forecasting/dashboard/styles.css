@@ -173,6 +173,9 @@ select:focus-visible, input:focus-visible, button:focus-visible, summary:focus-v
 .legenda .zwatch.band { background:var(--band); border:1px solid var(--band-line); }
 .legenda .zwatch.lijn { background:var(--accent); border-radius:50%; width:9px; height:9px; }
 
+.export-knoppen { display:flex; gap:10px; flex-wrap:wrap; margin-top:16px; padding-top:16px; border-top:1px solid var(--line); }
+.export-knoppen .btn { padding:8px 14px; font-size:0.8125rem; }
+
 .band { fill:var(--band); }
 .lijn { fill:none; stroke:var(--accent); stroke-width:2.5; stroke-linecap:round; stroke-linejoin:round; }
 .stip { fill:var(--accent); }
@@ -282,6 +285,47 @@ details.promo-vakantie { margin-top:16px; }
 
 .sparkline-lijn { fill:none; stroke:var(--accent); stroke-width:1.75; stroke-linecap:round; stroke-linejoin:round; }
 .sparkline-stip { fill:var(--accent); }
+
+/* Skeleton-laadstatus: een herkenbare vorm i.p.v. platte "Laden…"-tekst,
+   zodat de layout niet abrupt springt zodra de echte inhoud verschijnt. */
+.skelet { position:relative; overflow:hidden; background:var(--line); border-radius:8px; }
+.skelet::after {
+  content:""; position:absolute; inset:0;
+  background:linear-gradient(90deg, transparent, oklch(100% 0 0 / 0.15), transparent);
+  animation:skelet-schuif 1.4s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) { .skelet::after { animation:none; } }
+@keyframes skelet-schuif { from { transform:translateX(-150%); } to { transform:translateX(150%); } }
+
+.skelet-resultaat { display:flex; flex-direction:column; gap:12px; padding:28px 0 8px; }
+.skelet-regel { height:18px; }
+.skelet-groot { height:64px; margin-top:4px; }
+.skelet-kaart { height:200px; margin-top:20px; border-radius:14px; }
+.skelet-tabelregel { height:16px; }
+
+/* Command palette (Ctrl/Cmd+K) */
+.palet-hint { margin-top:32px; font-size:0.8125rem; color:var(--ink-faint); }
+.palet-hint kbd {
+  font-family:var(--font-mono); background:var(--paper-raised); border:1px solid var(--line-strong);
+  border-radius:4px; padding:1px 5px; font-size:0.75rem;
+}
+.palet-overlay {
+  position:fixed; inset:0; background:oklch(0% 0 0 / 0.5); display:flex; align-items:flex-start;
+  justify-content:center; padding-top:15vh; z-index:20;
+}
+.palet {
+  width:min(480px, 90vw); background:var(--paper-raised); border:1px solid var(--line-strong);
+  border-radius:12px; box-shadow:0 20px 60px oklch(0% 0 0 / 0.35); overflow:hidden;
+}
+.palet input {
+  width:100%; border:none; border-bottom:1px solid var(--line); border-radius:0; padding:16px;
+  font-size:1rem; background:transparent; color:var(--ink);
+}
+.palet input:focus-visible { outline:none; }
+.palet-resultaten { max-height:280px; overflow-y:auto; }
+.palet-item { padding:10px 16px; cursor:pointer; font-size:0.9375rem; color:var(--ink); }
+.palet-item.actief, .palet-item:hover { background:var(--paper); color:var(--accent-ink); }
+.palet-leeg { padding:16px; color:var(--ink-faint); font-size:0.875rem; margin:0; }
 
 @media (max-width: 560px) {
   .controls { flex-direction:column; align-items:stretch; }

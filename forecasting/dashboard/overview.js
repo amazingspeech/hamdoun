@@ -137,10 +137,29 @@ function tekenTabel() {
   document.getElementById("portfolio-rijen").replaceChildren(...getoond.map(maakRij));
 }
 
+function toonSkeletRijen(aantal) {
+  const rijen = [];
+  for (let i = 0; i < aantal; i++) {
+    const tr = document.createElement("tr");
+    const breedtes = ["55%", "70px", "90px"];
+    for (const breedte of breedtes) {
+      const td = document.createElement("td");
+      const balk = document.createElement("div");
+      balk.className = "skelet skelet-tabelregel";
+      balk.style.width = breedte;
+      td.appendChild(balk);
+      tr.appendChild(td);
+    }
+    rijen.push(tr);
+  }
+  document.getElementById("portfolio-rijen").replaceChildren(...rijen);
+}
+
 async function laadMeer() {
   const knop = document.getElementById("meer-laden");
   knop.disabled = true;
   toonFout("");
+  if (alleWinkels.length === 0) toonSkeletRijen(8);
   try {
     const data = await haalPortfolioPagina(volgendeOffset);
     alleWinkels = alleWinkels.concat(data.winkels);

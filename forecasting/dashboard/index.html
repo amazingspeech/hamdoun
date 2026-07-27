@@ -71,6 +71,12 @@
 
   <div class="leeg" id="leeg">Kies een winkel en klik op "Voorspel" om de verwachte omzet te zien.</div>
 
+  <div class="skelet-resultaat" id="skelet-resultaat" hidden>
+    <div class="skelet skelet-regel" style="width:45%;"></div>
+    <div class="skelet skelet-groot" style="width:35%;"></div>
+    <div class="skelet skelet-kaart"></div>
+  </div>
+
   <div id="resultaat">
     <div class="hero">
       <p class="hero-lead" id="hero-lead"></p>
@@ -106,6 +112,10 @@
           </details>
         </span>
       </div>
+      <div class="export-knoppen" id="export-knoppen" hidden>
+        <button type="button" class="btn zacht" id="export-csv">Download als CSV</button>
+        <button type="button" class="btn zacht" id="export-png">Download grafiek als PNG</button>
+      </div>
     </div>
 
     <p class="kanttekening" id="kanttekening"></p>
@@ -117,6 +127,17 @@
     <summary>Over dit model</summary>
     <div class="metrics" id="metrics"></div>
   </details>
+
+  <p class="palet-hint">
+    Snel naar een andere winkel: <kbd>Ctrl</kbd>+<kbd>K</kbd> (<kbd>⌘</kbd>+<kbd>K</kbd> op Mac)
+  </p>
+</div>
+
+<div class="palet-overlay" id="palet-overlay" hidden>
+  <div class="palet" role="dialog" aria-modal="true" aria-label="Snel naar winkel">
+    <input type="text" id="palet-zoek" placeholder="Typ een winkelnaam of -nummer…" autocomplete="off">
+    <div class="palet-resultaten" id="palet-resultaten"></div>
+  </div>
 </div>
 
 <script src="./config.js"></script>

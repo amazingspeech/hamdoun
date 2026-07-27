@@ -7,6 +7,8 @@
 const API_BASIS = window.TESSAR_FORECAST_API_BASIS || "";
 
 let modelMetrics = null;
+let alleWinkelsCache = [];
+let laatsteVoorspelling = null;
 
 const euro = new Intl.NumberFormat("nl-NL", {
   style: "currency", currency: "EUR", maximumFractionDigits: 0,
@@ -216,6 +218,78 @@ function tekenGrafiek(voorspellingen) {
   }
 }
 
+function downloadBlob(blob, bestandsnaam) {
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = bestandsnaam;
+  link.click();
+  URL.revokeObjectURL(url);
+}
+
+function exporteerCsv() {
+  if (!laatsteVoorspelling) return;
+  const { voorspellingen, storeId } = laatsteVoorspelling;
+  const regels = ["datum,p10,p50,p90"];
+  for (const v of voorspellingen) regels.push(`${v.datum},${v.p10},${v.p50},${v.p90}`);
+  const blob = new Blob([regels.join("\n")], { type: "text/csv;charset=utf-8" });
+  downloadBlob(blob, `voorspelling-winkel-${storeId}.csv`);
+}
+
+// Kopieert de live SVG en zet berekende stijlen (kleur, lijndikte,
+// lettertype) om naar inline attributen: een <img>/data-URL-SVG laadt
+// nooit de externe stylesheet, dus zonder dit zou de PNG kleurloos zijn.
+function inlineerSvgStijlen(bron, kloon) {
+  const bronElementen = bron.querySelectorAll("*");
+  const kloonElementen = kloon.querySelectorAll("*");
+  bronElementen.forEach((bronEl, i) => {
+    const berekend = getComputedStyle(bronEl);
+    const kloonEl = kloonElementen[i];
+    if (berekend.fill && berekend.fill !== "none") kloonEl.setAttribute("fill", berekend.fill);
+    if (berekend.stroke && berekend.stroke !== "none") kloonEl.setAttribute("stroke", berekend.stroke);
+    if (parseFloat(berekend.strokeWidth) > 0) kloonEl.setAttribute("stroke-width", berekend.strokeWidth);
+    if (kloonEl.tagName === "text") {
+      kloonEl.setAttribute("font-family", berekend.fontFamily);
+      kloonEl.setAttribute("font-size", berekend.fontSize);
+    }
+  });
+}
+
+function exporteerPng() {
+  if (!laatsteVoorspelling) return;
+  const bronSvg = document.getElementById("chart");
+  const breedte = bronSvg.width.baseVal.value;
+  const hoogte = bronSvg.height.baseVal.value;
+  const kloon = bronSvg.cloneNode(true);
+  inlineerSvgStijlen(bronSvg, kloon);
+  kloon.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+
+  const achtergrond = getComputedStyle(document.getElementById("chart-container")).backgroundColor;
+  const svgTekst = new XMLSerializer().serializeToString(kloon);
+  const svgUrl = URL.createObjectURL(new Blob([svgTekst], { type: "image/svg+xml;charset=utf-8" }));
+
+  const img = new Image();
+  img.onload = () => {
+    const schaal = 2; // scherper dan 1:1 op scherms met hoge pixeldichtheid
+    const canvas = document.createElement("canvas");
+    canvas.width = breedte * schaal;
+    canvas.height = hoogte * schaal;
+    const ctx = canvas.getContext("2d");
+    ctx.scale(schaal, schaal);
+    ctx.fillStyle = achtergrond;
+    ctx.fillRect(0, 0, breedte, hoogte);
+    ctx.drawImage(img, 0, 0, breedte, hoogte);
+    URL.revokeObjectURL(svgUrl);
+    canvas.toBlob((blob) => downloadBlob(blob, `voorspelling-winkel-${laatsteVoorspelling.storeId}.png`));
+  };
+  img.onerror = () => toonFout("Grafiek exporteren als PNG is niet gelukt.");
+  img.src = svgUrl;
+}
+
+function toonExportKnoppen(zichtbaar) {
+  document.getElementById("export-knoppen").hidden = !zichtbaar;
+}
+
 function maakStat(label, waarde, toelichting) {
   const stat = document.createElement("div");
   stat.className = "stat";
@@ -311,10 +385,54 @@ function toonKanttekening(promoOpgegeven, vakantieOpgegeven) {
   }
 }
 
+// Koppelt formuliervelden aan hun URL-parameternaam, zodat een specifieke
+// weergave (winkel/datum/horizon/promo-vakantie) te delen of te
+// bookmarken is — de URL wordt na elke geslaagde voorspelling bijgewerkt
+// (synchroniseerUrl) en bij het laden gelezen (pasUrlParamsToe).
+const VELD_PARAM_MAP = {
+  store: "winkel",
+  start: "start",
+  horizon: "horizon",
+  "promo-van": "promo_van",
+  "promo-tot": "promo_tot",
+  "vakantie-van": "vakantie_van",
+  "vakantie-tot": "vakantie_tot",
+};
+
+function synchroniseerUrl() {
+  const params = new URLSearchParams();
+  for (const [veldId, paramNaam] of Object.entries(VELD_PARAM_MAP)) {
+    const waarde = document.getElementById(veldId).value;
+    if (waarde) params.set(paramNaam, waarde);
+  }
+  history.replaceState(null, "", `?${params.toString()}`);
+}
+
+function pasUrlParamsToe(winkels, params) {
+  let heeftWeergave = false;
+  const winkelId = params.get("winkel");
+  if (winkelId && winkels.some((w) => String(w.extern_store_id) === winkelId)) {
+    document.getElementById("store").value = winkelId;
+    heeftWeergave = true;
+  }
+  for (const [veldId, paramNaam] of Object.entries(VELD_PARAM_MAP)) {
+    if (veldId === "store") continue;
+    const waarde = params.get(paramNaam);
+    if (waarde) {
+      document.getElementById(veldId).value = waarde;
+      heeftWeergave = true;
+    }
+  }
+  return heeftWeergave;
+}
+
 async function voorspel() {
   const knop = document.getElementById("voorspel");
   knop.disabled = true;
   toonFout("");
+  document.getElementById("leeg").hidden = true;
+  document.getElementById("resultaat").classList.remove("zichtbaar");
+  document.getElementById("skelet-resultaat").hidden = false;
   try {
     const storeId = Number(document.getElementById("store").value);
     const startDatum = document.getElementById("start").value;
@@ -337,13 +455,18 @@ async function voorspel() {
       p50: Math.max(0, v.p50),
       p90: Math.max(0, v.p90),
     }));
-    document.getElementById("leeg").hidden = true;
+    document.getElementById("skelet-resultaat").hidden = true;
     document.getElementById("resultaat").classList.add("zichtbaar");
     toonSamenvatting(voorspellingen, data.store_id);
     tekenGrafiek(voorspellingen);
     toonKanttekening(Boolean(promoVakantie.promoVan), Boolean(promoVakantie.vakantieVan));
     toonFactoren(data.belangrijkste_factoren);
+    laatsteVoorspelling = { voorspellingen, storeId: data.store_id };
+    toonExportKnoppen(true);
+    synchroniseerUrl();
   } catch (e) {
+    document.getElementById("skelet-resultaat").hidden = true;
+    document.getElementById("leeg").hidden = false;
     toonFout(e.message);
   } finally {
     knop.disabled = false;
@@ -403,6 +526,82 @@ function initUitloggenLink() {
   });
 }
 
+// Command palette (Ctrl/Cmd+K): snel van winkel wisselen zonder de muis —
+// vooral waardevol met veel winkels, waar de kale <select> traag bladert.
+function initCommandPalette() {
+  const overlay = document.getElementById("palet-overlay");
+  const invoer = document.getElementById("palet-zoek");
+  const resultatenEl = document.getElementById("palet-resultaten");
+  let actieveIndex = -1;
+
+  function toonResultaten(zoekterm) {
+    const term = zoekterm.trim().toLowerCase();
+    const treffers = alleWinkelsCache
+      .filter((w) => !term || String(w.extern_store_id).includes(term) || (w.naam || "").toLowerCase().includes(term))
+      .slice(0, 20);
+    actieveIndex = treffers.length > 0 ? 0 : -1;
+    if (treffers.length === 0) {
+      const leeg = document.createElement("p");
+      leeg.className = "palet-leeg";
+      leeg.textContent = "Geen winkel gevonden.";
+      resultatenEl.replaceChildren(leeg);
+      return;
+    }
+    resultatenEl.replaceChildren(...treffers.map((w, i) => {
+      const item = document.createElement("div");
+      item.className = "palet-item" + (i === 0 ? " actief" : "");
+      item.textContent = w.naam || `Winkel ${w.extern_store_id}`;
+      item.addEventListener("click", () => kiesWinkel(w.extern_store_id));
+      return item;
+    }));
+  }
+
+  function open() {
+    overlay.hidden = false;
+    invoer.value = "";
+    toonResultaten("");
+    invoer.focus();
+  }
+  function sluit() {
+    overlay.hidden = true;
+  }
+  function kiesWinkel(storeId) {
+    document.getElementById("store").value = String(storeId);
+    sluit();
+    voorspel();
+  }
+
+  document.addEventListener("keydown", (event) => {
+    if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
+      event.preventDefault();
+      open();
+    } else if (event.key === "Escape" && !overlay.hidden) {
+      sluit();
+    }
+  });
+  overlay.addEventListener("click", (event) => {
+    if (event.target === overlay) sluit();
+  });
+  invoer.addEventListener("input", () => toonResultaten(invoer.value));
+  invoer.addEventListener("keydown", (event) => {
+    const items = [...resultatenEl.querySelectorAll(".palet-item")];
+    if (event.key === "ArrowDown") {
+      event.preventDefault();
+      actieveIndex = Math.min(actieveIndex + 1, items.length - 1);
+    } else if (event.key === "ArrowUp") {
+      event.preventDefault();
+      actieveIndex = Math.max(actieveIndex - 1, 0);
+    } else if (event.key === "Enter" && items[actieveIndex]) {
+      items[actieveIndex].click();
+      return;
+    } else {
+      return;
+    }
+    items.forEach((el, i) => el.classList.toggle("actief", i === actieveIndex));
+    items[actieveIndex]?.scrollIntoView({ block: "nearest" });
+  });
+}
+
 document.addEventListener("DOMContentLoaded", async () => {
   const me = await initToegang();
   if (!me) return;
@@ -426,14 +625,15 @@ document.addEventListener("DOMContentLoaded", async () => {
       "Er zijn nog geen winkels aan jouw organisatie gekoppeld. Neem contact op om dit in te laten stellen.";
     return;
   }
+  alleWinkelsCache = winkels;
+  initCommandPalette();
 
-  // Drill-down vanuit het portfolio-overzicht (overview.html) komt binnen
-  // als ?winkel=<id> — vooraf selecteren en direct voorspellen, zodat een
-  // klik op een winkelrij daar meteen bij de detailvoorspelling uitkomt.
-  const gevraagdeWinkel = new URLSearchParams(window.location.search).get("winkel");
-  if (gevraagdeWinkel && winkels.some((w) => String(w.extern_store_id) === gevraagdeWinkel)) {
-    document.getElementById("store").value = gevraagdeWinkel;
-  }
+  // Opgeslagen weergave: een gedeelde/gebookmarkte URL (of een drill-down
+  // vanuit overview.html met ?winkel=<id>) vult vooraf de velden en
+  // voorspelt meteen, zodat een klik op zo'n link direct bij het juiste
+  // resultaat uitkomt i.p.v. bij een leeg formulier.
+  const urlParams = new URLSearchParams(window.location.search);
+  const heeftOpgeslagenWeergave = pasUrlParamsToe(winkels, urlParams);
 
   // Knop blijft uit tot /metrics geladen is: anders kan een snelle klik een
   // voorspelling opvragen met de kalenderdatum van vandaag in plaats van een
@@ -441,7 +641,12 @@ document.addEventListener("DOMContentLoaded", async () => {
   // gebruiker iets fout ziet gaan.
   laadMetrics()
     .then((data) => {
-      document.getElementById("start").value = eenDagNa(data.trainingsperiode_eind);
+      // Alleen de trainingsperiode-standaard toepassen als de URL zelf
+      // geen startdatum opgaf — anders overschrijft dit een opgeslagen
+      // weergave stilzwijgend met een andere datum.
+      if (!urlParams.get("start")) {
+        document.getElementById("start").value = eenDagNa(data.trainingsperiode_eind);
+      }
       // Voorkomt de servergegenereerde 422-foutmelding voor het gangbare
       // geval: het veld kan nu al niet verder dan wat het model dekt.
       const horizonVeld = document.getElementById("horizon");
@@ -454,6 +659,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     .finally(() => {
       knop.disabled = false;
       knop.textContent = "Voorspel";
-      if (gevraagdeWinkel) voorspel();
+      if (heeftOpgeslagenWeergave) voorspel();
     });
+
+  document.getElementById("export-csv").addEventListener("click", exporteerCsv);
+  document.getElementById("export-png").addEventListener("click", exporteerPng);
 });
