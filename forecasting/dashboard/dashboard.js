@@ -99,11 +99,15 @@ async function laadMetrics() {
   return data;
 }
 
-async function haalVoorspelling(storeId, startDatum, horizonDagen) {
+async function haalVoorspelling(storeId, startDatum, horizonDagen, promoVakantie) {
   const resp = await fetch(`${API_BASIS}/forecast`, {
     method: "POST",
     headers: { "Content-Type": "application/json", "X-API-Key": API_KEY },
-    body: JSON.stringify({ store_id: storeId, start_datum: startDatum, horizon_dagen: horizonDagen }),
+    body: JSON.stringify({
+      store_id: storeId, start_datum: startDatum, horizon_dagen: horizonDagen,
+      promo_van: promoVakantie.promoVan || null, promo_tot: promoVakantie.promoTot || null,
+      schoolvakantie_van: promoVakantie.vakantieVan || null, schoolvakantie_tot: promoVakantie.vakantieTot || null,
+    }),
   });
   if (!resp.ok) {
     const detail = await resp.json().catch(() => ({}));
@@ -257,6 +261,25 @@ function toonSamenvatting(voorspellingen, storeId) {
     `verkoop tot ${euro.format(Math.round(totaalP10))} als het rustiger is dan verwacht.`;
 }
 
+function toonKanttekening(promoOpgegeven, vakantieOpgegeven) {
+  const el = document.getElementById("kanttekening");
+  if (promoOpgegeven && vakantieOpgegeven) {
+    el.textContent = "Deze voorspelling houdt rekening met de opgegeven promotie- en schoolvakantieperiode.";
+  } else if (promoOpgegeven) {
+    el.textContent =
+      "Deze voorspelling houdt rekening met de opgegeven promotieperiode. Geen schoolvakantie opgegeven — " +
+      "speelt er in deze periode ook een schoolvakantie, dan kan de werkelijke omzet hoger uitvallen.";
+  } else if (vakantieOpgegeven) {
+    el.textContent =
+      "Deze voorspelling houdt rekening met de opgegeven schoolvakantieperiode. Geen promotie opgegeven — " +
+      "speelt er in deze periode ook een promotie, dan kan de werkelijke omzet hoger uitvallen.";
+  } else {
+    el.textContent =
+      "Houdt geen rekening met promoties of schoolvakanties — geef die hierboven op als die in deze " +
+      "periode spelen, anders kan de werkelijke omzet op zulke dagen hoger uitvallen dan hier getoond.";
+  }
+}
+
 async function voorspel() {
   const knop = document.getElementById("voorspel");
   knop.disabled = true;
@@ -265,7 +288,13 @@ async function voorspel() {
     const storeId = Number(document.getElementById("store").value);
     const startDatum = document.getElementById("start").value;
     const horizonDagen = Number(document.getElementById("horizon").value);
-    const data = await haalVoorspelling(storeId, startDatum, horizonDagen);
+    const promoVakantie = {
+      promoVan: document.getElementById("promo-van").value,
+      promoTot: document.getElementById("promo-tot").value,
+      vakantieVan: document.getElementById("vakantie-van").value,
+      vakantieTot: document.getElementById("vakantie-tot").value,
+    };
+    const data = await haalVoorspelling(storeId, startDatum, horizonDagen, promoVakantie);
     // Het model heeft geen ondergrens van 0 op voorspelde omzet (zie
     // KNOWN-LIMITATIONS.md) — hier, en alleen hier voor weergave, geklemd
     // op 0 zodat een winkelier nooit een letterlijk negatief omzetbedrag
@@ -281,6 +310,7 @@ async function voorspel() {
     document.getElementById("resultaat").classList.add("zichtbaar");
     toonSamenvatting(voorspellingen, data.store_id);
     tekenGrafiek(voorspellingen);
+    toonKanttekening(Boolean(promoVakantie.promoVan), Boolean(promoVakantie.vakantieVan));
   } catch (e) {
     toonFout(e.message);
   } finally {

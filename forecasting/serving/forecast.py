@@ -12,6 +12,8 @@ training, zodat serving-tijd-features nooit op een subtiel andere manier
 worden berekend dan trainings-tijd-features."""
 from __future__ import annotations
 
+from datetime import date, timedelta
+
 import numpy as np
 import pandas as pd
 
@@ -28,6 +30,20 @@ class HorizonBuitenBereik(Exception):
     pass
 
 
+def dagreeks(van: date | None, tot: date | None) -> set[date]:
+    """Zet een optionele van/tot-periode om in de losse dagen erin
+    (inclusief beide uiteinden). Geeft een lege set als van ontbreekt; als
+    tot ontbreekt wordt het als één dag (van) behandeld — vergevingsgezind
+    voor een enkele promotiedag zonder dat de aanroeper expliciet tot
+    hoeft mee te geven."""
+    if van is None:
+        return set()
+    eind = tot or van
+    if eind < van:
+        van, eind = eind, van
+    return {van + timedelta(days=i) for i in range((eind - van).days + 1)}
+
+
 def voorspel_periode(
     modellen: dict[float, object],
     historie: pd.DataFrame,
@@ -35,7 +51,11 @@ def voorspel_periode(
     store_id: int,
     start_datum: pd.Timestamp,
     horizon_dagen: int,
+    promo_datums: set[date] | None = None,
+    schoolvakantie_datums: set[date] | None = None,
 ) -> pd.DataFrame:
+    promo_datums = promo_datums or set()
+    schoolvakantie_datums = schoolvakantie_datums or set()
     if store_id not in historie["Store"].unique():
         raise OnbekendeWinkel(f"Onbekend store_id: {store_id}")
 
@@ -56,8 +76,12 @@ def voorspel_periode(
         nieuwe_rij = pd.DataFrame({
             "Store": [store_id], "Date": [doel_datum], "Sales": [np.nan], "Open": [1],
             "DayOfWeek": [doel_datum.dayofweek + 1],
-            "Promo": [0],  # Future promo status unknown; default to 0
-            "SchoolHoliday": [0],  # Future school holiday status unknown; default to 0
+            # Standaard 0 (geen promo/vakantie) tenzij de aanroeper die dag
+            # expliciet opgeeft — vóór deze parameters bestond er geen
+            # manier om dit ooit anders te zetten, wat een structurele
+            # onderschatting gaf op precies de dagen die winkeliers plannen.
+            "Promo": [1 if doel_datum.date() in promo_datums else 0],
+            "SchoolHoliday": [1 if doel_datum.date() in schoolvakantie_datums else 0],
         })
         volledig = pd.concat([werkreeks, nieuwe_rij], ignore_index=True)
         volledig = voeg_kalenderfeatures_toe(volledig)

@@ -1,5 +1,6 @@
 import importlib
 import sys
+from datetime import date
 
 import numpy as np
 import pandas as pd
@@ -177,3 +178,52 @@ def test_forecast_boven_rate_limit_geeft_429(tmp_path, monkeypatch):
 
     resp = client.post("/forecast", json=verzoek, headers=headers)
     assert resp.status_code == 429
+
+
+def test_forecast_geeft_promo_en_schoolvakantie_datums_door(tmp_path, monkeypatch):
+    client = _bouw_test_omgeving(tmp_path, monkeypatch)
+
+    import serving.app as app_module
+    aangeroepen_met = {}
+
+    def _spy(**kwargs):
+        aangeroepen_met.update(kwargs)
+        return pd.DataFrame({"Date": [pd.Timestamp("2015-07-11")], "p10": [1.0], "p50": [2.0], "p90": [3.0]})
+
+    monkeypatch.setattr(app_module, "voorspel_periode", _spy)
+
+    resp = client.post(
+        "/forecast",
+        json={
+            "store_id": 1, "start_datum": "2015-07-11", "horizon_dagen": 3,
+            "promo_van": "2015-07-12", "promo_tot": "2015-07-13",
+            "schoolvakantie_van": "2015-07-11",
+        },
+        headers={"X-API-Key": "test-key-123"},
+    )
+
+    assert resp.status_code == 200
+    assert aangeroepen_met["promo_datums"] == {date(2015, 7, 12), date(2015, 7, 13)}
+    assert aangeroepen_met["schoolvakantie_datums"] == {date(2015, 7, 11)}
+
+
+def test_forecast_zonder_promo_datums_geeft_lege_sets_door(tmp_path, monkeypatch):
+    client = _bouw_test_omgeving(tmp_path, monkeypatch)
+
+    import serving.app as app_module
+    aangeroepen_met = {}
+
+    def _spy(**kwargs):
+        aangeroepen_met.update(kwargs)
+        return pd.DataFrame({"Date": [pd.Timestamp("2015-07-11")], "p10": [1.0], "p50": [2.0], "p90": [3.0]})
+
+    monkeypatch.setattr(app_module, "voorspel_periode", _spy)
+
+    resp = client.post(
+        "/forecast", json={"store_id": 1, "start_datum": "2015-07-11", "horizon_dagen": 3},
+        headers={"X-API-Key": "test-key-123"},
+    )
+
+    assert resp.status_code == 200
+    assert aangeroepen_met["promo_datums"] == set()
+    assert aangeroepen_met["schoolvakantie_datums"] == set()

@@ -25,7 +25,7 @@ from db.schema import gebruikers as gebruikers_tabel
 from db.schema import maak_database
 from security import audit
 from serving.config import laad_settings
-from serving.forecast import HorizonBuitenBereik, OnbekendeWinkel, voorspel_periode
+from serving.forecast import HorizonBuitenBereik, OnbekendeWinkel, dagreeks, voorspel_periode
 from serving.schemas import (
     ApiKeyAanmakenVerzoek,
     ApiKeyResponse,
@@ -257,6 +257,8 @@ def forecast(
             store_id=verzoek.store_id,
             start_datum=verzoek.start_datum,
             horizon_dagen=verzoek.horizon_dagen,
+            promo_datums=dagreeks(verzoek.promo_van, verzoek.promo_tot),
+            schoolvakantie_datums=dagreeks(verzoek.schoolvakantie_van, verzoek.schoolvakantie_tot),
         )
         statuscode = 200
     except OnbekendeWinkel:

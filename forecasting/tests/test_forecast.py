@@ -1,8 +1,10 @@
+from datetime import date
+
 import numpy as np
 import pandas as pd
 import pytest
 
-from serving.forecast import HorizonBuitenBereik, OnbekendeWinkel, voorspel_periode
+from serving.forecast import HorizonBuitenBereik, OnbekendeWinkel, dagreeks, voorspel_periode
 
 
 class _NepModel:
@@ -82,3 +84,66 @@ def test_voorspel_periode_werkt_voorbij_de_kortste_lag():
     )
     assert len(resultaat) == 10
     assert resultaat["p50"].notna().all()
+
+
+class _FeatureTeruggeefModel:
+    """Geeft de gevraagde featurekolom letterlijk terug als 'voorspelling',
+    zodat een test kan verifiëren welke waarde er daadwerkelijk als
+    modelinvoer voor die dag is aangeleverd."""
+    def __init__(self, kolom):
+        self.kolom = kolom
+
+    def predict(self, X):
+        return X[self.kolom].to_numpy()
+
+
+def test_voorspel_periode_gebruikt_opgegeven_promo_datums():
+    resultaat = voorspel_periode(
+        modellen={q: _FeatureTeruggeefModel("Promo") for q in (0.1, 0.5, 0.9)},
+        historie=_historie(), winkel_metadata=_winkel_metadata(),
+        store_id=1, start_datum=pd.Timestamp("2015-07-11"), horizon_dagen=3,
+        promo_datums={pd.Timestamp("2015-07-12").date()},
+    )
+    assert resultaat.iloc[0]["p50"] == 0  # 11 juli: geen promo
+    assert resultaat.iloc[1]["p50"] == 1  # 12 juli: wel promo
+    assert resultaat.iloc[2]["p50"] == 0  # 13 juli: geen promo
+
+
+def test_voorspel_periode_gebruikt_opgegeven_schoolvakantie_datums():
+    resultaat = voorspel_periode(
+        modellen={q: _FeatureTeruggeefModel("SchoolHoliday") for q in (0.1, 0.5, 0.9)},
+        historie=_historie(), winkel_metadata=_winkel_metadata(),
+        store_id=1, start_datum=pd.Timestamp("2015-07-11"), horizon_dagen=2,
+        schoolvakantie_datums={pd.Timestamp("2015-07-11").date()},
+    )
+    assert resultaat.iloc[0]["p50"] == 1  # 11 juli: wel schoolvakantie
+    assert resultaat.iloc[1]["p50"] == 0  # 12 juli: geen schoolvakantie
+
+
+def test_voorspel_periode_zonder_opgegeven_datums_blijft_nul():
+    resultaat = voorspel_periode(
+        modellen={q: _FeatureTeruggeefModel("Promo") for q in (0.1, 0.5, 0.9)},
+        historie=_historie(), winkel_metadata=_winkel_metadata(),
+        store_id=1, start_datum=pd.Timestamp("2015-07-11"), horizon_dagen=1,
+    )
+    assert resultaat.iloc[0]["p50"] == 0
+
+
+def test_dagreeks_zonder_van_geeft_lege_set():
+    assert dagreeks(None, None) == set()
+
+
+def test_dagreeks_alleen_van_geeft_één_dag():
+    assert dagreeks(date(2015, 7, 12), None) == {date(2015, 7, 12)}
+
+
+def test_dagreeks_van_tot_tot_geeft_inclusieve_reeks():
+    assert dagreeks(date(2015, 7, 12), date(2015, 7, 14)) == {
+        date(2015, 7, 12), date(2015, 7, 13), date(2015, 7, 14),
+    }
+
+
+def test_dagreeks_verwisselde_van_tot_wordt_gecorrigeerd():
+    assert dagreeks(date(2015, 7, 14), date(2015, 7, 12)) == {
+        date(2015, 7, 12), date(2015, 7, 13), date(2015, 7, 14),
+    }

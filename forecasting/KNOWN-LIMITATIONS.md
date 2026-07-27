@@ -13,16 +13,18 @@ patroon als Certo's `KNOWN-LIMITATIONS.md`.
   als werkwaarde voor latere lag-features. Fouten kunnen zich opstapelen
   over een langere horizon — dit is inherent aan de recursieve aanpak, niet
   een bug.
-- **Promotie- en schoolvakantie-features standaard nul.** Bij meerdaagse 
-  recursieve voorspellingen stellen toekomstige `Promo` en `SchoolHoliday` 
-  waarden zich standaard op 0 (geen promotie, geen schoolvakantie) in, omdat 
-  hun werkelijke toekomstige waarden op voorspellingstijdstip onbekend zijn. 
-  Dit veroorzaakt een systematische neerwaartse bias in voorspellingen op 
-  dagen waarop een promotie daadwerkelijk plaatsvindt. Omdat de voorspelling 
-  recursief is, voeden deze vertekende uitkomsten terug in de lag-features 
-  voor volgende dagen, wat de bias verder in de horizon versterkt. Dit is 
-  een onderscheiden bron van systematische fout, los van de reeds 
-  gedocumenteerde foutsamenstellingen over lange horizons.
+- **Promotie- en schoolvakantie-features standaard nul, tenzij opgegeven.**
+  ~~Bij meerdaagse recursieve voorspellingen stonden toekomstige `Promo`- en
+  `SchoolHoliday`-waarden altijd hardcoded op 0~~ — sinds 2026-07-27 kan de
+  aanroeper (via `promo_van`/`promo_tot`/`schoolvakantie_van`/
+  `schoolvakantie_tot` op `POST /forecast`, of het uitklapbare veld op het
+  dashboard) een geplande periode opgeven, die dan per dag wordt meegegeven
+  aan het model i.p.v. altijd 0. **Resterende beperking:** dagen die de
+  aanroeper niet opgeeft, gebruiken nog steeds 0 — als een winkelier een
+  promotie niet vooraf weet of vergeet op te geven, blijft de bekende
+  neerwaartse bias bestaan (en versterkt die zich verder in de horizon via
+  de recursieve lag-features, zoals hierboven). Dit is dus niet langer een
+  onvermijdelijke modelbeperking, maar een input-afhankelijkheid.
 - **Rate limiting is per-instance.** De in-memory rate limiter houdt geen
   gedeelde staat bij tussen meerdere gelijktijdige API-instances. Geldig
   voor deze fase (één instance), niet voor een horizontaal geschaalde

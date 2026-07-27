@@ -41,6 +41,28 @@
       </div>
       <button id="voorspel" class="btn" disabled>Laden…</button>
     </div>
+
+    <details class="uitklap promo-vakantie">
+      <summary>Promotie of schoolvakantie gepland in deze periode?</summary>
+      <div class="promo-vakantie-velden">
+        <div class="veld">
+          <label for="promo-van">Promotie van</label>
+          <input type="date" id="promo-van">
+        </div>
+        <div class="veld">
+          <label for="promo-tot">tot en met</label>
+          <input type="date" id="promo-tot">
+        </div>
+        <div class="veld">
+          <label for="vakantie-van">Schoolvakantie van</label>
+          <input type="date" id="vakantie-van">
+        </div>
+        <div class="veld">
+          <label for="vakantie-tot">tot en met</label>
+          <input type="date" id="vakantie-tot">
+        </div>
+      </div>
+    </details>
   </header>
 
   <div class="leeg" id="leeg">Kies een winkel en klik op "Voorspel" om de verwachte omzet te zien.</div>
@@ -77,16 +99,12 @@
       </div>
     </div>
 
-    <p class="kanttekening">
-      Houdt geen rekening met geplande promoties of schoolvakanties in deze
-      periode — de werkelijke omzet kan op zulke dagen hoger uitvallen dan
-      hier getoond.
-    </p>
+    <p class="kanttekening" id="kanttekening"></p>
   </div>
 
   <p class="fout" id="fout" hidden></p>
 
-  <details class="model-info">
+  <details class="uitklap model-info">
     <summary>Over dit model</summary>
     <div class="metrics" id="metrics"></div>
   </details>

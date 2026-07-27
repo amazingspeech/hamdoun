@@ -181,14 +181,25 @@ select:focus-visible, input:focus-visible, button:focus-visible, summary:focus-v
   background:var(--warn); color:var(--paper-raised); font:700 0.75rem var(--font-mono); margin-top:1px;
 }
 
-details.model-info { margin-top:32px; border-top:1px solid var(--line); padding-top:16px; }
-details.model-info summary {
+/* Herbruikbare uitklap-chevron: zelfde patroon voor elk <details> dat als
+   "optioneel, klap open voor meer" oogt — "Over dit model" en het
+   promotie/schoolvakantie-blok delen 'm. */
+.uitklap summary {
   cursor:pointer; font:600 0.875rem/1.4 var(--font-body); color:var(--ink-soft);
   list-style:none; display:flex; align-items:center; gap:6px;
 }
-details.model-info summary::before { content:"›"; display:inline-block; transition:transform 0.15s ease; font-family:var(--font-mono); }
-details.model-info[open] summary::before { transform:rotate(90deg); }
-details.model-info summary::-webkit-details-marker { display:none; }
+.uitklap summary::before { content:"›"; display:inline-block; transition:transform 0.15s ease; font-family:var(--font-mono); }
+.uitklap[open] summary::before { transform:rotate(90deg); }
+.uitklap summary::-webkit-details-marker { display:none; }
+
+details.model-info { margin-top:32px; border-top:1px solid var(--line); padding-top:16px; }
+
+details.promo-vakantie { margin-top:16px; }
+.promo-vakantie-velden {
+  display:flex; gap:14px; flex-wrap:wrap; margin-top:12px; padding:16px;
+  background:var(--paper-raised); border:1px solid var(--line); border-radius:12px;
+}
+.promo-vakantie-velden .veld { min-width:150px; }
 .metrics { display:flex; gap:16px; margin:16px 0 0; flex-wrap:wrap; }
 .metric { flex:1 1 220px; border:1px solid var(--line); border-radius:10px; padding:14px 16px; background:var(--paper-raised); }
 .metric .label { font:600 0.8125rem/1.2 var(--font-body); color:var(--ink-soft); }
