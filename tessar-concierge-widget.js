@@ -26,7 +26,7 @@
 
   // ----------------------- CONFIG -----------------------
   var CONFIG = {
-    webhookUrl: "https://PLACEHOLDER-jouw-n8n-domein.example.com/webhook/PLACEHOLDER/chat",
+    webhookUrl: "https://n8n.tessar.nl/webhook/c1a2b3c4-1111-4ed4-9c97-e633ab209b8c/chat",
     clientId: "tessar",
     brandName: "Tessar",
     assistantName: "Tess",
