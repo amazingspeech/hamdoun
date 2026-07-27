@@ -365,7 +365,10 @@
         if (typeof obj === "string") { text += obj; return; }
         text += obj.content || obj.chunk || obj.text || obj.output || "";
       } catch (e) {
-        text += line;
+        // Onherkenbare (niet-JSON) regels stil negeren i.p.v. tonen aan de
+        // bezoeker - dit voorkomt dat interne fout-/debugoutput van n8n
+        // (bijv. een falende tool-aanroep) rechtstreeks in de chat lekt.
+        console.warn("[Tessar concierge] kon streamregel niet verwerken, genegeerd:", line);
       }
     });
     return text;
