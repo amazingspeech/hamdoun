@@ -35,6 +35,17 @@ Een organisatie verwijderen moet **cascade-delete** zijn: gebruikers,
 winkels, api_keys, sessies en wachtwoord-reset-tokens ruimen mee op in
 dezelfde transactie. Geen orphaned rows, geen soft-delete-vlaggen.
 
+**Status 2026-07-27: alleen toegang intrekken is gebouwd, hard verwijderen
+nog niet.** `POST /webhooks/stripe` deactiveert een organisatie
+(`organisaties.actief = false`, afgedwongen bij `login`/`vereis_sessie`/
+`vereis_toegang` — zie `serving/app.py`) zodra Stripe `customer.
+subscription.deleted` meldt. Bewust géén automatische data-verwijdering
+op dat moment: een net geannuleerd abonnement kan tijdens Stripe's eigen
+betaalretry-cyclus soms alsnog herstellen, en onomkeerbaar verwijderen op
+basis van één webhook-event geeft daar geen ruimte voor. De daadwerkelijke
+AVG-vereiste (hard delete) hierboven is dus nog steeds niet gebouwd — dat
+blijft een aparte, bewust latere stap, niet per ongeluk vergeten.
+
 ## Database-aanpak (SQLite als bewuste, tijdelijke brug)
 
 Gebruik een query-laag die niet SQLite-specifiek is (bv. SQLAlchemy Core,

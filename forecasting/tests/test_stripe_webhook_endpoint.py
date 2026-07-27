@@ -91,6 +91,13 @@ def _checkout_completed_event(sessie_id, customer_id="cus_123", subscription_id=
     }
 
 
+def _subscription_deleted_event(subscription_id):
+    return {
+        "type": "customer.subscription.deleted",
+        "data": {"object": _NepStripeObject({"id": subscription_id})},
+    }
+
+
 def _leg_aanmelding_vast(engine, sessie_id="cs_test_123"):
     hash_hex, salt_hex = hash_key("correct-paard")
     return maak_aanmelding(
@@ -133,6 +140,32 @@ def test_nieuwe_eigenaar_kan_meteen_inloggen(tmp_path, monkeypatch):
     client.post("/webhooks/stripe", content=b"ruwe-payload", headers={"stripe-signature": "t=1,v1=geldig"})
 
     resp = client.post("/login", json={"email": "devries@voorbeeld.nl", "wachtwoord": "correct-paard"})
+
+    assert resp.status_code == 200
+
+
+def test_subscription_deleted_deactiveert_de_organisatie(tmp_path, monkeypatch):
+    from db.organisaties import is_actief
+
+    module, client, engine = _bouw_omgeving(tmp_path, monkeypatch)
+    _leg_aanmelding_vast(engine)
+    monkeypatch.setattr(module, "lees_webhook_event", lambda **kw: _checkout_completed_event("cs_test_123"))
+    client.post("/webhooks/stripe", content=b"ruwe-payload", headers={"stripe-signature": "t=1,v1=geldig"})
+    aanmelding = haal_aanmelding_bij_sessie(engine, "cs_test_123")
+    assert is_actief(engine, organisatie_id=aanmelding.organisatie_id) is True
+
+    monkeypatch.setattr(module, "lees_webhook_event", lambda **kw: _subscription_deleted_event("sub_456"))
+    resp = client.post("/webhooks/stripe", content=b"ruwe-payload", headers={"stripe-signature": "t=1,v1=geldig"})
+
+    assert resp.status_code == 200, resp.text
+    assert is_actief(engine, organisatie_id=aanmelding.organisatie_id) is False
+
+
+def test_subscription_deleted_onbekende_subscription_wordt_genegeerd(tmp_path, monkeypatch):
+    module, client, engine = _bouw_omgeving(tmp_path, monkeypatch)
+    monkeypatch.setattr(module, "lees_webhook_event", lambda **kw: _subscription_deleted_event("sub_onbekend"))
+
+    resp = client.post("/webhooks/stripe", content=b"ruwe-payload", headers={"stripe-signature": "t=1,v1=geldig"})
 
     assert resp.status_code == 200
 

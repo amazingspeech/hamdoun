@@ -38,6 +38,38 @@ def _stel_stripe_koppeling_in_op_connectie(
     )
 
 
+def is_actief(engine: Engine, organisatie_id: int) -> bool:
+    """Voor toegangscontrole (serving/app.py: login, vereis_sessie,
+    vereis_toegang) — een onbekend organisatie_id levert bewust False op
+    i.p.v. te crashen, zodat de aanroeper dit hetzelfde kan behandelen als
+    een gedeactiveerde organisatie."""
+    with engine.connect() as conn:
+        waarde = conn.execute(
+            select(organisaties.c.actief).where(organisaties.c.id == organisatie_id)
+        ).scalar_one_or_none()
+    return bool(waarde)
+
+
+def deactiveer_organisatie(engine: Engine, organisatie_id: int) -> None:
+    """Gezet door de webhook-handler zodra Stripe customer.subscription.
+    deleted meldt (opzegging of einde van de betaalretry-cyclus) — zie
+    serving/app.py. Alleen toegang intrekken, geen data verwijderen: een
+    daadwerkelijke verwijdering (AVG-vereiste, beslissing 9 in
+    FASE4-SAAS-FOUNDATION.md) is een aparte, bewust nog niet gebouwde
+    stap — een geannuleerd abonnement kan nog binnen de betaalretry-cyclus
+    alsnog herstellen, en onomkeerbaar verwijderen op basis van één
+    webhook-event zou dat geen ruimte geven."""
+    with engine.begin() as conn:
+        conn.execute(organisaties.update().where(organisaties.c.id == organisatie_id).values(actief=False))
+
+
+def haal_organisatie_id_bij_stripe_subscription(engine: Engine, stripe_subscription_id: str) -> Optional[int]:
+    with engine.connect() as conn:
+        return conn.execute(
+            select(organisaties.c.id).where(organisaties.c.stripe_subscription_id == stripe_subscription_id)
+        ).scalar_one_or_none()
+
+
 def lijst_actieve_organisaties(engine: Engine):
     """Voor de wekelijkse herbestel-mail (Fase 5 NODIG 3), die elke actieve
     organisatie langsloopt om te bepalen of er iets te melden valt."""

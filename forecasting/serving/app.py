@@ -167,6 +167,11 @@ def vereis_sessie(request: Request) -> GeauthenticeerdeGebruiker:
         raise HTTPException(status_code=401, detail="Sessie ongeldig of verlopen.")
     with tenants_db.connect() as conn:
         rij = conn.execute(select(gebruikers_tabel).where(gebruikers_tabel.c.id == gebruiker_id)).one()
+    # Een bestaande sessie overleeft een deactivatie (bv. Stripe
+    # customer.subscription.deleted, zie POST /webhooks/stripe) niet — dit
+    # loopt op elk geauthenticeerd verzoek, niet alleen bij het inloggen.
+    if not db_organisaties.is_actief(tenants_db, rij.organisatie_id):
+        raise HTTPException(status_code=403, detail="Deze organisatie is niet meer actief.")
     return GeauthenticeerdeGebruiker(
         gebruiker_id=rij.id, organisatie_id=rij.organisatie_id, rol=rij.rol, email=rij.email
     )
@@ -191,6 +196,8 @@ def vereis_toegang(request: Request, sleutel: Optional[str] = Security(api_key_h
         if resultaat is None:
             raise HTTPException(status_code=401, detail="Ongeldige API-key.")
         naam, organisatie_id = resultaat
+        if not db_organisaties.is_actief(tenants_db, organisatie_id):
+            raise HTTPException(status_code=403, detail="Deze organisatie is niet meer actief.")
         return GeauthenticeerdeKey(naam=naam, organisatie_id=organisatie_id)
 
     token = request.cookies.get(SESSIE_COOKIE_NAAM)
@@ -199,6 +206,8 @@ def vereis_toegang(request: Request, sleutel: Optional[str] = Security(api_key_h
         if gebruiker_id is not None:
             with tenants_db.connect() as conn:
                 rij = conn.execute(select(gebruikers_tabel).where(gebruikers_tabel.c.id == gebruiker_id)).one()
+            if not db_organisaties.is_actief(tenants_db, rij.organisatie_id):
+                raise HTTPException(status_code=403, detail="Deze organisatie is niet meer actief.")
             return GeauthenticeerdeKey(
                 naam=rij.email, organisatie_id=rij.organisatie_id, gebruiker_id=rij.id, rol=rij.rol
             )
@@ -217,6 +226,13 @@ def login(request: Request, response: Response, verzoek: LoginVerzoek) -> dict:
     gebruiker_id = db_gebruikers.verifieer_inloggegevens(tenants_db, email=verzoek.email, wachtwoord=verzoek.wachtwoord)
     if gebruiker_id is None:
         raise HTTPException(status_code=401, detail="Ongeldige inloggegevens.")
+
+    with tenants_db.connect() as conn:
+        organisatie_id = conn.execute(
+            select(gebruikers_tabel.c.organisatie_id).where(gebruikers_tabel.c.id == gebruiker_id)
+        ).scalar_one()
+    if not db_organisaties.is_actief(tenants_db, organisatie_id):
+        raise HTTPException(status_code=403, detail="Deze organisatie is niet meer actief.")
 
     token = db_sessies.maak_sessie(tenants_db, gebruiker_id=gebruiker_id)
     response.set_cookie(
@@ -302,6 +318,14 @@ async def stripe_webhook(request: Request) -> dict:
         )
     except OngeldigeWebhookSignature:
         raise HTTPException(status_code=400, detail="Ongeldige Stripe-signature.")
+
+    if event["type"] == "customer.subscription.deleted":
+        subscription = event["data"]["object"]
+        organisatie_id = db_organisaties.haal_organisatie_id_bij_stripe_subscription(tenants_db, subscription["id"])
+        if organisatie_id is None:
+            return {"status": "genegeerd"}
+        db_organisaties.deactiveer_organisatie(tenants_db, organisatie_id)
+        return {"status": "ok"}
 
     if event["type"] != "checkout.session.completed":
         return {"status": "genegeerd"}
