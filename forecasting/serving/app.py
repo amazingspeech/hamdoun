@@ -256,22 +256,47 @@ def winkeltoewijzing_instellen(
     verzoek: WinkelToewijzingVerzoek,
     eigenaar: GeauthenticeerdeGebruiker = Depends(vereis_eigenaar),
 ) -> WinkelToewijzingResponse:
-    doelgebruiker = db_gebruikers.haal_gebruiker(
-        tenants_db, gebruiker_id=gebruiker_id, organisatie_id=eigenaar.organisatie_id
-    )
-    if doelgebruiker is None:
-        raise HTTPException(status_code=404, detail=f"Onbekende gebruiker: {gebruiker_id}")
-    if doelgebruiker.rol != "lid":
-        raise HTTPException(
-            status_code=422, detail="Winkeltoewijzing geldt alleen voor leden, niet voor de eigenaar."
+    # Auditlogging hier om dezelfde reden als bij /forecast: dit endpoint
+    # verandert wie welke data mag zien, dus een operator moet kunnen zien
+    # wie wanneer welke toewijzing heeft ingesteld — niet alleen geslaagde
+    # aanroepen (via finally), net als de tenant-isolatie-check elders.
+    start = time.monotonic()
+    statuscode = 500
+    try:
+        doelgebruiker = db_gebruikers.haal_gebruiker(
+            tenants_db, gebruiker_id=gebruiker_id, organisatie_id=eigenaar.organisatie_id
         )
-    for store_id in verzoek.winkel_ids:
-        if not db_winkels.hoort_store_bij_organisatie(tenants_db, store_id, eigenaar.organisatie_id):
-            raise HTTPException(status_code=422, detail=f"Onbekend store_id: {store_id}")
+        if doelgebruiker is None:
+            statuscode = 404
+            raise HTTPException(status_code=404, detail=f"Onbekende gebruiker: {gebruiker_id}")
+        if doelgebruiker.rol != "lid":
+            statuscode = 422
+            raise HTTPException(
+                status_code=422, detail="Winkeltoewijzing geldt alleen voor leden, niet voor de eigenaar."
+            )
+        for store_id in verzoek.winkel_ids:
+            if not db_winkels.hoort_store_bij_organisatie(tenants_db, store_id, eigenaar.organisatie_id):
+                statuscode = 422
+                raise HTTPException(status_code=422, detail=f"Onbekend store_id: {store_id}")
 
-    db_gebruiker_winkels.stel_toewijzingen_in(
-        tenants_db, gebruiker_id=gebruiker_id, extern_store_ids=verzoek.winkel_ids
-    )
+        db_gebruiker_winkels.stel_toewijzingen_in(
+            tenants_db, gebruiker_id=gebruiker_id, extern_store_ids=verzoek.winkel_ids
+        )
+        statuscode = 200
+    finally:
+        audit.log(
+            settings.audit_log_file,
+            {
+                "key": eigenaar.email,
+                "organisatie_id": eigenaar.organisatie_id,
+                "doel_gebruiker_id": gebruiker_id,
+                "winkel_ids": verzoek.winkel_ids,
+                "statuscode": statuscode,
+                "latency_ms": round((time.monotonic() - start) * 1000, 1),
+            },
+            versleuteld=settings.encrypt_at_rest,
+        )
+
     winkel_ids = db_gebruiker_winkels.lijst_toegewezen_winkels(tenants_db, gebruiker_id=gebruiker_id)
     return WinkelToewijzingResponse(winkel_ids=winkel_ids)
 
@@ -415,7 +440,9 @@ def winkels_lijst(key: GeauthenticeerdeKey = Depends(vereis_toegang)) -> list[Wi
 
 
 @app.get("/portfolio", response_model=PortfolioResponse)
+@limiter.limit(f"{settings.rate_limit_per_minute}/minute")
 def portfolio(
+    request: Request,
     horizon_dagen: int = Query(7, gt=0),
     limiet: int = Query(50, gt=0, le=200),
     offset: int = Query(0, ge=0),

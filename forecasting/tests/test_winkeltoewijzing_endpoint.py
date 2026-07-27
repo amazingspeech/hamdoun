@@ -142,3 +142,21 @@ def test_toewijzing_voor_eigenaar_zelf_geeft_422(tmp_path, monkeypatch):
     resp = client.put(f"/gebruikers/{eigenaar_a_id}/winkels", json={"winkel_ids": [1]})
 
     assert resp.status_code == 422
+
+
+def test_toewijzing_instellen_komt_in_de_auditlog(tmp_path, monkeypatch):
+    """Winkeltoewijzing verandert wie welke data mag zien — net zo
+    controle-waardig als een cross-tenant-poging op /forecast, dus hoort
+    in dezelfde auditlog terecht te komen."""
+    client, _, _, lid_a, _ = _bouw_omgeving(tmp_path, monkeypatch)
+    _inloggen(client, "eigenaar-a@klant.nl", "wachtwoord-a")
+
+    resp = client.put(f"/gebruikers/{lid_a}/winkels", json={"winkel_ids": [1, 2]})
+    assert resp.status_code == 200
+
+    import json
+    regel = json.loads((tmp_path / "audit.log").read_text(encoding="utf-8").strip().splitlines()[-1])
+    assert regel["key"] == "eigenaar-a@klant.nl"
+    assert regel["doel_gebruiker_id"] == lid_a
+    assert regel["winkel_ids"] == [1, 2]
+    assert regel["statuscode"] == 200

@@ -10,6 +10,7 @@ let totaalWinkels = 0;
 let modelNauwkeurigheidRmspe = null;
 let sorteerVeld = null;
 let sorteerRichting = -1;
+let ingelogdeRol = null;
 
 const euro = new Intl.NumberFormat("nl-NL", {
   style: "currency", currency: "EUR", maximumFractionDigits: 0,
@@ -155,6 +156,15 @@ function toonSkeletRijen(aantal) {
   document.getElementById("portfolio-rijen").replaceChildren(...rijen);
 }
 
+function toonLeeg(bericht) {
+  const el = document.getElementById("leeg");
+  el.textContent = bericht;
+  el.hidden = !bericht;
+  document.getElementById("portfolio-kpis").hidden = Boolean(bericht);
+  document.querySelector(".portfolio-zoek").hidden = Boolean(bericht);
+  document.querySelector(".portfolio-tabel-wrap").hidden = Boolean(bericht);
+}
+
 async function laadMeer() {
   const knop = document.getElementById("meer-laden");
   knop.disabled = true;
@@ -166,6 +176,18 @@ async function laadMeer() {
     volgendeOffset += data.winkels.length;
     totaalWinkels = data.totaal_winkels;
     modelNauwkeurigheidRmspe = data.kpi.model_nauwkeurigheid_rmspe;
+    if (totaalWinkels === 0) {
+      // Zelfde onderscheid als op de voorspelpagina: voor een eigenaar
+      // (altijd org-breed) betekent leeg dat de organisatie zelf nog geen
+      // winkels heeft; voor een lid betekent het meestal alleen dat de
+      // eigenaar nog geen winkels heeft toegewezen — een normale
+      // tussenstap, geen organisatiebreed probleem.
+      toonLeeg(ingelogdeRol === "lid"
+        ? "Er zijn nog geen winkels aan jou toegewezen. Vraag de eigenaar van je organisatie om dit in te stellen via Team beheren."
+        : "Er zijn nog geen winkels aan jouw organisatie gekoppeld. Neem contact op om dit in te laten stellen.");
+      knop.hidden = true;
+      return;
+    }
     toonKpis();
     tekenTabel();
     knop.hidden = volgendeOffset >= totaalWinkels || data.winkels.length === 0;
@@ -194,6 +216,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     return;
   }
   document.getElementById("wie-ben-ik").textContent = `Ingelogd als ${me.email}`;
+  ingelogdeRol = me.rol;
 
   document.getElementById("uitloggen").addEventListener("click", async (event) => {
     event.preventDefault();

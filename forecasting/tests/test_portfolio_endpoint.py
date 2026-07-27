@@ -16,7 +16,7 @@ from db.schema import maak_database
 from training import artifact, train
 
 
-def _bouw_omgeving(tmp_path, monkeypatch, org_a_stores=(1, 2, 3), org_b_stores=(4, 5)):
+def _bouw_omgeving(tmp_path, monkeypatch, org_a_stores=(1, 2, 3), org_b_stores=(4, 5), rate_limit_per_minuut="1000"):
     modellen = train.train_alle_kwantielen(pd.DataFrame({
         **{k: np.random.default_rng(1).uniform(0, 100, 200) for k in train.FEATURE_KOLOMMEN},
         "Sales": np.random.default_rng(1).uniform(500, 2000, 200),
@@ -59,7 +59,7 @@ def _bouw_omgeving(tmp_path, monkeypatch, org_a_stores=(1, 2, 3), org_b_stores=(
     monkeypatch.setenv("TENANTS_DB_PAD", str(tenants_db_pad))
     monkeypatch.setenv("CORS_ALLOWED_ORIGINS", "")
     monkeypatch.setenv("FORECASTING_ENCRYPT_AT_REST", "false")
-    monkeypatch.setenv("RATE_LIMIT_PER_MINUUT", "1000")
+    monkeypatch.setenv("RATE_LIMIT_PER_MINUUT", rate_limit_per_minuut)
     monkeypatch.setenv("SESSIE_COOKIE_SECURE", "false")
 
     if "serving.app" in sys.modules:
@@ -126,3 +126,15 @@ def test_portfolio_zonder_toegang_geeft_401(tmp_path, monkeypatch):
     resp = client.get("/portfolio")
 
     assert resp.status_code == 401
+
+
+def test_portfolio_boven_rate_limit_geeft_429(tmp_path, monkeypatch):
+    client = _bouw_omgeving(tmp_path, monkeypatch, rate_limit_per_minuut="2")
+    _inloggen(client, "eigenaar-a@klant.nl", "wachtwoord-a")
+
+    for _ in range(2):
+        resp = client.get("/portfolio?horizon_dagen=3&limiet=10")
+        assert resp.status_code == 200
+
+    resp = client.get("/portfolio?horizon_dagen=3&limiet=10")
+    assert resp.status_code == 429

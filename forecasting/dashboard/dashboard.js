@@ -696,8 +696,15 @@ document.addEventListener("DOMContentLoaded", async () => {
     return;
   }
   if (winkels.length === 0) {
-    document.getElementById("leeg").textContent =
-      "Er zijn nog geen winkels aan jouw organisatie gekoppeld. Neem contact op om dit in te laten stellen.";
+    // "Geen winkels" betekent voor een lid vaak iets anders dan voor een
+    // eigenaar: een eigenaar ziet altijd de volledige organisatie (dus
+    // leeg = de organisatie heeft écht nog geen winkels), terwijl een lid
+    // met een lege toewijzing gewoon nog niet is ingesteld door de
+    // eigenaar — een normale, verwachte tussenstap na het toevoegen van
+    // een teamlid, geen organisatiebreed probleem.
+    document.getElementById("leeg").textContent = me.rol === "lid"
+      ? "Er zijn nog geen winkels aan jou toegewezen. Vraag de eigenaar van je organisatie om dit in te stellen via Team beheren."
+      : "Er zijn nog geen winkels aan jouw organisatie gekoppeld. Neem contact op om dit in te laten stellen.";
     return;
   }
   alleWinkelsCache = winkels;
