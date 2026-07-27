@@ -61,32 +61,33 @@ touch api_keys.json audit.log tenants.db
 sudo chown 10001:10001 api_keys.json audit.log tenants.db
 ```
 
-API-key genereren (dezelfde key komt in stap 7 in het dashboard-JS):
-```bash
-cd /home/job/forecasting-demo/deploy
-docker compose run --rm api python3 -c "
-from pathlib import Path
-from security import api_keys
-api_keys.voeg_key_toe(Path('/app/api_keys.json'), 'publieke-demo', 'ZET-HIER-EEN-EIGEN-WILLEKEURIGE-KEY-NEER')
-"
-```
+`api_keys.json` blijft een verplicht bestand (zie `serving/config.py`) maar
+hoeft sinds Fase 4 niet meer gevuld te zijn — klanten loggen zelf in via
+het dashboard, dat gebruikt een sessiecookie, geen API-key. Een leeg
+bestand (`{}`, zoals hierboven al aangemaakt) volstaat.
 
-Sinds Fase 4 Stap 2 verifieert de server keys via de database, niet meer
-via `api_keys.json` — dat bestand blijft verplicht aanwezig (zie
-`serving/config.py`), maar de key hierboven moet ook naar `tenants.db`.
 Eén organisatie bootstrappen (koppelt alle store-ID's uit het
-modelartefact eraan) en de zojuist aangemaakte key overzetten:
+modelartefact eraan):
 ```bash
 docker compose run --rm api python3 -m db.cli \
   --models-dir /app/models --model-version <versie uit stap 2> \
   --database-pad /app/tenants.db \
-  --organisatie-naam "Publieke demo" --organisatie-slug publieke-demo
-docker compose run --rm api python3 -m db.migreer_keys_cli \
-  --api-keys-json /app/api_keys.json --database-pad /app/tenants.db \
-  --organisatie-slug publieke-demo
+  --organisatie-naam "<klantnaam>" --organisatie-slug <klant-slug>
 ```
-Zonder deze twee stappen faalt elke `/forecast`/`/metrics`-aanroep met
-401, ook met een geldige key in `api_keys.json`.
+
+Het eerste (eigenaar-)account voor die klant aanmaken, zodat ze zelf
+kunnen inloggen — kies zelf een tijdelijk wachtwoord en geef dat apart
+(niet per e-mail) door aan de klant:
+```bash
+docker compose run --rm api python3 -m db.gebruikers_cli \
+  --database-pad /app/tenants.db --organisatie-slug <klant-slug> \
+  --email <klant-e-mailadres> --wachtwoord <tijdelijk-wachtwoord> --rol eigenaar
+```
+Zonder dit account kan niemand inloggen — het dashboard redirect dan
+permanent naar het inlogscherm. Eenmaal ingelogd kan de eigenaar zelf
+teamleden toevoegen (`team.html`) en, alleen als een externe integratie
+(bv. een kassasysteem) programmatische toegang nodig heeft, een eigen
+API-key aanmaken — dat hoeft een operator niet meer handmatig te doen.
 
 (`--rm api` bouwt en start de container kort om het commando uit te voeren
 en verwijdert 'm daarna weer — dit is dezelfde image die straks ook live
@@ -133,49 +134,45 @@ sudo caddy reload --config /etc/caddy/Caddyfile
 Controleer meteen dat Certo (`vandijkprotocol.tessar.nl`) en n8n
 (`n8n.tessar.nl`) nog steeds normaal bereikbaar zijn na deze stap.
 
-## 7. Dashboard-API-key invullen
+## 7. Verifiëren
 
-Het dashboard verwacht de key als globale JS-variabele, gezet vóór
-`dashboard.js` laadt. `index.html` laadt hiervoor al een `config.js` vóór
-`dashboard.js` (zie `dashboard/index.html`) — dat bestand bestaat lokaal
-niet (harmless 404, `window.TESSAR_FORECAST_API_KEY` blijft undefined) en
-moet op de server aangemaakt worden.
+Open `https://forecasting-demo.tessar.nl/login.html` in een browser en log
+in met het account uit stap 3. Je wordt automatisch naar het dashboard
+doorgestuurd (het dashboard vereist sinds deze stap een geldige sessie —
+zonder login redirect het permanent naar `login.html`). Kies een winkel,
+klik "Voorspel". Controleer dat:
+- de startdatum automatisch op de dag ná de trainingsperiode staat (niet op
+  de kalenderdag van vandaag) — bevestigt dat het juiste model geladen is;
+- de winkellijst overeenkomt met wat er in stap 3 gebootstrapt is, niet een
+  vaste testlijst.
 
-**Niet** rechtstreeks in `index.html` plakken: `Caddyfile-snippet` zet een
-strikte `Content-Security-Policy` met `script-src 'self'` en zonder
-`'unsafe-inline'`, dus een inline `<script>`-blok in `index.html` wordt
-door de browser stilzwijgend geblokkeerd — `window.TESSAR_FORECAST_API_KEY`
-blijft dan undefined en elke `/forecast`/`/metrics`-aanroep faalt met 401,
-zonder enige foutmelding die daar direct naar wijst. Een los, same-origin
-bestand valt wél binnen `script-src 'self'`.
-
-Maak op de server `/home/job/forecasting-demo/dashboard/config.js` aan
-(nieuw bestand, niet `index.html` bewerken) met als inhoud:
-```javascript
-window.TESSAR_FORECAST_API_KEY = "ZELFDE-KEY-ALS-STAP-3";
-```
-Geen rebuild of restart nodig: `dashboard/` is bind-gemount (zie
-`deploy/docker-compose.yml`), dus de container serveert dit bestand direct
-van schijf bij elk verzoek.
-
-## 8. Verifiëren
-
-Open `https://forecasting-demo.tessar.nl` in een browser. Kies een winkel,
-klik "Voorspel". Controleer dat de startdatum automatisch op de dag ná de
-trainingsperiode staat (niet op de kalenderdag van vandaag) — dat bevestigt
-dat de `trainingsperiode_eind`-fix (zie het implementatieplan, Taken 1-2)
-op de live server ook echt werkt, niet alleen lokaal.
+Controleer ook dat `HTTPS` daadwerkelijk actief is (Caddy, stap 6) vóórdat
+je inlogt: de sessiecookie krijgt de `Secure`-vlag (`SESSIE_COOKIE_SECURE`,
+standaard aan — zie `serving/config.py`) en wordt door de browser
+stilzwijgend niet verzonden over gewone `http://`, wat inloggen laat lijken
+te werken maar elke volgende aanvraag alsnog met 401 laat falen.
 
 ## Bekende beperkingen van deze live opzet
 
 Zie ook `forecasting/KNOWN-LIMITATIONS.md`. Specifiek voor deze deployment:
 - **Geen live historiefeed.** Voorspellingen zijn geankerd aan de
   trainingsperiode van het geladen model, niet aan de actuele kalenderdag —
-  dit is precies waarom stap 8 hierboven de datumstandaard controleert.
-- **Gedeelde rate limit, geen per-bezoeker-limiet.** Eén publieke demo-key
-  voor alle bezoekers — zie de comment in `deploy/.env.example`.
-- **`requirements.txt` bevat nog de 9 bekende pip-audit-bevindingen** totdat
-  het opnieuw gegenereerd wordt op een machine met Python ≥3.10 (zie
+  dit is precies waarom stap 7 hierboven de datumstandaard controleert.
+- **Rate limit is per organisatie, niet per losse gebruiker/key** (Fase 4
+  Stap 7) — meerdere gelijktijdige gebruikers van dezelfde klant delen één
+  budget. Zet `RATE_LIMIT_PER_MINUUT` ruim genoeg voor de grootste klant.
+- **Docker-image gebruikt Python 3.11, `requirements.txt` is gegenereerd
+  met Python 3.9** (zie de `pip-compile`-header in dat bestand) — dit
+  bestond al vóór Fase 3's `shap`-toevoeging. Vooraf gecontroleerd (`pip
+  download --platform manylinux2014_x86_64 --python-version 311
+  --only-binary=:all:`) dat `shap`/`numba`/`llvmlite`/`cloudpickle`/
+  `slicer`/`tqdm` allemaal een kant-en-klare wheel hebben voor deze
+  combinatie — geen compiler nodig tijdens de build. **Nog steeds nooit
+  lokaal met Docker getest** (geen Docker op de ontwikkelmachine), dus
+  stap 4 hierboven blijft de eerste echte test — maar het risico op een
+  mislukte build door deze specifieke dependencies is laag gebleken.
+- **`requirements.txt` bevat nog eventuele bekende pip-audit-bevindingen**
+  totdat het opnieuw gegenereerd wordt op een machine met Python ≥3.10 (zie
   `forecasting/KNOWN-LIMITATIONS.md`) — niet opgelost door deze deployment.
 - **Model hertrainen = handmatig herhalen van stap 2-4** (nieuw artefact
   overzetten, `MODEL_VERSION` in `.env` bijwerken, `docker compose up -d`

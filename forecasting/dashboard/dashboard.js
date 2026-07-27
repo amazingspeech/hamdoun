@@ -5,9 +5,6 @@
 // forecasting-API zodra dit dashboard op de Tessar-website staat — dan wordt
 // TESSAR_FORECAST_API_BASIS vóór het laden van dit script gezet.
 const API_BASIS = window.TESSAR_FORECAST_API_BASIS || "";
-const API_KEY = window.TESSAR_FORECAST_API_KEY || "";
-
-const WINKEL_IDS = [1, 2, 3, 4, 5, 10, 25, 50, 100, 250];
 
 let modelMetrics = null;
 
@@ -39,14 +36,25 @@ function animeerGetal(el, doelwaarde, duurMs = 700) {
   requestAnimationFrame(stap);
 }
 
-function vulWinkelSelect() {
+async function haalMe() {
+  const resp = await fetch(`${API_BASIS}/me`, { credentials: "same-origin" });
+  if (!resp.ok) return null;
+  return resp.json();
+}
+
+async function laadWinkels() {
+  const resp = await fetch(`${API_BASIS}/winkels`, { credentials: "same-origin" });
+  if (!resp.ok) throw new Error(`Kon de winkellijst niet ophalen (${resp.status})`);
+  const winkels = await resp.json();
   const select = document.getElementById("store");
-  for (const id of WINKEL_IDS) {
+  select.innerHTML = "";
+  for (const winkel of winkels) {
     const optie = document.createElement("option");
-    optie.value = String(id);
-    optie.textContent = `Winkel ${id}`;
+    optie.value = String(winkel.extern_store_id);
+    optie.textContent = winkel.naam || `Winkel ${winkel.extern_store_id}`;
     select.appendChild(optie);
   }
+  return winkels;
 }
 
 function toonFout(bericht) {
@@ -56,7 +64,7 @@ function toonFout(bericht) {
 }
 
 async function laadMetrics() {
-  const resp = await fetch(`${API_BASIS}/metrics`, { headers: { "X-API-Key": API_KEY } });
+  const resp = await fetch(`${API_BASIS}/metrics`, { credentials: "same-origin" });
   if (!resp.ok) throw new Error(`Kon nauwkeurigheidscijfers niet ophalen (${resp.status})`);
   const data = await resp.json();
   modelMetrics = data;
@@ -102,7 +110,8 @@ async function laadMetrics() {
 async function haalVoorspelling(storeId, startDatum, horizonDagen, promoVakantie) {
   const resp = await fetch(`${API_BASIS}/forecast`, {
     method: "POST",
-    headers: { "Content-Type": "application/json", "X-API-Key": API_KEY },
+    credentials: "same-origin",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       store_id: storeId, start_datum: startDatum, horizon_dagen: horizonDagen,
       promo_van: promoVakantie.promoVan || null, promo_tot: promoVakantie.promoTot || null,
@@ -373,13 +382,50 @@ function initInfoKnopjes() {
   }
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+async function initToegang() {
+  const me = await haalMe();
+  if (!me) {
+    window.location.href = "./login.html";
+    return null;
+  }
+  const wieBenIk = document.getElementById("wie-ben-ik");
+  if (wieBenIk) wieBenIk.textContent = `Ingelogd als ${me.email}`;
+  return me;
+}
+
+function initUitloggenLink() {
+  const link = document.getElementById("uitloggen");
+  if (!link) return;
+  link.addEventListener("click", async (event) => {
+    event.preventDefault();
+    await fetch(`${API_BASIS}/logout`, { method: "POST", credentials: "same-origin" });
+    window.location.href = "./login.html";
+  });
+}
+
+document.addEventListener("DOMContentLoaded", async () => {
+  const me = await initToegang();
+  if (!me) return;
+  initUitloggenLink();
+
   const knop = document.getElementById("voorspel");
-  vulWinkelSelect();
   document.addEventListener("click", sluitAndereInfoKnopjes);
   initInfoKnopjes();
   document.getElementById("start").value = vandaagPlusEen();
   knop.addEventListener("click", voorspel);
+
+  let winkels;
+  try {
+    winkels = await laadWinkels();
+  } catch (e) {
+    toonFout(e.message);
+    return;
+  }
+  if (winkels.length === 0) {
+    document.getElementById("leeg").textContent =
+      "Er zijn nog geen winkels aan jouw organisatie gekoppeld. Neem contact op om dit in te laten stellen.";
+    return;
+  }
 
   // Knop blijft uit tot /metrics geladen is: anders kan een snelle klik een
   // voorspelling opvragen met de kalenderdatum van vandaag in plaats van een

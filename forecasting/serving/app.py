@@ -38,6 +38,7 @@ from serving.schemas import (
     LoginVerzoek,
     MetricsResponse,
     NieuweApiKeyResponse,
+    WinkelResponse,
 )
 from training.artifact import laad_artefact
 
@@ -93,16 +94,6 @@ class GeauthenticeerdeKey(NamedTuple):
     organisatie_id: int
 
 
-def vereis_api_key(sleutel: Optional[str] = Security(api_key_header)) -> GeauthenticeerdeKey:
-    if not sleutel:
-        raise HTTPException(status_code=401, detail="X-API-Key header ontbreekt.")
-    resultaat = db_api_keys.vind_organisatie_voor_key(tenants_db, sleutel)
-    if resultaat is None:
-        raise HTTPException(status_code=401, detail="Ongeldige API-key.")
-    naam, organisatie_id = resultaat
-    return GeauthenticeerdeKey(naam=naam, organisatie_id=organisatie_id)
-
-
 SESSIE_COOKIE_NAAM = "sessie"
 
 
@@ -131,6 +122,32 @@ def vereis_eigenaar(gebruiker: GeauthenticeerdeGebruiker = Depends(vereis_sessie
     if gebruiker.rol != "eigenaar":
         raise HTTPException(status_code=403, detail="Alleen de eigenaar van de organisatie mag dit.")
     return gebruiker
+
+
+def vereis_toegang(request: Request, sleutel: Optional[str] = Security(api_key_header)) -> GeauthenticeerdeKey:
+    """Accepteert zowel een API-key (externe integraties, bv. een
+    kassasysteem — Fase 4 Stap 6) als een geldige sessiecookie (het
+    ingelogde dashboard) — allebei resolven naar dezelfde
+    GeauthenticeerdeKey-vorm, zodat /forecast, /metrics en /winkels geen
+    onderscheid hoeven te maken tussen de twee toegangswegen. Probeert de
+    API-key eerst als die is meegegeven; valt anders terug op de
+    sessiecookie."""
+    if sleutel:
+        resultaat = db_api_keys.vind_organisatie_voor_key(tenants_db, sleutel)
+        if resultaat is None:
+            raise HTTPException(status_code=401, detail="Ongeldige API-key.")
+        naam, organisatie_id = resultaat
+        return GeauthenticeerdeKey(naam=naam, organisatie_id=organisatie_id)
+
+    token = request.cookies.get(SESSIE_COOKIE_NAAM)
+    if token:
+        gebruiker_id = db_sessies.vind_gebruiker_voor_sessie(tenants_db, token)
+        if gebruiker_id is not None:
+            with tenants_db.connect() as conn:
+                rij = conn.execute(select(gebruikers_tabel).where(gebruikers_tabel.c.id == gebruiker_id)).one()
+            return GeauthenticeerdeKey(naam=rij.email, organisatie_id=rij.organisatie_id)
+
+    raise HTTPException(status_code=401, detail="Niet ingelogd en geen geldige API-key.")
 
 
 @app.get("/health")
@@ -222,7 +239,7 @@ def api_key_intrekken(key_id: int, eigenaar: GeauthenticeerdeGebruiker = Depends
 @app.post("/forecast", response_model=ForecastResponse)
 @limiter.limit(f"{settings.rate_limit_per_minute}/minute")
 def forecast(
-    request: Request, verzoek: ForecastVerzoek, key: GeauthenticeerdeKey = Depends(vereis_api_key)
+    request: Request, verzoek: ForecastVerzoek, key: GeauthenticeerdeKey = Depends(vereis_toegang)
 ) -> ForecastResponse:
     # Isolatie- en horizon-check zitten binnen dezelfde try/finally als de
     # voorspelling zelf, zodat een geweigerde cross-tenant-poging net zo
@@ -294,7 +311,7 @@ def forecast(
 
 
 @app.get("/metrics", response_model=MetricsResponse)
-def metrics(key: GeauthenticeerdeKey = Depends(vereis_api_key)) -> MetricsResponse:
+def metrics(key: GeauthenticeerdeKey = Depends(vereis_toegang)) -> MetricsResponse:
     m = artefact["metadata"]
     return MetricsResponse(
         model_versie=m["versie"],
@@ -304,6 +321,12 @@ def metrics(key: GeauthenticeerdeKey = Depends(vereis_api_key)) -> MetricsRespon
         gevalideerde_horizon_dagen=m["gevalideerde_horizon_dagen"],
         trainingsperiode_eind=m["trainingsperiode_eind"][:10],
     )
+
+
+@app.get("/winkels", response_model=list[WinkelResponse])
+def winkels_lijst(key: GeauthenticeerdeKey = Depends(vereis_toegang)) -> list[WinkelResponse]:
+    rijen = db_winkels.lijst_winkels(tenants_db, organisatie_id=key.organisatie_id)
+    return [WinkelResponse(extern_store_id=r.extern_store_id, naam=r.naam) for r in rijen]
 
 
 _dashboard_pad = Path(__file__).resolve().parent.parent / "dashboard"

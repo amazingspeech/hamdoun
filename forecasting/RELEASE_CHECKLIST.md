@@ -25,9 +25,12 @@ echte, losstaande staging rechtvaardigt.
       voor waarom).
 - [ ] `pip-audit -r requirements.txt` schoon, of nieuwe bevindingen bewust
       geaccepteerd/uitgesteld — nooit stilzwijgend genegeerd.
-- [ ] Geen migraties van toepassing (er is geen database in deze fase) —
-      zodra Fase 4 (SaaS Foundation) een database toevoegt, voeg hier een
-      concrete migratie-check-stap toe.
+- [ ] `tenants.db` op de server geback-upt vóór de release (bv. `cp
+      tenants.db tenants.db.bak-$(date +%Y%m%d)`) — bevat nu echte
+      klantaccounts, teams en API-keys (Fase 4), niet meer alleen
+      wegwerpbare demo-state. Geen Alembic-migraties tot nu toe nodig
+      geweest (`create_all()` volstaat, zie `db/schema.py`); zodra dat
+      verandert, voeg hier een concrete migratie-stap toe.
 - [ ] `.env` op de server bevat alle verplichte variabelen uit
       `deploy/.env.example` (`MODEL_VERSION` met een echte, op Rossmann-data
       getrainde versie — nooit de synthetische testset) en

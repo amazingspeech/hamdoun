@@ -75,6 +75,11 @@ class NieuweApiKeyResponse(BaseModel):
     ruwe_key: str
 
 
+class WinkelResponse(BaseModel):
+    extern_store_id: int
+    naam: Optional[str] = None
+
+
 class MetricsResponse(BaseModel):
     model_versie: str
     rmspe: float

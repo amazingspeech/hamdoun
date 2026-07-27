@@ -22,3 +22,15 @@ def hoort_store_bij_organisatie(engine: Engine, store_id: int, organisatie_id: i
             )
         ).first()
     return rij is not None
+
+
+def lijst_winkels(engine: Engine, organisatie_id: int):
+    """Geeft de winkels van een organisatie terug (extern_store_id + naam)
+    — voedt de winkelkeuze in het dashboard, i.p.v. de eerder hardcoded
+    voorbeeldlijst die niets met een echte klant te maken had."""
+    with engine.connect() as conn:
+        return conn.execute(
+            select(winkels.c.extern_store_id, winkels.c.naam).where(
+                winkels.c.organisatie_id == organisatie_id, winkels.c.actief.is_(True)
+            )
+        ).all()

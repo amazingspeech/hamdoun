@@ -13,6 +13,7 @@ from serving.schemas import (
     LoginVerzoek,
     MetricsResponse,
     NieuweApiKeyResponse,
+    WinkelResponse,
 )
 
 
@@ -61,6 +62,16 @@ def test_forecast_response_belangrijkste_factoren_standaard_leeg():
 def test_factor_bijdrage_verwerpt_ongeldige_richting():
     with pytest.raises(ValidationError):
         FactorBijdrage(naam="Promotie", richting="omhoog")
+
+
+def test_winkel_response_serialiseert():
+    response = WinkelResponse(extern_store_id=1, naam="Winkel Centrum")
+    assert response.model_dump()["extern_store_id"] == 1
+
+
+def test_winkel_response_naam_optioneel():
+    response = WinkelResponse(extern_store_id=1, naam=None)
+    assert response.naam is None
 
 
 def test_metrics_response_serialiseert():
