@@ -97,6 +97,29 @@ def haal_eigenaar_email(engine: Engine, organisatie_id: int) -> Optional[str]:
     return rij.email if rij is not None else None
 
 
+def vind_gebruiker_id_via_email(engine: Engine, email: str) -> Optional[int]:
+    """Voor het aanvragen van een wachtwoord-reset: alleen actieve
+    gebruikers kunnen een reset-token krijgen, zelfde 'actief'-filter als
+    verifieer_inloggegevens(). De aanroeper (POST /wachtwoord-reset/
+    aanvragen) gebruikt None hetzelfde als een gevonden gebruiker af te
+    handelen — altijd dezelfde generieke bevestiging teruggeven, nooit
+    lekken of een e-mailadres bestaat."""
+    with engine.connect() as conn:
+        rij = conn.execute(
+            select(gebruikers.c.id).where(gebruikers.c.email == email, gebruikers.c.actief.is_(True))
+        ).first()
+    return rij.id if rij is not None else None
+
+
+def wijzig_wachtwoord(engine: Engine, gebruiker_id: int, nieuw_wachtwoord: str) -> None:
+    hash_hex, salt_hex = hash_key(nieuw_wachtwoord)
+    with engine.begin() as conn:
+        conn.execute(
+            gebruikers.update().where(gebruikers.c.id == gebruiker_id)
+            .values(wachtwoord_hash=hash_hex, wachtwoord_salt=salt_hex)
+        )
+
+
 def haal_gebruiker(engine: Engine, gebruiker_id: int, organisatie_id: int):
     """Geeft de gebruikersrij terug, alleen als gebruiker_id bij
     organisatie_id hoort — anders None. Zelfde org-scoping-patroon als

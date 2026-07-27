@@ -3,6 +3,7 @@ expliciet gepinde modelversie (MODEL_VERSION) — hard-fail als die ontbreekt
 of niet bestaat, nooit een impliciet 'laatste' model."""
 from __future__ import annotations
 
+import sys
 import time
 from datetime import date
 from pathlib import Path
@@ -27,11 +28,12 @@ from db import gebruikers as db_gebruikers
 from db import organisaties as db_organisaties
 from db import sessies as db_sessies
 from db import verkoopdata as db_verkoopdata
+from db import wachtwoord_reset as db_wachtwoord_reset
 from db import winkels as db_winkels
 from db.bootstrap import bootstrap_organisatie
 from db.schema import gebruikers as gebruikers_tabel
 from db.schema import maak_database
-from security import audit
+from security import audit, mail
 from security.api_keys import hash_key
 from serving.betaalintegratie import OngeldigeWebhookSignature, lees_webhook_event, maak_checkout_sessie
 from serving.config import laad_settings
@@ -70,6 +72,8 @@ from serving.schemas import (
     VerkoopdataResponse,
     VerkoopdataRij,
     VerkoopdataUploadResponse,
+    WachtwoordResetAanvraagVerzoek,
+    WachtwoordResetVoltooienVerzoek,
     WinkelResponse,
     WinkelSamenvatting,
     WinkelToewijzingResponse,
@@ -252,6 +256,49 @@ def logout(request: Request, response: Response) -> dict:
     if token:
         db_sessies.verwijder_sessie(tenants_db, token)
     response.delete_cookie(SESSIE_COOKIE_NAAM)
+    return {"status": "ok"}
+
+
+@app.post("/wachtwoord-reset/aanvragen")
+@limiter.limit(f"{settings.rate_limit_per_minute}/minute", key_func=get_remote_address)
+def wachtwoord_reset_aanvragen(request: Request, verzoek: WachtwoordResetAanvraagVerzoek) -> dict:
+    """Altijd dezelfde generieke response, ongeacht of het e-mailadres
+    bestaat of het versturen lukt — lekt nooit welke e-mailadressen een
+    account hebben (zelfde principe als /login en /signup's
+    email_is_in_gebruik-check). Rate-limited per IP, want dit endpoint
+    stuurt e-mail naar een door de aanvrager opgegeven adres."""
+    try:
+        gebruiker_id = db_gebruikers.vind_gebruiker_id_via_email(tenants_db, email=verzoek.email)
+        if gebruiker_id is not None and settings.app_basis_url:
+            token = db_wachtwoord_reset.maak_reset_token(tenants_db, gebruiker_id=gebruiker_id)
+            link = f"{settings.app_basis_url}/wachtwoord-resetten.html?token={token}"
+            mail.verstuur(
+                smtp_host=settings.mail_smtp_host, smtp_poort=settings.mail_smtp_poort,
+                afzender=settings.mail_afzender, smtp_gebruiker=settings.mail_smtp_gebruiker,
+                smtp_wachtwoord=settings.mail_smtp_wachtwoord,
+                ontvanger=verzoek.email, onderwerp="Wachtwoord resetten",
+                tekst=(
+                    "Je hebt een wachtwoord-reset aangevraagd voor Vraagvoorspelling.\n\n"
+                    f"Klik op deze link om een nieuw wachtwoord in te stellen: {link}\n\n"
+                    "Deze link is 1 uur geldig. Heb je dit niet aangevraagd, negeer dan deze e-mail."
+                ),
+            )
+    except Exception as e:
+        print(f"Wachtwoord-reset-mail voor {verzoek.email!r} mislukt: {e}", file=sys.stderr)
+    return {"status": "ok"}
+
+
+@app.post("/wachtwoord-reset/voltooien")
+def wachtwoord_reset_voltooien(verzoek: WachtwoordResetVoltooienVerzoek) -> dict:
+    gebruiker_id = db_wachtwoord_reset.vind_gebruiker_voor_reset_token(tenants_db, verzoek.token)
+    if gebruiker_id is None:
+        raise HTTPException(status_code=400, detail="Ongeldige of verlopen reset-link.")
+
+    db_gebruikers.wijzig_wachtwoord(tenants_db, gebruiker_id=gebruiker_id, nieuw_wachtwoord=verzoek.nieuw_wachtwoord)
+    db_wachtwoord_reset.markeer_reset_token_gebruikt(tenants_db, verzoek.token)
+    # Elke bestaande sessie ongeldig maken, niet alleen het wachtwoord
+    # wijzigen — zie db.sessies.verwijder_sessies_voor_gebruiker.
+    db_sessies.verwijder_sessies_voor_gebruiker(tenants_db, gebruiker_id=gebruiker_id)
     return {"status": "ok"}
 
 

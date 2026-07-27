@@ -158,8 +158,21 @@ Elke stap is op zichzelf shipbaar en testbaar — geen big-bang-migratie.
    `tests/test_db_sessies.py`, `tests/test_db_gebruikers_cli.py`,
    `tests/test_config.py`, `tests/test_schemas.py`, `tests/test_login.py`),
    133/133 tests groen, ruff schoon.
-4. **Wachtwoord-resetflow.** Geblokkeerd op beslissing 7 (mailprovider moet
-   nog gekozen/opgezet worden).
+4. **✅ Wachtwoord-resetflow — gedaan 2026-07-27.** Was geblokkeerd op
+   beslissing 7 (mailprovider) — die is sinds de mailprovider-stap
+   opgelost. `wachtwoord_reset_tokens`-tabel in `db/schema.py` (zelfde
+   SHA-256-tokenaanpak als `sessies`, maar met een kortere geldigheidsduur
+   van 1 uur en een eenmalig-gebruik-vlag). `POST /wachtwoord-reset/
+   aanvragen` (rate-limited, lekt nooit of een e-mailadres bestaat — altijd
+   dezelfde generieke response, ook als het versturen mislukt) en
+   `POST /wachtwoord-reset/voltooien` (wijzigt het wachtwoord, trekt alle
+   bestaande sessies van die gebruiker in — niet alleen de sessie die de
+   reset aanvroeg). Nieuwe pagina's `dashboard/wachtwoord-vergeten.html` en
+   `dashboard/wachtwoord-resetten.html`. Live geverifieerd: een echte
+   e-mail verzonden via de echte Zoho SMTP-configuratie, en de volledige
+   klik-flow in de browser (oud wachtwoord geweigerd, nieuw wachtwoord
+   werkt, formulier toont dezelfde generieke bevestiging ongeacht of het
+   e-mailadres bestaat). 359/359 tests, TDD doorheen, ruff schoon.
 5. **✅ Meerdere gebruikers per organisatie — gedaan 2026-07-27.**
    Rolonderscheid (eigenaar/lid) wordt nu daadwerkelijk afgedwongen, niet
    meer alleen een inert kolomveld. `POST /gebruikers` (alleen bereikbaar

@@ -4,13 +4,54 @@ import pytest
 from sqlalchemy import create_engine, inspect, text
 from sqlalchemy.exc import IntegrityError
 
-from db.schema import aanmeldingen, gebruiker_winkels, gebruikers, maak_database, organisaties, winkels
+from db.schema import (
+    aanmeldingen,
+    gebruiker_winkels,
+    gebruikers,
+    maak_database,
+    organisaties,
+    wachtwoord_reset_tokens,
+    winkels,
+)
 
 
 def test_maak_database_maakt_organisaties_en_winkels_tabellen(tmp_path):
     engine = maak_database(tmp_path / "tenants.db")
     tabellen = set(inspect(engine).get_table_names())
-    assert {"organisaties", "winkels", "api_keys", "gebruikers", "sessies", "gebruiker_winkels"} <= tabellen
+    assert {
+        "organisaties", "winkels", "api_keys", "gebruikers", "sessies", "gebruiker_winkels",
+        "wachtwoord_reset_tokens",
+    } <= tabellen
+
+
+def test_reset_token_hash_moet_uniek_zijn(tmp_path):
+    engine = maak_database(tmp_path / "tenants.db")
+    nu = datetime.now(timezone.utc)
+    with engine.begin() as conn:
+        org_id = conn.execute(
+            organisaties.insert().values(naam="Org A", slug="org-a", actief=True, aangemaakt_op=nu)
+        ).inserted_primary_key[0]
+        gebruiker_id = conn.execute(
+            gebruikers.insert().values(
+                organisatie_id=org_id, email="test@klant.nl", wachtwoord_hash="x", wachtwoord_salt="y",
+                rol="eigenaar", actief=True, aangemaakt_op=nu,
+            )
+        ).inserted_primary_key[0]
+        conn.execute(
+            wachtwoord_reset_tokens.insert().values(
+                gebruiker_id=gebruiker_id, token_hash="dezelfde-hash", aangemaakt_op=nu,
+                verloopt_op=nu, gebruikt_op=None,
+            )
+        )
+
+    with pytest.raises(IntegrityError):
+        with engine.begin() as conn:
+            conn.execute(
+                wachtwoord_reset_tokens.insert().values(
+                    gebruiker_id=gebruiker_id, token_hash="dezelfde-hash", aangemaakt_op=nu,
+                    verloopt_op=nu, gebruikt_op=None,
+                )
+            )
 
 
 def test_extern_store_id_moet_uniek_zijn(tmp_path):

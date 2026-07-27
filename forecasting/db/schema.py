@@ -172,6 +172,25 @@ aanmeldingen = Table(
 )
 
 
+wachtwoord_reset_tokens = Table(
+    "wachtwoord_reset_tokens",
+    metadata,
+    Column("id", Integer, primary_key=True),
+    Column("gebruiker_id", Integer, ForeignKey("gebruikers.id"), nullable=False),
+    # token_hash: SHA-256, zelfde reden als sessies.token_hash — de ruwe
+    # token is zelf al een hoge-entropie secrets.token_urlsafe-waarde.
+    Column("token_hash", String, nullable=False, unique=True),
+    Column("aangemaakt_op", DateTime, nullable=False),
+    # Bewust een veel kortere geldigheidsduur dan een sessie (db/sessies.py:
+    # 7 dagen) — dit token geeft toegang tot een gevoeligere actie (het
+    # wachtwoord wijzigen), niet alleen inloggen.
+    Column("verloopt_op", DateTime, nullable=False),
+    # NULL = nog niet gebruikt. Eenmaal gezet, is het token voorgoed
+    # ongeldig — voorkomt hergebruik van een onderschepte reset-link.
+    Column("gebruikt_op", DateTime, nullable=True),
+)
+
+
 def _migreer_ontbrekende_kolommen(engine: Engine) -> None:
     """create_all() maakt alleen ontbrekende tábellen aan, nooit
     ontbrekende kolommen op een tabel die al bestaat — dus een al-lopende

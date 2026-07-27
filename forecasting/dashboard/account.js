@@ -91,6 +91,72 @@ function initSignupPagina() {
   });
 }
 
+async function vraagWachtwoordResetAan(email) {
+  const resp = await fetch(`${API_BASIS}/wachtwoord-reset/aanvragen`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    credentials: "same-origin",
+    body: JSON.stringify({ email }),
+  });
+  if (!resp.ok) {
+    const detail = await resp.json().catch(() => ({}));
+    throw new Error(detail.detail || `Aanvragen mislukt (${resp.status})`);
+  }
+}
+
+async function voltooiWachtwoordReset(token, nieuwWachtwoord) {
+  const resp = await fetch(`${API_BASIS}/wachtwoord-reset/voltooien`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    credentials: "same-origin",
+    body: JSON.stringify({ token, nieuw_wachtwoord: nieuwWachtwoord }),
+  });
+  if (!resp.ok) {
+    const detail = await resp.json().catch(() => ({}));
+    throw new Error(detail.detail || `Instellen mislukt (${resp.status})`);
+  }
+}
+
+function initWachtwoordVergetenPagina() {
+  const form = document.getElementById("wachtwoord-vergeten-form");
+  if (!form) return;
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const knop = document.getElementById("wachtwoord-vergeten-knop");
+    const emailVeld = document.getElementById("email");
+    knop.disabled = true;
+    // Altijd dezelfde melding tonen, ongeacht of het versturen lukte —
+    // het backend-endpoint lekt zelf ook nooit of een e-mailadres bestaat
+    // (zie serving/app.py), dus de UI mag dat niet alsnog via een aparte
+    // foutmelding verraden.
+    await vraagWachtwoordResetAan(emailVeld.value).catch(() => {});
+    const melding = document.getElementById("melding");
+    melding.textContent = "Als dit e-mailadres bekend is, ontvang je een link om je wachtwoord te resetten.";
+    melding.hidden = false;
+    emailVeld.disabled = true;
+  });
+}
+
+function initWachtwoordResettenPagina() {
+  const form = document.getElementById("wachtwoord-resetten-form");
+  if (!form) return;
+  const token = new URLSearchParams(window.location.search).get("token");
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const knop = document.getElementById("wachtwoord-resetten-knop");
+    knop.disabled = true;
+    toonFout("fout", "");
+    try {
+      if (!token) throw new Error("Ongeldige of onvolledige reset-link.");
+      await voltooiWachtwoordReset(token, document.getElementById("nieuw-wachtwoord").value);
+      window.location.href = "./login.html";
+    } catch (e) {
+      toonFout("fout", e.message);
+      knop.disabled = false;
+    }
+  });
+}
+
 function initLoginPagina() {
   const form = document.getElementById("login-form");
   if (!form) return;
@@ -623,5 +689,7 @@ async function initTeamPagina() {
 document.addEventListener("DOMContentLoaded", () => {
   initSignupPagina();
   initLoginPagina();
+  initWachtwoordVergetenPagina();
+  initWachtwoordResettenPagina();
   initTeamPagina();
 });

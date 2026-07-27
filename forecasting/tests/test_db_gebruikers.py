@@ -6,6 +6,8 @@ from db.gebruikers import (
     maak_gebruiker,
     maak_gebruiker_met_hash,
     verifieer_inloggegevens,
+    vind_gebruiker_id_via_email,
+    wijzig_wachtwoord,
 )
 from db.schema import maak_database
 from security.api_keys import hash_key
@@ -122,3 +124,39 @@ def test_haal_eigenaar_email_zonder_eigenaar_geeft_none(tmp_path):
     org_id = bootstrap_organisatie(engine, naam="Klant", slug="klant", store_ids=[])
 
     assert haal_eigenaar_email(engine, organisatie_id=org_id) is None
+
+
+def test_vind_gebruiker_id_via_email_bestaand_email(tmp_path):
+    engine = maak_database(tmp_path / "tenants.db")
+    org_id = bootstrap_organisatie(engine, naam="Klant", slug="klant", store_ids=[])
+    gebruiker_id = maak_gebruiker(engine, organisatie_id=org_id, email="test@klant.nl", wachtwoord="x")
+
+    assert vind_gebruiker_id_via_email(engine, email="test@klant.nl") == gebruiker_id
+
+
+def test_vind_gebruiker_id_via_email_onbekend_email(tmp_path):
+    engine = maak_database(tmp_path / "tenants.db")
+
+    assert vind_gebruiker_id_via_email(engine, email="onbekend@klant.nl") is None
+
+
+def test_vind_gebruiker_id_via_email_negeert_inactieve_gebruiker(tmp_path):
+    engine = maak_database(tmp_path / "tenants.db")
+    org_id = bootstrap_organisatie(engine, naam="Klant", slug="klant", store_ids=[])
+    maak_gebruiker(engine, organisatie_id=org_id, email="test@klant.nl", wachtwoord="x")
+    from db.schema import gebruikers
+    with engine.begin() as conn:
+        conn.execute(gebruikers.update().where(gebruikers.c.email == "test@klant.nl").values(actief=False))
+
+    assert vind_gebruiker_id_via_email(engine, email="test@klant.nl") is None
+
+
+def test_wijzig_wachtwoord(tmp_path):
+    engine = maak_database(tmp_path / "tenants.db")
+    org_id = bootstrap_organisatie(engine, naam="Klant", slug="klant", store_ids=[])
+    gebruiker_id = maak_gebruiker(engine, organisatie_id=org_id, email="test@klant.nl", wachtwoord="oud-wachtwoord")
+
+    wijzig_wachtwoord(engine, gebruiker_id=gebruiker_id, nieuw_wachtwoord="nieuw-wachtwoord")
+
+    assert verifieer_inloggegevens(engine, email="test@klant.nl", wachtwoord="oud-wachtwoord") is None
+    assert verifieer_inloggegevens(engine, email="test@klant.nl", wachtwoord="nieuw-wachtwoord") == gebruiker_id

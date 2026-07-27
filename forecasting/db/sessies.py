@@ -69,3 +69,12 @@ def vind_gebruiker_voor_sessie(engine: Engine, ruwe_token: str) -> int | None:
 def verwijder_sessie(engine: Engine, ruwe_token: str) -> None:
     with engine.begin() as conn:
         conn.execute(sessies.delete().where(sessies.c.token_hash == _hash_token(ruwe_token)))
+
+
+def verwijder_sessies_voor_gebruiker(engine: Engine, gebruiker_id: int) -> None:
+    """Voor na een geslaagde wachtwoord-reset: elke bestaande sessie van
+    deze gebruiker wordt ongeldig, niet alleen het wachtwoord gewijzigd —
+    als het wachtwoord gereset werd wegens een vermoeden van misbruik, mag
+    een eerder ingelogde sessie niet blijven werken."""
+    with engine.begin() as conn:
+        conn.execute(sessies.delete().where(sessies.c.gebruiker_id == gebruiker_id))

@@ -59,6 +59,17 @@ class LoginVerzoek(BaseModel):
     wachtwoord: str = Field(..., min_length=1)
 
 
+class WachtwoordResetAanvraagVerzoek(BaseModel):
+    email: str
+
+
+class WachtwoordResetVoltooienVerzoek(BaseModel):
+    token: str = Field(..., min_length=1)
+    # Zelfde ondergrens als SignupVerzoek.wachtwoord — dit is een
+    # zelf-gekozen wachtwoord zonder toezicht van een operator.
+    nieuw_wachtwoord: str = Field(..., min_length=8)
+
+
 class GebruikerAanmakenVerzoek(BaseModel):
     email: str
     wachtwoord: str = Field(..., min_length=1)
