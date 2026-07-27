@@ -108,6 +108,13 @@ class PortfolioResponse(BaseModel):
     kpi: PortfolioKpi
 
 
+class ModelVersieMetric(BaseModel):
+    versie: str
+    aangemaakt_op: str
+    rmspe: float
+    coverage_p10_p90: float
+
+
 class MetricsResponse(BaseModel):
     model_versie: str
     rmspe: float
@@ -115,3 +122,6 @@ class MetricsResponse(BaseModel):
     n_observaties: int
     gevalideerde_horizon_dagen: int
     trainingsperiode_eind: date
+    # Chronologisch (oudste eerst), voor de nauwkeurigheid-als-trend-weergave
+    # in het dashboard — zie training.artifact.lijst_metadata_per_versie().
+    geschiedenis: list[ModelVersieMetric] = []

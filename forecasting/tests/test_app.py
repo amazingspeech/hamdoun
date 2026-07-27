@@ -129,6 +129,8 @@ def test_metrics_geeft_gevalideerde_cijfers(tmp_path, monkeypatch):
     assert data["rmspe"] == 0.15
     assert data["coverage_p10_p90"] == 0.79
     assert data["trainingsperiode_eind"] == "2015-06-30"
+    assert len(data["geschiedenis"]) == 1
+    assert data["geschiedenis"][0]["rmspe"] == 0.15
 
 
 def test_cors_ontbrekende_config_staat_geen_enkele_origin_toe(tmp_path, monkeypatch):

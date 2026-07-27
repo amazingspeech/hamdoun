@@ -45,13 +45,14 @@ from serving.schemas import (
     GebruikerResponse,
     LoginVerzoek,
     MetricsResponse,
+    ModelVersieMetric,
     NieuweApiKeyResponse,
     PortfolioKpi,
     PortfolioResponse,
     WinkelResponse,
     WinkelSamenvatting,
 )
-from training.artifact import laad_artefact
+from training.artifact import laad_artefact, lijst_metadata_per_versie
 
 settings = laad_settings()
 artefact = laad_artefact(settings.models_dir, settings.model_version, versleuteld=settings.encrypt_at_rest)
@@ -329,6 +330,9 @@ def forecast(
 @app.get("/metrics", response_model=MetricsResponse)
 def metrics(key: GeauthenticeerdeKey = Depends(vereis_toegang)) -> MetricsResponse:
     m = artefact["metadata"]
+    # Laatste 10 versies: genoeg om een trend te tonen zonder dat het
+    # overzicht blijft groeien naarmate er meer versies bijkomen.
+    geschiedenis = lijst_metadata_per_versie(settings.models_dir, versleuteld=settings.encrypt_at_rest)[-10:]
     return MetricsResponse(
         model_versie=m["versie"],
         rmspe=m["metrics"]["rmspe"],
@@ -336,6 +340,7 @@ def metrics(key: GeauthenticeerdeKey = Depends(vereis_toegang)) -> MetricsRespon
         n_observaties=m["metrics"]["n_observaties"],
         gevalideerde_horizon_dagen=m["gevalideerde_horizon_dagen"],
         trainingsperiode_eind=m["trainingsperiode_eind"][:10],
+        geschiedenis=[ModelVersieMetric(**g) for g in geschiedenis],
     )
 
 

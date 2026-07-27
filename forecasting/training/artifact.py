@@ -133,3 +133,35 @@ def laad_artefact(basis_map: Path, versie: str, versleuteld: bool = False) -> di
         "winkel_metadata": pd.read_parquet(io.BytesIO(_lees(winkel_metadata_pad, versleuteld))),
         "metadata": json.loads(_lees(metadata_pad, versleuteld).decode("utf-8")),
     }
+
+
+def lijst_metadata_per_versie(basis_map: Path, versleuteld: bool = False) -> list[dict]:
+    """Leest alleen metadata.json van elke modelversie onder basis_map — niet
+    de modellen/historie zelf — voor een lichtgewicht overzicht van hoe de
+    nauwkeurigheid zich over versies heeft ontwikkeld. Slaat een map zonder
+    (leesbare) metadata.json stilzwijgend over: één onvolledige of corrupte
+    versie mag het overzicht van de andere versies niet blokkeren. Chronologisch
+    gesorteerd (oudste eerst) op aangemaakt_op, niet op mapnaam — een
+    handmatig hernoemde of teller-gesuffixte map (zie schrijf_artefact) hoeft
+    niet dezelfde volgorde te hebben als de mapnaam suggereert."""
+    if not basis_map.exists():
+        return []
+    resultaten = []
+    for map_pad in sorted(basis_map.iterdir()):
+        if not map_pad.is_dir():
+            continue
+        metadata_pad = map_pad / "metadata.json"
+        if not metadata_pad.exists():
+            continue
+        try:
+            metadata = json.loads(_lees(metadata_pad, versleuteld).decode("utf-8"))
+            resultaten.append({
+                "versie": metadata["versie"],
+                "aangemaakt_op": metadata["aangemaakt_op"],
+                "rmspe": metadata["metrics"]["rmspe"],
+                "coverage_p10_p90": metadata["metrics"]["coverage_p10_p90"],
+            })
+        except (json.JSONDecodeError, KeyError):
+            continue
+    resultaten.sort(key=lambda r: r["aangemaakt_op"])
+    return resultaten

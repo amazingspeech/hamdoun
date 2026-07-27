@@ -106,7 +106,63 @@ async function laadMetrics() {
     kaart.append(labelEl, waardeEl, uitlegEl);
     container.appendChild(kaart);
   }
+  toonNauwkeurigheidTrend(data.geschiedenis);
   return data;
+}
+
+function maakNauwkeurigheidSparkline(reeks) {
+  const breedte = 160, hoogte = 32;
+  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  svg.setAttribute("width", String(breedte));
+  svg.setAttribute("height", String(hoogte));
+  svg.setAttribute("class", "sparkline");
+  svg.setAttribute("role", "img");
+  svg.setAttribute("aria-label", "Nauwkeurigheid per modelversie, oudste naar nieuwste");
+  if (reeks.length < 2) return svg;
+
+  const min = Math.min(...reeks), max = Math.max(...reeks);
+  const spreiding = max - min || 1;
+  const x = (i) => (i / (reeks.length - 1)) * (breedte - 6) + 3;
+  const y = (v) => hoogte - 4 - ((v - min) / spreiding) * (hoogte - 8);
+
+  svg.appendChild(maakSVGEl("polyline", {
+    points: reeks.map((v, i) => `${x(i)},${y(v)}`).join(" "), class: "sparkline-lijn",
+  }));
+  svg.appendChild(maakSVGEl("circle", {
+    cx: x(reeks.length - 1), cy: y(reeks[reeks.length - 1]), r: "2.5", class: "sparkline-stip",
+  }));
+  return svg;
+}
+
+// "Nauwkeurigheid" hier = 100% - RMSPE, zodat hoger in de grafiek ook
+// beter betekent — RMSPE zelf loopt de andere kant op (lager is beter),
+// wat in een sparkline-context verwarrend zou ogen ("stijgende lijn" die
+// eigenlijk verslechtering betekent).
+function toonNauwkeurigheidTrend(geschiedenis) {
+  const el = document.getElementById("nauwkeurigheid-trend");
+  if (!geschiedenis || geschiedenis.length < 2) {
+    el.hidden = true;
+    return;
+  }
+  const accuraatheid = geschiedenis.map((g) => 100 - g.rmspe * 100);
+  const eerste = accuraatheid[0];
+  const laatste = accuraatheid[accuraatheid.length - 1];
+  const verschil = laatste - eerste;
+  const richting = Math.abs(verschil) < 1 ? "blijft stabiel" : verschil > 0 ? "verbetert" : "is afgenomen";
+
+  el.replaceChildren();
+  const titel = document.createElement("p");
+  titel.className = "nauwkeurigheid-trend-titel";
+  titel.textContent = "Nauwkeurigheid over tijd";
+  const rij = document.createElement("div");
+  rij.className = "nauwkeurigheid-trend-rij";
+  rij.appendChild(maakNauwkeurigheidSparkline(accuraatheid));
+  const tekst = document.createElement("span");
+  tekst.textContent =
+    `${eerste.toFixed(0)}% → ${laatste.toFixed(0)}% over de laatste ${geschiedenis.length} versies — ${richting}.`;
+  rij.appendChild(tekst);
+  el.append(titel, rij);
+  el.hidden = false;
 }
 
 async function haalVoorspelling(storeId, startDatum, horizonDagen, promoVakantie) {
