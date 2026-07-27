@@ -295,6 +295,16 @@ function initHerbestelForm() {
       const melding = document.getElementById("herbestel-melding");
       melding.textContent = "Opgeslagen.";
       melding.hidden = false;
+      // De eigen-voorspelling-kaart toont een herbestel-advies i.p.v. een
+      // omzetbedrag zodra er een prijs is ingesteld — die moet dus meteen
+      // verversen, anders blijft de oude (omzet-)tekst staan tot een
+      // volgende paginaherlaad.
+      try {
+        toonEigenVoorspelling(await haalEigenVoorspelling());
+      } catch (_e) {
+        // Niet kritisch voor deze form-submit — de prijs zelf is al
+        // succesvol opgeslagen, dus geen foutmelding hierover tonen.
+      }
     } catch (e) {
       toonFout("herbestel-fout", e.message);
     } finally {
@@ -380,6 +390,47 @@ function toonVerkoopdata(rijen) {
   wrap.hidden = false;
 }
 
+async function haalEigenVoorspelling() {
+  const resp = await fetch(`${API_BASIS}/organisatie/eigen-voorspelling`, { credentials: "same-origin" });
+  if (!resp.ok) throw new Error(`Kon eigen voorspelling niet ophalen (${resp.status})`);
+  return resp.json();
+}
+
+function toonEigenVoorspelling(data) {
+  const voortgang = document.getElementById("eigen-voorspelling-voortgang");
+  const aanbeveling = document.getElementById("eigen-voorspelling-aanbeveling");
+
+  if (!data.beschikbaar) {
+    if (data.dagen_verzameld === 0) {
+      voortgang.hidden = true;
+      aanbeveling.hidden = true;
+      return;
+    }
+    const nogTeGaan = data.dagen_nodig - data.dagen_verzameld;
+    voortgang.textContent =
+      `${data.dagen_verzameld} van de ${data.dagen_nodig} dagen verzameld voor een eigen voorspelling — ` +
+      `nog ${nogTeGaan} ${nogTeGaan === 1 ? "dag" : "dagen"} te gaan.`;
+    voortgang.hidden = false;
+    aanbeveling.hidden = true;
+    return;
+  }
+
+  voortgang.hidden = true;
+  if (data.herbestel_advies) {
+    aanbeveling.textContent =
+      `Op basis van je eigen verkoopdata: bestel de komende week ongeveer ${data.herbestel_advies.stuks_p50} ` +
+      `stuks bij. Houd rekening met pieken tot ${data.herbestel_advies.stuks_p90} stuks bij drukte, en met ` +
+      `minder verkoop tot ${data.herbestel_advies.stuks_p10} stuks als het rustiger is dan verwacht.`;
+  } else {
+    aanbeveling.textContent =
+      `Op basis van je eigen verkoopdata: verwachte omzet komende week circa ` +
+      `${euro.format(Math.round(data.totaal_p50))}. Houd rekening met pieken tot ` +
+      `${euro.format(Math.round(data.totaal_p90))} bij drukte, en met minder omzet tot ` +
+      `${euro.format(Math.round(data.totaal_p10))} als het rustiger is dan verwacht.`;
+  }
+  aanbeveling.hidden = false;
+}
+
 function initVerkoopdataForm() {
   const form = document.getElementById("verkoopdata-form");
   if (!form) return;
@@ -398,6 +449,7 @@ function initVerkoopdataForm() {
       melding.hidden = false;
       bestandVeld.value = "";
       toonVerkoopdata((await haalVerkoopdata()).rijen);
+      toonEigenVoorspelling(await haalEigenVoorspelling());
     } catch (e) {
       toonFout("verkoopdata-fout", e.message);
     } finally {
@@ -558,6 +610,7 @@ async function initTeamPagina() {
   document.getElementById("verkoopdata-form").hidden = !kanBeheren;
   try {
     toonVerkoopdata((await haalVerkoopdata()).rijen);
+    toonEigenVoorspelling(await haalEigenVoorspelling());
   } catch (e) {
     toonFout("fout", e.message);
   }

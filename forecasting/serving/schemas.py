@@ -106,6 +106,29 @@ class VerkoopdataUploadResponse(BaseModel):
     aantal_rijen: int
 
 
+class EigenVoorspellingDag(BaseModel):
+    datum: date
+    p10: float
+    p50: float
+    p90: float
+
+
+class EigenVoorspellingResponse(BaseModel):
+    # False zolang er nog geen serving.eigen_voorspelling.MINIMUM_DAGEN dagen
+    # verkoopdata verzameld zijn — dagen_verzameld/dagen_nodig laten het
+    # dashboard een voortgangsindicatie tonen i.p.v. alleen "nog niet
+    # beschikbaar" (zie de afweging met de gebruiker over 'geen halve
+    # voorspelling tonen op te weinig data').
+    beschikbaar: bool
+    dagen_verzameld: int
+    dagen_nodig: int
+    voorspellingen: list[EigenVoorspellingDag] = []
+    totaal_p10: Optional[float] = None
+    totaal_p50: Optional[float] = None
+    totaal_p90: Optional[float] = None
+    herbestel_advies: Optional[HerbestelAdvies] = None
+
+
 class WinkelToewijzingVerzoek(BaseModel):
     winkel_ids: list[int] = []
 

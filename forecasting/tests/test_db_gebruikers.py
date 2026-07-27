@@ -1,6 +1,7 @@
 from db.bootstrap import bootstrap_organisatie
 from db.gebruikers import (
     email_is_in_gebruik,
+    haal_eigenaar_email,
     haal_gebruiker,
     maak_gebruiker,
     maak_gebruiker_met_hash,
@@ -105,3 +106,19 @@ def test_email_is_in_gebruik_onbekend_email(tmp_path):
     engine = maak_database(tmp_path / "tenants.db")
 
     assert email_is_in_gebruik(engine, email="vrij@klant.nl") is False
+
+
+def test_haal_eigenaar_email_geeft_email_van_de_eigenaar(tmp_path):
+    engine = maak_database(tmp_path / "tenants.db")
+    org_id = bootstrap_organisatie(engine, naam="Klant", slug="klant", store_ids=[])
+    maak_gebruiker(engine, organisatie_id=org_id, email="lid@klant.nl", wachtwoord="x", rol="lid")
+    maak_gebruiker(engine, organisatie_id=org_id, email="eigenaar@klant.nl", wachtwoord="x", rol="eigenaar")
+
+    assert haal_eigenaar_email(engine, organisatie_id=org_id) == "eigenaar@klant.nl"
+
+
+def test_haal_eigenaar_email_zonder_eigenaar_geeft_none(tmp_path):
+    engine = maak_database(tmp_path / "tenants.db")
+    org_id = bootstrap_organisatie(engine, naam="Klant", slug="klant", store_ids=[])
+
+    assert haal_eigenaar_email(engine, organisatie_id=org_id) is None

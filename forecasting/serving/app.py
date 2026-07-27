@@ -4,6 +4,7 @@ of niet bestaat, nooit een impliciet 'laatste' model."""
 from __future__ import annotations
 
 import time
+from datetime import date
 from pathlib import Path
 from typing import NamedTuple, Optional
 
@@ -34,6 +35,7 @@ from security import audit
 from security.api_keys import hash_key
 from serving.betaalintegratie import OngeldigeWebhookSignature, lees_webhook_event, maak_checkout_sessie
 from serving.config import laad_settings
+from serving.eigen_voorspelling import MINIMUM_DAGEN, bereken_eigen_voorspelling
 from serving.forecast import (
     HorizonBuitenBereik,
     OnbekendeWinkel,
@@ -47,6 +49,8 @@ from serving.schemas import (
     ApiKeyAanmakenVerzoek,
     ApiKeyResponse,
     DagVoorspelling,
+    EigenVoorspellingDag,
+    EigenVoorspellingResponse,
     FactorBijdrage,
     ForecastResponse,
     ForecastVerzoek,
@@ -467,6 +471,29 @@ def verkoopdata_uploaden(
         raise HTTPException(status_code=422, detail=str(e))
     db_verkoopdata.vervang_verkoopdata(tenants_db, organisatie_id=eigenaar.organisatie_id, rijen=rijen)
     return VerkoopdataUploadResponse(aantal_rijen=len(rijen))
+
+
+@app.get("/organisatie/eigen-voorspelling", response_model=EigenVoorspellingResponse)
+def eigen_voorspelling_lezen(
+    horizon_dagen: int = Query(7, gt=0), gebruiker: GeauthenticeerdeGebruiker = Depends(vereis_sessie)
+) -> EigenVoorspellingResponse:
+    """Voorspelling op basis van de eigen geüploade verkoopdata, voor
+    organisaties zonder winkel in het gedeelde model (elke self-serve
+    signup) — zie serving/eigen_voorspelling.py. Leesbaar voor elke
+    ingelogde gebruiker, net als /organisatie/verkoopdata zelf."""
+    rijen = db_verkoopdata.haal_verkoopdata(tenants_db, organisatie_id=gebruiker.organisatie_id)
+    if len(rijen) < MINIMUM_DAGEN:
+        return EigenVoorspellingResponse(beschikbaar=False, dagen_verzameld=len(rijen), dagen_nodig=MINIMUM_DAGEN)
+
+    resultaat = bereken_eigen_voorspelling(rijen, horizon_dagen=horizon_dagen, vanaf=date.today())
+    prijs = db_organisaties.haal_gemiddelde_omzet_per_stuk(tenants_db, organisatie_id=gebruiker.organisatie_id)
+    advies = herbestel_advies(resultaat["totaal_p10"], resultaat["totaal_p50"], resultaat["totaal_p90"], prijs)
+    return EigenVoorspellingResponse(
+        beschikbaar=True, dagen_verzameld=len(rijen), dagen_nodig=MINIMUM_DAGEN,
+        voorspellingen=[EigenVoorspellingDag(**v) for v in resultaat["voorspellingen"]],
+        totaal_p10=resultaat["totaal_p10"], totaal_p50=resultaat["totaal_p50"], totaal_p90=resultaat["totaal_p90"],
+        herbestel_advies=HerbestelAdvies(**advies) if advies else None,
+    )
 
 
 @app.post("/api-keys", response_model=NieuweApiKeyResponse, status_code=201)

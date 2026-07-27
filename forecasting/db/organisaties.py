@@ -38,6 +38,15 @@ def _stel_stripe_koppeling_in_op_connectie(
     )
 
 
+def lijst_actieve_organisaties(engine: Engine):
+    """Voor de wekelijkse herbestel-mail (Fase 5 NODIG 3), die elke actieve
+    organisatie langsloopt om te bepalen of er iets te melden valt."""
+    with engine.connect() as conn:
+        return conn.execute(
+            select(organisaties.c.id, organisaties.c.naam).where(organisaties.c.actief.is_(True))
+        ).all()
+
+
 def stel_stripe_koppeling_in(
     engine: Engine, organisatie_id: int, stripe_customer_id: str, stripe_subscription_id: str,
     conn: Optional[Connection] = None,

@@ -80,6 +80,23 @@ def email_is_in_gebruik(engine: Engine, email: str) -> bool:
     return rij is not None
 
 
+def haal_eigenaar_email(engine: Engine, organisatie_id: int) -> Optional[str]:
+    """Voor de wekelijkse herbestel-mail (Fase 5 NODIG 3): de eigenaar is
+    degene die de herbestel-prijs instelt en verkoopdata uploadt, dus de
+    logische ontvanger van een proactieve melding. Geeft None terug als de
+    organisatie (nog) geen eigenaar heeft — zou niet moeten voorkomen bij
+    een organisatie die via /signup of db/bootstrap.py is aangemaakt, maar
+    dit voorkomt een crash i.p.v. een aanname te doen."""
+    with engine.connect() as conn:
+        rij = conn.execute(
+            select(gebruikers.c.email).where(
+                gebruikers.c.organisatie_id == organisatie_id, gebruikers.c.rol == "eigenaar",
+                gebruikers.c.actief.is_(True),
+            )
+        ).first()
+    return rij.email if rij is not None else None
+
+
 def haal_gebruiker(engine: Engine, gebruiker_id: int, organisatie_id: int):
     """Geeft de gebruikersrij terug, alleen als gebruiker_id bij
     organisatie_id hoort — anders None. Zelfde org-scoping-patroon als

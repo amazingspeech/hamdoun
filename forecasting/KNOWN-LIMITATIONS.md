@@ -70,3 +70,16 @@ patroon als Certo's `KNOWN-LIMITATIONS.md`.
   deployment (bv. naast Certo, met een Caddy-reverse-proxy) en de
   daadwerkelijke website-demo-integratie zijn bewuste, losse
   vervolgstappen.
+- **Zelf-serve klanten krijgen 28 dagen lang geen voorspelling.** Het
+  gedeelde model (Rossmann-getraind) kan nooit een nieuwe, niet-getrainde
+  winkel voorspellen (`serving/forecast.py`: `OnbekendeWinkel`) — elke
+  self-serve aanmelding (Fase 5 NODIG 5) heeft dus per ontwerp géén winkel
+  in dat model. Sinds 2026-07-27 vult `serving/eigen_voorspelling.py` dit
+  aan met een lichte, eigen voorspelling op basis van de geüploade
+  verkoopdata (NODIG 2) — een naïef dag-van-de-week-gemiddelde met een
+  bandbreedte uit de eigen historische afwijking, bewust geen ML-model
+  (te weinig data per klant om overfitting te vermijden). **Resterende
+  beperking:** dit vereist minstens 28 dagen geüploade verkoopdata (zie
+  `MINIMUM_DAGEN`) — een gloednieuwe klant ziet die eerste 4 weken alleen
+  een voortgangsindicator, geen voorspelling. Bewuste keuze (minder data
+  zou een te wankel dag-patroon opleveren), niet per ongeluk.

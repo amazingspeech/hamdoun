@@ -152,6 +152,24 @@ standaard aan — zie `serving/config.py`) en wordt door de browser
 stilzwijgend niet verzonden over gewone `http://`, wat inloggen laat lijken
 te werken maar elke volgende aanvraag alsnog met 401 laat falen.
 
+## 8. Wekelijkse herbestel-mail inplannen (Fase 5 NODIG 3)
+
+Geen scheduler in de app zelf (bewust — geen extra always-on service voor
+deze schaal) — een cron-regel op de host draait `serving.herbestel_email_cli`
+elke maandagochtend binnen de al draaiende `api`-container:
+```bash
+crontab -e
+# 0 7 * * 1 cd /home/job/forecasting-demo && docker compose exec -T api \
+#   python3 -m serving.herbestel_email_cli >> /home/job/forecasting-demo/herbestel-mail.log 2>&1
+```
+Vereist dat `MAIL_SMTP_*` in `.env` staat (stap 3) — zonder mailconfig
+verstuurt `security/mail.py` simpelweg niets (elke organisatie wordt dan
+overgeslagen met een `MailNietGeconfigureerd`-regel in het logbestand,
+geen crash). Test één keer handmatig vóór je de cron-regel aanzet:
+```bash
+docker compose exec api python3 -m serving.herbestel_email_cli
+```
+
 ## Bekende beperkingen van deze live opzet
 
 Zie ook `forecasting/KNOWN-LIMITATIONS.md`. Specifiek voor deze deployment:
