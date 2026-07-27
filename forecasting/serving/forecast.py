@@ -87,6 +87,47 @@ def dagreeks(van: date | None, tot: date | None) -> set[date]:
     return {van + timedelta(days=i) for i in range((eind - van).days + 1)}
 
 
+def winkel_samenvatting(
+    modellen: dict[float, object],
+    historie: pd.DataFrame,
+    winkel_metadata: pd.DataFrame,
+    store_id: int,
+    start_datum: pd.Timestamp,
+    horizon_dagen: int,
+    afwijking_drempel: float = 0.25,
+) -> dict:
+    """Eén winkel samengevat voor het portfolio-overzicht: totaal
+    p10/p50/p90, een sparkline (dagelijkse p50-reeks) en een 'afwijkend'-
+    vlag. Afwijkend betekent hier: het voorspelde daggemiddelde wijkt meer
+    dan afwijking_drempel (standaard 25%) af van het daggemiddelde over de
+    laatste horizon_dagen werkelijke (open) dagen van diezelfde winkel —
+    vergeleken met de eigen historie, niet met andere winkels, want elke
+    winkel heeft een ander normaal niveau."""
+    resultaat = voorspel_periode(
+        modellen=modellen, historie=historie, winkel_metadata=winkel_metadata,
+        store_id=store_id, start_datum=start_datum, horizon_dagen=horizon_dagen,
+    )
+    v = resultaat.voorspellingen
+    totaal_p50 = float(v["p50"].sum())
+
+    eigen_historie = historie[(historie["Store"] == store_id) & (historie["Open"] == 1)].sort_values("Date")
+    recent = eigen_historie.tail(horizon_dagen)
+    afwijkend = False
+    if not recent.empty:
+        historisch_gemiddeld = float(recent["Sales"].mean())
+        voorspeld_gemiddeld = totaal_p50 / horizon_dagen
+        if historisch_gemiddeld > 0:
+            afwijkend = abs(voorspeld_gemiddeld - historisch_gemiddeld) / historisch_gemiddeld > afwijking_drempel
+
+    return {
+        "totaal_p50": totaal_p50,
+        "totaal_p10": float(v["p10"].sum()),
+        "totaal_p90": float(v["p90"].sum()),
+        "sparkline": [float(x) for x in v["p50"].tolist()],
+        "afwijkend": afwijkend,
+    }
+
+
 def voorspel_periode(
     modellen: dict[float, object],
     historie: pd.DataFrame,

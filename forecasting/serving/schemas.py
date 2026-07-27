@@ -80,6 +80,30 @@ class WinkelResponse(BaseModel):
     naam: Optional[str] = None
 
 
+class WinkelSamenvatting(BaseModel):
+    extern_store_id: int
+    naam: Optional[str] = None
+    totaal_p50: float
+    totaal_p10: float
+    totaal_p90: float
+    sparkline: list[float]
+    afwijkend: bool
+
+
+class PortfolioKpi(BaseModel):
+    totale_verwachte_omzet: float
+    model_nauwkeurigheid_rmspe: float
+    aantal_afwijkend: int
+
+
+class PortfolioResponse(BaseModel):
+    winkels: list[WinkelSamenvatting]
+    totaal_winkels: int
+    offset: int
+    limiet: int
+    kpi: PortfolioKpi
+
+
 class MetricsResponse(BaseModel):
     model_versie: str
     rmspe: float

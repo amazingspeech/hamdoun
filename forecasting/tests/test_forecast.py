@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from serving.forecast import HorizonBuitenBereik, OnbekendeWinkel, dagreeks, voorspel_periode
+from serving.forecast import HorizonBuitenBereik, OnbekendeWinkel, dagreeks, voorspel_periode, winkel_samenvatting
 
 
 class _NepModel:
@@ -14,6 +14,14 @@ class _NepModel:
         return X["omzet_rolling_gemiddeld_7"].to_numpy()
 
 
+class _ConstantModel:
+    def __init__(self, waarde):
+        self.waarde = waarde
+
+    def predict(self, X):
+        return np.full(len(X), self.waarde)
+
+
 def _historie(store_id=1, n_dagen=40, basis=1000.0):
     datums = pd.date_range("2015-06-01", periods=n_dagen, freq="D")
     return pd.DataFrame({
@@ -21,6 +29,20 @@ def _historie(store_id=1, n_dagen=40, basis=1000.0):
         "Sales": [basis + i for i in range(n_dagen)], "Open": 1,
         "DayOfWeek": [d.dayofweek + 1 for d in datums],
         "Promo": [i % 5 == 0 for i in range(n_dagen)],
+        "SchoolHoliday": 0,
+    })
+
+
+def _historie_vlak(store_id=1, n_dagen=40, waarde=1000.0):
+    """Constante omzet — maakt het historische gemiddelde triviaal om te
+    voorspellen in afwijking-tests, in plaats van de oplopende reeks van
+    _historie()."""
+    datums = pd.date_range("2015-06-01", periods=n_dagen, freq="D")
+    return pd.DataFrame({
+        "Store": store_id, "Date": datums,
+        "Sales": waarde, "Open": 1,
+        "DayOfWeek": [d.dayofweek + 1 for d in datums],
+        "Promo": 0,
         "SchoolHoliday": 0,
     })
 
@@ -196,3 +218,34 @@ def test_dagreeks_verwisselde_van_tot_wordt_gecorrigeerd():
     assert dagreeks(date(2015, 7, 14), date(2015, 7, 12)) == {
         date(2015, 7, 12), date(2015, 7, 13), date(2015, 7, 14),
     }
+
+
+def test_winkel_samenvatting_geeft_totalen_en_sparkline():
+    samenvatting = winkel_samenvatting(
+        modellen={q: _ConstantModel(1000.0) for q in (0.1, 0.5, 0.9)},
+        historie=_historie_vlak(), winkel_metadata=_winkel_metadata(),
+        store_id=1, start_datum=pd.Timestamp("2015-07-11"), horizon_dagen=4,
+    )
+    assert samenvatting["totaal_p50"] == 4000.0
+    assert len(samenvatting["sparkline"]) == 4
+    assert samenvatting["sparkline"][0] == 1000.0
+
+
+def test_winkel_samenvatting_markeert_sterke_afwijking():
+    # Historisch vlak op 1000/dag, model voorspelt steevast 5000/dag —
+    # ruim boven de standaard-afwijkingsdrempel.
+    samenvatting = winkel_samenvatting(
+        modellen={q: _ConstantModel(5000.0) for q in (0.1, 0.5, 0.9)},
+        historie=_historie_vlak(waarde=1000.0), winkel_metadata=_winkel_metadata(),
+        store_id=1, start_datum=pd.Timestamp("2015-07-11"), horizon_dagen=4,
+    )
+    assert samenvatting["afwijkend"] is True
+
+
+def test_winkel_samenvatting_geen_afwijking_bij_vergelijkbare_waarde():
+    samenvatting = winkel_samenvatting(
+        modellen={q: _ConstantModel(1010.0) for q in (0.1, 0.5, 0.9)},
+        historie=_historie_vlak(waarde=1000.0), winkel_metadata=_winkel_metadata(),
+        store_id=1, start_datum=pd.Timestamp("2015-07-11"), horizon_dagen=4,
+    )
+    assert samenvatting["afwijkend"] is False

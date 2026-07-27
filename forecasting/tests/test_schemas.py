@@ -13,7 +13,10 @@ from serving.schemas import (
     LoginVerzoek,
     MetricsResponse,
     NieuweApiKeyResponse,
+    PortfolioKpi,
+    PortfolioResponse,
     WinkelResponse,
+    WinkelSamenvatting,
 )
 
 
@@ -72,6 +75,30 @@ def test_winkel_response_serialiseert():
 def test_winkel_response_naam_optioneel():
     response = WinkelResponse(extern_store_id=1, naam=None)
     assert response.naam is None
+
+
+def test_winkel_samenvatting_serialiseert():
+    samenvatting = WinkelSamenvatting(
+        extern_store_id=1, naam="Winkel Centrum", totaal_p50=1000.0, totaal_p10=800.0,
+        totaal_p90=1200.0, sparkline=[100.0, 200.0], afwijkend=True,
+    )
+    assert samenvatting.model_dump()["afwijkend"] is True
+
+
+def test_portfolio_response_serialiseert():
+    response = PortfolioResponse(
+        winkels=[
+            WinkelSamenvatting(
+                extern_store_id=1, naam=None, totaal_p50=1000.0, totaal_p10=800.0,
+                totaal_p90=1200.0, sparkline=[100.0], afwijkend=False,
+            ),
+        ],
+        totaal_winkels=1115, offset=0, limiet=50,
+        kpi=PortfolioKpi(totale_verwachte_omzet=1000.0, model_nauwkeurigheid_rmspe=0.13, aantal_afwijkend=0),
+    )
+    data = response.model_dump()
+    assert data["totaal_winkels"] == 1115
+    assert data["kpi"]["aantal_afwijkend"] == 0
 
 
 def test_metrics_response_serialiseert():

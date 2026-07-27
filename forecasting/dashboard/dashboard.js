@@ -427,6 +427,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     return;
   }
 
+  // Drill-down vanuit het portfolio-overzicht (overview.html) komt binnen
+  // als ?winkel=<id> — vooraf selecteren en direct voorspellen, zodat een
+  // klik op een winkelrij daar meteen bij de detailvoorspelling uitkomt.
+  const gevraagdeWinkel = new URLSearchParams(window.location.search).get("winkel");
+  if (gevraagdeWinkel && winkels.some((w) => String(w.extern_store_id) === gevraagdeWinkel)) {
+    document.getElementById("store").value = gevraagdeWinkel;
+  }
+
   // Knop blijft uit tot /metrics geladen is: anders kan een snelle klik een
   // voorspelling opvragen met de kalenderdatum van vandaag in plaats van een
   // datum die bij de trainingsperiode van het model past, zonder dat de
@@ -446,5 +454,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     .finally(() => {
       knop.disabled = false;
       knop.textContent = "Voorspel";
+      if (gevraagdeWinkel) voorspel();
     });
 });

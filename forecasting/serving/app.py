@@ -7,7 +7,8 @@ import time
 from pathlib import Path
 from typing import NamedTuple, Optional
 
-from fastapi import Depends, FastAPI, HTTPException, Request, Response, Security
+import pandas as pd
+from fastapi import Depends, FastAPI, HTTPException, Query, Request, Response, Security
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import APIKeyHeader
 from fastapi.staticfiles import StaticFiles
@@ -25,7 +26,13 @@ from db.schema import gebruikers as gebruikers_tabel
 from db.schema import maak_database
 from security import audit
 from serving.config import laad_settings
-from serving.forecast import HorizonBuitenBereik, OnbekendeWinkel, dagreeks, voorspel_periode
+from serving.forecast import (
+    HorizonBuitenBereik,
+    OnbekendeWinkel,
+    dagreeks,
+    voorspel_periode,
+    winkel_samenvatting,
+)
 from serving.schemas import (
     ApiKeyAanmakenVerzoek,
     ApiKeyResponse,
@@ -38,7 +45,10 @@ from serving.schemas import (
     LoginVerzoek,
     MetricsResponse,
     NieuweApiKeyResponse,
+    PortfolioKpi,
+    PortfolioResponse,
     WinkelResponse,
+    WinkelSamenvatting,
 )
 from training.artifact import laad_artefact
 
@@ -327,6 +337,60 @@ def metrics(key: GeauthenticeerdeKey = Depends(vereis_toegang)) -> MetricsRespon
 def winkels_lijst(key: GeauthenticeerdeKey = Depends(vereis_toegang)) -> list[WinkelResponse]:
     rijen = db_winkels.lijst_winkels(tenants_db, organisatie_id=key.organisatie_id)
     return [WinkelResponse(extern_store_id=r.extern_store_id, naam=r.naam) for r in rijen]
+
+
+@app.get("/portfolio", response_model=PortfolioResponse)
+def portfolio(
+    horizon_dagen: int = Query(7, gt=0),
+    limiet: int = Query(50, gt=0, le=200),
+    offset: int = Query(0, ge=0),
+    key: GeauthenticeerdeKey = Depends(vereis_toegang),
+) -> PortfolioResponse:
+    # Berekent bewust alleen de opgevraagde pagina, nooit alle winkels van
+    # een organisatie in één keer: een volledige live-berekening voor de
+    # 1115 winkels van de lokale demo-organisatie kost ~88 seconden
+    # (gemeten) — te traag voor één synchrone aanvraag. Een echte klant
+    # heeft naar verwachting een paar winkels (zie FASE4-SAAS-FOUNDATION.md,
+    # beslissing 5), dus past sowieso al binnen één pagina.
+    gevalideerde_horizon = artefact["metadata"]["gevalideerde_horizon_dagen"]
+    if horizon_dagen > gevalideerde_horizon:
+        raise HTTPException(
+            status_code=422,
+            detail=(
+                f"horizon_dagen ({horizon_dagen}) overschrijdt de tijdens training "
+                f"gevalideerde periode ({gevalideerde_horizon} dagen)."
+            ),
+        )
+
+    alle_winkels = db_winkels.lijst_winkels(tenants_db, organisatie_id=key.organisatie_id)
+    pagina = alle_winkels[offset:offset + limiet]
+
+    start_datum = pd.Timestamp(artefact["metadata"]["trainingsperiode_eind"][:10]) + pd.Timedelta(days=1)
+    winkel_samenvattingen = []
+    for rij in pagina:
+        try:
+            samenvatting = winkel_samenvatting(
+                modellen=artefact["modellen"], historie=artefact["historie"],
+                winkel_metadata=artefact["winkel_metadata"],
+                store_id=rij.extern_store_id, start_datum=start_datum, horizon_dagen=horizon_dagen,
+            )
+        except (OnbekendeWinkel, HorizonBuitenBereik):
+            # Winkel bestaat in tenants.db maar niet (meer) in het huidige
+            # modelartefact, of heeft onvoldoende historie voor deze
+            # horizon — overslaan i.p.v. de hele pagina te laten falen.
+            continue
+        winkel_samenvattingen.append(
+            WinkelSamenvatting(extern_store_id=rij.extern_store_id, naam=rij.naam, **samenvatting)
+        )
+
+    kpi = PortfolioKpi(
+        totale_verwachte_omzet=sum(w.totaal_p50 for w in winkel_samenvattingen),
+        model_nauwkeurigheid_rmspe=artefact["metadata"]["metrics"]["rmspe"],
+        aantal_afwijkend=sum(1 for w in winkel_samenvattingen if w.afwijkend),
+    )
+    return PortfolioResponse(
+        winkels=winkel_samenvattingen, totaal_winkels=len(alle_winkels), offset=offset, limiet=limiet, kpi=kpi,
+    )
 
 
 _dashboard_pad = Path(__file__).resolve().parent.parent / "dashboard"
