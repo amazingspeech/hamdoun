@@ -4,13 +4,13 @@ import pytest
 from sqlalchemy import inspect
 from sqlalchemy.exc import IntegrityError
 
-from db.schema import maak_database, organisaties, winkels
+from db.schema import gebruiker_winkels, gebruikers, maak_database, organisaties, winkels
 
 
 def test_maak_database_maakt_organisaties_en_winkels_tabellen(tmp_path):
     engine = maak_database(tmp_path / "tenants.db")
     tabellen = set(inspect(engine).get_table_names())
-    assert {"organisaties", "winkels", "api_keys", "gebruikers", "sessies"} <= tabellen
+    assert {"organisaties", "winkels", "api_keys", "gebruikers", "sessies", "gebruiker_winkels"} <= tabellen
 
 
 def test_extern_store_id_moet_uniek_zijn(tmp_path):
@@ -35,4 +35,35 @@ def test_extern_store_id_moet_uniek_zijn(tmp_path):
                 winkels.insert().values(
                     organisatie_id=org_id, extern_store_id=1, naam=None, actief=True, aangemaakt_op=nu
                 )
+            )
+
+
+def test_gebruiker_winkel_combinatie_moet_uniek_zijn(tmp_path):
+    """Eén toewijzing per (gebruiker, winkel) — dubbel toewijzen mag geen
+    stille tweede rij opleveren."""
+    engine = maak_database(tmp_path / "tenants.db")
+    nu = datetime.now(timezone.utc)
+    with engine.begin() as conn:
+        org_id = conn.execute(
+            organisaties.insert().values(naam="Org A", slug="org-a", actief=True, aangemaakt_op=nu)
+        ).inserted_primary_key[0]
+        winkel_id = conn.execute(
+            winkels.insert().values(
+                organisatie_id=org_id, extern_store_id=1, naam=None, actief=True, aangemaakt_op=nu
+            )
+        ).inserted_primary_key[0]
+        gebruiker_id = conn.execute(
+            gebruikers.insert().values(
+                organisatie_id=org_id, email="lid@test.nl", wachtwoord_hash="x", wachtwoord_salt="y",
+                rol="lid", actief=True, aangemaakt_op=nu,
+            )
+        ).inserted_primary_key[0]
+        conn.execute(
+            gebruiker_winkels.insert().values(gebruiker_id=gebruiker_id, winkel_id=winkel_id, aangemaakt_op=nu)
+        )
+
+    with pytest.raises(IntegrityError):
+        with engine.begin() as conn:
+            conn.execute(
+                gebruiker_winkels.insert().values(gebruiker_id=gebruiker_id, winkel_id=winkel_id, aangemaakt_op=nu)
             )

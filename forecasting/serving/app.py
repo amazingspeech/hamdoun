@@ -19,6 +19,7 @@ from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 
 from db import api_keys as db_api_keys
+from db import gebruiker_winkels as db_gebruiker_winkels
 from db import gebruikers as db_gebruikers
 from db import sessies as db_sessies
 from db import winkels as db_winkels
@@ -51,6 +52,8 @@ from serving.schemas import (
     PortfolioResponse,
     WinkelResponse,
     WinkelSamenvatting,
+    WinkelToewijzingResponse,
+    WinkelToewijzingVerzoek,
 )
 from training.artifact import laad_artefact, lijst_metadata_per_versie
 
@@ -104,6 +107,13 @@ api_key_header = APIKeyHeader(name="X-API-Key", auto_error=False)
 class GeauthenticeerdeKey(NamedTuple):
     naam: str
     organisatie_id: int
+    # gebruiker_id/rol: alleen gevuld via de sessiecookie-weg (het
+    # ingelogde dashboard) — een API-key is niet aan een specifieke
+    # gebruiker gekoppeld (zie db/api_keys.py), dus blijft altijd org-breed
+    # werken. Winkeltoewijzing (portfolio-dashboard item 10) geldt daarom
+    # alleen als rol == "lid"; None betekent "geen restrictie toepassen".
+    gebruiker_id: Optional[int] = None
+    rol: Optional[str] = None
 
 
 SESSIE_COOKIE_NAAM = "sessie"
@@ -157,7 +167,9 @@ def vereis_toegang(request: Request, sleutel: Optional[str] = Security(api_key_h
         if gebruiker_id is not None:
             with tenants_db.connect() as conn:
                 rij = conn.execute(select(gebruikers_tabel).where(gebruikers_tabel.c.id == gebruiker_id)).one()
-            return GeauthenticeerdeKey(naam=rij.email, organisatie_id=rij.organisatie_id)
+            return GeauthenticeerdeKey(
+                naam=rij.email, organisatie_id=rij.organisatie_id, gebruiker_id=rij.id, rol=rij.rol
+            )
 
     raise HTTPException(status_code=401, detail="Niet ingelogd en geen geldige API-key.")
 
@@ -225,6 +237,45 @@ def gebruikers_lijst(gebruiker: GeauthenticeerdeGebruiker = Depends(vereis_sessi
     return [GebruikerResponse(id=r.id, email=r.email, rol=r.rol, actief=r.actief) for r in rijen]
 
 
+@app.get("/gebruikers/{gebruiker_id}/winkels", response_model=WinkelToewijzingResponse)
+def winkeltoewijzing_lezen(
+    gebruiker_id: int, eigenaar: GeauthenticeerdeGebruiker = Depends(vereis_eigenaar)
+) -> WinkelToewijzingResponse:
+    doelgebruiker = db_gebruikers.haal_gebruiker(
+        tenants_db, gebruiker_id=gebruiker_id, organisatie_id=eigenaar.organisatie_id
+    )
+    if doelgebruiker is None:
+        raise HTTPException(status_code=404, detail=f"Onbekende gebruiker: {gebruiker_id}")
+    winkel_ids = db_gebruiker_winkels.lijst_toegewezen_winkels(tenants_db, gebruiker_id=gebruiker_id)
+    return WinkelToewijzingResponse(winkel_ids=winkel_ids)
+
+
+@app.put("/gebruikers/{gebruiker_id}/winkels", response_model=WinkelToewijzingResponse)
+def winkeltoewijzing_instellen(
+    gebruiker_id: int,
+    verzoek: WinkelToewijzingVerzoek,
+    eigenaar: GeauthenticeerdeGebruiker = Depends(vereis_eigenaar),
+) -> WinkelToewijzingResponse:
+    doelgebruiker = db_gebruikers.haal_gebruiker(
+        tenants_db, gebruiker_id=gebruiker_id, organisatie_id=eigenaar.organisatie_id
+    )
+    if doelgebruiker is None:
+        raise HTTPException(status_code=404, detail=f"Onbekende gebruiker: {gebruiker_id}")
+    if doelgebruiker.rol != "lid":
+        raise HTTPException(
+            status_code=422, detail="Winkeltoewijzing geldt alleen voor leden, niet voor de eigenaar."
+        )
+    for store_id in verzoek.winkel_ids:
+        if not db_winkels.hoort_store_bij_organisatie(tenants_db, store_id, eigenaar.organisatie_id):
+            raise HTTPException(status_code=422, detail=f"Onbekend store_id: {store_id}")
+
+    db_gebruiker_winkels.stel_toewijzingen_in(
+        tenants_db, gebruiker_id=gebruiker_id, extern_store_ids=verzoek.winkel_ids
+    )
+    winkel_ids = db_gebruiker_winkels.lijst_toegewezen_winkels(tenants_db, gebruiker_id=gebruiker_id)
+    return WinkelToewijzingResponse(winkel_ids=winkel_ids)
+
+
 @app.post("/api-keys", response_model=NieuweApiKeyResponse, status_code=201)
 def api_key_aanmaken(
     verzoek: ApiKeyAanmakenVerzoek, eigenaar: GeauthenticeerdeGebruiker = Depends(vereis_eigenaar)
@@ -267,6 +318,16 @@ def forecast(
             # bevestigen "dit store_id bestaat, is alleen niet van jou",
             # wat andermans store-ID's enumereerbaar maakt. 404 laat
             # "bestaat niet" en "is niet van jou" ononderscheidbaar.
+            raise HTTPException(status_code=404, detail=f"Onbekend store_id: {verzoek.store_id}")
+
+        # Winkeltoewijzing (portfolio-dashboard item 10): alleen voor een
+        # ingelogde "lid"-sessie. Zelfde 404-redenering als hierboven — de
+        # winkel bestaat wel binnen de organisatie, maar dat mag dit lid
+        # niet kunnen afleiden uit het verschil tussen 403 en 404.
+        if key.rol == "lid" and not db_gebruiker_winkels.hoort_winkel_bij_toewijzing(
+            tenants_db, gebruiker_id=key.gebruiker_id, extern_store_id=verzoek.store_id
+        ):
+            statuscode = 404
             raise HTTPException(status_code=404, detail=f"Onbekend store_id: {verzoek.store_id}")
 
         gevalideerde_horizon = artefact["metadata"]["gevalideerde_horizon_dagen"]
@@ -347,6 +408,9 @@ def metrics(key: GeauthenticeerdeKey = Depends(vereis_toegang)) -> MetricsRespon
 @app.get("/winkels", response_model=list[WinkelResponse])
 def winkels_lijst(key: GeauthenticeerdeKey = Depends(vereis_toegang)) -> list[WinkelResponse]:
     rijen = db_winkels.lijst_winkels(tenants_db, organisatie_id=key.organisatie_id)
+    if key.rol == "lid":
+        toegewezen = set(db_gebruiker_winkels.lijst_toegewezen_winkels(tenants_db, gebruiker_id=key.gebruiker_id))
+        rijen = [r for r in rijen if r.extern_store_id in toegewezen]
     return [WinkelResponse(extern_store_id=r.extern_store_id, naam=r.naam) for r in rijen]
 
 
@@ -374,6 +438,9 @@ def portfolio(
         )
 
     alle_winkels = db_winkels.lijst_winkels(tenants_db, organisatie_id=key.organisatie_id)
+    if key.rol == "lid":
+        toegewezen = set(db_gebruiker_winkels.lijst_toegewezen_winkels(tenants_db, gebruiker_id=key.gebruiker_id))
+        alle_winkels = [r for r in alle_winkels if r.extern_store_id in toegewezen]
     pagina = alle_winkels[offset:offset + limiet]
 
     start_datum = pd.Timestamp(artefact["metadata"]["trainingsperiode_eind"][:10]) + pd.Timedelta(days=1)

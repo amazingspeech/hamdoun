@@ -30,6 +30,20 @@ def maak_gebruiker(engine: Engine, organisatie_id: int, email: str, wachtwoord: 
         ).inserted_primary_key[0]
 
 
+def haal_gebruiker(engine: Engine, gebruiker_id: int, organisatie_id: int):
+    """Geeft de gebruikersrij terug, alleen als gebruiker_id bij
+    organisatie_id hoort — anders None. Zelfde org-scoping-patroon als
+    db.winkels.hoort_store_bij_organisatie(), hier met de volledige rij
+    (inclusief rol) i.p.v. een bool, omdat de aanroeper (winkeltoewijzing-
+    beheer) de rol nodig heeft."""
+    with engine.connect() as conn:
+        return conn.execute(
+            select(gebruikers).where(
+                gebruikers.c.id == gebruiker_id, gebruikers.c.organisatie_id == organisatie_id
+            )
+        ).first()
+
+
 def verifieer_inloggegevens(engine: Engine, email: str, wachtwoord: str) -> int | None:
     """Geeft het gebruiker-id terug als email+wachtwoord kloppen en de
     gebruiker actief is, anders None. Lekt nooit of het email-adres bestaat

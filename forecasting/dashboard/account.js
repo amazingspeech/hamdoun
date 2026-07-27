@@ -70,7 +70,91 @@ function initLoginPagina() {
   });
 }
 
-function maakTeamlidEl(lid) {
+async function haalWinkels() {
+  const resp = await fetch(`${API_BASIS}/winkels`, { credentials: "same-origin" });
+  if (!resp.ok) throw new Error(`Kon winkels niet ophalen (${resp.status})`);
+  return resp.json();
+}
+
+async function haalWinkeltoewijzing(lidId) {
+  const resp = await fetch(`${API_BASIS}/gebruikers/${lidId}/winkels`, { credentials: "same-origin" });
+  if (!resp.ok) throw new Error(`Kon winkeltoewijzing niet ophalen (${resp.status})`);
+  return resp.json();
+}
+
+async function stelWinkeltoewijzingIn(lidId, winkelIds) {
+  const resp = await fetch(`${API_BASIS}/gebruikers/${lidId}/winkels`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    credentials: "same-origin",
+    body: JSON.stringify({ winkel_ids: winkelIds }),
+  });
+  if (!resp.ok) {
+    const detail = await resp.json().catch(() => ({}));
+    throw new Error(detail.detail || `Opslaan mislukt (${resp.status})`);
+  }
+  return resp.json();
+}
+
+async function vulWinkeltoewijzing(container, lidId, alleWinkels) {
+  const status = document.createElement("p");
+  status.className = "sub";
+  status.textContent = "Bezig met laden…";
+  container.replaceChildren(status);
+
+  let toegewezen;
+  try {
+    toegewezen = new Set((await haalWinkeltoewijzing(lidId)).winkel_ids);
+  } catch (e) {
+    status.textContent = e.message;
+    return;
+  }
+
+  if (alleWinkels.length === 0) {
+    status.textContent = "Deze organisatie heeft nog geen winkels.";
+    return;
+  }
+
+  const lijst = document.createElement("div");
+  lijst.className = "winkeltoewijzing-lijst";
+  for (const winkel of alleWinkels) {
+    const label = document.createElement("label");
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.value = String(winkel.extern_store_id);
+    checkbox.checked = toegewezen.has(winkel.extern_store_id);
+    label.append(checkbox, document.createTextNode(winkel.naam || `Winkel ${winkel.extern_store_id}`));
+    lijst.appendChild(label);
+  }
+
+  const opslaanRij = document.createElement("div");
+  opslaanRij.className = "winkeltoewijzing-opslaan";
+  const opslaanKnop = document.createElement("button");
+  opslaanKnop.type = "button";
+  opslaanKnop.className = "btn zacht";
+  opslaanKnop.textContent = "Opslaan";
+  const melding = document.createElement("span");
+  melding.className = "sub";
+
+  opslaanKnop.addEventListener("click", async () => {
+    opslaanKnop.disabled = true;
+    melding.textContent = "";
+    const winkelIds = [...lijst.querySelectorAll("input:checked")].map((el) => Number(el.value));
+    try {
+      await stelWinkeltoewijzingIn(lidId, winkelIds);
+      melding.textContent = "Opgeslagen.";
+    } catch (e) {
+      melding.textContent = e.message;
+    } finally {
+      opslaanKnop.disabled = false;
+    }
+  });
+
+  opslaanRij.append(opslaanKnop, melding);
+  container.replaceChildren(lijst, opslaanRij);
+}
+
+function maakTeamlidEl(lid, kanBeheren, alleWinkels) {
   const rij = document.createElement("div");
   rij.className = "teamlid";
   const email = document.createElement("span");
@@ -80,16 +164,33 @@ function maakTeamlidEl(lid) {
   rol.className = "rol";
   rol.textContent = lid.rol;
   rij.append(email, rol);
-  return rij;
+
+  if (!kanBeheren || lid.rol !== "lid") return [rij];
+
+  const details = document.createElement("details");
+  details.className = "winkeltoewijzing";
+  const summary = document.createElement("summary");
+  summary.textContent = "Winkels beheren";
+  const inhoud = document.createElement("div");
+  inhoud.className = "winkeltoewijzing-inhoud";
+  details.append(summary, inhoud);
+
+  details.addEventListener("toggle", async () => {
+    if (!details.open || inhoud.dataset.geladen) return;
+    inhoud.dataset.geladen = "1";
+    await vulWinkeltoewijzing(inhoud, lid.id, alleWinkels);
+  });
+
+  return [rij, details];
 }
 
-async function verversTeamlijst() {
+async function verversTeamlijst(kanBeheren, alleWinkels) {
   const teamEl = document.getElementById("teamlijst");
   const team = await haalTeam();
-  teamEl.replaceChildren(...team.map(maakTeamlidEl));
+  teamEl.replaceChildren(...team.flatMap((lid) => maakTeamlidEl(lid, kanBeheren, alleWinkels)));
 }
 
-function initNieuwLidForm() {
+function initNieuwLidForm(kanBeheren, alleWinkels) {
   const form = document.getElementById("nieuw-lid-form");
   if (!form) return;
   form.addEventListener("submit", async (event) => {
@@ -101,7 +202,7 @@ function initNieuwLidForm() {
       await voegLidToe(document.getElementById("nieuw-email").value, document.getElementById("nieuw-wachtwoord").value);
       document.getElementById("nieuw-email").value = "";
       document.getElementById("nieuw-wachtwoord").value = "";
-      await verversTeamlijst();
+      await verversTeamlijst(kanBeheren, alleWinkels);
     } catch (e) {
       toonFout("nieuw-lid-fout", e.message);
     } finally {
@@ -228,13 +329,23 @@ async function initTeamPagina() {
   }
   document.getElementById("wie-ben-ik").textContent = `Ingelogd als ${me.email} (${me.rol}).`;
 
+  const kanBeheren = me.rol === "eigenaar";
+  let alleWinkels = [];
+  if (kanBeheren) {
+    try {
+      alleWinkels = await haalWinkels();
+    } catch (e) {
+      toonFout("fout", e.message);
+    }
+  }
+
   try {
-    await verversTeamlijst();
+    await verversTeamlijst(kanBeheren, alleWinkels);
   } catch (e) {
     toonFout("fout", e.message);
   }
 
-  if (me.rol === "eigenaar") {
+  if (kanBeheren) {
     document.getElementById("nieuw-lid-kaart").hidden = false;
     document.getElementById("api-keys-kaart").hidden = false;
     try {
@@ -245,7 +356,7 @@ async function initTeamPagina() {
     initNieuweKeyForm();
   }
 
-  initNieuwLidForm();
+  initNieuwLidForm(kanBeheren, alleWinkels);
   initUitloggenLink();
 }
 

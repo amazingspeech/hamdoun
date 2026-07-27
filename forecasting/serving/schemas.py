@@ -62,6 +62,14 @@ class GebruikerResponse(BaseModel):
     actief: bool
 
 
+class WinkelToewijzingVerzoek(BaseModel):
+    winkel_ids: list[int] = []
+
+
+class WinkelToewijzingResponse(BaseModel):
+    winkel_ids: list[int]
+
+
 class ApiKeyAanmakenVerzoek(BaseModel):
     naam: str = Field(..., min_length=1)
 

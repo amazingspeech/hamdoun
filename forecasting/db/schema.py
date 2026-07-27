@@ -21,6 +21,7 @@ from sqlalchemy import (
     MetaData,
     String,
     Table,
+    UniqueConstraint,
     create_engine,
 )
 from sqlalchemy.engine import Engine
@@ -85,6 +86,18 @@ gebruikers = Table(
     Column("rol", String, nullable=False, default="lid"),
     Column("actief", Boolean, nullable=False, default=True),
     Column("aangemaakt_op", DateTime, nullable=False),
+)
+
+gebruiker_winkels = Table(
+    "gebruiker_winkels",
+    metadata,
+    Column("id", Integer, primary_key=True),
+    Column("gebruiker_id", Integer, ForeignKey("gebruikers.id"), nullable=False),
+    Column("winkel_id", Integer, ForeignKey("winkels.id"), nullable=False),
+    Column("aangemaakt_op", DateTime, nullable=False),
+    # Alleen relevant voor rol="lid" (zie db/gebruiker_winkels.py) — een
+    # eigenaar heeft altijd org-brede toegang en krijgt hier nooit rijen.
+    UniqueConstraint("gebruiker_id", "winkel_id", name="uq_gebruiker_winkel"),
 )
 
 sessies = Table(

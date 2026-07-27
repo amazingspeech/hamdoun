@@ -49,8 +49,8 @@ def _bouw_omgeving(tmp_path, monkeypatch, org_a_stores=(1, 2, 3), org_b_stores=(
     engine = maak_database(tenants_db_pad)
     org_a = bootstrap_organisatie(engine, naam="Organisatie A", slug="org-a", store_ids=list(org_a_stores))
     org_b = bootstrap_organisatie(engine, naam="Organisatie B", slug="org-b", store_ids=list(org_b_stores))
-    maak_gebruiker(engine, organisatie_id=org_a, email="eigenaar-a@klant.nl", wachtwoord="wachtwoord-a")
-    maak_gebruiker(engine, organisatie_id=org_b, email="eigenaar-b@klant.nl", wachtwoord="wachtwoord-b")
+    maak_gebruiker(engine, organisatie_id=org_a, email="eigenaar-a@klant.nl", wachtwoord="wachtwoord-a", rol="eigenaar")
+    maak_gebruiker(engine, organisatie_id=org_b, email="eigenaar-b@klant.nl", wachtwoord="wachtwoord-b", rol="eigenaar")
 
     monkeypatch.setenv("MODEL_VERSION", versie)
     monkeypatch.setenv("MODELS_DIR", str(tmp_path / "models"))
