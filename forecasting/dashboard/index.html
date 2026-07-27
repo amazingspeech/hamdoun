@@ -46,27 +46,16 @@
       <button id="voorspel" class="btn" disabled>Laden…</button>
     </div>
 
-    <details class="uitklap promo-vakantie">
-      <summary>Promotie of schoolvakantie gepland in deze periode?</summary>
-      <div class="promo-vakantie-velden">
-        <div class="veld">
-          <label for="promo-van">Promotie van</label>
-          <input type="date" id="promo-van">
-        </div>
-        <div class="veld">
-          <label for="promo-tot">tot en met</label>
-          <input type="date" id="promo-tot">
-        </div>
-        <div class="veld">
-          <label for="vakantie-van">Schoolvakantie van</label>
-          <input type="date" id="vakantie-van">
-        </div>
-        <div class="veld">
-          <label for="vakantie-tot">tot en met</label>
-          <input type="date" id="vakantie-tot">
-        </div>
-      </div>
-    </details>
+    <div class="promo-vinkjes">
+      <label class="vinkje">
+        <input type="checkbox" id="promo-vinkje">
+        Ik heb in deze periode een actie
+      </label>
+      <label class="vinkje">
+        <input type="checkbox" id="vakantie-vinkje">
+        Deze periode valt in een schoolvakantie
+      </label>
+    </div>
   </header>
 
   <div class="leeg" id="leeg">Kies een winkel en klik op "Voorspel" om de verwachte omzet te zien.</div>

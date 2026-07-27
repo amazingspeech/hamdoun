@@ -468,10 +468,6 @@ const VELD_PARAM_MAP = {
   store: "winkel",
   start: "start",
   horizon: "horizon",
-  "promo-van": "promo_van",
-  "promo-tot": "promo_tot",
-  "vakantie-van": "vakantie_van",
-  "vakantie-tot": "vakantie_tot",
 };
 
 function synchroniseerUrl() {
@@ -480,6 +476,8 @@ function synchroniseerUrl() {
     const waarde = document.getElementById(veldId).value;
     if (waarde) params.set(paramNaam, waarde);
   }
+  if (document.getElementById("promo-vinkje").checked) params.set("promo", "1");
+  if (document.getElementById("vakantie-vinkje").checked) params.set("vakantie", "1");
   history.replaceState(null, "", `?${params.toString()}`);
 }
 
@@ -498,6 +496,14 @@ function pasUrlParamsToe(winkels, params) {
       heeftWeergave = true;
     }
   }
+  if (params.get("promo") === "1") {
+    document.getElementById("promo-vinkje").checked = true;
+    heeftWeergave = true;
+  }
+  if (params.get("vakantie") === "1") {
+    document.getElementById("vakantie-vinkje").checked = true;
+    heeftWeergave = true;
+  }
   return heeftWeergave;
 }
 
@@ -512,11 +518,16 @@ async function voorspel() {
     const storeId = Number(document.getElementById("store").value);
     const startDatum = document.getElementById("start").value;
     const horizonDagen = Number(document.getElementById("horizon").value);
+    // Vinkje i.p.v. configuratiescherm: een aangevinkte actie/vakantie
+    // geldt voor de hele opgevraagde periode (start t/m start+horizon-1),
+    // niet voor een apart te kiezen deelperiode — simpeler voor iemand die
+    // geen tijd heeft om twee datumbereiken uit te zoeken.
+    const laatsteDag = dagenNa(startDatum, horizonDagen - 1);
     const promoVakantie = {
-      promoVan: document.getElementById("promo-van").value,
-      promoTot: document.getElementById("promo-tot").value,
-      vakantieVan: document.getElementById("vakantie-van").value,
-      vakantieTot: document.getElementById("vakantie-tot").value,
+      promoVan: document.getElementById("promo-vinkje").checked ? startDatum : "",
+      promoTot: document.getElementById("promo-vinkje").checked ? laatsteDag : "",
+      vakantieVan: document.getElementById("vakantie-vinkje").checked ? startDatum : "",
+      vakantieTot: document.getElementById("vakantie-vinkje").checked ? laatsteDag : "",
     };
     const data = await haalVoorspelling(storeId, startDatum, horizonDagen, promoVakantie);
     // Het model heeft geen ondergrens van 0 op voorspelde omzet (zie
@@ -554,13 +565,17 @@ function vandaagPlusEen() {
   return morgen.toISOString().slice(0, 10);
 }
 
-function eenDagNa(isoDatum) {
+function dagenNa(isoDatum, aantalDagen) {
   const d = new Date(isoDatum + "T00:00:00");
-  d.setDate(d.getDate() + 1);
+  d.setDate(d.getDate() + aantalDagen);
   const jaar = d.getFullYear();
   const maand = String(d.getMonth() + 1).padStart(2, "0");
   const dag = String(d.getDate()).padStart(2, "0");
   return `${jaar}-${maand}-${dag}`;
+}
+
+function eenDagNa(isoDatum) {
+  return dagenNa(isoDatum, 1);
 }
 
 function sluitAndereInfoKnopjes(event) {

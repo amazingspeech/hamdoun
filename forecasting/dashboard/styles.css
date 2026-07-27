@@ -210,12 +210,11 @@ select:focus-visible, input:focus-visible, button:focus-visible, summary:focus-v
 
 details.model-info { margin-top:32px; border-top:1px solid var(--line); padding-top:16px; }
 
-details.promo-vakantie { margin-top:16px; }
-.promo-vakantie-velden {
-  display:flex; gap:14px; flex-wrap:wrap; margin-top:12px; padding:16px;
-  background:var(--paper-raised); border:1px solid var(--line); border-radius:12px;
+.promo-vinkjes { display:flex; gap:20px; flex-wrap:wrap; margin-top:16px; }
+.promo-vinkjes .vinkje {
+  display:flex; align-items:center; gap:8px; font-size:0.9375rem; color:var(--ink); cursor:pointer;
 }
-.promo-vakantie-velden .veld { min-width:150px; }
+.promo-vinkjes .vinkje input { width:18px; height:18px; accent-color:var(--accent); cursor:pointer; }
 .metrics { display:flex; gap:16px; margin:16px 0 0; flex-wrap:wrap; }
 .metric { flex:1 1 220px; border:1px solid var(--line); border-radius:10px; padding:14px 16px; background:var(--paper-raised); }
 .metric .label { font:600 0.8125rem/1.2 var(--font-body); color:var(--ink-soft); }
