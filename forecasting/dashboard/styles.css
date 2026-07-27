@@ -353,3 +353,19 @@ details.model-info { margin-top:32px; border-top:1px solid var(--line); padding-
   .secundair { gap:20px; }
   header.top { flex-direction:column; }
 }
+
+/* Inhoudspagina's (bv. hoe-werkt-dit.html): platte, leesbare tekstopmaak
+   i.p.v. de formulier-georiënteerde .kaart-stijl hierboven. */
+.inhoud { max-width:640px; }
+.inhoud section { margin-top:40px; }
+.inhoud section:first-child { margin-top:0; }
+.inhoud h2 {
+  font:600 1.375rem/1.3 var(--font-display); color:var(--ink); margin:0 0 12px; letter-spacing:-0.005em;
+}
+.inhoud p { font-size:0.9375rem; line-height:1.65; color:var(--ink-soft); margin:0 0 14px; }
+.inhoud p:last-child { margin-bottom:0; }
+.inhoud strong { color:var(--ink); font-weight:600; }
+.inhoud ul { margin:0; padding-left:20px; font-size:0.9375rem; line-height:1.65; color:var(--ink-soft); }
+.inhoud li { margin-bottom:6px; }
+.inhoud li:last-child { margin-bottom:0; }
+.inhoud .kaart { margin-top:0; }
