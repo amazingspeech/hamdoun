@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import NamedTuple, Optional
 
 import pandas as pd
+from dotenv import load_dotenv
 from fastapi import Depends, FastAPI, HTTPException, Query, Request, Response, Security
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import APIKeyHeader
@@ -56,6 +57,13 @@ from serving.schemas import (
     WinkelToewijzingVerzoek,
 )
 from training.artifact import laad_artefact, lijst_metadata_per_versie
+
+# Alleen voor lokale ontwikkeling: laadt forecasting/.env als het bestaat
+# (nooit in Docker gebruikt, zie deploy/DEPLOY.md — daar zet docker compose
+# de omgeving direct). Overschrijft nooit een al-gezette omgevingsvariabele
+# (python-dotenv's default), dus dit is een no-op zolang de omgeving zelf
+# al alles levert, zoals in CI en de testsuite.
+load_dotenv()
 
 settings = laad_settings()
 artefact = laad_artefact(settings.models_dir, settings.model_version, versleuteld=settings.encrypt_at_rest)

@@ -58,6 +58,32 @@ def test_laad_settings_defaults_toegepast(monkeypatch, tmp_path):
     assert settings.rate_limit_per_minute == 60
 
 
+def test_laad_settings_zonder_mailconfig_geeft_none(monkeypatch, tmp_path):
+    _basis_env(monkeypatch, tmp_path)
+    for var in ("MAIL_SMTP_HOST", "MAIL_SMTP_POORT", "MAIL_AFZENDER", "MAIL_SMTP_GEBRUIKER", "MAIL_SMTP_WACHTWOORD"):
+        monkeypatch.delenv(var, raising=False)
+    settings = config.laad_settings()
+    assert settings.mail_smtp_host is None
+    assert settings.mail_smtp_poort is None
+    assert settings.mail_afzender is None
+    assert settings.mail_smtp_gebruiker is None
+    assert settings.mail_smtp_wachtwoord is None
+
+
+def test_laad_settings_leest_mailconfig(monkeypatch, tmp_path):
+    _basis_env(
+        monkeypatch, tmp_path,
+        MAIL_SMTP_HOST="smtp.zoho.eu", MAIL_SMTP_POORT="587", MAIL_AFZENDER="info@tessar.nl",
+        MAIL_SMTP_GEBRUIKER="info@tessar.nl", MAIL_SMTP_WACHTWOORD="geheim",
+    )
+    settings = config.laad_settings()
+    assert settings.mail_smtp_host == "smtp.zoho.eu"
+    assert settings.mail_smtp_poort == 587
+    assert settings.mail_afzender == "info@tessar.nl"
+    assert settings.mail_smtp_gebruiker == "info@tessar.nl"
+    assert settings.mail_smtp_wachtwoord == "geheim"
+
+
 def test_laad_settings_docs_staan_standaard_uit(monkeypatch, tmp_path):
     _basis_env(monkeypatch, tmp_path)
     monkeypatch.delenv("EXPOSE_API_DOCS", raising=False)

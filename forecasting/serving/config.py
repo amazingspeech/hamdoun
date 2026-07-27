@@ -6,6 +6,7 @@ from __future__ import annotations
 import os
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Optional
 
 
 @dataclass(frozen=True)
@@ -20,6 +21,16 @@ class Settings:
     expose_docs: bool
     tenants_db_pad: Path
     sessie_cookie_secure: bool
+    # Mail is optioneel: nog geen endpoint hangt hier vandaag van af (dat
+    # komt met wachtwoord-reset / herbestel-meldingen), dus dit faalt
+    # bewust niet hard bij afwezigheid zoals MODEL_VERSION dat wel doet —
+    # de aanroeper die mail daadwerkelijk gebruikt controleert zelf op
+    # None, zie security/mail.py.
+    mail_smtp_host: Optional[str] = None
+    mail_smtp_poort: Optional[int] = None
+    mail_afzender: Optional[str] = None
+    mail_smtp_gebruiker: Optional[str] = None
+    mail_smtp_wachtwoord: Optional[str] = None
 
 
 def laad_settings() -> Settings:
@@ -75,6 +86,9 @@ def laad_settings() -> Settings:
     # omgekeerd — hier is de veilige default WEL aan).
     sessie_cookie_secure = os.environ.get("SESSIE_COOKIE_SECURE", "true").lower() == "true"
 
+    mail_smtp_poort_ruw = os.environ.get("MAIL_SMTP_POORT")
+    mail_smtp_poort = int(mail_smtp_poort_ruw) if mail_smtp_poort_ruw else None
+
     return Settings(
         model_version=model_version,
         models_dir=models_dir,
@@ -86,4 +100,9 @@ def laad_settings() -> Settings:
         expose_docs=expose_docs,
         tenants_db_pad=tenants_db_pad,
         sessie_cookie_secure=sessie_cookie_secure,
+        mail_smtp_host=os.environ.get("MAIL_SMTP_HOST"),
+        mail_smtp_poort=mail_smtp_poort,
+        mail_afzender=os.environ.get("MAIL_AFZENDER"),
+        mail_smtp_gebruiker=os.environ.get("MAIL_SMTP_GEBRUIKER"),
+        mail_smtp_wachtwoord=os.environ.get("MAIL_SMTP_WACHTWOORD"),
     )
