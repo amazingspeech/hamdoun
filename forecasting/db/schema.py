@@ -16,6 +16,7 @@ from sqlalchemy import (
     Boolean,
     Column,
     DateTime,
+    Float,
     ForeignKey,
     Integer,
     MetaData,
@@ -23,6 +24,8 @@ from sqlalchemy import (
     Table,
     UniqueConstraint,
     create_engine,
+    inspect,
+    text,
 )
 from sqlalchemy.engine import Engine
 
@@ -36,6 +39,14 @@ organisaties = Table(
     Column("slug", String, nullable=False, unique=True),
     Column("actief", Boolean, nullable=False, default=True),
     Column("aangemaakt_op", DateTime, nullable=False),
+    # Fase 5 NODIG 1 (herbestel-advies): een winkelier vult dit één keer
+    # zelf in — er is nergens in dit systeem echte product-/inventarisdata
+    # (het model voorspelt totale omzet, geen losse stuks), dus dit is de
+    # enige eerlijke manier om een omzetvoorspelling om te rekenen naar een
+    # aantal-stuks-schatting zonder een verzonnen prijs te gebruiken.
+    # Optioneel: zonder ingevulde waarde toont het dashboard geen
+    # stuks-advies, alleen het bestaande omzetgetal.
+    Column("gemiddelde_omzet_per_stuk", Float, nullable=True),
 )
 
 winkels = Table(
@@ -116,10 +127,38 @@ sessies = Table(
 )
 
 
+def _migreer_ontbrekende_kolommen(engine: Engine) -> None:
+    """create_all() maakt alleen ontbrekende tábellen aan, nooit
+    ontbrekende kolommen op een tabel die al bestaat — dus een al-lopende
+    database van vóór een schemawijziging (bv. een nieuwe nullable kolom
+    op organisaties) krijgt die kolom anders nooit. Voegt zulke kolommen
+    alsnog toe via een simpele ALTER TABLE, wat SQLite voor het toevoegen
+    van een kolom native ondersteunt. Dit is bewust geen vervanging voor
+    een echte migratietool (Alembic) — zie de afweging in het
+    projectplan (FASE4-SAAS-FOUNDATION.md) over wanneer dat wél nodig
+    wordt; voor incidentele, losse nullable kolommen op deze schaal
+    volstaat dit."""
+    inspector = inspect(engine)
+    bestaande_tabellen = set(inspector.get_table_names())
+    for tabel in metadata.sorted_tables:
+        if tabel.name not in bestaande_tabellen:
+            continue
+        bestaande_kolommen = {kol["name"] for kol in inspector.get_columns(tabel.name)}
+        for kolom in tabel.columns:
+            if kolom.name in bestaande_kolommen:
+                continue
+            kolomtype = kolom.type.compile(engine.dialect)
+            with engine.begin() as conn:
+                conn.execute(text(f'ALTER TABLE "{tabel.name}" ADD COLUMN "{kolom.name}" {kolomtype}'))
+
+
 def maak_database(database_pad: Path) -> Engine:
     """Maakt (indien nog niet aanwezig) de database aan op database_pad en
     zorgt dat alle tabellen in dit schema bestaan. Idempotent: bestaande
-    tabellen worden nooit overschreven of leeggemaakt."""
+    tabellen worden nooit overschreven of leeggemaakt. Voegt ook
+    ontbrekende kolommen toe aan al bestaande tabellen, zie
+    _migreer_ontbrekende_kolommen()."""
     engine = create_engine(f"sqlite:///{database_pad}")
     metadata.create_all(engine)
+    _migreer_ontbrekende_kolommen(engine)
     return engine

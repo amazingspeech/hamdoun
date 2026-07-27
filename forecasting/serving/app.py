@@ -22,6 +22,7 @@ from sqlalchemy.exc import IntegrityError
 from db import api_keys as db_api_keys
 from db import gebruiker_winkels as db_gebruiker_winkels
 from db import gebruikers as db_gebruikers
+from db import organisaties as db_organisaties
 from db import sessies as db_sessies
 from db import winkels as db_winkels
 from db.schema import gebruikers as gebruikers_tabel
@@ -32,6 +33,7 @@ from serving.forecast import (
     HorizonBuitenBereik,
     OnbekendeWinkel,
     dagreeks,
+    herbestel_advies,
     voorspel_periode,
     vorige_periode_omzet,
     winkel_samenvatting,
@@ -45,10 +47,13 @@ from serving.schemas import (
     ForecastVerzoek,
     GebruikerAanmakenVerzoek,
     GebruikerResponse,
+    HerbestelAdvies,
     LoginVerzoek,
     MetricsResponse,
     ModelVersieMetric,
     NieuweApiKeyResponse,
+    OrganisatieInstellingenResponse,
+    OrganisatieInstellingenVerzoek,
     PortfolioKpi,
     PortfolioResponse,
     WinkelResponse,
@@ -309,6 +314,27 @@ def winkeltoewijzing_instellen(
     return WinkelToewijzingResponse(winkel_ids=winkel_ids)
 
 
+@app.get("/organisatie/instellingen", response_model=OrganisatieInstellingenResponse)
+def organisatie_instellingen_lezen(
+    gebruiker: GeauthenticeerdeGebruiker = Depends(vereis_sessie),
+) -> OrganisatieInstellingenResponse:
+    # Leesbaar voor elke ingelogde gebruiker (niet alleen eigenaar-only
+    # zoals het wijzigen): een lid heeft de prijs nodig om het herbestel-
+    # advies op /forecast te kunnen zien. De prijs zelf is geen geheim.
+    prijs = db_organisaties.haal_gemiddelde_omzet_per_stuk(tenants_db, organisatie_id=gebruiker.organisatie_id)
+    return OrganisatieInstellingenResponse(gemiddelde_omzet_per_stuk=prijs)
+
+
+@app.put("/organisatie/instellingen", response_model=OrganisatieInstellingenResponse)
+def organisatie_instellingen_instellen(
+    verzoek: OrganisatieInstellingenVerzoek, eigenaar: GeauthenticeerdeGebruiker = Depends(vereis_eigenaar)
+) -> OrganisatieInstellingenResponse:
+    db_organisaties.stel_gemiddelde_omzet_per_stuk_in(
+        tenants_db, organisatie_id=eigenaar.organisatie_id, bedrag=verzoek.gemiddelde_omzet_per_stuk
+    )
+    return OrganisatieInstellingenResponse(gemiddelde_omzet_per_stuk=verzoek.gemiddelde_omzet_per_stuk)
+
+
 @app.post("/api-keys", response_model=NieuweApiKeyResponse, status_code=201)
 def api_key_aanmaken(
     verzoek: ApiKeyAanmakenVerzoek, eigenaar: GeauthenticeerdeGebruiker = Depends(vereis_eigenaar)
@@ -389,6 +415,15 @@ def forecast(
             historie=artefact["historie"], store_id=verzoek.store_id,
             start_datum=verzoek.start_datum, horizon_dagen=verzoek.horizon_dagen,
         )
+        gemiddelde_prijs = db_organisaties.haal_gemiddelde_omzet_per_stuk(
+            tenants_db, organisatie_id=key.organisatie_id
+        )
+        advies = herbestel_advies(
+            totaal_p10=float(resultaat.voorspellingen["p10"].sum()),
+            totaal_p50=float(resultaat.voorspellingen["p50"].sum()),
+            totaal_p90=float(resultaat.voorspellingen["p90"].sum()),
+            gemiddelde_omzet_per_stuk=gemiddelde_prijs,
+        )
         statuscode = 200
     except OnbekendeWinkel:
         statuscode = 404
@@ -418,6 +453,7 @@ def forecast(
         ],
         belangrijkste_factoren=[FactorBijdrage(**f) for f in resultaat.belangrijkste_factoren],
         vorige_periode_omzet=vorige_omzet,
+        herbestel_advies=HerbestelAdvies(**advies) if advies else None,
     )
 
 

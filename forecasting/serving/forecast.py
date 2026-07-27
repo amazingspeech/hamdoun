@@ -149,6 +149,25 @@ def vorige_periode_omzet(
     return float(recent["Sales"].sum())
 
 
+def herbestel_advies(
+    totaal_p10: float, totaal_p50: float, totaal_p90: float, gemiddelde_omzet_per_stuk: float | None,
+) -> dict | None:
+    """Rekent de omzet-bandbreedte om naar een stuks-schatting, op basis
+    van de gemiddelde omzet per stuk die de winkelier zelf heeft opgegeven
+    (db.organisaties) — er is nergens in dit systeem echte product- of
+    inventarisdata om een precieze stuksprijs uit af te leiden. Geeft None
+    als die prijs niet (geldig) is ingesteld: nooit een verzonnen prijs
+    aannemen. Blijft, net als de rest van de voorspelling, een bandbreedte
+    (p10/p50/p90) i.p.v. één los getal."""
+    if not gemiddelde_omzet_per_stuk or gemiddelde_omzet_per_stuk <= 0:
+        return None
+    return {
+        "stuks_p10": round(totaal_p10 / gemiddelde_omzet_per_stuk),
+        "stuks_p50": round(totaal_p50 / gemiddelde_omzet_per_stuk),
+        "stuks_p90": round(totaal_p90 / gemiddelde_omzet_per_stuk),
+    }
+
+
 def voorspel_periode(
     modellen: dict[float, object],
     historie: pd.DataFrame,

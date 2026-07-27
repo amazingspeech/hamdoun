@@ -44,6 +44,23 @@
     <div class="teamlijst" id="teamlijst"></div>
   </div>
 
+  <div class="kaart" id="herbestel-kaart" hidden>
+    <p class="sub" style="margin:0;">
+      Voor een herbestel-advies (bijv. "bestel deze week circa 40 stuks") moet het systeem weten hoeveel
+      omzet één verkocht stuk gemiddeld oplevert. Zonder deze prijs toont de voorspelling alleen een
+      omzetbedrag, geen aantal stuks.
+    </p>
+    <form id="herbestel-form" style="display:flex; gap:14px; align-items:end; flex-wrap:wrap;">
+      <div class="veld">
+        <label for="herbestel-prijs">Gemiddelde omzet per verkocht stuk (€)</label>
+        <input type="number" id="herbestel-prijs" min="0.01" step="0.01" required>
+      </div>
+      <button type="submit" class="btn" id="herbestel-knop">Opslaan</button>
+    </form>
+    <p class="fout" id="herbestel-fout" hidden></p>
+    <p class="sub" id="herbestel-melding" hidden style="margin:0;"></p>
+  </div>
+
   <div class="kaart" id="api-keys-kaart" hidden>
     <p class="sub" style="margin:0;">API-keys geven programmatische toegang tot de voorspellings-API namens jouw organisatie.</p>
     <form id="nieuwe-key-form" style="display:flex; gap:14px; align-items:end; flex-wrap:wrap;">

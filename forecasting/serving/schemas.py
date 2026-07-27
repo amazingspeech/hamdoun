@@ -35,6 +35,12 @@ class FactorBijdrage(BaseModel):
     richting: Literal["hoger", "lager"]
 
 
+class HerbestelAdvies(BaseModel):
+    stuks_p10: int
+    stuks_p50: int
+    stuks_p90: int
+
+
 class ForecastResponse(BaseModel):
     store_id: int
     voorspellingen: list[DagVoorspelling]
@@ -43,6 +49,9 @@ class ForecastResponse(BaseModel):
     # voorafgaand aan start_datum — None als daar niet genoeg historie voor
     # is. Zie serving.forecast.vorige_periode_omzet().
     vorige_periode_omzet: Optional[float] = None
+    # None tenzij de organisatie een gemiddelde-omzet-per-stuk heeft
+    # ingesteld (Fase 5 NODIG 1) — zie serving.forecast.herbestel_advies().
+    herbestel_advies: Optional[HerbestelAdvies] = None
 
 
 class LoginVerzoek(BaseModel):
@@ -60,6 +69,14 @@ class GebruikerResponse(BaseModel):
     email: str
     rol: str
     actief: bool
+
+
+class OrganisatieInstellingenVerzoek(BaseModel):
+    gemiddelde_omzet_per_stuk: float = Field(..., gt=0)
+
+
+class OrganisatieInstellingenResponse(BaseModel):
+    gemiddelde_omzet_per_stuk: Optional[float] = None
 
 
 class WinkelToewijzingVerzoek(BaseModel):

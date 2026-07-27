@@ -5,10 +5,13 @@ from datetime import date
 import numpy as np
 import pandas as pd
 from fastapi.testclient import TestClient
+from sqlalchemy import select
 
 from db.api_keys import migreer_bestaande_key
 from db.bootstrap import bootstrap_organisatie
+from db.organisaties import stel_gemiddelde_omzet_per_stuk_in
 from db.schema import maak_database
+from db.schema import organisaties as organisaties_tabel
 from security import api_keys
 from serving.forecast import VoorspelResultaat
 from training import artifact, train
@@ -101,6 +104,33 @@ def test_forecast_met_geldige_key_geeft_voorspellingen(tmp_path, monkeypatch):
     # genoeg voorafgaande open dagen voor een periodevergelijking.
     assert data["vorige_periode_omzet"] is not None
     assert data["vorige_periode_omzet"] > 0
+    # Geen gemiddelde-omzet-per-stuk ingesteld voor deze organisatie —
+    # geen verzonnen prijs aannemen, dus geen herbestel-advies.
+    assert data["herbestel_advies"] is None
+
+
+def test_forecast_met_ingestelde_prijs_geeft_herbestel_advies(tmp_path, monkeypatch):
+    client = _bouw_test_omgeving(tmp_path, monkeypatch)
+
+    engine = maak_database(tmp_path / "tenants.db")
+    with engine.connect() as conn:
+        org_id = conn.execute(
+            select(organisaties_tabel.c.id).where(organisaties_tabel.c.slug == "test-organisatie")
+        ).scalar_one()
+    stel_gemiddelde_omzet_per_stuk_in(engine, organisatie_id=org_id, bedrag=10.0)
+
+    resp = client.post(
+        "/forecast", json={"store_id": 1, "start_datum": "2015-07-11", "horizon_dagen": 3},
+        headers={"X-API-Key": "test-key-123"},
+    )
+
+    assert resp.status_code == 200
+    data = resp.json()
+    advies = data["herbestel_advies"]
+    assert advies is not None
+    totaal_p50 = sum(d["p50"] for d in data["voorspellingen"])
+    assert advies["stuks_p50"] == round(totaal_p50 / 10.0)
+    assert advies["stuks_p10"] <= advies["stuks_p50"] <= advies["stuks_p90"]
 
 
 def test_forecast_onbekende_winkel_geeft_404(tmp_path, monkeypatch):

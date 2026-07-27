@@ -402,7 +402,7 @@ function toonPeriodeVergelijking(totaalP50, vorigePeriodeOmzet) {
   el.hidden = false;
 }
 
-function toonSamenvatting(voorspellingen, storeId, vorigePeriodeOmzet) {
+function toonSamenvatting(voorspellingen, storeId, vorigePeriodeOmzet, herbestelAdvies) {
   const totaalP50 = voorspellingen.reduce((som, v) => som + v.p50, 0);
   const totaalP10 = voorspellingen.reduce((som, v) => som + v.p10, 0);
   const totaalP90 = voorspellingen.reduce((som, v) => som + v.p90, 0);
@@ -435,10 +435,22 @@ function toonSamenvatting(voorspellingen, storeId, vorigePeriodeOmzet) {
   document.getElementById("chart-titel").textContent =
     `Winkel ${storeId} — dagelijkse omzet, ${formatDatumKort(voorspellingen[0].datum)} t/m ${formatDatumKort(voorspellingen[n - 1].datum)}`;
 
-  document.getElementById("aanbeveling").textContent =
-    `Plan voorraad voor circa ${euro.format(Math.round(totaalP50))} omzet deze periode. ` +
-    `Houd rekening met pieken tot ${euro.format(Math.round(totaalP90))} bij drukte, en met minder ` +
-    `verkoop tot ${euro.format(Math.round(totaalP10))} als het rustiger is dan verwacht.`;
+  // Herbestel-advies (Fase 5 NODIG 1) vervangt het omzetgetal door een
+  // stuks-advies zodra de organisatie een gemiddelde prijs per stuk heeft
+  // ingesteld (Team beheren) — dat is nuttiger om echt op te bestellen dan
+  // een omzetbedrag. Zonder die prijs blijft de bestaande omzet-tekst
+  // ongewijzigd staan, geen verzonnen stuks-aantal.
+  if (herbestelAdvies) {
+    document.getElementById("aanbeveling").textContent =
+      `Bestel voor deze periode ongeveer ${herbestelAdvies.stuks_p50} stuks bij. ` +
+      `Houd rekening met pieken tot ${herbestelAdvies.stuks_p90} stuks bij drukte, en met minder ` +
+      `verkoop tot ${herbestelAdvies.stuks_p10} stuks als het rustiger is dan verwacht.`;
+  } else {
+    document.getElementById("aanbeveling").textContent =
+      `Plan voorraad voor circa ${euro.format(Math.round(totaalP50))} omzet deze periode. ` +
+      `Houd rekening met pieken tot ${euro.format(Math.round(totaalP90))} bij drukte, en met minder ` +
+      `verkoop tot ${euro.format(Math.round(totaalP10))} als het rustiger is dan verwacht.`;
+  }
 }
 
 function toonKanttekening(promoOpgegeven, vakantieOpgegeven) {
@@ -543,7 +555,7 @@ async function voorspel() {
     }));
     document.getElementById("skelet-resultaat").hidden = true;
     document.getElementById("resultaat").classList.add("zichtbaar");
-    toonSamenvatting(voorspellingen, data.store_id, data.vorige_periode_omzet);
+    toonSamenvatting(voorspellingen, data.store_id, data.vorige_periode_omzet, data.herbestel_advies);
     tekenGrafiek(voorspellingen);
     toonKanttekening(Boolean(promoVakantie.promoVan), Boolean(promoVakantie.vakantieVan));
     toonFactoren(data.belangrijkste_factoren);

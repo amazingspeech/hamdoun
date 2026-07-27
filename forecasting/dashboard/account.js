@@ -221,6 +221,49 @@ function initUitloggenLink() {
   });
 }
 
+async function haalOrganisatieInstellingen() {
+  const resp = await fetch(`${API_BASIS}/organisatie/instellingen`, { credentials: "same-origin" });
+  if (!resp.ok) throw new Error(`Kon instellingen niet ophalen (${resp.status})`);
+  return resp.json();
+}
+
+async function stelGemiddeldeOmzetPerStukIn(bedrag) {
+  const resp = await fetch(`${API_BASIS}/organisatie/instellingen`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    credentials: "same-origin",
+    body: JSON.stringify({ gemiddelde_omzet_per_stuk: bedrag }),
+  });
+  if (!resp.ok) {
+    const detail = await resp.json().catch(() => ({}));
+    throw new Error(detail.detail || `Opslaan mislukt (${resp.status})`);
+  }
+  return resp.json();
+}
+
+function initHerbestelForm() {
+  const form = document.getElementById("herbestel-form");
+  if (!form) return;
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const knop = document.getElementById("herbestel-knop");
+    knop.disabled = true;
+    toonFout("herbestel-fout", "");
+    document.getElementById("herbestel-melding").hidden = true;
+    try {
+      const bedrag = Number(document.getElementById("herbestel-prijs").value);
+      await stelGemiddeldeOmzetPerStukIn(bedrag);
+      const melding = document.getElementById("herbestel-melding");
+      melding.textContent = "Opgeslagen.";
+      melding.hidden = false;
+    } catch (e) {
+      toonFout("herbestel-fout", e.message);
+    } finally {
+      knop.disabled = false;
+    }
+  });
+}
+
 async function haalApiKeys() {
   const resp = await fetch(`${API_BASIS}/api-keys`, { credentials: "same-origin" });
   if (!resp.ok) throw new Error(`Kon API-keys niet ophalen (${resp.status})`);
@@ -347,7 +390,17 @@ async function initTeamPagina() {
 
   if (kanBeheren) {
     document.getElementById("nieuw-lid-kaart").hidden = false;
+    document.getElementById("herbestel-kaart").hidden = false;
     document.getElementById("api-keys-kaart").hidden = false;
+    try {
+      const instellingen = await haalOrganisatieInstellingen();
+      if (instellingen.gemiddelde_omzet_per_stuk !== null) {
+        document.getElementById("herbestel-prijs").value = instellingen.gemiddelde_omzet_per_stuk;
+      }
+    } catch (e) {
+      toonFout("fout", e.message);
+    }
+    initHerbestelForm();
     try {
       await verversApiKeysLijst();
     } catch (e) {

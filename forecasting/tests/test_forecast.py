@@ -8,6 +8,7 @@ from serving.forecast import (
     HorizonBuitenBereik,
     OnbekendeWinkel,
     dagreeks,
+    herbestel_advies,
     voorspel_periode,
     vorige_periode_omzet,
     winkel_samenvatting,
@@ -291,3 +292,28 @@ def test_vorige_periode_omzet_te_weinig_voorafgaande_historie_geeft_none():
         start_datum=pd.Timestamp("2015-06-03"), horizon_dagen=4,
     )
     assert omzet is None
+
+
+def test_herbestel_advies_rekent_omzet_om_naar_stuks():
+    advies = herbestel_advies(
+        totaal_p10=1000.0, totaal_p50=2000.0, totaal_p90=3000.0, gemiddelde_omzet_per_stuk=10.0,
+    )
+    assert advies == {"stuks_p10": 100, "stuks_p50": 200, "stuks_p90": 300}
+
+
+def test_herbestel_advies_zonder_ingestelde_prijs_geeft_none():
+    assert herbestel_advies(totaal_p10=1000.0, totaal_p50=2000.0, totaal_p90=3000.0, gemiddelde_omzet_per_stuk=None) is None
+
+
+def test_herbestel_advies_negeert_ongeldige_prijs():
+    """Nul of negatief is geen bruikbare prijs — nooit delen door nul of
+    een absurd stuks-aantal teruggeven."""
+    assert herbestel_advies(totaal_p10=1000.0, totaal_p50=2000.0, totaal_p90=3000.0, gemiddelde_omzet_per_stuk=0.0) is None
+    assert herbestel_advies(totaal_p10=1000.0, totaal_p50=2000.0, totaal_p90=3000.0, gemiddelde_omzet_per_stuk=-5.0) is None
+
+
+def test_herbestel_advies_rondt_af():
+    advies = herbestel_advies(
+        totaal_p10=103.0, totaal_p50=207.0, totaal_p90=299.0, gemiddelde_omzet_per_stuk=10.0,
+    )
+    assert advies == {"stuks_p10": 10, "stuks_p50": 21, "stuks_p90": 30}
