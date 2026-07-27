@@ -704,10 +704,30 @@ function initCommandPalette() {
   });
 }
 
+function pasPremiumStatusToe(inProefperiode) {
+  const promoVinkjes = document.getElementById("promo-vinkjes");
+  if (promoVinkjes) {
+    document.getElementById("promo-premium-badge").hidden = !inProefperiode;
+    document.getElementById("promo-vinkje").disabled = inProefperiode;
+    document.getElementById("vakantie-vinkje").disabled = inProefperiode;
+    if (inProefperiode) promoVinkjes.setAttribute("data-premium-vergrendeld", "");
+    else promoVinkjes.removeAttribute("data-premium-vergrendeld");
+  }
+  const exportKnoppen = document.getElementById("export-knoppen");
+  if (exportKnoppen) {
+    document.getElementById("export-premium-badge").hidden = !inProefperiode;
+    document.getElementById("export-csv").disabled = inProefperiode;
+    document.getElementById("export-png").disabled = inProefperiode;
+    if (inProefperiode) exportKnoppen.setAttribute("data-premium-vergrendeld", "");
+    else exportKnoppen.removeAttribute("data-premium-vergrendeld");
+  }
+}
+
 document.addEventListener("DOMContentLoaded", async () => {
   const me = await initToegang();
   if (!me) return;
   initUitloggenLink();
+  pasPremiumStatusToe(me.in_proefperiode);
 
   const knop = document.getElementById("voorspel");
   document.addEventListener("click", sluitAndereInfoKnopjes);

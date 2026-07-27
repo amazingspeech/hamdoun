@@ -1,3 +1,5 @@
+from datetime import datetime, timedelta, timezone
+
 from sqlalchemy import select
 
 from db.bootstrap import bootstrap_organisatie
@@ -6,6 +8,7 @@ from db.organisaties import (
     haal_gemiddelde_omzet_per_stuk,
     haal_organisatie_id_bij_stripe_subscription,
     is_actief,
+    is_in_proefperiode,
     lijst_actieve_organisaties,
     stel_gemiddelde_omzet_per_stuk_in,
     stel_stripe_koppeling_in,
@@ -118,3 +121,32 @@ def test_haal_organisatie_id_bij_onbekend_stripe_subscription_geeft_none(tmp_pat
     engine = maak_database(tmp_path / "tenants.db")
 
     assert haal_organisatie_id_bij_stripe_subscription(engine, "sub_onbekend") is None
+
+
+def test_handmatig_aangemaakte_organisatie_is_niet_in_proefperiode(tmp_path):
+    """bootstrap_organisatie zet trial_verloopt_op nooit — een handmatig
+    onboarde klant (bv. via db/cli.py) is per ontwerp nooit trial-beperkt."""
+    engine = maak_database(tmp_path / "tenants.db")
+    org_id = bootstrap_organisatie(engine, naam="Klant", slug="klant", store_ids=[])
+
+    assert is_in_proefperiode(engine, organisatie_id=org_id) is False
+
+
+def test_organisatie_met_toekomstige_trial_verloopt_op_is_in_proefperiode(tmp_path):
+    engine = maak_database(tmp_path / "tenants.db")
+    org_id = bootstrap_organisatie(engine, naam="Klant", slug="klant", store_ids=[])
+    toekomst = datetime.now(timezone.utc) + timedelta(days=14)
+    with engine.begin() as conn:
+        conn.execute(organisaties.update().where(organisaties.c.id == org_id).values(trial_verloopt_op=toekomst))
+
+    assert is_in_proefperiode(engine, organisatie_id=org_id) is True
+
+
+def test_organisatie_met_verlopen_trial_verloopt_op_is_niet_meer_in_proefperiode(tmp_path):
+    engine = maak_database(tmp_path / "tenants.db")
+    org_id = bootstrap_organisatie(engine, naam="Klant", slug="klant", store_ids=[])
+    verleden = datetime.now(timezone.utc) - timedelta(days=1)
+    with engine.begin() as conn:
+        conn.execute(organisaties.update().where(organisaties.c.id == org_id).values(trial_verloopt_op=verleden))
+
+    assert is_in_proefperiode(engine, organisatie_id=org_id) is False

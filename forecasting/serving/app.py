@@ -5,7 +5,7 @@ from __future__ import annotations
 
 import sys
 import time
-from datetime import date
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from typing import NamedTuple, Optional
 
@@ -149,10 +149,13 @@ class GeauthenticeerdeKey(NamedTuple):
 
 
 SESSIE_COOKIE_NAAM = "sessie"
-# Fase 5 NODIG 5: 7 dagen proberen, dan automatisch een eerste incasso —
-# vastgelegde productbeslissing (zie FASE4-SAAS-FOUNDATION.md), geen
-# omgevingsvariabele omdat dit geen deployment-instelling is.
-SIGNUP_PROEFPERIODE_DAGEN = 7
+# Fase 5 premium-fundament: 14 dagen proberen, dan automatisch een eerste
+# incasso — vastgelegde productbeslissing, geen omgevingsvariabele omdat
+# dit geen deployment-instelling is. Dezelfde waarde stuurt zowel Stripe's
+# eigen trial_period_days (POST /signup) als de lokale trial_verloopt_op
+# die db.organisaties.is_in_proefperiode gebruikt (POST /webhooks/stripe)
+# — beide moeten in sync blijven.
+SIGNUP_PROEFPERIODE_DAGEN = 14
 
 
 class GeauthenticeerdeGebruiker(NamedTuple):
@@ -304,7 +307,10 @@ def wachtwoord_reset_voltooien(verzoek: WachtwoordResetVoltooienVerzoek) -> dict
 
 @app.get("/me")
 def me(gebruiker: GeauthenticeerdeGebruiker = Depends(vereis_sessie)) -> dict:
-    return {"email": gebruiker.email, "rol": gebruiker.rol, "organisatie_id": gebruiker.organisatie_id}
+    return {
+        "email": gebruiker.email, "rol": gebruiker.rol, "organisatie_id": gebruiker.organisatie_id,
+        "in_proefperiode": db_organisaties.is_in_proefperiode(tenants_db, gebruiker.organisatie_id),
+    }
 
 
 @app.post("/signup", response_model=SignupResponse)
@@ -392,7 +398,8 @@ async def stripe_webhook(request: Request) -> dict:
     # email. Ofwel alles lukt, ofwel niets (rollback), nooit iets ertussenin.
     with tenants_db.begin() as conn:
         org_id = bootstrap_organisatie(
-            tenants_db, naam=aanmelding.organisatie_naam, slug=aanmelding.organisatie_slug, store_ids=[], conn=conn
+            tenants_db, naam=aanmelding.organisatie_naam, slug=aanmelding.organisatie_slug, store_ids=[], conn=conn,
+            trial_verloopt_op=datetime.now(timezone.utc) + timedelta(days=SIGNUP_PROEFPERIODE_DAGEN),
         )
         db_gebruikers.maak_gebruiker_met_hash(
             tenants_db, organisatie_id=org_id, email=aanmelding.email,
@@ -571,6 +578,13 @@ def eigen_voorspelling_lezen(
 def api_key_aanmaken(
     verzoek: ApiKeyAanmakenVerzoek, eigenaar: GeauthenticeerdeGebruiker = Depends(vereis_eigenaar)
 ) -> NieuweApiKeyResponse:
+    # Premium-functie: zelf API-keys aanmaken hoort niet bij de gratis
+    # proefperiode, zie de trial/premium-fundament-beslissing.
+    if db_organisaties.is_in_proefperiode(tenants_db, eigenaar.organisatie_id):
+        raise HTTPException(
+            status_code=403,
+            detail="Zelfbediening API-keys is een premium-functie, niet beschikbaar in je proefperiode.",
+        )
     key_id, ruwe_key = db_api_keys.maak_api_key(tenants_db, organisatie_id=eigenaar.organisatie_id, naam=verzoek.naam)
     return NieuweApiKeyResponse(id=key_id, naam=verzoek.naam, ruwe_key=ruwe_key)
 
@@ -632,6 +646,12 @@ def forecast(
                 ),
             )
 
+        # Promotie/schoolvakantie-invoer is een premium-functie: tijdens de
+        # proefperiode stilzwijgend negeren (geen foutcode — dit zijn
+        # optionele verrijkingsvelden op een verder werkend verzoek, geen
+        # losse actie zoals API-key aanmaken). Verdediging in de diepte:
+        # de frontend toont deze velden al uitgeschakeld tijdens de trial.
+        in_proefperiode = db_organisaties.is_in_proefperiode(tenants_db, key.organisatie_id)
         resultaat = voorspel_periode(
             modellen=artefact["modellen"],
             historie=artefact["historie"],
@@ -639,8 +659,10 @@ def forecast(
             store_id=verzoek.store_id,
             start_datum=verzoek.start_datum,
             horizon_dagen=verzoek.horizon_dagen,
-            promo_datums=dagreeks(verzoek.promo_van, verzoek.promo_tot),
-            schoolvakantie_datums=dagreeks(verzoek.schoolvakantie_van, verzoek.schoolvakantie_tot),
+            promo_datums=set() if in_proefperiode else dagreeks(verzoek.promo_van, verzoek.promo_tot),
+            schoolvakantie_datums=(
+                set() if in_proefperiode else dagreeks(verzoek.schoolvakantie_van, verzoek.schoolvakantie_tot)
+            ),
             verklaar=True,
         )
         vorige_omzet = vorige_periode_omzet(

@@ -133,6 +133,34 @@ def test_checkout_completed_maakt_organisatie_en_eigenaar_aan(tmp_path, monkeypa
     assert org.stripe_subscription_id == "sub_456"
 
 
+def test_checkout_completed_zet_trial_verloopt_op(tmp_path, monkeypatch):
+    """De lokale proefperiode-status (db.organisaties.is_in_proefperiode)
+    moet Stripe's eigen trial_period_days volgen (SIGNUP_PROEFPERIODE_DAGEN,
+    zie serving/app.py) — anders weet de app niet welke organisaties nog
+    premium-functies moeten missen."""
+    from datetime import datetime, timedelta, timezone
+
+    from sqlalchemy import select
+
+    from db.schema import organisaties
+
+    module, client, engine = _bouw_omgeving(tmp_path, monkeypatch)
+    _leg_aanmelding_vast(engine)
+    monkeypatch.setattr(module, "lees_webhook_event", lambda **kw: _checkout_completed_event("cs_test_123"))
+    voor = datetime.now(timezone.utc)
+
+    resp = client.post("/webhooks/stripe", content=b"ruwe-payload", headers={"stripe-signature": "t=1,v1=geldig"})
+    na = datetime.now(timezone.utc)
+
+    assert resp.status_code == 200, resp.text
+    aanmelding = haal_aanmelding_bij_sessie(engine, "cs_test_123")
+    with engine.connect() as conn:
+        org = conn.execute(select(organisaties).where(organisaties.c.id == aanmelding.organisatie_id)).one()
+    verwachte_ondergrens = (voor + timedelta(days=module.SIGNUP_PROEFPERIODE_DAGEN)).replace(tzinfo=None)
+    verwachte_bovengrens = (na + timedelta(days=module.SIGNUP_PROEFPERIODE_DAGEN)).replace(tzinfo=None)
+    assert verwachte_ondergrens <= org.trial_verloopt_op <= verwachte_bovengrens
+
+
 def test_nieuwe_eigenaar_kan_meteen_inloggen(tmp_path, monkeypatch):
     module, client, engine = _bouw_omgeving(tmp_path, monkeypatch)
     _leg_aanmelding_vast(engine)

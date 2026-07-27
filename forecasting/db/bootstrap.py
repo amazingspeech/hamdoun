@@ -12,10 +12,14 @@ from sqlalchemy.engine import Connection, Engine
 from db.schema import organisaties, winkels
 
 
-def _bootstrap_organisatie_op_connectie(conn: Connection, naam: str, slug: str, store_ids: list[int]) -> int:
+def _bootstrap_organisatie_op_connectie(
+    conn: Connection, naam: str, slug: str, store_ids: list[int], trial_verloopt_op: Optional[datetime] = None
+) -> int:
     nu = datetime.now(timezone.utc)
     org_id = conn.execute(
-        organisaties.insert().values(naam=naam, slug=slug, actief=True, aangemaakt_op=nu)
+        organisaties.insert().values(
+            naam=naam, slug=slug, actief=True, aangemaakt_op=nu, trial_verloopt_op=trial_verloopt_op
+        )
     ).inserted_primary_key[0]
 
     if store_ids:
@@ -36,7 +40,8 @@ def _bootstrap_organisatie_op_connectie(conn: Connection, naam: str, slug: str, 
 
 
 def bootstrap_organisatie(
-    engine: Engine, naam: str, slug: str, store_ids: list[int], conn: Optional[Connection] = None
+    engine: Engine, naam: str, slug: str, store_ids: list[int], conn: Optional[Connection] = None,
+    trial_verloopt_op: Optional[datetime] = None,
 ) -> int:
     """Maakt één organisatie aan en koppelt elke store_id uit store_ids
     eraan als winkel. Geeft het id van de aangemaakte organisatie terug.
@@ -47,8 +52,13 @@ def bootstrap_organisatie(
     serving.app's Stripe-webhook, die dit met andere schrijfacties atomisch
     moet combineren — zie db/organisaties.py en db/aanmeldingen.py voor
     hetzelfde patroon). Zonder conn opent deze functie zoals voorheen zijn
-    eigen transactie."""
+    eigen transactie.
+
+    trial_verloopt_op: optioneel, alleen door de Stripe-webhook meegegeven
+    zodat de lokale proefperiode-status (db.organisaties.is_in_proefperiode)
+    Stripe's eigen trial_period_days volgt. Standaard None — een handmatige
+    bootstrap (db/cli.py) is per ontwerp nooit trial-beperkt."""
     if conn is not None:
-        return _bootstrap_organisatie_op_connectie(conn, naam, slug, store_ids)
+        return _bootstrap_organisatie_op_connectie(conn, naam, slug, store_ids, trial_verloopt_op)
     with engine.begin() as eigen_conn:
-        return _bootstrap_organisatie_op_connectie(eigen_conn, naam, slug, store_ids)
+        return _bootstrap_organisatie_op_connectie(eigen_conn, naam, slug, store_ids, trial_verloopt_op)

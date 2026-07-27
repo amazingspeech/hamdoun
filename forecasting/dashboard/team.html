@@ -85,7 +85,13 @@
   </div>
 
   <div class="kaart" id="api-keys-kaart" hidden>
-    <p class="sub" style="margin:0;">API-keys geven programmatische toegang tot de voorspellings-API namens jouw organisatie.</p>
+    <p class="sub" style="margin:0;">
+      API-keys geven programmatische toegang tot de voorspellings-API namens jouw organisatie.
+      <span class="premium-badge" id="api-keys-premium-badge" hidden>Premium</span>
+    </p>
+    <p class="sub" id="api-keys-proefperiode-melding" hidden style="margin:4px 0 0;">
+      Niet beschikbaar tijdens je proefperiode — upgrade om zelf API-keys aan te maken.
+    </p>
     <form id="nieuwe-key-form" style="display:flex; gap:14px; align-items:end; flex-wrap:wrap;">
       <div class="veld">
         <label for="nieuwe-key-naam">Naam</label>

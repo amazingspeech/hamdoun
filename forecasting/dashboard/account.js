@@ -600,6 +600,19 @@ function toonNieuweKey(ruweKey) {
   el.appendChild(code);
 }
 
+function pasApiKeysPremiumStatusToe(inProefperiode) {
+  document.getElementById("api-keys-premium-badge").hidden = !inProefperiode;
+  document.getElementById("api-keys-proefperiode-melding").hidden = !inProefperiode;
+  const form = document.getElementById("nieuwe-key-form");
+  if (inProefperiode) {
+    form.setAttribute("data-premium-vergrendeld", "");
+  } else {
+    form.removeAttribute("data-premium-vergrendeld");
+  }
+  document.getElementById("nieuwe-key-naam").disabled = inProefperiode;
+  document.getElementById("nieuwe-key-knop").disabled = inProefperiode;
+}
+
 function initNieuweKeyForm() {
   const form = document.getElementById("nieuwe-key-form");
   if (!form) return;
@@ -652,6 +665,7 @@ async function initTeamPagina() {
     document.getElementById("nieuw-lid-kaart").hidden = false;
     document.getElementById("herbestel-kaart").hidden = false;
     document.getElementById("api-keys-kaart").hidden = false;
+    pasApiKeysPremiumStatusToe(me.in_proefperiode);
     try {
       const instellingen = await haalOrganisatieInstellingen();
       if (instellingen.gemiddelde_omzet_per_stuk !== null) {

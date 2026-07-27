@@ -53,6 +53,14 @@ organisaties = Table(
     # naast elkaar bestaan.
     Column("stripe_customer_id", String, nullable=True),
     Column("stripe_subscription_id", String, nullable=True),
+    # Fase 5 premium-fundament: gezet bij self-serve signup (dezelfde
+    # proefperiode-lengte als Stripe's eigen trial_period_days, zie
+    # serving/app.py) om lokaal premium-functies te kunnen afschermen
+    # zonder bij elk verzoek Stripe te bevragen. NULL voor handmatig
+    # aangemaakte organisaties (db.bootstrap.bootstrap_organisatie) — die
+    # zijn per ontwerp nooit trial-beperkt, zie db.organisaties.
+    # is_in_proefperiode().
+    Column("trial_verloopt_op", DateTime, nullable=True),
 )
 
 winkels = Table(

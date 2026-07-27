@@ -46,7 +46,7 @@
       <button id="voorspel" class="btn" disabled>Laden…</button>
     </div>
 
-    <div class="promo-vinkjes">
+    <div class="promo-vinkjes" id="promo-vinkjes">
       <label class="vinkje">
         <input type="checkbox" id="promo-vinkje">
         Ik heb in deze periode een actie
@@ -55,6 +55,7 @@
         <input type="checkbox" id="vakantie-vinkje">
         Deze periode valt in een schoolvakantie
       </label>
+      <span class="premium-badge" id="promo-premium-badge" hidden>Premium</span>
     </div>
   </header>
 
@@ -105,6 +106,7 @@
       <div class="export-knoppen" id="export-knoppen" hidden>
         <button type="button" class="btn zacht" id="export-csv">Download als CSV</button>
         <button type="button" class="btn zacht" id="export-png">Download grafiek als PNG</button>
+        <span class="premium-badge" id="export-premium-badge" hidden>Premium</span>
       </div>
     </div>
 

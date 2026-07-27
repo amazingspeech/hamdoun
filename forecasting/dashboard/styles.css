@@ -303,6 +303,19 @@ details.model-info { margin-top:32px; border-top:1px solid var(--line); padding-
   color:var(--accent-ink); background:var(--accent-soft); border-radius:999px; padding:3px 9px;
 }
 
+/* Premium-gate: zichtbaar-maar-uitgeschakeld tijdens de proefperiode
+   (i.p.v. volledig verbergen) — de gebruiker ziet dat de functie bestaat
+   en wat 'm ontgrendelt, in plaats van te raden waarom iets ontbreekt. */
+.premium-badge {
+  display:inline-flex; align-items:center; margin-left:8px; font:600 0.6875rem/1.2 var(--font-body);
+  color:var(--accent-ink); background:var(--accent-soft); border-radius:999px; padding:3px 9px;
+  letter-spacing:0.02em; text-transform:uppercase;
+}
+[data-premium-vergrendeld] { opacity:0.55; }
+[data-premium-vergrendeld] input, [data-premium-vergrendeld] button, [data-premium-vergrendeld] select {
+  cursor:not-allowed;
+}
+
 .sparkline-lijn { fill:none; stroke:var(--accent); stroke-width:1.75; stroke-linecap:round; stroke-linejoin:round; }
 .sparkline-stip { fill:var(--accent); }
 

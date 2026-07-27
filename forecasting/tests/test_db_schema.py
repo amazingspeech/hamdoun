@@ -158,6 +158,23 @@ def test_organisatie_stripe_kolommen_zijn_optioneel(tmp_path):
     assert rij.stripe_subscription_id is None
 
 
+def test_organisatie_trial_verloopt_op_is_optioneel(tmp_path):
+    """Handmatig aangemaakte organisaties (bootstrap_organisatie, geen
+    self-serve signup) hebben geen proefperiode — ze zijn per ontwerp nooit
+    trial-beperkt (zie db.organisaties.is_in_proefperiode), dus deze kolom
+    moet nullable zijn, net als de Stripe-kolommen hierboven."""
+    engine = maak_database(tmp_path / "tenants.db")
+    nu = datetime.now(timezone.utc)
+    with engine.begin() as conn:
+        org_id = conn.execute(
+            organisaties.insert().values(naam="Org A", slug="org-a", actief=True, aangemaakt_op=nu)
+        ).inserted_primary_key[0]
+
+    with engine.connect() as conn:
+        rij = conn.execute(organisaties.select().where(organisaties.c.id == org_id)).one()
+    assert rij.trial_verloopt_op is None
+
+
 def test_aanmelding_kan_aangemaakt_worden_zonder_organisatie(tmp_path):
     """Een aanmelding bestaat vanaf het moment een Stripe Checkout Session
     wordt gestart, ruim vóórdat de betaling (en dus de organisatie) er is —

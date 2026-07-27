@@ -94,7 +94,7 @@ def test_signup_geeft_checkout_url_terug(tmp_path, monkeypatch):
     assert resp.json() == {"checkout_url": "https://checkout.stripe.com/c/pay/cs_test_123"}
     assert aangeroepen_met["klant_email"] == "devries@voorbeeld.nl"
     assert aangeroepen_met["price_id"] == "price_abc"
-    assert aangeroepen_met["proefperiode_dagen"] == 7
+    assert aangeroepen_met["proefperiode_dagen"] == 14
     assert aangeroepen_met["success_url"] == "http://127.0.0.1:8000/signup-gelukt.html"
     assert aangeroepen_met["cancel_url"] == "http://127.0.0.1:8000/signup.html"
 

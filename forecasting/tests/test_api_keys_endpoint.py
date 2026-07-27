@@ -55,7 +55,7 @@ def _bouw_omgeving(tmp_path, monkeypatch):
     if "serving.app" in sys.modules:
         del sys.modules["serving.app"]
     module = importlib.import_module("serving.app")
-    return TestClient(module.app)
+    return TestClient(module.app), engine
 
 
 def _inloggen(client, email, wachtwoord):
@@ -64,7 +64,7 @@ def _inloggen(client, email, wachtwoord):
 
 
 def test_eigenaar_kan_api_key_aanmaken(tmp_path, monkeypatch):
-    client = _bouw_omgeving(tmp_path, monkeypatch)
+    client, _ = _bouw_omgeving(tmp_path, monkeypatch)
     _inloggen(client, "eigenaar-a@klant.nl", "wachtwoord-a")
 
     resp = client.post("/api-keys", json={"naam": "Kassasysteem"})
@@ -76,7 +76,7 @@ def test_eigenaar_kan_api_key_aanmaken(tmp_path, monkeypatch):
 
 
 def test_nieuwe_api_key_werkt_voor_forecast_auth(tmp_path, monkeypatch):
-    client = _bouw_omgeving(tmp_path, monkeypatch)
+    client, _ = _bouw_omgeving(tmp_path, monkeypatch)
     _inloggen(client, "eigenaar-a@klant.nl", "wachtwoord-a")
     ruwe_key = client.post("/api-keys", json={"naam": "Kassasysteem"}).json()["ruwe_key"]
 
@@ -85,8 +85,34 @@ def test_nieuwe_api_key_werkt_voor_forecast_auth(tmp_path, monkeypatch):
     assert resp.status_code == 200
 
 
+def test_eigenaar_in_proefperiode_mag_geen_api_key_aanmaken(tmp_path, monkeypatch):
+    """Self-serve API-keys zijn een premium-functie (zie de trial/premium-
+    fundament-beslissing) — een organisatie die nog in haar gratis
+    proefperiode zit, mag deze actie niet uitvoeren, alleen na conversie
+    naar een betaald abonnement."""
+    from datetime import datetime, timedelta, timezone
+
+    client, engine = _bouw_omgeving(tmp_path, monkeypatch)
+    from sqlalchemy import select
+
+    from db.schema import organisaties
+    with engine.begin() as conn:
+        org_a_id = conn.execute(select(organisaties.c.id).where(organisaties.c.slug == "org-a")).scalar_one()
+        conn.execute(
+            organisaties.update().where(organisaties.c.id == org_a_id).values(
+                trial_verloopt_op=datetime.now(timezone.utc) + timedelta(days=14)
+            )
+        )
+    _inloggen(client, "eigenaar-a@klant.nl", "wachtwoord-a")
+
+    resp = client.post("/api-keys", json={"naam": "Kassasysteem"})
+
+    assert resp.status_code == 403
+    assert "proefperiode" in resp.json()["detail"].lower()
+
+
 def test_lid_mag_geen_api_key_aanmaken(tmp_path, monkeypatch):
-    client = _bouw_omgeving(tmp_path, monkeypatch)
+    client, _ = _bouw_omgeving(tmp_path, monkeypatch)
     _inloggen(client, "lid-a@klant.nl", "wachtwoord-a-lid")
 
     resp = client.post("/api-keys", json={"naam": "Kassasysteem"})
@@ -95,7 +121,7 @@ def test_lid_mag_geen_api_key_aanmaken(tmp_path, monkeypatch):
 
 
 def test_api_key_aanmaken_zonder_sessie_geeft_401(tmp_path, monkeypatch):
-    client = _bouw_omgeving(tmp_path, monkeypatch)
+    client, _ = _bouw_omgeving(tmp_path, monkeypatch)
 
     resp = client.post("/api-keys", json={"naam": "Kassasysteem"})
 
@@ -103,7 +129,7 @@ def test_api_key_aanmaken_zonder_sessie_geeft_401(tmp_path, monkeypatch):
 
 
 def test_api_keys_lijst_toont_alleen_eigen_organisatie_zonder_ruwe_waarde(tmp_path, monkeypatch):
-    client = _bouw_omgeving(tmp_path, monkeypatch)
+    client, _ = _bouw_omgeving(tmp_path, monkeypatch)
     _inloggen(client, "eigenaar-a@klant.nl", "wachtwoord-a")
     client.post("/api-keys", json={"naam": "Kassasysteem"})
 
@@ -117,7 +143,7 @@ def test_api_keys_lijst_toont_alleen_eigen_organisatie_zonder_ruwe_waarde(tmp_pa
 
 
 def test_lid_mag_api_keys_niet_bekijken(tmp_path, monkeypatch):
-    client = _bouw_omgeving(tmp_path, monkeypatch)
+    client, _ = _bouw_omgeving(tmp_path, monkeypatch)
     _inloggen(client, "lid-a@klant.nl", "wachtwoord-a-lid")
 
     resp = client.get("/api-keys")
@@ -126,7 +152,7 @@ def test_lid_mag_api_keys_niet_bekijken(tmp_path, monkeypatch):
 
 
 def test_eigenaar_kan_eigen_api_key_intrekken(tmp_path, monkeypatch):
-    client = _bouw_omgeving(tmp_path, monkeypatch)
+    client, _ = _bouw_omgeving(tmp_path, monkeypatch)
     _inloggen(client, "eigenaar-a@klant.nl", "wachtwoord-a")
     key_id = client.post("/api-keys", json={"naam": "Kassasysteem"}).json()["id"]
 
@@ -138,7 +164,7 @@ def test_eigenaar_kan_eigen_api_key_intrekken(tmp_path, monkeypatch):
 
 
 def test_intrekken_van_andermans_key_geeft_404(tmp_path, monkeypatch):
-    client = _bouw_omgeving(tmp_path, monkeypatch)
+    client, _ = _bouw_omgeving(tmp_path, monkeypatch)
     _inloggen(client, "eigenaar-a@klant.nl", "wachtwoord-a")
     key_id = client.post("/api-keys", json={"naam": "Kassasysteem"}).json()["id"]
     client.post("/logout")

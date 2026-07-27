@@ -55,37 +55,37 @@ def _bouw_login_omgeving(tmp_path, monkeypatch, rate_limit_per_minuut="1000"):
     if "serving.app" in sys.modules:
         del sys.modules["serving.app"]
     module = importlib.import_module("serving.app")
-    return TestClient(module.app)
+    return TestClient(module.app), engine
 
 
 def test_login_met_juiste_gegevens_zet_sessiecookie(tmp_path, monkeypatch):
-    client = _bouw_login_omgeving(tmp_path, monkeypatch)
+    client, _ = _bouw_login_omgeving(tmp_path, monkeypatch)
     resp = client.post("/login", json={"email": "eigenaar@klant.nl", "wachtwoord": "een-goed-wachtwoord"})
     assert resp.status_code == 200
     assert "sessie" in resp.cookies
 
 
 def test_login_met_fout_wachtwoord_geeft_401_zonder_cookie(tmp_path, monkeypatch):
-    client = _bouw_login_omgeving(tmp_path, monkeypatch)
+    client, _ = _bouw_login_omgeving(tmp_path, monkeypatch)
     resp = client.post("/login", json={"email": "eigenaar@klant.nl", "wachtwoord": "verkeerd"})
     assert resp.status_code == 401
     assert "sessie" not in resp.cookies
 
 
 def test_login_met_onbekend_email_geeft_401(tmp_path, monkeypatch):
-    client = _bouw_login_omgeving(tmp_path, monkeypatch)
+    client, _ = _bouw_login_omgeving(tmp_path, monkeypatch)
     resp = client.post("/login", json={"email": "onbekend@klant.nl", "wachtwoord": "een-goed-wachtwoord"})
     assert resp.status_code == 401
 
 
 def test_me_zonder_sessie_geeft_401(tmp_path, monkeypatch):
-    client = _bouw_login_omgeving(tmp_path, monkeypatch)
+    client, _ = _bouw_login_omgeving(tmp_path, monkeypatch)
     resp = client.get("/me")
     assert resp.status_code == 401
 
 
 def test_me_met_geldige_sessie_geeft_gebruiker(tmp_path, monkeypatch):
-    client = _bouw_login_omgeving(tmp_path, monkeypatch)
+    client, _ = _bouw_login_omgeving(tmp_path, monkeypatch)
     client.post("/login", json={"email": "eigenaar@klant.nl", "wachtwoord": "een-goed-wachtwoord"})
 
     resp = client.get("/me")
@@ -94,8 +94,43 @@ def test_me_met_geldige_sessie_geeft_gebruiker(tmp_path, monkeypatch):
     assert resp.json()["email"] == "eigenaar@klant.nl"
 
 
+def test_me_geeft_in_proefperiode_false_voor_handmatig_aangemaakte_org(tmp_path, monkeypatch):
+    """bootstrap_organisatie zet nooit trial_verloopt_op — de frontend
+    gebruikt dit veld om premium-functies (self-serve API-keys, promotie/
+    schoolvakantie-invoer, CSV/PNG-export) zichtbaar-maar-uitgeschakeld te
+    tonen tijdens een proefperiode."""
+    client, _ = _bouw_login_omgeving(tmp_path, monkeypatch)
+    client.post("/login", json={"email": "eigenaar@klant.nl", "wachtwoord": "een-goed-wachtwoord"})
+
+    resp = client.get("/me")
+
+    assert resp.json()["in_proefperiode"] is False
+
+
+def test_me_geeft_in_proefperiode_true_tijdens_proefperiode(tmp_path, monkeypatch):
+    from datetime import datetime, timedelta, timezone
+
+    from sqlalchemy import select
+
+    from db.schema import organisaties
+
+    client, engine = _bouw_login_omgeving(tmp_path, monkeypatch)
+    with engine.begin() as conn:
+        org_id = conn.execute(select(organisaties.c.id).where(organisaties.c.slug == "test-organisatie")).scalar_one()
+        conn.execute(
+            organisaties.update().where(organisaties.c.id == org_id).values(
+                trial_verloopt_op=datetime.now(timezone.utc) + timedelta(days=14)
+            )
+        )
+    client.post("/login", json={"email": "eigenaar@klant.nl", "wachtwoord": "een-goed-wachtwoord"})
+
+    resp = client.get("/me")
+
+    assert resp.json()["in_proefperiode"] is True
+
+
 def test_logout_maakt_sessie_ongeldig(tmp_path, monkeypatch):
-    client = _bouw_login_omgeving(tmp_path, monkeypatch)
+    client, _ = _bouw_login_omgeving(tmp_path, monkeypatch)
     client.post("/login", json={"email": "eigenaar@klant.nl", "wachtwoord": "een-goed-wachtwoord"})
 
     logout_resp = client.post("/logout")
@@ -106,7 +141,7 @@ def test_logout_maakt_sessie_ongeldig(tmp_path, monkeypatch):
 
 
 def test_login_boven_rate_limit_geeft_429(tmp_path, monkeypatch):
-    client = _bouw_login_omgeving(tmp_path, monkeypatch, rate_limit_per_minuut="2")
+    client, _ = _bouw_login_omgeving(tmp_path, monkeypatch, rate_limit_per_minuut="2")
     verzoek = {"email": "eigenaar@klant.nl", "wachtwoord": "verkeerd"}
 
     for _ in range(2):

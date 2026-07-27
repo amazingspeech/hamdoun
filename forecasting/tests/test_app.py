@@ -65,23 +65,23 @@ def _bouw_test_omgeving(tmp_path, monkeypatch, cors_origins="", rate_limit_per_m
     if "serving.app" in sys.modules:
         del sys.modules["serving.app"]
     module = importlib.import_module("serving.app")
-    return TestClient(module.app)
+    return TestClient(module.app), engine
 
 
 def test_health_werkt_zonder_auth(tmp_path, monkeypatch):
-    client = _bouw_test_omgeving(tmp_path, monkeypatch)
+    client, _ = _bouw_test_omgeving(tmp_path, monkeypatch)
     resp = client.get("/health")
     assert resp.status_code == 200
 
 
 def test_forecast_zonder_key_geeft_401(tmp_path, monkeypatch):
-    client = _bouw_test_omgeving(tmp_path, monkeypatch)
+    client, _ = _bouw_test_omgeving(tmp_path, monkeypatch)
     resp = client.post("/forecast", json={"store_id": 1, "start_datum": "2015-07-11", "horizon_dagen": 3})
     assert resp.status_code == 401
 
 
 def test_forecast_met_ongeldige_key_geeft_401(tmp_path, monkeypatch):
-    client = _bouw_test_omgeving(tmp_path, monkeypatch)
+    client, _ = _bouw_test_omgeving(tmp_path, monkeypatch)
     resp = client.post(
         "/forecast", json={"store_id": 1, "start_datum": "2015-07-11", "horizon_dagen": 3},
         headers={"X-API-Key": "fout"},
@@ -90,7 +90,7 @@ def test_forecast_met_ongeldige_key_geeft_401(tmp_path, monkeypatch):
 
 
 def test_forecast_met_geldige_key_geeft_voorspellingen(tmp_path, monkeypatch):
-    client = _bouw_test_omgeving(tmp_path, monkeypatch)
+    client, _ = _bouw_test_omgeving(tmp_path, monkeypatch)
     resp = client.post(
         "/forecast", json={"store_id": 1, "start_datum": "2015-07-11", "horizon_dagen": 3},
         headers={"X-API-Key": "test-key-123"},
@@ -110,7 +110,7 @@ def test_forecast_met_geldige_key_geeft_voorspellingen(tmp_path, monkeypatch):
 
 
 def test_forecast_met_ingestelde_prijs_geeft_herbestel_advies(tmp_path, monkeypatch):
-    client = _bouw_test_omgeving(tmp_path, monkeypatch)
+    client, _ = _bouw_test_omgeving(tmp_path, monkeypatch)
 
     engine = maak_database(tmp_path / "tenants.db")
     with engine.connect() as conn:
@@ -134,7 +134,7 @@ def test_forecast_met_ingestelde_prijs_geeft_herbestel_advies(tmp_path, monkeypa
 
 
 def test_forecast_onbekende_winkel_geeft_404(tmp_path, monkeypatch):
-    client = _bouw_test_omgeving(tmp_path, monkeypatch)
+    client, _ = _bouw_test_omgeving(tmp_path, monkeypatch)
     resp = client.post(
         "/forecast", json={"store_id": 999, "start_datum": "2015-07-11", "horizon_dagen": 3},
         headers={"X-API-Key": "test-key-123"},
@@ -143,7 +143,7 @@ def test_forecast_onbekende_winkel_geeft_404(tmp_path, monkeypatch):
 
 
 def test_forecast_horizon_boven_gevalideerde_periode_geeft_422(tmp_path, monkeypatch):
-    client = _bouw_test_omgeving(tmp_path, monkeypatch)
+    client, _ = _bouw_test_omgeving(tmp_path, monkeypatch)
     resp = client.post(
         "/forecast", json={"store_id": 1, "start_datum": "2015-07-11", "horizon_dagen": 9999},
         headers={"X-API-Key": "test-key-123"},
@@ -152,7 +152,7 @@ def test_forecast_horizon_boven_gevalideerde_periode_geeft_422(tmp_path, monkeyp
 
 
 def test_metrics_geeft_gevalideerde_cijfers(tmp_path, monkeypatch):
-    client = _bouw_test_omgeving(tmp_path, monkeypatch)
+    client, _ = _bouw_test_omgeving(tmp_path, monkeypatch)
     resp = client.get("/metrics", headers={"X-API-Key": "test-key-123"})
     assert resp.status_code == 200
     data = resp.json()
@@ -164,7 +164,7 @@ def test_metrics_geeft_gevalideerde_cijfers(tmp_path, monkeypatch):
 
 
 def test_cors_ontbrekende_config_staat_geen_enkele_origin_toe(tmp_path, monkeypatch):
-    client = _bouw_test_omgeving(tmp_path, monkeypatch, cors_origins="")
+    client, _ = _bouw_test_omgeving(tmp_path, monkeypatch, cors_origins="")
     resp = client.get(
         "/health", headers={"Origin": "https://willekeurige-site.example"},
     )
@@ -172,13 +172,13 @@ def test_cors_ontbrekende_config_staat_geen_enkele_origin_toe(tmp_path, monkeypa
 
 
 def test_cors_toegestane_origin_krijgt_header(tmp_path, monkeypatch):
-    client = _bouw_test_omgeving(tmp_path, monkeypatch, cors_origins="https://tessar.nl")
+    client, _ = _bouw_test_omgeving(tmp_path, monkeypatch, cors_origins="https://tessar.nl")
     resp = client.get("/health", headers={"Origin": "https://tessar.nl"})
     assert resp.headers.get("access-control-allow-origin") == "https://tessar.nl"
 
 
 def test_audit_log_bevat_verzoek_metadata(tmp_path, monkeypatch):
-    client = _bouw_test_omgeving(tmp_path, monkeypatch)
+    client, _ = _bouw_test_omgeving(tmp_path, monkeypatch)
     client.post(
         "/forecast", json={"store_id": 1, "start_datum": "2015-07-11", "horizon_dagen": 2},
         headers={"X-API-Key": "test-key-123"},
@@ -191,7 +191,7 @@ def test_audit_log_bevat_verzoek_metadata(tmp_path, monkeypatch):
 
 
 def test_docs_niet_bereikbaar_zonder_expliciete_opt_in(tmp_path, monkeypatch):
-    client = _bouw_test_omgeving(tmp_path, monkeypatch)
+    client, _ = _bouw_test_omgeving(tmp_path, monkeypatch)
     assert client.get("/docs").status_code == 404
     assert client.get("/redoc").status_code == 404
     assert client.get("/openapi.json").status_code == 404
@@ -199,13 +199,13 @@ def test_docs_niet_bereikbaar_zonder_expliciete_opt_in(tmp_path, monkeypatch):
 
 def test_docs_bereikbaar_met_expliciete_opt_in(tmp_path, monkeypatch):
     monkeypatch.setenv("EXPOSE_API_DOCS", "true")
-    client = _bouw_test_omgeving(tmp_path, monkeypatch)
+    client, _ = _bouw_test_omgeving(tmp_path, monkeypatch)
     assert client.get("/docs").status_code == 200
     assert client.get("/openapi.json").status_code == 200
 
 
 def test_forecast_boven_rate_limit_geeft_429(tmp_path, monkeypatch):
-    client = _bouw_test_omgeving(tmp_path, monkeypatch, rate_limit_per_minuut="2")
+    client, _ = _bouw_test_omgeving(tmp_path, monkeypatch, rate_limit_per_minuut="2")
     verzoek = {"store_id": 1, "start_datum": "2015-07-11", "horizon_dagen": 3}
     headers = {"X-API-Key": "test-key-123"}
 
@@ -218,7 +218,7 @@ def test_forecast_boven_rate_limit_geeft_429(tmp_path, monkeypatch):
 
 
 def test_forecast_geeft_promo_en_schoolvakantie_datums_door(tmp_path, monkeypatch):
-    client = _bouw_test_omgeving(tmp_path, monkeypatch)
+    client, _ = _bouw_test_omgeving(tmp_path, monkeypatch)
 
     import serving.app as app_module
     aangeroepen_met = {}
@@ -247,8 +247,56 @@ def test_forecast_geeft_promo_en_schoolvakantie_datums_door(tmp_path, monkeypatc
     assert aangeroepen_met["schoolvakantie_datums"] == {date(2015, 7, 11)}
 
 
+def test_forecast_negeert_promo_datums_tijdens_proefperiode(tmp_path, monkeypatch):
+    """Promotie/schoolvakantie-invoer is een premium-functie (zie de
+    trial/premium-fundament-beslissing) — een organisatie in haar
+    proefperiode mag de voorspelling er niet mee laten beïnvloeden, ook
+    niet als de velden wel worden meegestuurd (bv. door een client die de
+    disabled-state omzeilt). Bewust stilzwijgend negeren, geen foutcode:
+    dit zijn optionele verrijkingsvelden op een verder werkend verzoek,
+    geen losse actie zoals API-key aanmaken."""
+    from datetime import datetime, timedelta, timezone
+
+    client, engine = _bouw_test_omgeving(tmp_path, monkeypatch)
+    with engine.begin() as conn:
+        org_id = conn.execute(
+            select(organisaties_tabel.c.id).where(organisaties_tabel.c.slug == "test-organisatie")
+        ).scalar_one()
+        conn.execute(
+            organisaties_tabel.update().where(organisaties_tabel.c.id == org_id).values(
+                trial_verloopt_op=datetime.now(timezone.utc) + timedelta(days=14)
+            )
+        )
+
+    import serving.app as app_module
+    aangeroepen_met = {}
+
+    def _spy(**kwargs):
+        aangeroepen_met.update(kwargs)
+        return VoorspelResultaat(
+            voorspellingen=pd.DataFrame({"Date": [pd.Timestamp("2015-07-11")], "p10": [1.0], "p50": [2.0], "p90": [3.0]}),
+            belangrijkste_factoren=[],
+        )
+
+    monkeypatch.setattr(app_module, "voorspel_periode", _spy)
+
+    resp = client.post(
+        "/forecast",
+        json={
+            "store_id": 1, "start_datum": "2015-07-11", "horizon_dagen": 3,
+            "promo_van": "2015-07-12", "promo_tot": "2015-07-13",
+            "schoolvakantie_van": "2015-07-11",
+        },
+        headers={"X-API-Key": "test-key-123"},
+    )
+
+    assert resp.status_code == 200
+    assert aangeroepen_met["promo_datums"] == set()
+    assert aangeroepen_met["schoolvakantie_datums"] == set()
+
+
 def test_forecast_zonder_promo_datums_geeft_lege_sets_door(tmp_path, monkeypatch):
-    client = _bouw_test_omgeving(tmp_path, monkeypatch)
+    client, _ = _bouw_test_omgeving(tmp_path, monkeypatch)
 
     import serving.app as app_module
     aangeroepen_met = {}

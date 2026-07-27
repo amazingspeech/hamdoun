@@ -4,12 +4,22 @@ worden opgegeven — momenteel alleen de gemiddelde omzet per verkocht stuk,
 nodig om een omzetvoorspelling om te rekenen naar een stuks-schatting."""
 from __future__ import annotations
 
+from datetime import datetime, timezone
 from typing import Optional
 
 from sqlalchemy import select
 from sqlalchemy.engine import Connection, Engine
 
 from db.schema import organisaties
+
+
+def _als_utc(moment: datetime) -> datetime:
+    """SQLite/SQLAlchemy geeft datetimes terug zonder tijdzone-info, ook al
+    is er altijd UTC ingeschreven — zelfde reden/patroon als db.sessies.
+    _als_utc en db.wachtwoord_reset._als_utc."""
+    if moment.tzinfo is None:
+        return moment.replace(tzinfo=timezone.utc)
+    return moment
 
 
 def stel_gemiddelde_omzet_per_stuk_in(engine: Engine, organisatie_id: int, bedrag: float) -> None:
@@ -48,6 +58,22 @@ def is_actief(engine: Engine, organisatie_id: int) -> bool:
             select(organisaties.c.actief).where(organisaties.c.id == organisatie_id)
         ).scalar_one_or_none()
     return bool(waarde)
+
+
+def is_in_proefperiode(engine: Engine, organisatie_id: int) -> bool:
+    """True als deze organisatie nog binnen haar gratis proefperiode valt —
+    gebruikt om premium-functies af te schermen (self-serve API-keys,
+    promotie/schoolvakantie-invoer) zonder bij elk verzoek Stripe te
+    bevragen. trial_verloopt_op is NULL voor handmatig aangemaakte
+    organisaties (db.bootstrap.bootstrap_organisatie) — die zijn dus nooit
+    in een proefperiode, ongeacht hoe lang geleden ze zijn aangemaakt."""
+    with engine.connect() as conn:
+        waarde = conn.execute(
+            select(organisaties.c.trial_verloopt_op).where(organisaties.c.id == organisatie_id)
+        ).scalar_one_or_none()
+    if waarde is None:
+        return False
+    return _als_utc(waarde) > datetime.now(timezone.utc)
 
 
 def deactiveer_organisatie(engine: Engine, organisatie_id: int) -> None:
