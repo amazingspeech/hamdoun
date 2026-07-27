@@ -8,13 +8,14 @@ hergebruikt security.api_keys.verifieer_key(), verzint geen tweede
 verificatielogica."""
 from __future__ import annotations
 
+import secrets
 from datetime import datetime, timezone
 
 from sqlalchemy import select
 from sqlalchemy.engine import Engine
 
 from db.schema import api_keys
-from security.api_keys import verifieer_key
+from security.api_keys import hash_key, verifieer_key
 
 
 def migreer_bestaande_key(engine: Engine, organisatie_id: int, naam: str, hash: str, salt: str) -> int:
@@ -33,6 +34,53 @@ def migreer_bestaande_key(engine: Engine, organisatie_id: int, naam: str, hash: 
                 aangemaakt_op=datetime.now(timezone.utc),
             )
         ).inserted_primary_key[0]
+
+
+def maak_api_key(engine: Engine, organisatie_id: int, naam: str) -> tuple[int, str]:
+    """Genereert een nieuwe ruwe API-key, slaat 'm gehasht op en geeft
+    (id, ruwe_key) terug — de ruwe waarde wordt precies één keer getoond
+    (in de dashboard-UI direct na aanmaken), de database bewaart alleen
+    de hash."""
+    ruwe_key = f"vk_{secrets.token_urlsafe(32)}"
+    hash_hex, salt_hex = hash_key(ruwe_key)
+    with engine.begin() as conn:
+        key_id = conn.execute(
+            api_keys.insert().values(
+                organisatie_id=organisatie_id,
+                naam=naam,
+                hash=hash_hex,
+                salt=salt_hex,
+                verlopen_op=None,
+                actief=True,
+                aangemaakt_op=datetime.now(timezone.utc),
+            )
+        ).inserted_primary_key[0]
+    return key_id, ruwe_key
+
+
+def lijst_api_keys(engine: Engine, organisatie_id: int):
+    """Geeft alle keys van een organisatie terug zonder hash/salt — enkel
+    de kolommen die een dashboard mag tonen."""
+    with engine.connect() as conn:
+        return conn.execute(
+            select(api_keys.c.id, api_keys.c.naam, api_keys.c.actief, api_keys.c.aangemaakt_op).where(
+                api_keys.c.organisatie_id == organisatie_id
+            )
+        ).all()
+
+
+def deactiveer_api_key(engine: Engine, organisatie_id: int, key_id: int) -> bool:
+    """Zet een key op inactief, alleen als hij bij organisatie_id hoort.
+    Geeft False terug bij een onbekende of andermans key — geen wijziging,
+    zodat de aanroepende laag hetzelfde 404-gedrag kan geven als bij de
+    store_id-isolatie elders in de app."""
+    with engine.begin() as conn:
+        resultaat = conn.execute(
+            api_keys.update()
+            .where(api_keys.c.id == key_id, api_keys.c.organisatie_id == organisatie_id)
+            .values(actief=False)
+        )
+    return resultaat.rowcount > 0
 
 
 def vind_organisatie_voor_key(engine: Engine, ruwe_key: str) -> tuple[str, int] | None:

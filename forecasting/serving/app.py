@@ -27,6 +27,8 @@ from security import audit
 from serving.config import laad_settings
 from serving.forecast import HorizonBuitenBereik, OnbekendeWinkel, voorspel_periode
 from serving.schemas import (
+    ApiKeyAanmakenVerzoek,
+    ApiKeyResponse,
     DagVoorspelling,
     ForecastResponse,
     ForecastVerzoek,
@@ -34,6 +36,7 @@ from serving.schemas import (
     GebruikerResponse,
     LoginVerzoek,
     MetricsResponse,
+    NieuweApiKeyResponse,
 )
 from training.artifact import laad_artefact
 
@@ -64,7 +67,7 @@ app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.cors_allowed_origins,
-    allow_methods=["GET", "POST"],
+    allow_methods=["GET", "POST", "DELETE"],
     allow_headers=["X-API-Key", "Content-Type"],
 )
 
@@ -177,6 +180,29 @@ def gebruikers_lijst(gebruiker: GeauthenticeerdeGebruiker = Depends(vereis_sessi
             select(gebruikers_tabel).where(gebruikers_tabel.c.organisatie_id == gebruiker.organisatie_id)
         ).all()
     return [GebruikerResponse(id=r.id, email=r.email, rol=r.rol, actief=r.actief) for r in rijen]
+
+
+@app.post("/api-keys", response_model=NieuweApiKeyResponse, status_code=201)
+def api_key_aanmaken(
+    verzoek: ApiKeyAanmakenVerzoek, eigenaar: GeauthenticeerdeGebruiker = Depends(vereis_eigenaar)
+) -> NieuweApiKeyResponse:
+    key_id, ruwe_key = db_api_keys.maak_api_key(tenants_db, organisatie_id=eigenaar.organisatie_id, naam=verzoek.naam)
+    return NieuweApiKeyResponse(id=key_id, naam=verzoek.naam, ruwe_key=ruwe_key)
+
+
+@app.get("/api-keys", response_model=list[ApiKeyResponse])
+def api_keys_lijst(eigenaar: GeauthenticeerdeGebruiker = Depends(vereis_eigenaar)) -> list[ApiKeyResponse]:
+    rijen = db_api_keys.lijst_api_keys(tenants_db, organisatie_id=eigenaar.organisatie_id)
+    return [ApiKeyResponse(id=r.id, naam=r.naam, actief=r.actief, aangemaakt_op=r.aangemaakt_op) for r in rijen]
+
+
+@app.delete("/api-keys/{key_id}", status_code=204)
+def api_key_intrekken(key_id: int, eigenaar: GeauthenticeerdeGebruiker = Depends(vereis_eigenaar)) -> None:
+    # Zelfde 404-i.p.v.-403-redenering als bij store_id hierboven: een
+    # andermans key-id bestaat niet voor jou, punt.
+    gelukt = db_api_keys.deactiveer_api_key(tenants_db, organisatie_id=eigenaar.organisatie_id, key_id=key_id)
+    if not gelukt:
+        raise HTTPException(status_code=404, detail=f"Onbekende API-key: {key_id}")
 
 
 @app.post("/forecast", response_model=ForecastResponse)

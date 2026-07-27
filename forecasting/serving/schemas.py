@@ -3,7 +3,7 @@ periode-controle staat bewust niet hier — die vereist het geladen
 modelartefact, dat pas bij de endpoint-handler bekend is (zie serving/app.py)."""
 from __future__ import annotations
 
-from datetime import date
+from datetime import date, datetime
 
 from pydantic import BaseModel, Field
 
@@ -41,6 +41,23 @@ class GebruikerResponse(BaseModel):
     email: str
     rol: str
     actief: bool
+
+
+class ApiKeyAanmakenVerzoek(BaseModel):
+    naam: str = Field(..., min_length=1)
+
+
+class ApiKeyResponse(BaseModel):
+    id: int
+    naam: str
+    actief: bool
+    aangemaakt_op: datetime
+
+
+class NieuweApiKeyResponse(BaseModel):
+    id: int
+    naam: str
+    ruwe_key: str
 
 
 class MetricsResponse(BaseModel):

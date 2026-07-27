@@ -204,7 +204,13 @@ details.model-info summary::-webkit-details-marker { display:none; }
   margin-top:24px; display:flex; flex-direction:column; gap:14px;
 }
 .kaart .veld { gap:6px; }
-.kaart[hidden] { display:none; }
+
+/* Elk element hier dat ook 'hidden' krijgt, heeft ergens een eigen
+   display-regel (.kaart, .aanbeveling, .fout, ...) die een auteursregel
+   is en dus de UA-standaard [hidden]{display:none} wint — vandaar hier
+   één generieke, harde garantie in plaats van per element opnieuw tegen
+   deze val aan te lopen. */
+[hidden] { display:none !important; }
 
 .teamlijst { display:flex; flex-direction:column; gap:0; margin-top:8px; }
 .teamlid {
@@ -216,6 +222,12 @@ details.model-info summary::-webkit-details-marker { display:none; }
 .teamlid .rol {
   font:600 0.75rem/1.2 var(--font-body); color:var(--ink-soft); background:var(--paper);
   border:1px solid var(--line-strong); border-radius:999px; padding:3px 10px; text-transform:capitalize;
+}
+.teamlid .rechts { display:flex; align-items:center; gap:10px; }
+
+.sleutel-code {
+  font-family:var(--font-mono); background:var(--paper); border:1px solid var(--line-strong);
+  border-radius:6px; padding:2px 8px; margin-left:6px; word-break:break-all; user-select:all;
 }
 
 @media (max-width: 560px) {

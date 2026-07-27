@@ -168,7 +168,32 @@ Elke stap is op zichzelf shipbaar en testbaar — geen big-bang-migratie.
    `tests/test_gebruikers_endpoint.py` (eigenaar mag, lid mag niet, geen
    sessie geeft 401, dubbel e-mailadres geeft 409, teamlijst blijft
    org-gescheiden tussen twee klanten). 142/142 tests groen, ruff schoon.
-6. **Zelfbediening van API-keys.** Gebruikers beheren eigen keys.
+6. **✅ Zelfbediening van API-keys — gedaan 2026-07-27.**
+   `db/api_keys.py`: `maak_api_key()` genereert een ruwe key
+   (`vk_`-prefix + `secrets.token_urlsafe(32)`), hasht 'm met dezelfde
+   `security.api_keys.hash_key()` als altijd, en geeft `(id, ruwe_key)`
+   terug — de ruwe waarde wordt precies één keer getoond. `lijst_api_keys()`
+   geeft alleen id/naam/actief/aangemaakt_op terug, nooit hash/salt.
+   `deactiveer_api_key()` is org-gescoped (geeft `False` terug bij een
+   andermans key-id, geen exception). HTTP-laag, alle drie eigenaar-only
+   via `vereis_eigenaar`: `POST /api-keys` (201, geeft de ruwe key eenmalig
+   terug), `GET /api-keys` (lijst, nooit de ruwe waarde), `DELETE
+   /api-keys/{id}` (204, of 404 bij andermans key — zelfde
+   enumeratie-preventie-redenering als bij store_id). Nieuwe zelfbediende
+   keys werken meteen voor `/forecast`/`/metrics`-auth, exact dezelfde
+   verificatiepad als een gemigreerde key. UI op `team.html`: een
+   eigenaar-only kaart om keys aan te maken (ruwe waarde in een
+   kopieerbare monospace-regel, met expliciete "wordt niet nog een keer
+   getoond"-waarschuwing) en in te trekken. Twee echte CSS-bugs gevonden
+   en gefixt tijdens het bouwen: `.kaart`/`.aanbeveling` (elk met een eigen
+   `display`-regel) overschreven telkens het `hidden`-attribuut — opgelost
+   met één generieke `[hidden] { display:none !important; }` in plaats van
+   per component te patchen. Getest via `tests/test_db_api_keys.py` en
+   `tests/test_api_keys_endpoint.py` (eigenaar mag, lid mag niet (403),
+   geen sessie geeft 401, nieuwe key werkt voor forecast-auth, lijst nooit
+   hash/salt, andermans key intrekken geeft 404). 158/158 tests groen,
+   ruff schoon. Live geverifieerd: key aanmaken, tonen, intrekken, status
+   wisselt naar "Ingetrokken".
 7. **Rate limiting per organisatie.** Pas relevant zodra een organisatie
    meerdere keys deelt.
 8. **Postgres-migratie (voorwaardelijk).** Alleen bij een van de triggers

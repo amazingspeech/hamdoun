@@ -2,6 +2,8 @@ import pytest
 from pydantic import ValidationError
 
 from serving.schemas import (
+    ApiKeyAanmakenVerzoek,
+    ApiKeyResponse,
     DagVoorspelling,
     ForecastResponse,
     ForecastVerzoek,
@@ -9,6 +11,7 @@ from serving.schemas import (
     GebruikerResponse,
     LoginVerzoek,
     MetricsResponse,
+    NieuweApiKeyResponse,
 )
 
 
@@ -73,3 +76,18 @@ def test_gebruiker_aanmaken_verzoek_verwerpt_leeg_wachtwoord():
 def test_gebruiker_response_serialiseert():
     response = GebruikerResponse(id=1, email="lid@klant.nl", rol="lid", actief=True)
     assert response.model_dump()["rol"] == "lid"
+
+
+def test_api_key_aanmaken_verzoek_verwerpt_lege_naam():
+    with pytest.raises(ValidationError):
+        ApiKeyAanmakenVerzoek(naam="")
+
+
+def test_api_key_response_serialiseert():
+    response = ApiKeyResponse(id=1, naam="Kassasysteem", actief=True, aangemaakt_op="2026-07-27T12:00:00")
+    assert response.model_dump()["naam"] == "Kassasysteem"
+
+
+def test_nieuwe_api_key_response_bevat_ruwe_key():
+    response = NieuweApiKeyResponse(id=1, naam="Kassasysteem", ruwe_key="vk_geheim")
+    assert response.model_dump()["ruwe_key"] == "vk_geheim"
