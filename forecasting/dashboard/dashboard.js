@@ -328,7 +328,25 @@ function toonFactoren(factoren) {
   document.getElementById("factoren-lijst").replaceChildren(...factoren.map(maakFactorChip));
 }
 
-function toonSamenvatting(voorspellingen, storeId) {
+function toonPeriodeVergelijking(totaalP50, vorigePeriodeOmzet) {
+  const el = document.getElementById("periode-vergelijking");
+  if (vorigePeriodeOmzet === null || vorigePeriodeOmzet === undefined || vorigePeriodeOmzet === 0) {
+    el.hidden = true;
+    return;
+  }
+  const verschilPct = Math.round(((totaalP50 - vorigePeriodeOmzet) / vorigePeriodeOmzet) * 100);
+  const vorigeTekst = `de vergelijkbare voorgaande periode (${euro.format(Math.round(vorigePeriodeOmzet))})`;
+  if (Math.abs(verschilPct) < 2) {
+    el.textContent = `Vergelijkbaar met ${vorigeTekst}.`;
+  } else if (verschilPct > 0) {
+    el.textContent = `↑ ${verschilPct}% meer dan ${vorigeTekst}.`;
+  } else {
+    el.textContent = `↓ ${Math.abs(verschilPct)}% minder dan ${vorigeTekst}.`;
+  }
+  el.hidden = false;
+}
+
+function toonSamenvatting(voorspellingen, storeId, vorigePeriodeOmzet) {
   const totaalP50 = voorspellingen.reduce((som, v) => som + v.p50, 0);
   const totaalP10 = voorspellingen.reduce((som, v) => som + v.p10, 0);
   const totaalP90 = voorspellingen.reduce((som, v) => som + v.p90, 0);
@@ -341,6 +359,7 @@ function toonSamenvatting(voorspellingen, storeId) {
   animeerGetal(document.getElementById("hero-waarde"), Math.round(totaalP50));
   document.getElementById("hero-sub").textContent =
     `${formatDatumKort(voorspellingen[0].datum)} – ${formatDatumKort(voorspellingen[n - 1].datum)}`;
+  toonPeriodeVergelijking(totaalP50, vorigePeriodeOmzet);
 
   const secundairContainer = document.getElementById("secundair");
   secundairContainer.innerHTML = "";
@@ -457,7 +476,7 @@ async function voorspel() {
     }));
     document.getElementById("skelet-resultaat").hidden = true;
     document.getElementById("resultaat").classList.add("zichtbaar");
-    toonSamenvatting(voorspellingen, data.store_id);
+    toonSamenvatting(voorspellingen, data.store_id, data.vorige_periode_omzet);
     tekenGrafiek(voorspellingen);
     toonKanttekening(Boolean(promoVakantie.promoVan), Boolean(promoVakantie.vakantieVan));
     toonFactoren(data.belangrijkste_factoren);

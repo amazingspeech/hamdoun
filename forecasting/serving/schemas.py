@@ -39,6 +39,10 @@ class ForecastResponse(BaseModel):
     store_id: int
     voorspellingen: list[DagVoorspelling]
     belangrijkste_factoren: list[FactorBijdrage] = []
+    # Som van de werkelijke omzet over de horizon_dagen open dagen direct
+    # voorafgaand aan start_datum — None als daar niet genoeg historie voor
+    # is. Zie serving.forecast.vorige_periode_omzet().
+    vorige_periode_omzet: Optional[float] = None
 
 
 class LoginVerzoek(BaseModel):

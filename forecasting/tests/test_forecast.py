@@ -4,7 +4,14 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from serving.forecast import HorizonBuitenBereik, OnbekendeWinkel, dagreeks, voorspel_periode, winkel_samenvatting
+from serving.forecast import (
+    HorizonBuitenBereik,
+    OnbekendeWinkel,
+    dagreeks,
+    voorspel_periode,
+    vorige_periode_omzet,
+    winkel_samenvatting,
+)
 
 
 class _NepModel:
@@ -249,3 +256,38 @@ def test_winkel_samenvatting_geen_afwijking_bij_vergelijkbare_waarde():
         store_id=1, start_datum=pd.Timestamp("2015-07-11"), horizon_dagen=4,
     )
     assert samenvatting["afwijkend"] is False
+
+
+def test_vorige_periode_omzet_som_van_laatste_open_dagen():
+    omzet = vorige_periode_omzet(
+        historie=_historie_vlak(waarde=1000.0), store_id=1,
+        start_datum=pd.Timestamp("2015-07-11"), horizon_dagen=4,
+    )
+    assert omzet == 4000.0
+
+
+def test_vorige_periode_omzet_negeert_gesloten_dagen():
+    historie = _historie_vlak(waarde=1000.0)
+    historie.loc[historie.index[-1], "Open"] = 0
+    omzet = vorige_periode_omzet(
+        historie=historie, store_id=1,
+        start_datum=pd.Timestamp("2015-07-11"), horizon_dagen=1,
+    )
+    # De gesloten laatste dag telt niet mee, dus dit is de voorlaatste dag.
+    assert omzet == 1000.0
+
+
+def test_vorige_periode_omzet_zonder_voorafgaande_historie_geeft_none():
+    omzet = vorige_periode_omzet(
+        historie=_historie_vlak(n_dagen=40, waarde=1000.0), store_id=1,
+        start_datum=pd.Timestamp("2015-06-01"), horizon_dagen=4,
+    )
+    assert omzet is None
+
+
+def test_vorige_periode_omzet_te_weinig_voorafgaande_historie_geeft_none():
+    omzet = vorige_periode_omzet(
+        historie=_historie_vlak(n_dagen=2, waarde=1000.0), store_id=1,
+        start_datum=pd.Timestamp("2015-06-03"), horizon_dagen=4,
+    )
+    assert omzet is None

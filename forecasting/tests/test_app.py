@@ -97,6 +97,10 @@ def test_forecast_met_geldige_key_geeft_voorspellingen(tmp_path, monkeypatch):
     assert len(data["voorspellingen"]) == 3
     for dag in data["voorspellingen"]:
         assert dag["p10"] <= dag["p50"] <= dag["p90"]
+    # start_datum volgt direct op de 40-daagse historie, dus er zijn ruim
+    # genoeg voorafgaande open dagen voor een periodevergelijking.
+    assert data["vorige_periode_omzet"] is not None
+    assert data["vorige_periode_omzet"] > 0
 
 
 def test_forecast_onbekende_winkel_geeft_404(tmp_path, monkeypatch):

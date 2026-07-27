@@ -31,6 +31,7 @@ from serving.forecast import (
     OnbekendeWinkel,
     dagreeks,
     voorspel_periode,
+    vorige_periode_omzet,
     winkel_samenvatting,
 )
 from serving.schemas import (
@@ -289,6 +290,10 @@ def forecast(
             schoolvakantie_datums=dagreeks(verzoek.schoolvakantie_van, verzoek.schoolvakantie_tot),
             verklaar=True,
         )
+        vorige_omzet = vorige_periode_omzet(
+            historie=artefact["historie"], store_id=verzoek.store_id,
+            start_datum=verzoek.start_datum, horizon_dagen=verzoek.horizon_dagen,
+        )
         statuscode = 200
     except OnbekendeWinkel:
         statuscode = 404
@@ -317,6 +322,7 @@ def forecast(
             for _, rij in resultaat.voorspellingen.iterrows()
         ],
         belangrijkste_factoren=[FactorBijdrage(**f) for f in resultaat.belangrijkste_factoren],
+        vorige_periode_omzet=vorige_omzet,
     )
 
 

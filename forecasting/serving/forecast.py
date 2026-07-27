@@ -128,6 +128,27 @@ def winkel_samenvatting(
     }
 
 
+def vorige_periode_omzet(
+    historie: pd.DataFrame,
+    store_id: int,
+    start_datum: pd.Timestamp,
+    horizon_dagen: int,
+) -> float | None:
+    """Som van de werkelijke omzet over de horizon_dagen open dagen die
+    onmiddellijk voorafgaan aan start_datum — voor de periodevergelijking
+    naast de voorspelling. Geeft None als er niet minstens horizon_dagen
+    voorafgaande open dagen bekend zijn, zodat een gedeeltelijk venster
+    nooit stilzwijgend als volledige periode wordt vergeleken."""
+    start_datum = pd.Timestamp(start_datum)
+    eigen_historie = historie[
+        (historie["Store"] == store_id) & (historie["Open"] == 1) & (historie["Date"] < start_datum)
+    ].sort_values("Date")
+    recent = eigen_historie.tail(horizon_dagen)
+    if len(recent) < horizon_dagen:
+        return None
+    return float(recent["Sales"].sum())
+
+
 def voorspel_periode(
     modellen: dict[float, object],
     historie: pd.DataFrame,
