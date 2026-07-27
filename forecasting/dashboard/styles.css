@@ -316,6 +316,31 @@ details.model-info { margin-top:32px; border-top:1px solid var(--line); padding-
   cursor:not-allowed;
 }
 
+/* Scenario-vergelijking (wat-if): twee kolommen met aannames, twee
+   resultaatkaarten ernaast — bewust geen overlay-grafiek in v1, twee
+   heldere kaarten + een verschilzin communiceert het effect net zo goed
+   zonder de complexiteit van twee bandbreedtes in één SVG te stapelen. */
+details.scenario-vergelijking { margin-top:32px; border-top:1px solid var(--line); padding-top:16px; }
+.scenario-kolommen { display:flex; gap:24px; flex-wrap:wrap; margin-top:14px; }
+.scenario-kolom {
+  flex:1 1 200px; padding:14px 16px; border:1px solid var(--line); border-radius:10px;
+  background:var(--paper-raised); display:flex; flex-direction:column; gap:8px;
+}
+.scenario-kolom-titel { font:600 0.8125rem/1.2 var(--font-body); color:var(--ink-soft); margin:0 0 2px; }
+.scenario-resultaat { display:flex; gap:24px; flex-wrap:wrap; margin-top:20px; }
+.scenario-resultaat-kaart {
+  flex:1 1 200px; padding:16px; border:1px solid var(--line); border-radius:10px; background:var(--paper-raised);
+}
+.scenario-resultaat-kaart .titel { font:600 0.8125rem/1.2 var(--font-body); color:var(--ink-soft); margin:0 0 6px; }
+.scenario-resultaat-kaart .waarde {
+  font:600 1.625rem/1.2 var(--font-display); color:var(--ink); font-variant-numeric:tabular-nums; margin:0;
+}
+.scenario-resultaat-kaart .bandbreedte { font-size:0.8125rem; color:var(--ink-faint); margin:6px 0 0; }
+.scenario-verschil {
+  flex-basis:100%; font-size:0.9375rem; color:var(--ink); background:var(--accent-soft);
+  border-radius:8px; padding:12px 16px; margin:0;
+}
+
 .sparkline-lijn { fill:none; stroke:var(--accent); stroke-width:1.75; stroke-linecap:round; stroke-linejoin:round; }
 .sparkline-stip { fill:var(--accent); }
 

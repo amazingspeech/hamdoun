@@ -721,6 +721,88 @@ function pasPremiumStatusToe(inProefperiode) {
     if (inProefperiode) exportKnoppen.setAttribute("data-premium-vergrendeld", "");
     else exportKnoppen.removeAttribute("data-premium-vergrendeld");
   }
+  const scenarioInvoer = document.getElementById("scenario-invoer");
+  if (scenarioInvoer) {
+    document.getElementById("scenario-premium-badge").hidden = !inProefperiode;
+    for (const id of ["scenario-a-promo", "scenario-a-vakantie", "scenario-b-promo", "scenario-b-vakantie", "vergelijk-knop"]) {
+      document.getElementById(id).disabled = inProefperiode;
+    }
+    if (inProefperiode) scenarioInvoer.setAttribute("data-premium-vergrendeld", "");
+    else scenarioInvoer.removeAttribute("data-premium-vergrendeld");
+  }
+}
+
+function maakScenarioResultaatKaart(titel, voorspellingen) {
+  const totaalP10 = voorspellingen.reduce((som, v) => som + Math.max(0, v.p10), 0);
+  const totaalP50 = voorspellingen.reduce((som, v) => som + Math.max(0, v.p50), 0);
+  const totaalP90 = voorspellingen.reduce((som, v) => som + Math.max(0, v.p90), 0);
+
+  const kaart = document.createElement("div");
+  kaart.className = "scenario-resultaat-kaart";
+  const titelEl = document.createElement("p");
+  titelEl.className = "titel";
+  titelEl.textContent = titel;
+  const waardeEl = document.createElement("p");
+  waardeEl.className = "waarde";
+  waardeEl.textContent = euro.format(Math.round(totaalP50));
+  const bandEl = document.createElement("p");
+  bandEl.className = "bandbreedte";
+  bandEl.textContent = `Bandbreedte ${euro.format(Math.round(totaalP10))} – ${euro.format(Math.round(totaalP90))}`;
+  kaart.append(titelEl, waardeEl, bandEl);
+  return { kaart, totaalP50 };
+}
+
+async function vergelijkScenarios() {
+  const knop = document.getElementById("vergelijk-knop");
+  const foutEl = document.getElementById("scenario-fout");
+  const storeId = Number(document.getElementById("store").value);
+  const startDatum = document.getElementById("start").value;
+  const horizonDagen = Number(document.getElementById("horizon").value);
+  if (!storeId || !startDatum || !horizonDagen) {
+    foutEl.textContent = "Kies eerst een winkel, startdatum en horizon hierboven.";
+    foutEl.hidden = false;
+    return;
+  }
+  const laatsteDag = dagenNa(startDatum, horizonDagen - 1);
+  const scenarioParams = (prefix) => {
+    const promo = document.getElementById(`${prefix}-promo`).checked;
+    const vakantie = document.getElementById(`${prefix}-vakantie`).checked;
+    return {
+      promoVan: promo ? startDatum : "", promoTot: promo ? laatsteDag : "",
+      vakantieVan: vakantie ? startDatum : "", vakantieTot: vakantie ? laatsteDag : "",
+    };
+  };
+
+  knop.disabled = true;
+  foutEl.hidden = true;
+  try {
+    const [dataA, dataB] = await Promise.all([
+      haalVoorspelling(storeId, startDatum, horizonDagen, scenarioParams("scenario-a")),
+      haalVoorspelling(storeId, startDatum, horizonDagen, scenarioParams("scenario-b")),
+    ]);
+
+    const resultaatEl = document.getElementById("scenario-resultaat");
+    const { kaart: kaartA, totaalP50: totaalA } = maakScenarioResultaatKaart("Scenario A", dataA.voorspellingen);
+    const { kaart: kaartB, totaalP50: totaalB } = maakScenarioResultaatKaart("Scenario B", dataB.voorspellingen);
+
+    const verschilEl = document.createElement("p");
+    verschilEl.className = "scenario-verschil";
+    const verschil = Math.round(totaalA - totaalB);
+    if (verschil === 0) {
+      verschilEl.textContent = "Beide scenario's komen op ongeveer dezelfde verwachte omzet uit.";
+    } else {
+      const grootste = verschil > 0 ? "A" : "B";
+      verschilEl.textContent = `Scenario ${grootste} levert naar verwachting ${euro.format(Math.abs(verschil))} meer op dan het andere scenario.`;
+    }
+
+    resultaatEl.replaceChildren(kaartA, kaartB, verschilEl);
+    resultaatEl.hidden = false;
+  } catch (e) {
+    foutEl.textContent = e.message;
+    foutEl.hidden = false;
+  } finally {
+    knop.disabled = false;
+  }
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -734,6 +816,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   initInfoKnopjes();
   document.getElementById("start").value = vandaagPlusEen();
   knop.addEventListener("click", voorspel);
+  document.getElementById("vergelijk-knop").addEventListener("click", vergelijkScenarios);
 
   let winkels;
   try {

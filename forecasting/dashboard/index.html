@@ -115,6 +115,34 @@
 
   <p class="fout" id="fout" hidden></p>
 
+  <details class="uitklap scenario-vergelijking" id="scenario-vergelijking">
+    <summary>
+      Vergelijk twee scenario's
+      <span class="premium-badge" id="scenario-premium-badge" hidden>Premium</span>
+    </summary>
+    <div id="scenario-invoer">
+      <p class="sub" style="margin:0 0 14px;">
+        Zelfde winkel, startdatum en horizon als hierboven — kies per scenario of er een actie of
+        schoolvakantie is, en vergelijk de uitkomst direct naast elkaar.
+      </p>
+      <div class="scenario-kolommen">
+        <div class="scenario-kolom">
+          <p class="scenario-kolom-titel">Scenario A</p>
+          <label class="vinkje"><input type="checkbox" id="scenario-a-promo"> Actie</label>
+          <label class="vinkje"><input type="checkbox" id="scenario-a-vakantie"> Schoolvakantie</label>
+        </div>
+        <div class="scenario-kolom">
+          <p class="scenario-kolom-titel">Scenario B</p>
+          <label class="vinkje"><input type="checkbox" id="scenario-b-promo"> Actie</label>
+          <label class="vinkje"><input type="checkbox" id="scenario-b-vakantie"> Schoolvakantie</label>
+        </div>
+      </div>
+      <button type="button" class="btn" id="vergelijk-knop" style="margin-top:14px;">Vergelijk</button>
+      <p class="fout" id="scenario-fout" hidden></p>
+    </div>
+    <div class="scenario-resultaat" id="scenario-resultaat" hidden></div>
+  </details>
+
   <details class="uitklap model-info">
     <summary>Over dit model</summary>
     <div class="metrics" id="metrics"></div>
