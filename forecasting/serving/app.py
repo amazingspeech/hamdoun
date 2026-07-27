@@ -46,11 +46,24 @@ tenants_db = maak_database(settings.tenants_db_pad)
 
 
 def _rate_limit_key(request: Request) -> str:
-    """Rate-limit per API-key, niet per bron-IP: meerdere klantsystemen achter
-    dezelfde NAT/proxy mogen niet dezelfde bucket delen. Valt terug op het
-    IP-adres alleen als slowapi deze functie aanroept vóórdat
-    vereis_api_key() draait (dus zonder geverifieerde key)."""
-    return request.headers.get("X-API-Key") or get_remote_address(request)
+    """Rate-limit per organisatie, niet per losse API-key of bron-IP: twee
+    keys van dezelfde klant (bv. kassasysteem + eigen integratie) mogen
+    niet elk een eigen budget krijgen, anders verdubbelt de effectieve
+    limiet naarmate een organisatie meer keys aanmaakt (Fase 4 Stap 6
+    maakte zelfbediende keys pas echt waarschijnlijk). Doet dezelfde
+    DB-lookup als vereis_api_key(): slowapi roept dit aan vóórdat FastAPI's
+    dependency-resolutie draait, dus er is nog geen geverifieerde
+    GeauthenticeerdeKey beschikbaar om organisatie_id uit te lezen. Valt
+    terug op het IP-adres als er geen (geldige) key is — dan is er ook geen
+    organisatie om op te groeperen."""
+    sleutel = request.headers.get("X-API-Key")
+    if not sleutel:
+        return get_remote_address(request)
+    resultaat = db_api_keys.vind_organisatie_voor_key(tenants_db, sleutel)
+    if resultaat is None:
+        return get_remote_address(request)
+    _, organisatie_id = resultaat
+    return f"org:{organisatie_id}"
 
 
 limiter = Limiter(key_func=_rate_limit_key)

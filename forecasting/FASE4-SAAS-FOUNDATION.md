@@ -194,8 +194,22 @@ Elke stap is op zichzelf shipbaar en testbaar — geen big-bang-migratie.
    hash/salt, andermans key intrekken geeft 404). 158/158 tests groen,
    ruff schoon. Live geverifieerd: key aanmaken, tonen, intrekken, status
    wisselt naar "Ingetrokken".
-7. **Rate limiting per organisatie.** Pas relevant zodra een organisatie
-   meerdere keys deelt.
+7. **✅ Rate limiting per organisatie — gedaan 2026-07-27.** Sinds Stap 6
+   kan een organisatie zelf meerdere API-keys aanmaken — de bucket stond
+   tot nu toe per ruwe key, dus twee keys van dezelfde klant kregen elk
+   een eigen budget (de effectieve limiet verdubbelt zo per extra key).
+   `_rate_limit_key()` in `serving/app.py` groepeert nu op organisatie_id
+   i.p.v. de ruwe key-string: `f"org:{organisatie_id}"`, via dezelfde
+   `db_api_keys.vind_organisatie_voor_key()`-lookup als `vereis_api_key()`
+   (slowapi's key_func draait vóór FastAPI's dependency-resolutie, dus
+   kan niet leunen op een al-geverifieerde `GeauthenticeerdeKey`). Valt
+   terug op het bron-IP zonder (geldige) key, zoals voorheen. `/login`
+   blijft ongewijzigd op IP-gebaseerde limitering (geen key bekend op het
+   moment van inloggen). Getest via `tests/test_rate_limit_organisatie.py`:
+   twee keys van één organisatie delen nu aantoonbaar dezelfde limiet
+   (2 aanvragen verdeeld over beide keys is toegestaan bij een limiet van
+   2, de derde — met een van de twee keys — geeft 429). 159/159 tests
+   groen, ruff schoon.
 8. **Postgres-migratie (voorwaardelijk).** Alleen bij een van de triggers
    hierboven — dankzij het portable schema een migratie-run, geen herontwerp.
 
