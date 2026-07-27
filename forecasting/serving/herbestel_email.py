@@ -36,14 +36,28 @@ def _verzamel_forecast_via_gedeeld_model(
     if not winkels:
         return None
     totaal_p10 = totaal_p50 = totaal_p90 = 0.0
+    minstens_een_winkel_gelukt = False
     for extern_store_id, _naam in winkels:
-        samenvatting = winkel_samenvatting(
-            modellen=modellen, historie=historie, winkel_metadata=winkel_metadata,
-            store_id=extern_store_id, start_datum=pd.Timestamp(start_datum), horizon_dagen=HORIZON_DAGEN,
-        )
+        # Bij een portfolio van honderden winkels (bv. het gedeelde
+        # Rossmann-model) mist er vrijwel altijd wel één winkel genoeg
+        # historie voor deze startdatum (net geopend, lange sluiting) —
+        # dat mag de voorspelling voor de rest van de organisatie niet
+        # blokkeren, net zomin als een mislukte mail dat mag (zie
+        # verstuur_wekelijkse_herbestel_mails hieronder).
+        try:
+            samenvatting = winkel_samenvatting(
+                modellen=modellen, historie=historie, winkel_metadata=winkel_metadata,
+                store_id=extern_store_id, start_datum=pd.Timestamp(start_datum), horizon_dagen=HORIZON_DAGEN,
+            )
+        except Exception as e:
+            print(f"Winkel {extern_store_id} overgeslagen in herbestel-mail: {e}", file=sys.stderr)
+            continue
         totaal_p10 += samenvatting["totaal_p10"]
         totaal_p50 += samenvatting["totaal_p50"]
         totaal_p90 += samenvatting["totaal_p90"]
+        minstens_een_winkel_gelukt = True
+    if not minstens_een_winkel_gelukt:
+        return None
     return {"totaal_p10": totaal_p10, "totaal_p50": totaal_p50, "totaal_p90": totaal_p90}
 
 

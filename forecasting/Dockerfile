@@ -22,7 +22,8 @@ COPY db/ ./db/
 # toevallig toewijst) zodat een operator op de server host-bestanden precies
 # naar deze gebruiker kan chown'en i.p.v. ze wereldschrijfbaar te moeten
 # maken — zie deploy/DEPLOY.md.
-RUN useradd --no-create-home --uid 10001 --shell /usr/sbin/nologin forecasting
+RUN useradd --no-create-home --uid 10001 --shell /usr/sbin/nologin forecasting \
+    && chown forecasting:forecasting /app
 USER forecasting
 
 ENV PORT=8000

@@ -1,10 +1,16 @@
 # Toe te voegen aan de bestaande, gedeelde Caddyfile op de server
 # (naast de blokken voor vandijkprotocol.tessar.nl en n8n.tessar.nl).
 # Zelfde stijl/headers als Certo's blok — zie DEPLOY.md voor de precieze
-# toepas-stappen (caddy validate, dan caddy reload — nooit restart).
+# toepas-stappen.
+#
+# LET OP: Caddy draait hier als container (tessar-caddy-1, onderdeel van
+# ~/tessar/docker-compose.yml), niet als host-proces — "127.0.0.1" vanuit
+# die container is de container zelf, niet de host. reverse_proxy verwijst
+# daarom naar de forecasting-api-container bij naam (api:8000), bereikbaar
+# via het gedeelde externe caddy-net-netwerk — zie DEPLOY.md stap 6.
 
 forecasting-demo.tessar.nl {
-	reverse_proxy 127.0.0.1:8010
+	reverse_proxy api:8000
 
 	encode gzip
 

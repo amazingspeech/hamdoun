@@ -159,6 +159,36 @@ def test_organisatie_zonder_eigenaar_wordt_overgeslagen(tmp_path, monkeypatch):
     assert resultaat == []
 
 
+def test_winkel_zonder_genoeg_historie_blokkeert_niet_de_rest_van_de_organisatie(tmp_path, monkeypatch):
+    """Regressietest voor een productiebug: bij een organisatie met veel
+    winkels (bv. het gedeelde Rossmann-model met 1115 winkels) mist er
+    vrijwel altijd wel één winkel genoeg historie voor de gekozen
+    startdatum (HorizonBuitenBereik) — bv. een winkel die net geopend is
+    of een lange sluiting had. Zonder per-winkel foutafhandeling crasht dat
+    de hele wekelijkse cronrun voor élke organisatie, wat de docstring van
+    verstuur_wekelijkse_herbestel_mails expliciet belooft te voorkomen."""
+    engine = maak_database(tmp_path / "tenants.db")
+    org_id = bootstrap_organisatie(engine, naam="Tessar Demo", slug="tessar-demo", store_ids=[1, 2])
+    maak_gebruiker(engine, organisatie_id=org_id, email="eigenaar@tessar.nl", wachtwoord="x", rol="eigenaar")
+
+    verzonden = []
+    monkeypatch.setattr(
+        "serving.herbestel_email.mail.verstuur",
+        lambda **kwargs: verzonden.append(kwargs["ontvanger"]),
+    )
+
+    # Winkel 2 komt helemaal niet voor in de historie — precies de situatie
+    # die HorizonBuitenBereik veroorzaakt (geen lag-features te berekenen).
+    resultaat = verstuur_wekelijkse_herbestel_mails(
+        engine, modellen={q: _ConstantModel(1000.0) for q in (0.1, 0.5, 0.9)},
+        historie=_historie(store_id=1), winkel_metadata=_winkel_metadata(store_id=1),
+        mail_config=MAIL_CONFIG, start_datum=date(2015, 7, 11),
+    )
+
+    assert resultaat == ["eigenaar@tessar.nl"]
+    assert verzonden == ["eigenaar@tessar.nl"]
+
+
 def test_mislukte_mail_voor_een_org_blokkeert_de_rest_niet(tmp_path, monkeypatch):
     engine = maak_database(tmp_path / "tenants.db")
     org_a = bootstrap_organisatie(engine, naam="Org A", slug="org-a", store_ids=[1])

@@ -38,7 +38,13 @@ Op de server:
 cd /home/job/forecasting-demo/deploy
 cp .env.example .env
 nano .env
-# Zet MODEL_VERSION op de versie uit stap 2.
+# Zet MODEL_VERSION op de versie uit stap 2, APP_BASIS_URL op
+# https://forecasting-demo.tessar.nl, en de MAIL_SMTP_*-waarden (nodig voor
+# wachtwoord-reset én de wekelijkse herbestel-mail — zie .env.example voor
+# uitleg per variabele). Laat STRIPE_SECRET_KEY/STRIPE_PRICE_ID/
+# STRIPE_WEBHOOK_SECRET leeg tenzij je bewust self-serve signup met een
+# geverifieerd live Stripe-account wilt aanzetten — leeg = POST /signup
+# geeft een nette 503, verder werkt alles normaal.
 ```
 
 Maak eerst lege `api_keys.json`- en `audit.log`-bestanden aan op de server,
@@ -122,17 +128,62 @@ Verwacht: `{"status":"ok","model_versie":"<jouw versie>"}`.
 
 ## 6. Caddy: nieuw subdomein toevoegen
 
-Voeg de inhoud van `/home/job/forecasting-demo/deploy/Caddyfile-snippet` toe
-aan de bestaande, gedeelde Caddyfile (`/etc/caddy/Caddyfile` — waar ook
-Certo's en n8n's blokken staan). Valideer vóór je herlaadt, en herlaad —
-**nooit herstart**, want reload valideert eerst en behoudt de oude config
-bij een fout, restart niet:
+**Caddy draait hier als container** (`tessar-caddy-1`, onderdeel van de
+losstaande `~/tessar/docker-compose.yml`-stack die ook n8n en Certo's
+`protocolwijzer` draait), niet als host-proces — er is dus geen
+`sudo caddy reload` beschikbaar, en `reverse_proxy 127.0.0.1:<poort>` zou
+vanuit die container naar zichzelf wijzen, niet naar de host. In plaats
+daarvan krijgt de forecasting-`api`-container een plek op een gedeeld
+extern Docker-netwerk, zodat Caddy 'm bij naam kan bereiken.
+
+**Vereist:** het DNS A-record voor `forecasting-demo.tessar.nl` moet al
+actief zijn (zie de vereisten bovenaan dit document) — zonder geldige DNS
+kan Caddy straks geen HTTPS-certificaat voor dit blok ophalen.
+
+Eenmalig het gedeelde netwerk aanmaken (idempotent — als het al bestaat,
+geeft dit commando een onschuldige foutmelding):
 ```bash
-sudo caddy validate --config /etc/caddy/Caddyfile
-sudo caddy reload --config /etc/caddy/Caddyfile
+docker network create caddy-net
 ```
-Controleer meteen dat Certo (`vandijkprotocol.tessar.nl`) en n8n
-(`n8n.tessar.nl`) nog steeds normaal bereikbaar zijn na deze stap.
+
+`forecasting/deploy/docker-compose.yml` heeft dit netwerk al als extern
+gedeclareerd (zie dat bestand) — geen aanpassing nodig zolang je met de
+huidige broncode werkt. Voeg de forecasting-app toe aan de bestaande,
+gedeelde Caddyfile:
+```bash
+cd /home/job/tessar
+cp docker-compose.yml docker-compose.yml.bak-$(date +%Y%m%d-%H%M%S)
+```
+Open `~/tessar/docker-compose.yml` en voeg aan de `caddy`-service toe:
+```yaml
+    networks:
+      - default
+      - caddy-net
+```
+en onderaan het bestand (naast de bestaande `volumes:`-sectie):
+```yaml
+networks:
+  default: {}
+  caddy-net:
+    external: true
+```
+Voeg de inhoud van `/home/job/forecasting-demo/deploy/Caddyfile-snippet`
+toe aan `~/tessar/Caddyfile` (naast de blokken voor
+`vandijkprotocol.tessar.nl` en `n8n.tessar.nl`) — die snippet gebruikt al
+`reverse_proxy api:8000`, niet een hostpoort.
+
+Herstart **alleen** de caddy-container om de netwerkwijziging en de
+nieuwe config op te pikken — dit raakt n8n/postgres/protocolwijzer niet,
+maar geeft een paar seconden onderbreking voor wie op dat moment
+`n8n.tessar.nl` of `vandijkprotocol.tessar.nl` gebruikt:
+```bash
+docker compose up -d caddy
+```
+Controleer **meteen** dat Certo (`vandijkprotocol.tessar.nl`) en n8n
+(`n8n.tessar.nl`) nog steeds normaal bereikbaar zijn — vóórdat je verder
+gaat naar stap 7. Bij problemen: `docker compose logs caddy` bekijken, en
+zo nodig `docker-compose.yml.bak-<tijdstip>` terugzetten en de
+caddy-container opnieuw starten.
 
 ## 7. Verifiëren
 
@@ -196,3 +247,10 @@ Zie ook `forecasting/KNOWN-LIMITATIONS.md`. Specifiek voor deze deployment:
   overzetten, `MODEL_VERSION` in `.env` bijwerken, `docker compose up -d`
   opnieuw) — geen automatische "laatste versie" promotie, met opzet (zie
   het oorspronkelijke ontwerp: nooit een impliciet gepromoveerd model).
+- **Self-serve signup (Fase 5 NODIG 5) staat bewust uit bij een eerste
+  soft-launch.** Zonder `STRIPE_SECRET_KEY`/`STRIPE_PRICE_ID` in `.env`
+  geeft `POST /signup` een nette 503 — alleen de handmatig gebootstrapte
+  organisatie(s) uit stap 3 kunnen inloggen. Pas invullen zodra het
+  Stripe-account voor live-modus geverifieerd is (zie `.env.example`).
+  Wachtwoord-reset en de wekelijkse herbestel-mail werken hier los van —
+  die hebben alleen `MAIL_SMTP_*` en `APP_BASIS_URL` nodig, geen Stripe.
