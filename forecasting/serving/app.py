@@ -30,6 +30,7 @@ from serving.schemas import (
     ApiKeyAanmakenVerzoek,
     ApiKeyResponse,
     DagVoorspelling,
+    FactorBijdrage,
     ForecastResponse,
     ForecastVerzoek,
     GebruikerAanmakenVerzoek,
@@ -259,6 +260,7 @@ def forecast(
             horizon_dagen=verzoek.horizon_dagen,
             promo_datums=dagreeks(verzoek.promo_van, verzoek.promo_tot),
             schoolvakantie_datums=dagreeks(verzoek.schoolvakantie_van, verzoek.schoolvakantie_tot),
+            verklaar=True,
         )
         statuscode = 200
     except OnbekendeWinkel:
@@ -285,8 +287,9 @@ def forecast(
         store_id=verzoek.store_id,
         voorspellingen=[
             DagVoorspelling(datum=rij["Date"].date(), p10=rij["p10"], p50=rij["p50"], p90=rij["p90"])
-            for _, rij in resultaat.iterrows()
+            for _, rij in resultaat.voorspellingen.iterrows()
         ],
+        belangrijkste_factoren=[FactorBijdrage(**f) for f in resultaat.belangrijkste_factoren],
     )
 
 

@@ -4,7 +4,7 @@ modelartefact, dat pas bij de endpoint-handler bekend is (zie serving/app.py).""
 from __future__ import annotations
 
 from datetime import date, datetime
-from typing import Optional
+from typing import Literal, Optional
 
 from pydantic import BaseModel, Field
 
@@ -30,9 +30,15 @@ class DagVoorspelling(BaseModel):
     p90: float
 
 
+class FactorBijdrage(BaseModel):
+    naam: str
+    richting: Literal["hoger", "lager"]
+
+
 class ForecastResponse(BaseModel):
     store_id: int
     voorspellingen: list[DagVoorspelling]
+    belangrijkste_factoren: list[FactorBijdrage] = []
 
 
 class LoginVerzoek(BaseModel):

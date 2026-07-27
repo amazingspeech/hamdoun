@@ -13,13 +13,32 @@ worden berekend dan trainings-tijd-features."""
 from __future__ import annotations
 
 from datetime import date, timedelta
+from typing import NamedTuple
 
 import numpy as np
 import pandas as pd
+import shap
 
 from pipeline.features import voeg_kalenderfeatures_toe, voeg_lag_features_toe
 from training.evaluate import sorteer_kwantielen
 from training.train import FEATURE_KOLOMMEN
+
+# Groepeert de 14 losse featurekolommen tot betekenisvolle, uitlegbare
+# categorieën voor een winkelier — niemand heeft iets aan "omzet_lag_14"
+# als los begrip. Store en CompetitionDistance staan er bewust niet in:
+# die zijn constant binnen één winkel/aanvraag, verklaren dus nooit
+# waarom DEZE periode afwijkt, alleen waarom deze winkel in het algemeen
+# van een gemiddelde winkel verschilt — een andere vraag dan waar dit
+# uitlegblok antwoord op geeft.
+_FACTOR_BUCKETS = {
+    "Promotie": ["Promo"],
+    "Schoolvakantie": ["SchoolHoliday"],
+    "Seizoen": ["DayOfWeek", "Jaar", "Maand", "Dag", "Weeknummer"],
+    "Recente verkooptrend": [
+        "omzet_lag_7", "omzet_lag_14", "omzet_lag_21",
+        "omzet_rolling_gemiddeld_7", "omzet_rolling_gemiddeld_28",
+    ],
+}
 
 
 class OnbekendeWinkel(Exception):
@@ -28,6 +47,30 @@ class OnbekendeWinkel(Exception):
 
 class HorizonBuitenBereik(Exception):
     pass
+
+
+class VoorspelResultaat(NamedTuple):
+    voorspellingen: pd.DataFrame
+    belangrijkste_factoren: list[dict]
+
+
+def belangrijkste_factoren(model: object, feature_rijen: pd.DataFrame, top_n: int = 2) -> list[dict]:
+    """Aggregeert SHAP-bijdrages van het p50-model per featuregroep over
+    alle voorspelde dagen samen (één uitleg voor de hele periode, geen
+    losse uitleg per dag — sluit aan bij hoe de rest van het dashboard al
+    op periodeniveau samenvat). Geeft de top_n grootste bijdrages terug,
+    gesorteerd op absolute grootte; een bijdrage van precies 0 wordt
+    overgeslagen (niets om over te zeggen)."""
+    verklaarder = shap.TreeExplainer(model)
+    shap_waarden = verklaarder.shap_values(feature_rijen[FEATURE_KOLOMMEN])
+    shap_df = pd.DataFrame(shap_waarden, columns=FEATURE_KOLOMMEN)
+
+    bijdrages = {naam: float(shap_df[kolommen].to_numpy().sum()) for naam, kolommen in _FACTOR_BUCKETS.items()}
+    gesorteerd = sorted(bijdrages.items(), key=lambda item: abs(item[1]), reverse=True)
+    return [
+        {"naam": naam, "richting": "hoger" if waarde > 0 else "lager"}
+        for naam, waarde in gesorteerd[:top_n] if waarde != 0
+    ]
 
 
 def dagreeks(van: date | None, tot: date | None) -> set[date]:
@@ -53,7 +96,8 @@ def voorspel_periode(
     horizon_dagen: int,
     promo_datums: set[date] | None = None,
     schoolvakantie_datums: set[date] | None = None,
-) -> pd.DataFrame:
+    verklaar: bool = False,
+) -> VoorspelResultaat:
     promo_datums = promo_datums or set()
     schoolvakantie_datums = schoolvakantie_datums or set()
     if store_id not in historie["Store"].unique():
@@ -70,6 +114,7 @@ def voorspel_periode(
         if col in store_history.columns:
             werkreeks[col] = store_history[col].values
     resultaten = []
+    alle_feature_rijen = []
 
     for i in range(horizon_dagen):
         doel_datum = start_datum + pd.Timedelta(days=i)
@@ -94,6 +139,7 @@ def voorspel_periode(
                 f"Onvoldoende historie om {doel_datum.date()} te voorspellen voor winkel {store_id}."
             )
 
+        alle_feature_rijen.append(feature_rij)
         ruwe = {q: float(modellen[q].predict(feature_rij[FEATURE_KOLOMMEN])[0]) for q in (0.1, 0.5, 0.9)}
         p10, p50, p90 = sorteer_kwantielen(
             np.array([ruwe[0.1]]), np.array([ruwe[0.5]]), np.array([ruwe[0.9]])
@@ -105,4 +151,8 @@ def voorspel_periode(
             ignore_index=True,
         )
 
-    return pd.DataFrame(resultaten)
+    factoren = []
+    if verklaar:
+        factoren = belangrijkste_factoren(modellen[0.5], pd.concat(alle_feature_rijen, ignore_index=True))
+
+    return VoorspelResultaat(voorspellingen=pd.DataFrame(resultaten), belangrijkste_factoren=factoren)

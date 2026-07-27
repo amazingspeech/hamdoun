@@ -44,8 +44,8 @@ def test_voorspel_periode_geeft_juiste_aantal_dagen():
         historie=_historie(), winkel_metadata=_winkel_metadata(),
         store_id=1, start_datum=pd.Timestamp("2015-07-11"), horizon_dagen=5,
     )
-    assert len(resultaat) == 5
-    assert list(resultaat.columns) == ["Date", "p10", "p50", "p90"]
+    assert len(resultaat.voorspellingen) == 5
+    assert list(resultaat.voorspellingen.columns) == ["Date", "p10", "p50", "p90"]
 
 
 def test_voorspel_periode_sorteert_gekruiste_kwantielen():
@@ -61,7 +61,7 @@ def test_voorspel_periode_sorteert_gekruiste_kwantielen():
         modellen=modellen, historie=_historie(), winkel_metadata=_winkel_metadata(),
         store_id=1, start_datum=pd.Timestamp("2015-07-11"), horizon_dagen=1,
     )
-    rij = resultaat.iloc[0]
+    rij = resultaat.voorspellingen.iloc[0]
     assert rij["p10"] <= rij["p50"] <= rij["p90"]
 
 
@@ -82,8 +82,8 @@ def test_voorspel_periode_werkt_voorbij_de_kortste_lag():
         historie=_historie(n_dagen=40), winkel_metadata=_winkel_metadata(),
         store_id=1, start_datum=pd.Timestamp("2015-07-11"), horizon_dagen=10,
     )
-    assert len(resultaat) == 10
-    assert resultaat["p50"].notna().all()
+    assert len(resultaat.voorspellingen) == 10
+    assert resultaat.voorspellingen["p50"].notna().all()
 
 
 class _FeatureTeruggeefModel:
@@ -104,9 +104,10 @@ def test_voorspel_periode_gebruikt_opgegeven_promo_datums():
         store_id=1, start_datum=pd.Timestamp("2015-07-11"), horizon_dagen=3,
         promo_datums={pd.Timestamp("2015-07-12").date()},
     )
-    assert resultaat.iloc[0]["p50"] == 0  # 11 juli: geen promo
-    assert resultaat.iloc[1]["p50"] == 1  # 12 juli: wel promo
-    assert resultaat.iloc[2]["p50"] == 0  # 13 juli: geen promo
+    v = resultaat.voorspellingen
+    assert v.iloc[0]["p50"] == 0  # 11 juli: geen promo
+    assert v.iloc[1]["p50"] == 1  # 12 juli: wel promo
+    assert v.iloc[2]["p50"] == 0  # 13 juli: geen promo
 
 
 def test_voorspel_periode_gebruikt_opgegeven_schoolvakantie_datums():
@@ -116,8 +117,9 @@ def test_voorspel_periode_gebruikt_opgegeven_schoolvakantie_datums():
         store_id=1, start_datum=pd.Timestamp("2015-07-11"), horizon_dagen=2,
         schoolvakantie_datums={pd.Timestamp("2015-07-11").date()},
     )
-    assert resultaat.iloc[0]["p50"] == 1  # 11 juli: wel schoolvakantie
-    assert resultaat.iloc[1]["p50"] == 0  # 12 juli: geen schoolvakantie
+    v = resultaat.voorspellingen
+    assert v.iloc[0]["p50"] == 1  # 11 juli: wel schoolvakantie
+    assert v.iloc[1]["p50"] == 0  # 12 juli: geen schoolvakantie
 
 
 def test_voorspel_periode_zonder_opgegeven_datums_blijft_nul():
@@ -126,7 +128,54 @@ def test_voorspel_periode_zonder_opgegeven_datums_blijft_nul():
         historie=_historie(), winkel_metadata=_winkel_metadata(),
         store_id=1, start_datum=pd.Timestamp("2015-07-11"), horizon_dagen=1,
     )
-    assert resultaat.iloc[0]["p50"] == 0
+    assert resultaat.voorspellingen.iloc[0]["p50"] == 0
+
+
+def test_voorspel_periode_zonder_verklaar_geeft_lege_factorenlijst():
+    resultaat = voorspel_periode(
+        modellen={q: _NepModel() for q in (0.1, 0.5, 0.9)},
+        historie=_historie(), winkel_metadata=_winkel_metadata(),
+        store_id=1, start_datum=pd.Timestamp("2015-07-11"), horizon_dagen=1,
+    )
+    assert resultaat.belangrijkste_factoren == []
+
+
+def test_voorspel_periode_met_verklaar_identificeert_promo_als_grootste_driver():
+    from pipeline.features import voeg_kalenderfeatures_toe, voeg_lag_features_toe
+    from training import train
+
+    rng = np.random.default_rng(7)
+    n = 90
+    datums = pd.date_range("2015-01-01", periods=n, freq="D")
+    ruw = pd.DataFrame({
+        "Store": 1, "Date": datums, "Open": 1,
+        "DayOfWeek": [d.dayofweek + 1 for d in datums],
+        "Promo": rng.integers(0, 2, n),
+        "SchoolHoliday": 0,
+    })
+    # Sales wordt sterk en overwegend door Promo bepaald — een echt getraind
+    # model zou dus Promo als dominante driver moeten herkennen, niet de
+    # kalender- of trendfeatures die hier vrijwel geen signaal dragen.
+    ruw["Sales"] = 1000.0 + ruw["Promo"] * 5000.0 + rng.normal(0, 5, n)
+    winkel_metadata = _winkel_metadata()
+
+    volledig = voeg_kalenderfeatures_toe(ruw)
+    volledig = voeg_lag_features_toe(volledig)
+    volledig = volledig.merge(winkel_metadata, on="Store", how="left")
+    trainset = train.bereid_trainset_voor(volledig)
+    modellen = train.train_alle_kwantielen(trainset)
+
+    start = datums[-1] + pd.Timedelta(days=1)
+    resultaat = voorspel_periode(
+        modellen=modellen, historie=ruw, winkel_metadata=winkel_metadata,
+        store_id=1, start_datum=start, horizon_dagen=3,
+        promo_datums={(start + pd.Timedelta(days=i)).date() for i in range(3)},
+        verklaar=True,
+    )
+
+    assert resultaat.belangrijkste_factoren
+    assert resultaat.belangrijkste_factoren[0]["naam"] == "Promotie"
+    assert resultaat.belangrijkste_factoren[0]["richting"] == "hoger"
 
 
 def test_dagreeks_zonder_van_geeft_lege_set():

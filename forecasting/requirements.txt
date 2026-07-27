@@ -21,6 +21,8 @@ cffi==2.0.0
     # via cryptography
 click==8.1.8
     # via uvicorn
+cloudpickle==3.1.2
+    # via shap
 cryptography==49.0.0
     # via -r requirements.in
 deprecated==1.3.1
@@ -51,19 +53,28 @@ joblib==1.5.3
     # via scikit-learn
 limits==4.2
     # via slowapi
+llvmlite==0.43.0
+    # via numba
+numba==0.60.0
+    # via shap
 numpy==2.0.2
     # via
     #   -r requirements.in
+    #   numba
     #   pandas
     #   scikit-learn
     #   scipy
+    #   shap
     #   xgboost
 packaging==24.2
     # via
     #   limits
     #   pytest
+    #   shap
 pandas==2.3.3
-    # via -r requirements.in
+    # via
+    #   -r requirements.in
+    #   shap
 pluggy==1.6.0
     # via pytest
 pyarrow==21.0.0
@@ -91,13 +102,20 @@ pytz==2026.3.post1
 pyyaml==6.0.3
     # via uvicorn
 scikit-learn==1.6.1
-    # via -r requirements.in
+    # via
+    #   -r requirements.in
+    #   shap
 scipy==1.13.1
     # via
     #   scikit-learn
+    #   shap
     #   xgboost
+shap==0.49.1
+    # via -r requirements.in
 six==1.17.0
     # via python-dateutil
+slicer==0.0.8
+    # via shap
 slowapi==0.1.10
     # via -r requirements.in
 sqlalchemy==2.0.51
@@ -108,6 +126,8 @@ threadpoolctl==3.6.0
     # via scikit-learn
 tomli==2.4.1
     # via pytest
+tqdm==4.69.1
+    # via shap
 typing-extensions==4.16.0
     # via
     #   anyio
@@ -117,6 +137,7 @@ typing-extensions==4.16.0
     #   limits
     #   pydantic
     #   pydantic-core
+    #   shap
     #   sqlalchemy
     #   starlette
     #   typing-inspection

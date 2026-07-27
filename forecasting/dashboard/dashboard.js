@@ -223,6 +223,28 @@ function maakStat(label, waarde, toelichting) {
   return stat;
 }
 
+function maakFactorChip(factor) {
+  const chip = document.createElement("span");
+  chip.className = `factor-chip ${factor.richting}`;
+  const pijl = document.createElement("span");
+  pijl.className = "pijl";
+  pijl.textContent = factor.richting === "hoger" ? "↑" : "↓";
+  const tekst = document.createElement("span");
+  tekst.textContent = `${factor.naam} — ${factor.richting} dan gemiddeld`;
+  chip.append(pijl, tekst);
+  return chip;
+}
+
+function toonFactoren(factoren) {
+  const el = document.getElementById("factoren");
+  if (!factoren || factoren.length === 0) {
+    el.hidden = true;
+    return;
+  }
+  el.hidden = false;
+  document.getElementById("factoren-lijst").replaceChildren(...factoren.map(maakFactorChip));
+}
+
 function toonSamenvatting(voorspellingen, storeId) {
   const totaalP50 = voorspellingen.reduce((som, v) => som + v.p50, 0);
   const totaalP10 = voorspellingen.reduce((som, v) => som + v.p10, 0);
@@ -311,6 +333,7 @@ async function voorspel() {
     toonSamenvatting(voorspellingen, data.store_id);
     tekenGrafiek(voorspellingen);
     toonKanttekening(Boolean(promoVakantie.promoVan), Boolean(promoVakantie.vakantieVan));
+    toonFactoren(data.belangrijkste_factoren);
   } catch (e) {
     toonFout(e.message);
   } finally {

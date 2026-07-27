@@ -10,6 +10,7 @@ from db.api_keys import migreer_bestaande_key
 from db.bootstrap import bootstrap_organisatie
 from db.schema import maak_database
 from security import api_keys
+from serving.forecast import VoorspelResultaat
 from training import artifact, train
 
 
@@ -188,7 +189,10 @@ def test_forecast_geeft_promo_en_schoolvakantie_datums_door(tmp_path, monkeypatc
 
     def _spy(**kwargs):
         aangeroepen_met.update(kwargs)
-        return pd.DataFrame({"Date": [pd.Timestamp("2015-07-11")], "p10": [1.0], "p50": [2.0], "p90": [3.0]})
+        return VoorspelResultaat(
+            voorspellingen=pd.DataFrame({"Date": [pd.Timestamp("2015-07-11")], "p10": [1.0], "p50": [2.0], "p90": [3.0]}),
+            belangrijkste_factoren=[],
+        )
 
     monkeypatch.setattr(app_module, "voorspel_periode", _spy)
 
@@ -215,7 +219,10 @@ def test_forecast_zonder_promo_datums_geeft_lege_sets_door(tmp_path, monkeypatch
 
     def _spy(**kwargs):
         aangeroepen_met.update(kwargs)
-        return pd.DataFrame({"Date": [pd.Timestamp("2015-07-11")], "p10": [1.0], "p50": [2.0], "p90": [3.0]})
+        return VoorspelResultaat(
+            voorspellingen=pd.DataFrame({"Date": [pd.Timestamp("2015-07-11")], "p10": [1.0], "p50": [2.0], "p90": [3.0]}),
+            belangrijkste_factoren=[],
+        )
 
     monkeypatch.setattr(app_module, "voorspel_periode", _spy)
 

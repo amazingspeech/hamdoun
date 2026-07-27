@@ -5,6 +5,7 @@ from serving.schemas import (
     ApiKeyAanmakenVerzoek,
     ApiKeyResponse,
     DagVoorspelling,
+    FactorBijdrage,
     ForecastResponse,
     ForecastVerzoek,
     GebruikerAanmakenVerzoek,
@@ -38,6 +39,28 @@ def test_forecast_response_serialiseert():
     )
     data = response.model_dump(mode="json")
     assert data["voorspellingen"][0]["p50"] == 150.0
+
+
+def test_forecast_response_bevat_belangrijkste_factoren():
+    response = ForecastResponse(
+        store_id=1,
+        voorspellingen=[DagVoorspelling(datum="2015-08-01", p10=100.0, p50=150.0, p90=200.0)],
+        belangrijkste_factoren=[FactorBijdrage(naam="Promotie", richting="hoger")],
+    )
+    assert response.model_dump()["belangrijkste_factoren"][0]["naam"] == "Promotie"
+
+
+def test_forecast_response_belangrijkste_factoren_standaard_leeg():
+    response = ForecastResponse(
+        store_id=1,
+        voorspellingen=[DagVoorspelling(datum="2015-08-01", p10=100.0, p50=150.0, p90=200.0)],
+    )
+    assert response.belangrijkste_factoren == []
+
+
+def test_factor_bijdrage_verwerpt_ongeldige_richting():
+    with pytest.raises(ValidationError):
+        FactorBijdrage(naam="Promotie", richting="omhoog")
 
 
 def test_metrics_response_serialiseert():
