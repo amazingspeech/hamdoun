@@ -176,7 +176,8 @@ async function laadMeer() {
   const knop = document.getElementById("meer-laden");
   knop.disabled = true;
   toonFout("");
-  if (alleWinkels.length === 0) toonSkeletRijen(8);
+  const eerstePagina = alleWinkels.length === 0;
+  if (eerstePagina) toonSkeletRijen(8);
   try {
     const data = await haalPortfolioPagina(volgendeOffset);
     alleWinkels = alleWinkels.concat(data.winkels);
@@ -197,6 +198,11 @@ async function laadMeer() {
     }
     toonKpis();
     tekenTabel();
+    // Alleen op de eerste pagina — reusen dezelfde data die hier toch al
+    // wordt opgehaald i.p.v. een aparte /portfolio-aanroep alleen voor de
+    // zijbalk, en voorkomt dat elke "meer laden"-klik de trendvergelijking
+    // (t.o.v. vorig bezoek) opnieuw zou ijken.
+    if (eerstePagina) toonSidebarKpis(data);
     knop.hidden = volgendeOffset >= totaalWinkels || data.winkels.length === 0;
   } catch (e) {
     toonFout(e.message);
@@ -237,5 +243,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   initSortering();
   document.getElementById("meer-laden").addEventListener("click", laadMeer);
 
+  initPortfolioSidebar(me);
   await laadMeer();
 });

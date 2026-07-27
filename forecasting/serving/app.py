@@ -312,9 +312,11 @@ def wachtwoord_reset_voltooien(verzoek: WachtwoordResetVoltooienVerzoek) -> dict
 
 @app.get("/me")
 def me(gebruiker: GeauthenticeerdeGebruiker = Depends(vereis_sessie)) -> dict:
+    trial_verloopt_op = db_organisaties.haal_trial_verloopt_op(tenants_db, gebruiker.organisatie_id)
     return {
         "email": gebruiker.email, "rol": gebruiker.rol, "organisatie_id": gebruiker.organisatie_id,
         "in_proefperiode": db_organisaties.is_in_proefperiode(tenants_db, gebruiker.organisatie_id),
+        "trial_verloopt_op": trial_verloopt_op.date().isoformat() if trial_verloopt_op else None,
     }
 
 

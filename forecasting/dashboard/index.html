@@ -11,7 +11,58 @@
 <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
-<div class="wrap">
+<div class="portfolio-shell">
+  <nav class="portfolio-sidebar">
+    <p class="portfolio-sidebar-merk">Vraagvoorspelling</p>
+
+    <div class="portfolio-sidebar-groep">
+      <p class="portfolio-sidebar-groepslabel">Voorspellen</p>
+      <ul class="portfolio-sidebar-nav">
+        <li>
+          <a href="./overview.html">
+            Overzicht
+            <span class="trend-pijl" id="trend-pijl" hidden></span>
+          </a>
+        </li>
+        <li><a href="./index.html">Voorspelling</a></li>
+      </ul>
+    </div>
+
+    <div class="portfolio-sidebar-groep">
+      <p class="portfolio-sidebar-groepslabel">Beheer</p>
+      <ul class="portfolio-sidebar-nav">
+        <li><a href="./team.html">Team beheren</a></li>
+        <li><a href="./team.html#api-keys-kaart">API-keys</a></li>
+        <li><a href="./hoe-werkt-dit.html">Hoe dit werkt</a></li>
+      </ul>
+    </div>
+
+    <div class="portfolio-sidebar-kpis" id="sidebar-kpis" hidden>
+      <div class="portfolio-sidebar-kpi">
+        <span class="waarde" id="sidebar-kpi-winkels">–</span>
+        <span class="label">winkels</span>
+      </div>
+      <div class="portfolio-sidebar-kpi">
+        <span class="waarde" id="sidebar-kpi-nauwkeurigheid">–</span>
+        <span class="label">nauwkeurig</span>
+      </div>
+    </div>
+    <p class="portfolio-sidebar-kpis-caveat" id="sidebar-kpis-caveat" hidden></p>
+
+    <div class="portfolio-sidebar-recent" id="sidebar-recent" hidden>
+      <p class="portfolio-sidebar-groepslabel">Recent bekeken</p>
+      <ul class="portfolio-sidebar-nav" id="sidebar-recent-lijst"></ul>
+    </div>
+
+    <div class="portfolio-sidebar-onder">
+      <p class="portfolio-sidebar-abonnement" id="sidebar-abonnement"></p>
+      <p class="portfolio-sidebar-status"><span class="live-stip" aria-hidden="true"></span>Bijgewerkt zojuist</p>
+      <p class="portfolio-sidebar-wie" id="wie-ben-ik">Bezig met laden…</p>
+      <a href="#" id="uitloggen">Uitloggen</a>
+    </div>
+  </nav>
+
+  <div class="wrap">
   <header class="top">
     <div class="kop">
       <p class="eyebrow">Vraagvoorspelling</p>
@@ -19,9 +70,9 @@
       <p class="sub" id="sub-basis">Op basis van historische verkoopdata — met een eerlijke bandbreedte in plaats van één te precies getal.</p>
     </div>
     <p class="account-nav">
-      <span id="wie-ben-ik"></span>
+      <span id="wie-ben-ik-mobiel"></span>
       · <a href="./overview.html">Overzicht</a> · <a href="./team.html">Team beheren</a> ·
-      <a href="#" id="uitloggen">Uitloggen</a>
+      <a href="#" id="uitloggen-mobiel">Uitloggen</a>
     </p>
 
     <div class="controls">
@@ -152,6 +203,7 @@
   <p class="palet-hint">
     Snel naar een andere winkel: <kbd>Ctrl</kbd>+<kbd>K</kbd> (<kbd>⌘</kbd>+<kbd>K</kbd> op Mac)
   </p>
+  </div>
 </div>
 
 <div class="palet-overlay" id="palet-overlay" hidden>
@@ -162,6 +214,7 @@
 </div>
 
 <script src="./config.js"></script>
+<script src="./sidebar.js"></script>
 <script src="./dashboard.js"></script>
 </body>
 </html>

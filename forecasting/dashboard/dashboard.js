@@ -555,6 +555,9 @@ async function voorspel() {
     }));
     document.getElementById("skelet-resultaat").hidden = true;
     document.getElementById("resultaat").classList.add("zichtbaar");
+    const storeSelect = document.getElementById("store");
+    const storeNaam = storeSelect.options[storeSelect.selectedIndex]?.textContent || `Winkel ${data.store_id}`;
+    if (typeof voegRecentWinkelToe === "function") voegRecentWinkelToe({ id: data.store_id, naam: storeNaam });
     toonSamenvatting(voorspellingen, data.store_id, data.vorige_periode_omzet, data.herbestel_advies);
     tekenGrafiek(voorspellingen);
     toonKanttekening(Boolean(promoVakantie.promoVan), Boolean(promoVakantie.vakantieVan));
@@ -613,19 +616,23 @@ async function initToegang() {
     window.location.href = "./login.html";
     return null;
   }
+  const wieBenIkMobiel = document.getElementById("wie-ben-ik-mobiel");
+  if (wieBenIkMobiel) wieBenIkMobiel.textContent = `Ingelogd als ${me.email}`;
   const wieBenIk = document.getElementById("wie-ben-ik");
-  if (wieBenIk) wieBenIk.textContent = `Ingelogd als ${me.email}`;
+  if (wieBenIk) wieBenIk.textContent = me.email;
   return me;
 }
 
 function initUitloggenLink() {
-  const link = document.getElementById("uitloggen");
-  if (!link) return;
-  link.addEventListener("click", async (event) => {
+  const uitloggen = async (event) => {
     event.preventDefault();
     await fetch(`${API_BASIS}/logout`, { method: "POST", credentials: "same-origin" });
     window.location.href = "./login.html";
-  });
+  };
+  for (const id of ["uitloggen", "uitloggen-mobiel"]) {
+    const link = document.getElementById(id);
+    if (link) link.addEventListener("click", uitloggen);
+  }
 }
 
 // Command palette (Ctrl/Cmd+K): snel van winkel wisselen zonder de muis —
@@ -810,6 +817,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   if (!me) return;
   initUitloggenLink();
   pasPremiumStatusToe(me.in_proefperiode);
+  initPortfolioSidebar(me);
 
   const knop = document.getElementById("voorspel");
   document.addEventListener("click", sluitAndereInfoKnopjes);

@@ -129,6 +129,39 @@ def test_me_geeft_in_proefperiode_true_tijdens_proefperiode(tmp_path, monkeypatc
     assert resp.json()["in_proefperiode"] is True
 
 
+def test_me_geeft_trial_verloopt_op_mee_tijdens_proefperiode(tmp_path, monkeypatch):
+    """De zijbalk toont hoeveel dagen er nog in de proefperiode over zijn
+    (zie dashboard/account.js) — daarvoor moet /me de vervaldatum zelf
+    meegeven, niet alleen het boolean in_proefperiode."""
+    from datetime import date, datetime, timedelta, timezone
+
+    from sqlalchemy import select
+
+    from db.schema import organisaties
+
+    client, engine = _bouw_login_omgeving(tmp_path, monkeypatch)
+    verloopt_op = datetime.now(timezone.utc) + timedelta(days=14)
+    with engine.begin() as conn:
+        org_id = conn.execute(select(organisaties.c.id).where(organisaties.c.slug == "test-organisatie")).scalar_one()
+        conn.execute(
+            organisaties.update().where(organisaties.c.id == org_id).values(trial_verloopt_op=verloopt_op)
+        )
+    client.post("/login", json={"email": "eigenaar@klant.nl", "wachtwoord": "een-goed-wachtwoord"})
+
+    resp = client.get("/me")
+
+    assert resp.json()["trial_verloopt_op"] == verloopt_op.date().isoformat()
+
+
+def test_me_geeft_geen_trial_verloopt_op_mee_zonder_proefperiode(tmp_path, monkeypatch):
+    client, _ = _bouw_login_omgeving(tmp_path, monkeypatch)
+    client.post("/login", json={"email": "eigenaar@klant.nl", "wachtwoord": "een-goed-wachtwoord"})
+
+    resp = client.get("/me")
+
+    assert resp.json()["trial_verloopt_op"] is None
+
+
 def test_logout_maakt_sessie_ongeldig(tmp_path, monkeypatch):
     client, _ = _bouw_login_omgeving(tmp_path, monkeypatch)
     client.post("/login", json={"email": "eigenaar@klant.nl", "wachtwoord": "een-goed-wachtwoord"})

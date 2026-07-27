@@ -60,6 +60,18 @@ def is_actief(engine: Engine, organisatie_id: int) -> bool:
     return bool(waarde)
 
 
+def haal_trial_verloopt_op(engine: Engine, organisatie_id: int) -> Optional[datetime]:
+    """Voor de zijbalk (dashboard/account.js): hoeveel dagen resteren er
+    nog in de proefperiode. None voor een organisatie die nooit in een
+    proefperiode zit (handmatig aangemaakt) of waarvan de proefperiode al
+    verstreken is — het aanroepende /me-endpoint toont dan geen
+    aftellende dagen, alleen "alle functies actief"."""
+    with engine.connect() as conn:
+        return conn.execute(
+            select(organisaties.c.trial_verloopt_op).where(organisaties.c.id == organisatie_id)
+        ).scalar_one_or_none()
+
+
 def is_in_proefperiode(engine: Engine, organisatie_id: int) -> bool:
     """True als deze organisatie nog binnen haar gratis proefperiode valt —
     gebruikt om premium-functies af te schermen (self-serve API-keys,

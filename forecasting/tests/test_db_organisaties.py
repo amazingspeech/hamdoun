@@ -7,6 +7,7 @@ from db.organisaties import (
     deactiveer_organisatie,
     haal_gemiddelde_omzet_per_stuk,
     haal_organisatie_id_bij_stripe_subscription,
+    haal_trial_verloopt_op,
     is_actief,
     is_in_proefperiode,
     lijst_actieve_organisaties,
@@ -150,3 +151,20 @@ def test_organisatie_met_verlopen_trial_verloopt_op_is_niet_meer_in_proefperiode
         conn.execute(organisaties.update().where(organisaties.c.id == org_id).values(trial_verloopt_op=verleden))
 
     assert is_in_proefperiode(engine, organisatie_id=org_id) is False
+
+
+def test_haal_trial_verloopt_op_zonder_proefperiode_geeft_none(tmp_path):
+    engine = maak_database(tmp_path / "tenants.db")
+    org_id = bootstrap_organisatie(engine, naam="Klant", slug="klant", store_ids=[])
+
+    assert haal_trial_verloopt_op(engine, organisatie_id=org_id) is None
+
+
+def test_haal_trial_verloopt_op_geeft_ingestelde_waarde_terug(tmp_path):
+    engine = maak_database(tmp_path / "tenants.db")
+    org_id = bootstrap_organisatie(engine, naam="Klant", slug="klant", store_ids=[])
+    verloopt_op = datetime.now(timezone.utc) + timedelta(days=14)
+    with engine.begin() as conn:
+        conn.execute(organisaties.update().where(organisaties.c.id == org_id).values(trial_verloopt_op=verloopt_op))
+
+    assert haal_trial_verloopt_op(engine, organisatie_id=org_id) == verloopt_op.replace(tzinfo=None)

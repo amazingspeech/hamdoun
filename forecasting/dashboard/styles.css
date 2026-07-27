@@ -445,7 +445,33 @@ details.scenario-vergelijking { margin-top:32px; border-top:1px solid var(--line
   .portfolio-sidebar-nav a.actief {
     border-left-color:var(--accent); color:var(--accent-ink); font-weight:600; background:var(--paper);
   }
+  .portfolio-sidebar-groepslabel {
+    font:600 0.6875rem/1.2 var(--font-body); color:var(--ink-faint); text-transform:uppercase;
+    letter-spacing:0.05em; margin:0 0 8px 9px;
+  }
+  .trend-pijl { display:inline-block; margin-left:6px; font-weight:700; }
+  .trend-pijl.omhoog { color:var(--accent-ink); }
+  .trend-pijl.omlaag { color:var(--ink-faint); }
+
+  .portfolio-sidebar-kpis { display:flex; gap:8px; }
+  .portfolio-sidebar-kpi {
+    flex:1 1 0; padding:8px 10px; border:1px solid var(--line); border-radius:8px; background:var(--paper);
+    display:flex; flex-direction:column; gap:2px;
+  }
+  .portfolio-sidebar-kpi .waarde {
+    font:600 1.0625rem/1.2 var(--font-mono); color:var(--ink); font-variant-numeric:tabular-nums;
+  }
+  .portfolio-sidebar-kpi .label { font-size:0.6875rem; color:var(--ink-faint); }
+  .portfolio-sidebar-kpis-caveat { font-size:0.6875rem; color:var(--ink-faint); margin:6px 2px 0; line-height:1.4; }
+
+  .portfolio-sidebar-recent .portfolio-sidebar-nav a {
+    font-weight:400; font-size:0.8125rem; padding:6px 12px;
+  }
+
   .portfolio-sidebar-onder { margin-top:auto; padding-top:20px; border-top:1px solid var(--line); }
+  .portfolio-sidebar-abonnement {
+    font:500 0.75rem/1.3 var(--font-body); color:var(--accent-ink); margin:0 0 10px;
+  }
   .portfolio-sidebar-status {
     display:flex; align-items:center; font:500 0.75rem/1.3 var(--font-mono); color:var(--ink-faint); margin:0 0 10px;
   }
@@ -456,7 +482,7 @@ details.scenario-vergelijking { margin-top:32px; border-top:1px solid var(--line
   .portfolio-sidebar-onder a:hover { text-decoration:underline; }
 
   .portfolio-main.wrap { max-width:1400px; margin:0; padding:36px 48px 80px; }
-  .portfolio-main .account-nav { display:none; }
+  .portfolio-shell .account-nav { display:none; }
   .portfolio-main header.top { margin-bottom:28px; }
 
   /* Signature: de KPI-rij is één doorlopende strook met dunne

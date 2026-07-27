@@ -317,13 +317,15 @@ function initNieuwLidForm(kanBeheren, alleWinkels) {
 }
 
 function initUitloggenLink() {
-  const link = document.getElementById("uitloggen");
-  if (!link) return;
-  link.addEventListener("click", async (event) => {
+  const uitloggen = async (event) => {
     event.preventDefault();
     await logout();
     window.location.href = "./login.html";
-  });
+  };
+  for (const id of ["uitloggen", "uitloggen-mobiel"]) {
+    const link = document.getElementById(id);
+    if (link) link.addEventListener("click", uitloggen);
+  }
 }
 
 async function haalOrganisatieInstellingen() {
@@ -726,7 +728,9 @@ async function initTeamPagina() {
     window.location.href = "./login.html";
     return;
   }
-  document.getElementById("wie-ben-ik").textContent = `Ingelogd als ${me.email} (${me.rol}).`;
+  document.getElementById("wie-ben-ik-mobiel").textContent = `Ingelogd als ${me.email} (${me.rol}).`;
+  document.getElementById("wie-ben-ik").textContent = me.email;
+  initPortfolioSidebar(me);
 
   const kanBeheren = me.rol === "eigenaar";
   let alleWinkels = [];
