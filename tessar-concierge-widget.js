@@ -88,6 +88,11 @@
     + ".tsc-body{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;background:oklch(98% 0.005 250);}"
     + ".tsc-msg{max-width:85%;padding:10px 13px;border-radius:14px;font-size:0.875rem;line-height:1.5;white-space:pre-wrap;word-wrap:break-word;}"
     + ".tsc-msg-bot{align-self:flex-start;background:#fff;border:1px solid oklch(92% 0.008 250);color:oklch(20% 0.02 255);border-bottom-left-radius:4px;}"
+    + ".tsc-msg-bot p{margin:0 0 8px 0;}"
+    + ".tsc-msg-bot p:last-child{margin-bottom:0;}"
+    + ".tsc-msg-bot ul,.tsc-msg-bot ol{margin:4px 0 8px 0;padding-left:20px;}"
+    + ".tsc-msg-bot li{margin:2px 0;}"
+    + ".tsc-msg-bot strong{font-weight:700;}"
     + ".tsc-msg-user{align-self:flex-end;background:oklch(18% 0.02 255);color:#fff;border-bottom-right-radius:4px;}"
     + ".tsc-starters{display:flex;flex-direction:column;gap:8px;padding:0 16px 12px;flex:none;}"
     + ".tsc-starter-btn{text-align:left;background:oklch(96% 0.015 220);border:1px solid oklch(88% 0.03 220);color:oklch(30% 0.05 240);"
@@ -279,10 +284,58 @@
   })();
 
   // ----------------------- MESSAGES -----------------------
+  // Lichte, veilige markdown-renderer voor bot-antwoorden: escaped eerst
+  // alle HTML (dus geen injectie mogelijk via modelinvoer), en zet daarna
+  // alleen **vet**, "- "/"1. "-lijsten en alinea's om naar echte tags.
+  // Gebruikersberichten blijven via textContent gaan (geen opmaak nodig).
+  function escapeHtml(s) {
+    return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  }
+
+  function renderBotHtml(text) {
+    var escaped = escapeHtml(text).replace(/\*\*([^\n*]+?)\*\*/g, "<strong>$1</strong>");
+    var lines = escaped.split("\n");
+    var html = "";
+    var i = 0;
+    while (i < lines.length) {
+      if (/^\s*[-*]\s+/.test(lines[i])) {
+        var items = [];
+        while (i < lines.length && /^\s*[-*]\s+/.test(lines[i])) {
+          items.push(lines[i].replace(/^\s*[-*]\s+/, ""));
+          i++;
+        }
+        html += "<ul>" + items.map(function (it) { return "<li>" + it + "</li>"; }).join("") + "</ul>";
+        continue;
+      }
+      if (/^\s*\d+\.\s+/.test(lines[i])) {
+        var oitems = [];
+        while (i < lines.length && /^\s*\d+\.\s+/.test(lines[i])) {
+          oitems.push(lines[i].replace(/^\s*\d+\.\s+/, ""));
+          i++;
+        }
+        html += "<ol>" + oitems.map(function (it) { return "<li>" + it + "</li>"; }).join("") + "</ol>";
+        continue;
+      }
+      if (lines[i].trim() === "") { i++; continue; }
+      var para = [lines[i]];
+      i++;
+      while (i < lines.length && lines[i].trim() !== "" && !/^\s*[-*]\s+/.test(lines[i]) && !/^\s*\d+\.\s+/.test(lines[i])) {
+        para.push(lines[i]);
+        i++;
+      }
+      html += "<p>" + para.join("<br>") + "</p>";
+    }
+    return html;
+  }
+
   function addMessage(role, text) {
     var el = document.createElement("div");
     el.className = "tsc-msg " + (role === "user" ? "tsc-msg-user" : "tsc-msg-bot");
-    el.textContent = text;
+    if (role === "user") {
+      el.textContent = text;
+    } else {
+      el.innerHTML = renderBotHtml(text);
+    }
     bodyEl.appendChild(el);
     bodyEl.scrollTop = bodyEl.scrollHeight;
     return el;
@@ -375,7 +428,7 @@
             typingEl.remove();
             botMsgEl = addMessage("bot", accumulated);
           } else {
-            botMsgEl.textContent = accumulated;
+            botMsgEl.innerHTML = renderBotHtml(accumulated);
             bodyEl.scrollTop = bodyEl.scrollHeight;
           }
         }
