@@ -111,6 +111,20 @@ gebruiker_winkels = Table(
     UniqueConstraint("gebruiker_id", "winkel_id", name="uq_gebruiker_winkel"),
 )
 
+eigen_verkoopdata = Table(
+    "eigen_verkoopdata",
+    metadata,
+    Column("id", Integer, primary_key=True),
+    Column("organisatie_id", Integer, ForeignKey("organisaties.id"), nullable=False),
+    # ISO-datumstring (JJJJ-MM-DD) i.p.v. Date: sorteert lexicografisch
+    # identiek aan chronologisch, en komt al in dit formaat uit
+    # serving.verkoopdata.parse_verkoopdata_csv() — geen conversie nodig.
+    Column("datum", String, nullable=False),
+    Column("omzet", Float, nullable=False),
+    Column("aangemaakt_op", DateTime, nullable=False),
+    UniqueConstraint("organisatie_id", "datum", name="uq_organisatie_datum"),
+)
+
 sessies = Table(
     "sessies",
     metadata,

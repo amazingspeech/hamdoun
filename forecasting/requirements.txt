@@ -97,6 +97,8 @@ python-dotenv==1.2.1
     # via
     #   -r requirements.in
     #   uvicorn
+python-multipart==0.0.20
+    # via -r requirements.in
 pytz==2026.3.post1
     # via pandas
 pyyaml==6.0.3

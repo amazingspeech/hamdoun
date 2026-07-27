@@ -79,6 +79,19 @@ class OrganisatieInstellingenResponse(BaseModel):
     gemiddelde_omzet_per_stuk: Optional[float] = None
 
 
+class VerkoopdataRij(BaseModel):
+    datum: date
+    omzet: float
+
+
+class VerkoopdataResponse(BaseModel):
+    rijen: list[VerkoopdataRij]
+
+
+class VerkoopdataUploadResponse(BaseModel):
+    aantal_rijen: int
+
+
 class WinkelToewijzingVerzoek(BaseModel):
     winkel_ids: list[int] = []
 

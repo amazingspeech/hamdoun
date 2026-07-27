@@ -9,7 +9,7 @@ from typing import NamedTuple, Optional
 
 import pandas as pd
 from dotenv import load_dotenv
-from fastapi import Depends, FastAPI, HTTPException, Query, Request, Response, Security
+from fastapi import Depends, FastAPI, HTTPException, Query, Request, Response, Security, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import APIKeyHeader
 from fastapi.staticfiles import StaticFiles
@@ -24,6 +24,7 @@ from db import gebruiker_winkels as db_gebruiker_winkels
 from db import gebruikers as db_gebruikers
 from db import organisaties as db_organisaties
 from db import sessies as db_sessies
+from db import verkoopdata as db_verkoopdata
 from db import winkels as db_winkels
 from db.schema import gebruikers as gebruikers_tabel
 from db.schema import maak_database
@@ -56,11 +57,15 @@ from serving.schemas import (
     OrganisatieInstellingenVerzoek,
     PortfolioKpi,
     PortfolioResponse,
+    VerkoopdataResponse,
+    VerkoopdataRij,
+    VerkoopdataUploadResponse,
     WinkelResponse,
     WinkelSamenvatting,
     WinkelToewijzingResponse,
     WinkelToewijzingVerzoek,
 )
+from serving.verkoopdata import OngeldigeVerkoopdata, parse_verkoopdata_csv
 from training.artifact import laad_artefact, lijst_metadata_per_versie
 
 # Alleen voor lokale ontwikkeling: laadt forecasting/.env als het bestaat
@@ -333,6 +338,27 @@ def organisatie_instellingen_instellen(
         tenants_db, organisatie_id=eigenaar.organisatie_id, bedrag=verzoek.gemiddelde_omzet_per_stuk
     )
     return OrganisatieInstellingenResponse(gemiddelde_omzet_per_stuk=verzoek.gemiddelde_omzet_per_stuk)
+
+
+@app.get("/organisatie/verkoopdata", response_model=VerkoopdataResponse)
+def verkoopdata_lezen(gebruiker: GeauthenticeerdeGebruiker = Depends(vereis_sessie)) -> VerkoopdataResponse:
+    # Leesbaar voor elke ingelogde gebruiker, net als de herbestel-prijs —
+    # alleen het uploaden (wijzigen) is eigenaar-only.
+    rijen = db_verkoopdata.haal_verkoopdata(tenants_db, organisatie_id=gebruiker.organisatie_id)
+    return VerkoopdataResponse(rijen=[VerkoopdataRij(**r) for r in rijen])
+
+
+@app.post("/organisatie/verkoopdata", response_model=VerkoopdataUploadResponse)
+def verkoopdata_uploaden(
+    bestand: UploadFile, eigenaar: GeauthenticeerdeGebruiker = Depends(vereis_eigenaar)
+) -> VerkoopdataUploadResponse:
+    inhoud = bestand.file.read().decode("utf-8", errors="replace")
+    try:
+        rijen = parse_verkoopdata_csv(inhoud)
+    except OngeldigeVerkoopdata as e:
+        raise HTTPException(status_code=422, detail=str(e))
+    db_verkoopdata.vervang_verkoopdata(tenants_db, organisatie_id=eigenaar.organisatie_id, rijen=rijen)
+    return VerkoopdataUploadResponse(aantal_rijen=len(rijen))
 
 
 @app.post("/api-keys", response_model=NieuweApiKeyResponse, status_code=201)

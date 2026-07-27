@@ -1,6 +1,9 @@
 "use strict";
 
 const API_BASIS = window.TESSAR_FORECAST_API_BASIS || "";
+const euro = new Intl.NumberFormat("nl-NL", {
+  style: "currency", currency: "EUR", maximumFractionDigits: 0,
+});
 
 function toonFout(elId, bericht) {
   const el = document.getElementById(elId);
@@ -264,6 +267,109 @@ function initHerbestelForm() {
   });
 }
 
+async function haalVerkoopdata() {
+  const resp = await fetch(`${API_BASIS}/organisatie/verkoopdata`, { credentials: "same-origin" });
+  if (!resp.ok) throw new Error(`Kon verkoopdata niet ophalen (${resp.status})`);
+  return resp.json();
+}
+
+async function uploadVerkoopdata(bestand) {
+  const formData = new FormData();
+  formData.append("bestand", bestand);
+  const resp = await fetch(`${API_BASIS}/organisatie/verkoopdata`, {
+    method: "POST",
+    credentials: "same-origin",
+    body: formData,
+  });
+  if (!resp.ok) {
+    const detail = await resp.json().catch(() => ({}));
+    throw new Error(detail.detail || `Uploaden mislukt (${resp.status})`);
+  }
+  return resp.json();
+}
+
+function maakSvgEl(tag, attrs) {
+  const el = document.createElementNS("http://www.w3.org/2000/svg", tag);
+  for (const [naam, waarde] of Object.entries(attrs)) el.setAttribute(naam, waarde);
+  return el;
+}
+
+function tekenVerkoopdataGrafiek(rijen) {
+  const svg = document.getElementById("verkoopdata-grafiek");
+  svg.replaceChildren();
+  if (rijen.length < 2) return;
+
+  const breedte = 920, hoogte = 200, marge = { boven: 16, rechts: 16, onder: 24, links: 70 };
+  const plotBreedte = breedte - marge.links - marge.rechts;
+  const plotHoogte = hoogte - marge.boven - marge.onder;
+  const omzetten = rijen.map((r) => r.omzet);
+  const minY = Math.min(...omzetten) * 0.95;
+  const maxY = Math.max(...omzetten) * 1.05 || 1;
+
+  const x = (i) => marge.links + (i / (rijen.length - 1)) * plotBreedte;
+  const y = (waarde) => marge.boven + plotHoogte - ((waarde - minY) / (maxY - minY || 1)) * plotHoogte;
+
+  svg.appendChild(maakSvgEl("polyline", {
+    class: "lijn",
+    points: rijen.map((r, i) => `${x(i)},${y(r.omzet)}`).join(" "),
+  }));
+
+  for (const waarde of [minY, maxY]) {
+    const label = maakSvgEl("text", {
+      class: "as-label", x: marge.links - 10, y: y(waarde) + 4, "text-anchor": "end",
+    });
+    label.textContent = euro.format(Math.round(waarde));
+    svg.appendChild(label);
+  }
+  const eersteLabel = maakSvgEl("text", {
+    class: "as-label", x: marge.links, y: hoogte - 4, "text-anchor": "start",
+  });
+  eersteLabel.textContent = rijen[0].datum;
+  const laatsteLabel = maakSvgEl("text", {
+    class: "as-label", x: breedte - marge.rechts, y: hoogte - 4, "text-anchor": "end",
+  });
+  laatsteLabel.textContent = rijen[rijen.length - 1].datum;
+  svg.append(eersteLabel, laatsteLabel);
+}
+
+function toonVerkoopdata(rijen) {
+  const wrap = document.getElementById("verkoopdata-grafiek-wrap");
+  if (rijen.length === 0) {
+    wrap.hidden = true;
+    return;
+  }
+  document.getElementById("verkoopdata-samenvatting").textContent =
+    `${rijen.length} dagen geüpload, van ${rijen[0].datum} t/m ${rijen[rijen.length - 1].datum}.`;
+  tekenVerkoopdataGrafiek(rijen);
+  wrap.hidden = false;
+}
+
+function initVerkoopdataForm() {
+  const form = document.getElementById("verkoopdata-form");
+  if (!form) return;
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const knop = document.getElementById("verkoopdata-knop");
+    const bestandVeld = document.getElementById("verkoopdata-bestand");
+    knop.disabled = true;
+    toonFout("verkoopdata-fout", "");
+    document.getElementById("verkoopdata-melding").hidden = true;
+    try {
+      const bestand = bestandVeld.files[0];
+      const resultaat = await uploadVerkoopdata(bestand);
+      const melding = document.getElementById("verkoopdata-melding");
+      melding.textContent = `${resultaat.aantal_rijen} dagen geüpload.`;
+      melding.hidden = false;
+      bestandVeld.value = "";
+      toonVerkoopdata((await haalVerkoopdata()).rijen);
+    } catch (e) {
+      toonFout("verkoopdata-fout", e.message);
+    } finally {
+      knop.disabled = false;
+    }
+  });
+}
+
 async function haalApiKeys() {
   const resp = await fetch(`${API_BASIS}/api-keys`, { credentials: "same-origin" });
   if (!resp.ok) throw new Error(`Kon API-keys niet ophalen (${resp.status})`);
@@ -408,6 +514,18 @@ async function initTeamPagina() {
     }
     initNieuweKeyForm();
   }
+
+  // Verkoopdata-kaart: voor iedereen zichtbaar (je eigen verkoophistorie
+  // bekijken is geen beheertaak), maar het upload-formulier zelf alleen
+  // voor de eigenaar — zelfde eigenaar/lid-verdeling als de herbestel-prijs.
+  document.getElementById("verkoopdata-kaart").hidden = false;
+  document.getElementById("verkoopdata-form").hidden = !kanBeheren;
+  try {
+    toonVerkoopdata((await haalVerkoopdata()).rijen);
+  } catch (e) {
+    toonFout("fout", e.message);
+  }
+  if (kanBeheren) initVerkoopdataForm();
 
   initNieuwLidForm(kanBeheren, alleWinkels);
   initUitloggenLink();

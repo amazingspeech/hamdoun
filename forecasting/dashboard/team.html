@@ -61,6 +61,26 @@
     <p class="sub" id="herbestel-melding" hidden style="margin:0;"></p>
   </div>
 
+  <div class="kaart" id="verkoopdata-kaart" hidden>
+    <p class="sub" style="margin:0;">
+      Geen koppeling met je webshop? Upload je eigen verkoopdata als CSV-bestand (kolommen "datum" en
+      "omzet", één rij per dag) om je verkoophistorie hier te zien.
+    </p>
+    <form id="verkoopdata-form" style="display:flex; gap:14px; align-items:end; flex-wrap:wrap;">
+      <div class="veld">
+        <label for="verkoopdata-bestand">CSV-bestand</label>
+        <input type="file" id="verkoopdata-bestand" accept=".csv" required>
+      </div>
+      <button type="submit" class="btn" id="verkoopdata-knop">Uploaden</button>
+    </form>
+    <p class="fout" id="verkoopdata-fout" hidden></p>
+    <p class="sub" id="verkoopdata-melding" hidden style="margin:0;"></p>
+    <div id="verkoopdata-grafiek-wrap" hidden>
+      <p class="sub" id="verkoopdata-samenvatting" style="margin:0 0 8px;"></p>
+      <svg id="verkoopdata-grafiek" width="920" height="200"></svg>
+    </div>
+  </div>
+
   <div class="kaart" id="api-keys-kaart" hidden>
     <p class="sub" style="margin:0;">API-keys geven programmatische toegang tot de voorspellings-API namens jouw organisatie.</p>
     <form id="nieuwe-key-form" style="display:flex; gap:14px; align-items:end; flex-wrap:wrap;">
