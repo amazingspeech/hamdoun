@@ -5,36 +5,50 @@ aangeroepen (zie db/cli.py), niet vanuit serving/app.py."""
 from __future__ import annotations
 
 from datetime import datetime, timezone
+from typing import Optional
 
-from sqlalchemy.engine import Engine
+from sqlalchemy.engine import Connection, Engine
 
 from db.schema import organisaties, winkels
 
 
-def bootstrap_organisatie(engine: Engine, naam: str, slug: str, store_ids: list[int]) -> int:
+def _bootstrap_organisatie_op_connectie(conn: Connection, naam: str, slug: str, store_ids: list[int]) -> int:
+    nu = datetime.now(timezone.utc)
+    org_id = conn.execute(
+        organisaties.insert().values(naam=naam, slug=slug, actief=True, aangemaakt_op=nu)
+    ).inserted_primary_key[0]
+
+    if store_ids:
+        conn.execute(
+            winkels.insert(),
+            [
+                {
+                    "organisatie_id": org_id,
+                    "extern_store_id": store_id,
+                    "naam": None,
+                    "actief": True,
+                    "aangemaakt_op": nu,
+                }
+                for store_id in store_ids
+            ],
+        )
+    return org_id
+
+
+def bootstrap_organisatie(
+    engine: Engine, naam: str, slug: str, store_ids: list[int], conn: Optional[Connection] = None
+) -> int:
     """Maakt één organisatie aan en koppelt elke store_id uit store_ids
     eraan als winkel. Geeft het id van de aangemaakte organisatie terug.
     Faalt hard (IntegrityError) bij een dubbele slug of een store_id die al
-    aan een andere organisatie hangt — nooit stilzwijgend overschrijven."""
-    nu = datetime.now(timezone.utc)
-    with engine.begin() as conn:
-        org_id = conn.execute(
-            organisaties.insert().values(naam=naam, slug=slug, actief=True, aangemaakt_op=nu)
-        ).inserted_primary_key[0]
+    aan een andere organisatie hangt — nooit stilzwijgend overschrijven.
 
-        if store_ids:
-            conn.execute(
-                winkels.insert(),
-                [
-                    {
-                        "organisatie_id": org_id,
-                        "extern_store_id": store_id,
-                        "naam": None,
-                        "actief": True,
-                        "aangemaakt_op": nu,
-                    }
-                    for store_id in store_ids
-                ],
-            )
-
-    return org_id
+    conn: optioneel een al-openstaande connectie/transactie (bv. vanuit
+    serving.app's Stripe-webhook, die dit met andere schrijfacties atomisch
+    moet combineren — zie db/organisaties.py en db/aanmeldingen.py voor
+    hetzelfde patroon). Zonder conn opent deze functie zoals voorheen zijn
+    eigen transactie."""
+    if conn is not None:
+        return _bootstrap_organisatie_op_connectie(conn, naam, slug, store_ids)
+    with engine.begin() as eigen_conn:
+        return _bootstrap_organisatie_op_connectie(eigen_conn, naam, slug, store_ids)

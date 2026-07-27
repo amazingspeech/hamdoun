@@ -31,6 +31,17 @@ class Settings:
     mail_afzender: Optional[str] = None
     mail_smtp_gebruiker: Optional[str] = None
     mail_smtp_wachtwoord: Optional[str] = None
+    # Stripe is optioneel om dezelfde reden als mail hierboven: /signup en
+    # /webhooks/stripe controleren zelf op None (zie serving/app.py) in
+    # plaats van dat dit hier hard faalt — een deployment zonder self-serve
+    # signup (bv. alleen handmatige onboarding) hoeft dit nooit te zetten.
+    stripe_secret_key: Optional[str] = None
+    stripe_webhook_secret: Optional[str] = None
+    stripe_price_id: Optional[str] = None
+    # Basis-URL van de draaiende app, nodig om Stripe Checkout's
+    # success_url/cancel_url naar de juiste plek te laten wijzen (Stripe kan
+    # dit niet zelf afleiden uit het inkomende verzoek).
+    app_basis_url: Optional[str] = None
 
 
 def laad_settings() -> Settings:
@@ -105,4 +116,8 @@ def laad_settings() -> Settings:
         mail_afzender=os.environ.get("MAIL_AFZENDER"),
         mail_smtp_gebruiker=os.environ.get("MAIL_SMTP_GEBRUIKER"),
         mail_smtp_wachtwoord=os.environ.get("MAIL_SMTP_WACHTWOORD"),
+        stripe_secret_key=os.environ.get("STRIPE_SECRET_KEY"),
+        stripe_webhook_secret=os.environ.get("STRIPE_WEBHOOK_SECRET"),
+        stripe_price_id=os.environ.get("STRIPE_PRICE_ID"),
+        app_basis_url=os.environ.get("APP_BASIS_URL"),
     )

@@ -121,3 +121,27 @@ def test_laad_settings_sessie_cookie_secure_expliciet_uit(monkeypatch, tmp_path)
     _basis_env(monkeypatch, tmp_path, SESSIE_COOKIE_SECURE="false")
     settings = config.laad_settings()
     assert settings.sessie_cookie_secure is False
+
+
+def test_laad_settings_zonder_stripeconfig_geeft_none(monkeypatch, tmp_path):
+    _basis_env(monkeypatch, tmp_path)
+    for var in ("STRIPE_SECRET_KEY", "STRIPE_WEBHOOK_SECRET", "STRIPE_PRICE_ID", "APP_BASIS_URL"):
+        monkeypatch.delenv(var, raising=False)
+    settings = config.laad_settings()
+    assert settings.stripe_secret_key is None
+    assert settings.stripe_webhook_secret is None
+    assert settings.stripe_price_id is None
+    assert settings.app_basis_url is None
+
+
+def test_laad_settings_leest_stripeconfig(monkeypatch, tmp_path):
+    _basis_env(
+        monkeypatch, tmp_path,
+        STRIPE_SECRET_KEY="sk_test_geheim", STRIPE_WEBHOOK_SECRET="whsec_geheim",
+        STRIPE_PRICE_ID="price_abc", APP_BASIS_URL="http://127.0.0.1:8000",
+    )
+    settings = config.laad_settings()
+    assert settings.stripe_secret_key == "sk_test_geheim"
+    assert settings.stripe_webhook_secret == "whsec_geheim"
+    assert settings.stripe_price_id == "price_abc"
+    assert settings.app_basis_url == "http://127.0.0.1:8000"

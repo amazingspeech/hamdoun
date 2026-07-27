@@ -17,8 +17,11 @@ certifi==2026.7.22
     # via
     #   httpcore
     #   httpx
+    #   requests
 cffi==2.0.0
     # via cryptography
+charset-normalizer==3.4.9
+    # via requests
 click==8.1.8
     # via uvicorn
 cloudpickle==3.1.2
@@ -47,6 +50,7 @@ idna==3.18
     # via
     #   anyio
     #   httpx
+    #   requests
 iniconfig==2.1.0
     # via pytest
 joblib==1.5.3
@@ -103,6 +107,8 @@ pytz==2026.3.post1
     # via pandas
 pyyaml==6.0.3
     # via uvicorn
+requests==2.32.5
+    # via stripe
 scikit-learn==1.6.1
     # via
     #   -r requirements.in
@@ -124,6 +130,8 @@ sqlalchemy==2.0.51
     # via -r requirements.in
 starlette==0.49.3
     # via fastapi
+stripe==15.3.1
+    # via -r requirements.in
 threadpoolctl==3.6.0
     # via scikit-learn
 tomli==2.4.1
@@ -142,6 +150,7 @@ typing-extensions==4.16.0
     #   shap
     #   sqlalchemy
     #   starlette
+    #   stripe
     #   typing-inspection
     #   uvicorn
 typing-inspection==0.4.2
@@ -150,6 +159,8 @@ typing-inspection==0.4.2
     #   pydantic
 tzdata==2026.3
     # via pandas
+urllib3==2.6.3
+    # via requests
 uvicorn[standard]==0.39.0
     # via -r requirements.in
 uvloop==0.22.1

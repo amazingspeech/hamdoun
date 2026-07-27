@@ -47,6 +47,12 @@ organisaties = Table(
     # Optioneel: zonder ingevulde waarde toont het dashboard geen
     # stuks-advies, alleen het bestaande omzetgetal.
     Column("gemiddelde_omzet_per_stuk", Float, nullable=True),
+    # Fase 5 NODIG 5 (self-serve signup): alleen gevuld voor organisaties die
+    # via /signup + Stripe Checkout zijn aangemaakt. Handmatig aangemaakte
+    # organisaties (db/bootstrap.py) hebben deze niet — beide paden blijven
+    # naast elkaar bestaan.
+    Column("stripe_customer_id", String, nullable=True),
+    Column("stripe_subscription_id", String, nullable=True),
 )
 
 winkels = Table(
@@ -138,6 +144,31 @@ sessies = Table(
     Column("token_hash", String, nullable=False, unique=True),
     Column("aangemaakt_op", DateTime, nullable=False),
     Column("verloopt_op", DateTime, nullable=False),
+)
+
+
+aanmeldingen = Table(
+    "aanmeldingen",
+    metadata,
+    Column("id", Integer, primary_key=True),
+    Column("organisatie_naam", String, nullable=False),
+    Column("organisatie_slug", String, nullable=False),
+    Column("email", String, nullable=False),
+    # wachtwoord_hash/salt: al gehasht op het moment dat de aanmelding wordt
+    # aangemaakt (vóór de Stripe-redirect) — het plaintext wachtwoord staat
+    # nooit ergens tussen /signup en de webhook opgeslagen, ook niet
+    # tijdelijk.
+    Column("wachtwoord_hash", String, nullable=False),
+    Column("wachtwoord_salt", String, nullable=False),
+    # Stripe kan hetzelfde webhook-event meermaals afleveren (at-least-once
+    # delivery) — de webhook-handler gebruikt deze kolom om een sessie te
+    # herkennen die al verwerkt is, dus uniek.
+    Column("stripe_checkout_session_id", String, nullable=False, unique=True),
+    # NULL tot de betaling bevestigd is (checkout.session.completed) — pas
+    # dan bestaat de echte organisatie en wordt dit gevuld.
+    Column("organisatie_id", Integer, ForeignKey("organisaties.id"), nullable=True),
+    Column("voltooid_op", DateTime, nullable=True),
+    Column("aangemaakt_op", DateTime, nullable=False),
 )
 
 

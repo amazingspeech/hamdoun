@@ -19,6 +19,7 @@ from slowapi.util import get_remote_address
 from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 
+from db import aanmeldingen as db_aanmeldingen
 from db import api_keys as db_api_keys
 from db import gebruiker_winkels as db_gebruiker_winkels
 from db import gebruikers as db_gebruikers
@@ -26,9 +27,12 @@ from db import organisaties as db_organisaties
 from db import sessies as db_sessies
 from db import verkoopdata as db_verkoopdata
 from db import winkels as db_winkels
+from db.bootstrap import bootstrap_organisatie
 from db.schema import gebruikers as gebruikers_tabel
 from db.schema import maak_database
 from security import audit
+from security.api_keys import hash_key
+from serving.betaalintegratie import OngeldigeWebhookSignature, lees_webhook_event, maak_checkout_sessie
 from serving.config import laad_settings
 from serving.forecast import (
     HorizonBuitenBereik,
@@ -57,6 +61,8 @@ from serving.schemas import (
     OrganisatieInstellingenVerzoek,
     PortfolioKpi,
     PortfolioResponse,
+    SignupResponse,
+    SignupVerzoek,
     VerkoopdataResponse,
     VerkoopdataRij,
     VerkoopdataUploadResponse,
@@ -135,6 +141,10 @@ class GeauthenticeerdeKey(NamedTuple):
 
 
 SESSIE_COOKIE_NAAM = "sessie"
+# Fase 5 NODIG 5: 7 dagen proberen, dan automatisch een eerste incasso —
+# vastgelegde productbeslissing (zie FASE4-SAAS-FOUNDATION.md), geen
+# omgevingsvariabele omdat dit geen deployment-instelling is.
+SIGNUP_PROEFPERIODE_DAGEN = 7
 
 
 class GeauthenticeerdeGebruiker(NamedTuple):
@@ -228,6 +238,104 @@ def logout(request: Request, response: Response) -> dict:
 @app.get("/me")
 def me(gebruiker: GeauthenticeerdeGebruiker = Depends(vereis_sessie)) -> dict:
     return {"email": gebruiker.email, "rol": gebruiker.rol, "organisatie_id": gebruiker.organisatie_id}
+
+
+@app.post("/signup", response_model=SignupResponse)
+@limiter.limit(f"{settings.rate_limit_per_minute}/minute", key_func=get_remote_address)
+def signup(request: Request, verzoek: SignupVerzoek) -> SignupResponse:
+    """Publiek, geen sessie nodig — start een Stripe Checkout Session met
+    proefperiode. De organisatie + eigenaar-account bestaan hierna nog
+    NIET; die ontstaan pas als Stripe de betaling bevestigt via
+    POST /webhooks/stripe. Zie db/aanmeldingen.py voor de tussentoestand."""
+    if not all([settings.stripe_secret_key, settings.stripe_price_id, settings.app_basis_url]):
+        raise HTTPException(status_code=503, detail="Self-serve aanmelden is nog niet geconfigureerd.")
+
+    if db_gebruikers.email_is_in_gebruik(tenants_db, email=verzoek.email):
+        raise HTTPException(status_code=409, detail=f"E-mailadres {verzoek.email} is al in gebruik.")
+
+    wachtwoord_hash, wachtwoord_salt = hash_key(verzoek.wachtwoord)
+    slug = db_aanmeldingen.genereer_unieke_organisatie_slug(tenants_db, verzoek.organisatie_naam)
+
+    sessie = maak_checkout_sessie(
+        stripe_secret_key=settings.stripe_secret_key,
+        price_id=settings.stripe_price_id,
+        klant_email=verzoek.email,
+        success_url=f"{settings.app_basis_url}/signup-gelukt.html",
+        cancel_url=f"{settings.app_basis_url}/signup.html",
+        metadata={"organisatie_naam": verzoek.organisatie_naam},
+        proefperiode_dagen=SIGNUP_PROEFPERIODE_DAGEN,
+    )
+
+    db_aanmeldingen.maak_aanmelding(
+        tenants_db,
+        organisatie_naam=verzoek.organisatie_naam,
+        organisatie_slug=slug,
+        email=verzoek.email,
+        wachtwoord_hash=wachtwoord_hash,
+        wachtwoord_salt=wachtwoord_salt,
+        stripe_checkout_session_id=sessie.id,
+    )
+    return SignupResponse(checkout_url=sessie.checkout_url)
+
+
+@app.post("/webhooks/stripe")
+async def stripe_webhook(request: Request) -> dict:
+    """Rondt een self-serve aanmelding af zodra Stripe checkout.session.
+    completed meldt (betaalmethode vastgelegd, proefperiode gestart). Geen
+    sessie/API-key-auth — dit endpoint authenticeert via de Stripe-
+    signature op de payload zelf (zie serving.betaalintegratie). Idempotent:
+    Stripe kan hetzelfde event meermaals afleveren, en aanmelding.
+    organisatie_id (al gezet = al verwerkt) voorkomt een tweede organisatie/
+    gebruiker."""
+    if not settings.stripe_webhook_secret:
+        raise HTTPException(status_code=503, detail="Stripe-webhook is nog niet geconfigureerd.")
+
+    payload = await request.body()
+    signature_header = request.headers.get("stripe-signature", "")
+    try:
+        event = lees_webhook_event(
+            payload=payload, signature_header=signature_header, webhook_secret=settings.stripe_webhook_secret
+        )
+    except OngeldigeWebhookSignature:
+        raise HTTPException(status_code=400, detail="Ongeldige Stripe-signature.")
+
+    if event["type"] != "checkout.session.completed":
+        return {"status": "genegeerd"}
+
+    sessie = event["data"]["object"]
+    aanmelding = db_aanmeldingen.haal_aanmelding_bij_sessie(tenants_db, sessie["id"])
+    if aanmelding is None:
+        return {"status": "genegeerd"}
+    if aanmelding.organisatie_id is not None:
+        return {"status": "al_verwerkt"}
+
+    # Eén gedeelde transactie voor alle vier schrijfacties: als Stripe deze
+    # aflevering herhaalt na een fout halverwege (bv. een tijdelijke
+    # DB-storing na het aanmaken van de organisatie), mag er nooit een
+    # gedeeltelijk resultaat blijven staan — dat zou de retry laten
+    # stuklopen op de unique constraint van organisaties.slug/gebruikers.
+    # email. Ofwel alles lukt, ofwel niets (rollback), nooit iets ertussenin.
+    with tenants_db.begin() as conn:
+        org_id = bootstrap_organisatie(
+            tenants_db, naam=aanmelding.organisatie_naam, slug=aanmelding.organisatie_slug, store_ids=[], conn=conn
+        )
+        db_gebruikers.maak_gebruiker_met_hash(
+            tenants_db, organisatie_id=org_id, email=aanmelding.email,
+            wachtwoord_hash=aanmelding.wachtwoord_hash, wachtwoord_salt=aanmelding.wachtwoord_salt,
+            rol="eigenaar", conn=conn,
+        )
+        db_organisaties.stel_stripe_koppeling_in(
+            tenants_db, organisatie_id=org_id,
+            # Itemtoegang, geen .get(): een echt Stripe-object (StripeObject)
+            # ondersteunt geen .get() zoals een plain dict — zie
+            # _NepStripeObject in tests/test_stripe_webhook_endpoint.py.
+            # customer/subscription staan altijd gevuld op dit punt in een
+            # subscription-mode Checkout.
+            stripe_customer_id=sessie["customer"], stripe_subscription_id=sessie["subscription"], conn=conn,
+        )
+        db_aanmeldingen.voltooi_aanmelding(tenants_db, aanmelding_id=aanmelding.id, organisatie_id=org_id, conn=conn)
+
+    return {"status": "ok"}
 
 
 @app.post("/gebruikers", response_model=GebruikerResponse, status_code=201)

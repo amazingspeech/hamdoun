@@ -19,7 +19,7 @@ de grond af moet worden toegevoegd.
 
 | # | Vraag | Beslissing |
 |---|---|---|
-| 1 | Self-service signup of handmatig? | **Handmatig.** Een organisatie zonder gekoppelde winkeldata is toch een lege huls; self-service is pas zinvol met een eigen data-onboardingsflow, die niet in scope is. |
+| 1 | Self-service signup of handmatig? | **Handmatig, herzien 2026-07-27.** Oorspronkelijk: een organisatie zonder gekoppelde winkeldata is een lege huls, self-service pas zinvol met een eigen data-onboardingsflow. Die flow bestaat inmiddels (Fase 5 NODIG 2, CSV-verkoopdata-upload) — self-service signup + Stripe-betaling is daarom alsnog gebouwd (Fase 5 NODIG 5): `POST /signup` start een Stripe Checkout Session (7 dagen proefperiode, daarna €49/maand), de webhook (`POST /webhooks/stripe`) maakt de organisatie + eigenaar-account pas aan zodra de betaling bevestigd is. |
 | 2 | Certo-klanten hergebruiken of gescheiden? | **Volledig gescheiden** identity, geen gedeeld gebruikersbestand met Certo. |
 | 3 | Prijsmodel? | **Flat-fee per organisatie**, geen usage-metering. Geen metering-tabel nodig in iteratie 1. |
 | 4 | Eén gedeeld model of per-organisatie getraind? | **Eén gedeeld, globaal model.** Isolatie zit volledig in toegangscontrole (welk `store_id` mag een org opvragen), niet in gescheiden training. |
@@ -217,10 +217,10 @@ Elke stap is op zichzelf shipbaar en testbaar — geen big-bang-migratie.
 
 - Granulaire RBAC/permissiematrix — twee rollen (eigenaar/lid) volstaan.
 - SSO/OAuth/SAML en 2FA — bevestigd door beslissing 8.
-- Self-service org-signup — bevestigd door beslissing 1.
+- ~~Self-service org-signup~~ — alsnog gebouwd, zie beslissing 1 (herzien 2026-07-27).
 - Per-organisatie modeltraining — bevestigd door beslissing 4.
 - Horizontale schaal / gedeelde rate-limit-state.
-- Billing-integratie (Stripe e.d.) — flat-fee (beslissing 3) heeft dit nu niet nodig.
+- ~~Billing-integratie (Stripe e.d.)~~ — alsnog gebouwd, zie beslissing 1 (herzien 2026-07-27). Blijft wel bij één vaste flat-fee-prijs (beslissing 3), geen usage-metering.
 - Zware ORM-laag.
 
 ## Volgende stap

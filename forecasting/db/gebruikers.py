@@ -6,9 +6,10 @@ db/gebruikers_cli.py, niet via een publiek registratie-endpoint."""
 from __future__ import annotations
 
 from datetime import datetime, timezone
+from typing import Optional
 
 from sqlalchemy import select
-from sqlalchemy.engine import Engine
+from sqlalchemy.engine import Connection, Engine
 
 from db.schema import gebruikers
 from security.api_keys import hash_key, verifieer_key
@@ -28,6 +29,55 @@ def maak_gebruiker(engine: Engine, organisatie_id: int, email: str, wachtwoord: 
                 aangemaakt_op=datetime.now(timezone.utc),
             )
         ).inserted_primary_key[0]
+
+
+def _maak_gebruiker_met_hash_op_connectie(
+    conn: Connection, organisatie_id: int, email: str, wachtwoord_hash: str, wachtwoord_salt: str, rol: str
+) -> int:
+    return conn.execute(
+        gebruikers.insert().values(
+            organisatie_id=organisatie_id,
+            email=email,
+            wachtwoord_hash=wachtwoord_hash,
+            wachtwoord_salt=wachtwoord_salt,
+            rol=rol,
+            actief=True,
+            aangemaakt_op=datetime.now(timezone.utc),
+        )
+    ).inserted_primary_key[0]
+
+
+def maak_gebruiker_met_hash(
+    engine: Engine, organisatie_id: int, email: str, wachtwoord_hash: str, wachtwoord_salt: str,
+    rol: str = "lid", conn: Optional[Connection] = None,
+) -> int:
+    """Zelfde als maak_gebruiker(), maar neemt een al-gehashte hash/salt aan
+    in plaats van een plaintext wachtwoord. Bestaat voor de self-serve
+    signup-flow (Fase 5 NODIG 5): het wachtwoord wordt al bij /signup
+    gehasht en opgeslagen in db.aanmeldingen — deze functie zet die hash
+    simpelweg over naar een echte gebruikersrij zodra Stripe de betaling
+    bevestigt, zonder ooit een plaintext wachtwoord op te slaan of opnieuw
+    te hashen.
+
+    conn: optioneel een al-openstaande connectie/transactie, zie
+    db.bootstrap.bootstrap_organisatie voor dezelfde reden/patroon."""
+    if conn is not None:
+        return _maak_gebruiker_met_hash_op_connectie(conn, organisatie_id, email, wachtwoord_hash, wachtwoord_salt, rol)
+    with engine.begin() as eigen_conn:
+        return _maak_gebruiker_met_hash_op_connectie(
+            eigen_conn, organisatie_id, email, wachtwoord_hash, wachtwoord_salt, rol
+        )
+
+
+def email_is_in_gebruik(engine: Engine, email: str) -> bool:
+    """Voor de self-serve signup-flow: voorkomt dat iemand een Stripe
+    Checkout Session start voor een e-mailadres dat al een account heeft —
+    beter om dat vóór de betaling te melden dan pas bij de webhook, waar
+    een mislukte aanmelding niet meer terug te draaien is zonder handmatig
+    in te grijpen op een al-betaalde Stripe-subscription."""
+    with engine.connect() as conn:
+        rij = conn.execute(select(gebruikers.c.id).where(gebruikers.c.email == email)).first()
+    return rij is not None
 
 
 def haal_gebruiker(engine: Engine, gebruiker_id: int, organisatie_id: int):

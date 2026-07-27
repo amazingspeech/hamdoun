@@ -4,7 +4,7 @@ import pytest
 from sqlalchemy import create_engine, inspect, text
 from sqlalchemy.exc import IntegrityError
 
-from db.schema import gebruiker_winkels, gebruikers, maak_database, organisaties, winkels
+from db.schema import aanmeldingen, gebruiker_winkels, gebruikers, maak_database, organisaties, winkels
 
 
 def test_maak_database_maakt_organisaties_en_winkels_tabellen(tmp_path):
@@ -98,6 +98,88 @@ def test_organisatie_gemiddelde_omzet_per_stuk_kan_ingesteld_worden(tmp_path):
     with engine.connect() as conn:
         rij = conn.execute(organisaties.select().where(organisaties.c.id == org_id)).one()
     assert rij.gemiddelde_omzet_per_stuk == 12.5
+
+
+def test_organisatie_stripe_kolommen_zijn_optioneel(tmp_path):
+    """Handmatig aangemaakte organisaties (bootstrap_organisatie, geen
+    self-serve signup) hebben geen Stripe-koppeling — deze kolommen mogen
+    nooit verplicht zijn bij het aanmaken."""
+    engine = maak_database(tmp_path / "tenants.db")
+    nu = datetime.now(timezone.utc)
+    with engine.begin() as conn:
+        org_id = conn.execute(
+            organisaties.insert().values(naam="Org A", slug="org-a", actief=True, aangemaakt_op=nu)
+        ).inserted_primary_key[0]
+
+    with engine.connect() as conn:
+        rij = conn.execute(organisaties.select().where(organisaties.c.id == org_id)).one()
+    assert rij.stripe_customer_id is None
+    assert rij.stripe_subscription_id is None
+
+
+def test_aanmelding_kan_aangemaakt_worden_zonder_organisatie(tmp_path):
+    """Een aanmelding bestaat vanaf het moment een Stripe Checkout Session
+    wordt gestart, ruim vóórdat de betaling (en dus de organisatie) er is —
+    organisatie_id moet dus nullable zijn."""
+    engine = maak_database(tmp_path / "tenants.db")
+    nu = datetime.now(timezone.utc)
+    with engine.begin() as conn:
+        aanmelding_id = conn.execute(
+            aanmeldingen.insert().values(
+                organisatie_naam="Bakkerij De Vries",
+                organisatie_slug="bakkerij-de-vries",
+                email="devries@voorbeeld.nl",
+                wachtwoord_hash="x",
+                wachtwoord_salt="y",
+                stripe_checkout_session_id="cs_test_123",
+                organisatie_id=None,
+                voltooid_op=None,
+                aangemaakt_op=nu,
+            )
+        ).inserted_primary_key[0]
+
+    with engine.connect() as conn:
+        rij = conn.execute(aanmeldingen.select().where(aanmeldingen.c.id == aanmelding_id)).one()
+    assert rij.organisatie_id is None
+    assert rij.voltooid_op is None
+
+
+def test_stripe_checkout_session_id_moet_uniek_zijn_op_aanmeldingen(tmp_path):
+    """Stripe kan hetzelfde webhook-event meermaals versturen — de webhook-
+    handler herkent een al-verwerkte sessie via deze kolom, dus die moet
+    uniek zijn."""
+    engine = maak_database(tmp_path / "tenants.db")
+    nu = datetime.now(timezone.utc)
+    with engine.begin() as conn:
+        conn.execute(
+            aanmeldingen.insert().values(
+                organisatie_naam="Bakkerij De Vries",
+                organisatie_slug="bakkerij-de-vries",
+                email="devries@voorbeeld.nl",
+                wachtwoord_hash="x",
+                wachtwoord_salt="y",
+                stripe_checkout_session_id="cs_test_123",
+                organisatie_id=None,
+                voltooid_op=None,
+                aangemaakt_op=nu,
+            )
+        )
+
+    with pytest.raises(IntegrityError):
+        with engine.begin() as conn:
+            conn.execute(
+                aanmeldingen.insert().values(
+                    organisatie_naam="Andere Zaak",
+                    organisatie_slug="andere-zaak",
+                    email="ander@voorbeeld.nl",
+                    wachtwoord_hash="x",
+                    wachtwoord_salt="y",
+                    stripe_checkout_session_id="cs_test_123",
+                    organisatie_id=None,
+                    voltooid_op=None,
+                    aangemaakt_op=nu,
+                )
+            )
 
 
 def test_maak_database_voegt_ontbrekende_kolom_toe_aan_bestaande_tabel(tmp_path):

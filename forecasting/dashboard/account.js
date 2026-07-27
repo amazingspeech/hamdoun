@@ -55,6 +55,42 @@ async function logout() {
   await fetch(`${API_BASIS}/logout`, { method: "POST", credentials: "same-origin" });
 }
 
+async function meldAan(organisatieNaam, email, wachtwoord) {
+  const resp = await fetch(`${API_BASIS}/signup`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    credentials: "same-origin",
+    body: JSON.stringify({ organisatie_naam: organisatieNaam, email, wachtwoord }),
+  });
+  if (!resp.ok) {
+    const detail = await resp.json().catch(() => ({}));
+    throw new Error(detail.detail || `Aanmelden mislukt (${resp.status})`);
+  }
+  return resp.json();
+}
+
+function initSignupPagina() {
+  const form = document.getElementById("signup-form");
+  if (!form) return;
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const knop = document.getElementById("signup-knop");
+    knop.disabled = true;
+    toonFout("fout", "");
+    try {
+      const { checkout_url: checkoutUrl } = await meldAan(
+        document.getElementById("organisatie-naam").value,
+        document.getElementById("email").value,
+        document.getElementById("wachtwoord").value,
+      );
+      window.location.href = checkoutUrl;
+    } catch (e) {
+      toonFout("fout", e.message);
+      knop.disabled = false;
+    }
+  });
+}
+
 function initLoginPagina() {
   const form = document.getElementById("login-form");
   if (!form) return;
@@ -532,6 +568,7 @@ async function initTeamPagina() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  initSignupPagina();
   initLoginPagina();
   initTeamPagina();
 });

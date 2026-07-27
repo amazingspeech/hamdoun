@@ -1,6 +1,13 @@
 from db.bootstrap import bootstrap_organisatie
-from db.gebruikers import haal_gebruiker, maak_gebruiker, verifieer_inloggegevens
+from db.gebruikers import (
+    email_is_in_gebruik,
+    haal_gebruiker,
+    maak_gebruiker,
+    maak_gebruiker_met_hash,
+    verifieer_inloggegevens,
+)
 from db.schema import maak_database
+from security.api_keys import hash_key
 
 
 def test_verifieer_inloggegevens_met_juist_wachtwoord(tmp_path):
@@ -64,3 +71,37 @@ def test_haal_gebruiker_onbekend_id_geeft_none(tmp_path):
     org_id = bootstrap_organisatie(engine, naam="Klant", slug="klant", store_ids=[])
 
     assert haal_gebruiker(engine, gebruiker_id=999, organisatie_id=org_id) is None
+
+
+def test_maak_gebruiker_met_hash_slaat_geen_nieuw_hashformaat_op(tmp_path):
+    """maak_gebruiker_met_hash() bestaat voor de self-serve signup-flow
+    (Fase 5 NODIG 5), waar het wachtwoord al gehasht is op het moment dat de
+    aanmelding werd gestart (vóór de Stripe-redirect) — dus geen tweede keer
+    hashen hier, alleen opslaan. Test bevestigt dat het resultaat nog steeds
+    verifieerbaar is via de bestaande login-functie, dus geen nieuw formaat."""
+    engine = maak_database(tmp_path / "tenants.db")
+    org_id = bootstrap_organisatie(engine, naam="Klant", slug="klant", store_ids=[])
+    hash_hex, salt_hex = hash_key("correct-paard")
+
+    gebruiker_id = maak_gebruiker_met_hash(
+        engine, organisatie_id=org_id, email="eigenaar@klant.nl",
+        wachtwoord_hash=hash_hex, wachtwoord_salt=salt_hex, rol="eigenaar",
+    )
+
+    assert verifieer_inloggegevens(engine, email="eigenaar@klant.nl", wachtwoord="correct-paard") == gebruiker_id
+    rij = haal_gebruiker(engine, gebruiker_id=gebruiker_id, organisatie_id=org_id)
+    assert rij.rol == "eigenaar"
+
+
+def test_email_is_in_gebruik_bestaand_email(tmp_path):
+    engine = maak_database(tmp_path / "tenants.db")
+    org_id = bootstrap_organisatie(engine, naam="Klant", slug="klant", store_ids=[])
+    maak_gebruiker(engine, organisatie_id=org_id, email="bezet@klant.nl", wachtwoord="x")
+
+    assert email_is_in_gebruik(engine, email="bezet@klant.nl") is True
+
+
+def test_email_is_in_gebruik_onbekend_email(tmp_path):
+    engine = maak_database(tmp_path / "tenants.db")
+
+    assert email_is_in_gebruik(engine, email="vrij@klant.nl") is False

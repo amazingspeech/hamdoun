@@ -64,6 +64,20 @@ class GebruikerAanmakenVerzoek(BaseModel):
     wachtwoord: str = Field(..., min_length=1)
 
 
+class SignupVerzoek(BaseModel):
+    organisatie_naam: str = Field(..., min_length=1)
+    email: str
+    # Strengere ondergrens dan GebruikerAanmakenVerzoek (min_length=1): daar
+    # kiest een eigenaar zelf een tijdelijk wachtwoord voor een teamlid, hier
+    # is dit het enige wachtwoord voor een gloednieuw, zelf-aangemaakt
+    # account zonder toezicht van een operator.
+    wachtwoord: str = Field(..., min_length=8)
+
+
+class SignupResponse(BaseModel):
+    checkout_url: str
+
+
 class GebruikerResponse(BaseModel):
     id: int
     email: str
