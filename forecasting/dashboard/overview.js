@@ -75,12 +75,6 @@ function maakRij(winkel) {
   link.href = `./index.html?winkel=${winkel.extern_store_id}`;
   link.textContent = winkel.naam || `Winkel ${winkel.extern_store_id}`;
   naamTd.appendChild(link);
-  if (winkel.afwijkend) {
-    const badge = document.createElement("span");
-    badge.className = "afwijkend-badge";
-    badge.textContent = "Wijkt af van gebruikelijk patroon";
-    naamTd.appendChild(badge);
-  }
 
   const omzetTd = document.createElement("td");
   omzetTd.className = "cijfer";
@@ -89,7 +83,20 @@ function maakRij(winkel) {
   const trendTd = document.createElement("td");
   trendTd.appendChild(maakSparklineSvg(winkel.sparkline));
 
-  tr.append(naamTd, omzetTd, trendTd);
+  const statusTd = document.createElement("td");
+  if (winkel.afwijkend) {
+    const badge = document.createElement("span");
+    badge.className = "afwijkend-badge";
+    badge.textContent = "Wijkt af";
+    statusTd.appendChild(badge);
+  } else {
+    const normaal = document.createElement("span");
+    normaal.className = "status-normaal";
+    normaal.textContent = "Normaal";
+    statusTd.appendChild(normaal);
+  }
+
+  tr.append(naamTd, omzetTd, trendTd, statusTd);
   return tr;
 }
 
@@ -111,8 +118,8 @@ function toonKpis() {
     ["Afwijkende winkels", String(aantalAfwijkend), "Voorspelling wijkt sterk af van het eigen historische patroon van die winkel."],
   ];
   for (const [label, waarde, uitleg] of items) {
-    const kaart = document.createElement("div");
-    kaart.className = "metric";
+    const item = document.createElement("div");
+    item.className = "cockpit-item";
     const labelEl = document.createElement("div");
     labelEl.className = "label";
     labelEl.textContent = label;
@@ -122,8 +129,8 @@ function toonKpis() {
     const uitlegEl = document.createElement("div");
     uitlegEl.className = "uitleg";
     uitlegEl.textContent = uitleg;
-    kaart.append(labelEl, waardeEl, uitlegEl);
-    el.appendChild(kaart);
+    item.append(labelEl, waardeEl, uitlegEl);
+    el.appendChild(item);
   }
 }
 
@@ -142,7 +149,7 @@ function toonSkeletRijen(aantal) {
   const rijen = [];
   for (let i = 0; i < aantal; i++) {
     const tr = document.createElement("tr");
-    const breedtes = ["55%", "70px", "90px"];
+    const breedtes = ["45%", "70px", "90px", "60px"];
     for (const breedte of breedtes) {
       const td = document.createElement("td");
       const balk = document.createElement("div");
@@ -215,14 +222,16 @@ document.addEventListener("DOMContentLoaded", async () => {
     window.location.href = "./login.html";
     return;
   }
-  document.getElementById("wie-ben-ik").textContent = `Ingelogd als ${me.email}`;
+  document.getElementById("wie-ben-ik").textContent = me.email;
   ingelogdeRol = me.rol;
 
-  document.getElementById("uitloggen").addEventListener("click", async (event) => {
+  const uitloggen = async (event) => {
     event.preventDefault();
     await fetch(`${API_BASIS}/logout`, { method: "POST", credentials: "same-origin" });
     window.location.href = "./login.html";
-  });
+  };
+  document.getElementById("uitloggen").addEventListener("click", uitloggen);
+  document.getElementById("uitloggen-mobiel").addEventListener("click", uitloggen);
 
   document.getElementById("zoeken").addEventListener("input", tekenTabel);
   initSortering();

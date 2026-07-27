@@ -354,6 +354,99 @@ details.model-info { margin-top:32px; border-top:1px solid var(--line); padding-
   header.top { flex-direction:column; }
 }
 
+/* ————————————————————————————————————————————————————————————————
+   Portfolio-overzicht: desktop-schil (overview.html only)
+   Onder 961px verandert er niets — .portfolio-shell blijft gewoon
+   documentflow, .portfolio-sidebar blijft verborgen, .portfolio-main
+   is gewoon .wrap zoals elke andere pagina. De sidebar + brede layout
+   zijn een bewuste desktop-toevoeging, geen vervanging van mobiel.
+   Alle regels hier zijn nieuw en scoped onder .portfolio-shell/
+   .portfolio-sidebar/.cockpit-*/.status-normaal — geen bestaande regel
+   (.wrap, .metric, .metrics, ...) is aangepast, dus index.html/
+   login.html/team.html blijven ongewijzigd. */
+.portfolio-sidebar { display:none; }
+
+.portfolio-werkbalk { display:flex; align-items:flex-end; gap:16px; }
+
+/* Mobiel-basisstijl voor de cockpit-strip — zelfde look als de bestaande
+   .metrics/.metric kaarten elders, maar onder een eigen naam zodat de
+   desktop-override hieronder niet per ongeluk ook index.html raakt. */
+.cockpit-strip { display:flex; gap:16px; margin:16px 0 0; flex-wrap:wrap; }
+.cockpit-item { flex:1 1 220px; border:1px solid var(--line); border-radius:10px; padding:14px 16px; background:var(--paper-raised); }
+.cockpit-item .label { font:600 0.8125rem/1.2 var(--font-body); color:var(--ink-soft); }
+.cockpit-item .value { font:600 1.25rem/1.3 var(--font-body); color:var(--ink); margin-top:4px; }
+.cockpit-item .uitleg { font-size:0.75rem; color:var(--ink-faint); margin-top:6px; line-height:1.5; }
+
+.status-normaal { font-size:0.8125rem; color:var(--ink-faint); }
+
+.live-stip {
+  display:inline-block; width:7px; height:7px; border-radius:50%;
+  background:var(--band-line); margin-right:7px; flex:none;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .live-stip { animation:live-stip-puls 2.4s ease-in-out infinite; }
+}
+@keyframes live-stip-puls { 0%, 100% { opacity:1; } 50% { opacity:0.35; } }
+
+@media (min-width: 961px) {
+  .portfolio-shell { display:grid; grid-template-columns:220px 1fr; align-items:start; min-height:100vh; }
+
+  .portfolio-sidebar {
+    display:flex; flex-direction:column; gap:32px; position:sticky; top:0; height:100vh;
+    padding:28px 20px; background:var(--paper-raised); border-right:1px solid var(--line);
+  }
+  .portfolio-sidebar-merk {
+    font:600 1rem/1.2 var(--font-display); letter-spacing:-0.005em; color:var(--ink); margin:0 0 4px;
+  }
+  .portfolio-sidebar-nav { list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:2px; }
+  .portfolio-sidebar-nav a {
+    display:block; padding:9px 12px; margin-left:-3px; border-left:3px solid transparent;
+    font:500 0.875rem/1.3 var(--font-body); color:var(--ink-soft); text-decoration:none; border-radius:0 6px 6px 0;
+  }
+  .portfolio-sidebar-nav a:hover { background:var(--paper); color:var(--ink); }
+  .portfolio-sidebar-nav a.actief {
+    border-left-color:var(--accent); color:var(--accent-ink); font-weight:600; background:var(--paper);
+  }
+  .portfolio-sidebar-onder { margin-top:auto; padding-top:20px; border-top:1px solid var(--line); }
+  .portfolio-sidebar-status {
+    display:flex; align-items:center; font:500 0.75rem/1.3 var(--font-mono); color:var(--ink-faint); margin:0 0 10px;
+  }
+  .portfolio-sidebar-wie {
+    font-size:0.8125rem; color:var(--ink-soft); margin:0 0 8px; overflow-wrap:break-word;
+  }
+  .portfolio-sidebar-onder a { font:600 0.8125rem/1.3 var(--font-body); color:var(--accent-ink); text-decoration:none; }
+  .portfolio-sidebar-onder a:hover { text-decoration:underline; }
+
+  .portfolio-main.wrap { max-width:1400px; margin:0; padding:36px 48px 80px; }
+  .portfolio-main .account-nav { display:none; }
+  .portfolio-main header.top { margin-bottom:28px; }
+
+  /* Signature: de KPI-rij is één doorlopende strook met dunne
+     scheidingslijnen, geen drie losse afgeronde kaarten — leest als een
+     instrumentenpaneel i.p.v. een stapel contentblokken. */
+  .cockpit-strip {
+    display:flex; margin:0; border:1px solid var(--line); border-radius:10px;
+    background:var(--paper-raised); overflow:hidden;
+  }
+  .cockpit-item {
+    flex:1 1 0; padding:14px 22px; border-left:1px solid var(--line);
+  }
+  .cockpit-item:first-child { border-left:none; }
+  .cockpit-item .label { font:600 0.75rem/1.2 var(--font-body); color:var(--ink-faint); }
+  .cockpit-item .value {
+    font:600 1.375rem/1.3 var(--font-mono); color:var(--ink); margin-top:4px; font-variant-numeric:tabular-nums;
+  }
+  .cockpit-item .uitleg { font-size:0.75rem; color:var(--ink-faint); margin-top:5px; line-height:1.45; max-width:34ch; }
+
+  .portfolio-werkbalk { margin:18px 0 0; }
+  .portfolio-zoek { margin:0; max-width:280px; }
+
+  .portfolio-tabel-wrap { margin-top:16px; }
+  .portfolio-tabel th, .portfolio-tabel td { padding:9px 16px; font-size:0.875rem; }
+  .portfolio-tabel td.cijfer { font-family:var(--font-mono); }
+  .portfolio-tabel tbody tr:hover { background:var(--paper); }
+}
+
 /* Inhoudspagina's (bv. hoe-werkt-dit.html): platte, leesbare tekstopmaak
    i.p.v. de formulier-georiënteerde .kaart-stijl hierboven. */
 .inhoud { max-width:640px; }

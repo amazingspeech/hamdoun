@@ -11,45 +11,63 @@
 <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
-<div class="wrap">
-  <header class="top">
-    <div class="kop">
-      <p class="eyebrow">Vraagvoorspelling</p>
-      <h1>Al je winkels in één overzicht</h1>
-      <p class="sub" id="wie-ben-ik">Bezig met laden…</p>
-    </div>
-    <p class="account-nav">
-      <a href="./index.html">Voorspelling</a> · <a href="./team.html">Team beheren</a> ·
+<div class="portfolio-shell">
+  <nav class="portfolio-sidebar">
+    <p class="portfolio-sidebar-merk">Vraagvoorspelling</p>
+    <ul class="portfolio-sidebar-nav">
+      <li><a href="./overview.html" class="actief">Overzicht</a></li>
+      <li><a href="./index.html">Voorspelling</a></li>
+      <li><a href="./team.html">Team beheren</a></li>
+    </ul>
+    <div class="portfolio-sidebar-onder">
+      <p class="portfolio-sidebar-status"><span class="live-stip" aria-hidden="true"></span>Bijgewerkt zojuist</p>
+      <p class="portfolio-sidebar-wie" id="wie-ben-ik">Bezig met laden…</p>
       <a href="#" id="uitloggen">Uitloggen</a>
-    </p>
-  </header>
+    </div>
+  </nav>
 
-  <div class="metrics" id="portfolio-kpis"></div>
+  <div class="wrap portfolio-main">
+    <header class="top">
+      <div class="kop">
+        <p class="eyebrow">Overzicht</p>
+        <h1>Al je winkels in één overzicht</h1>
+      </div>
+      <p class="account-nav">
+        <a href="./index.html">Voorspelling</a> · <a href="./team.html">Team beheren</a> ·
+        <a href="#" id="uitloggen-mobiel">Uitloggen</a>
+      </p>
+    </header>
 
-  <p class="leeg" id="leeg" hidden></p>
+    <div class="cockpit-strip" id="portfolio-kpis"></div>
 
-  <div class="portfolio-zoek">
-    <label for="zoeken">Zoeken</label>
-    <input type="search" id="zoeken" placeholder="Winkelnaam of -nummer">
+    <p class="leeg" id="leeg" hidden></p>
+
+    <div class="portfolio-werkbalk">
+      <div class="portfolio-zoek">
+        <label for="zoeken">Zoeken</label>
+        <input type="search" id="zoeken" placeholder="Winkelnaam of -nummer">
+      </div>
+    </div>
+
+    <div class="portfolio-tabel-wrap">
+      <table class="portfolio-tabel">
+        <thead>
+          <tr>
+            <th>Winkel</th>
+            <th class="cijfer">
+              <button type="button" class="sorteerbaar" data-sorteer="totaal_p50">Verwachte omzet</button>
+            </th>
+            <th>Trend</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="portfolio-rijen"></tbody>
+      </table>
+    </div>
+
+    <p class="fout" id="fout" hidden></p>
+    <button class="btn zacht" id="meer-laden" hidden>Meer winkels laden</button>
   </div>
-
-  <div class="portfolio-tabel-wrap">
-    <table class="portfolio-tabel">
-      <thead>
-        <tr>
-          <th>Winkel</th>
-          <th class="cijfer">
-            <button type="button" class="sorteerbaar" data-sorteer="totaal_p50">Verwachte omzet</button>
-          </th>
-          <th>Trend</th>
-        </tr>
-      </thead>
-      <tbody id="portfolio-rijen"></tbody>
-    </table>
-  </div>
-
-  <p class="fout" id="fout" hidden></p>
-  <button class="btn zacht" id="meer-laden" hidden>Meer winkels laden</button>
 </div>
 <script src="./config.js"></script>
 <script src="./overview.js"></script>
