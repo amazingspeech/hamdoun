@@ -25,7 +25,7 @@ de grond af moet worden toegevoegd.
 | 4 | Eén gedeeld model of per-organisatie getraind? | **Eén gedeeld, globaal model.** Isolatie zit volledig in toegangscontrole (welk `store_id` mag een org opvragen), niet in gescheiden training. |
 | 5 | Verwachte schaal? | **~10 klanten, een paar winkels elk.** |
 | 6 | Database-engine? | **SQLite.** Op deze schaal is het single-writer-nadeel geen probleem; de query-laag wordt vanaf stap 0 portable opgezet (zie hieronder) zodat een latere overstap naar Postgres een migratie-run is, geen herontwerp. |
-| 7 | Mailprovider voor wachtwoord-reset? | **Bestaat nog niet, moet vanaf nul opgezet worden.** Blokkeert concreet Stap 4 hieronder — niet de rest van het plan. |
+| 7 | Mailprovider voor wachtwoord-reset? | **Zoho Mail (SMTP), gekozen 2026-07-27** — niet Resend. `info@tessar.nl` op `smtp.zoho.eu`, via `security/mail.py` (stdlib `smtplib`, geen nieuwe dependency). Ontgrendelt zowel Stap 4 als de nieuwe herbestel-melding (zie Fase 5). |
 | 8 | Wie gebruikt de login? | **Een volwaardig klantdashboard** waar klanten zelf inloggen. "Enterprise" hier = professionele kwaliteit/uitstraling (Stripe/Linear-niveau), expliciet **geen** SSO/RBAC. |
 | 9 | Data-retentie bij opzegging? | **Hard verwijderen** (AVG-vereiste), geen soft-delete. Zie implicatie hieronder. |
 
