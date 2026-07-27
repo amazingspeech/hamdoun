@@ -84,6 +84,31 @@
     <p class="aanbeveling" id="eigen-voorspelling-aanbeveling" hidden style="margin:16px 0 0;"></p>
   </div>
 
+  <div class="kaart" id="product-verkoopdata-kaart" hidden>
+    <p class="sub" style="margin:0;">
+      Herbestel-advies per product — upload je verkoopdata per artikel als CSV-bestand (kolommen "datum",
+      "product" en "aantal", één rij per product per dag, ook op dagen zonder verkoop) voor een apart
+      bestelaantal per product.
+      <span class="premium-badge" id="product-verkoopdata-premium-badge" hidden>Premium</span>
+    </p>
+    <p class="sub" id="product-verkoopdata-proefperiode-melding" hidden style="margin:4px 0 0;">
+      Niet beschikbaar tijdens je proefperiode — upgrade om herbestel-advies per product te gebruiken.
+    </p>
+    <form id="product-verkoopdata-form" style="display:flex; gap:14px; align-items:end; flex-wrap:wrap;">
+      <div class="veld">
+        <label for="product-verkoopdata-bestand">CSV-bestand</label>
+        <input type="file" id="product-verkoopdata-bestand" accept=".csv" required>
+      </div>
+      <button type="submit" class="btn" id="product-verkoopdata-knop">Uploaden</button>
+    </form>
+    <p class="fout" id="product-verkoopdata-fout" hidden></p>
+    <p class="sub" id="product-verkoopdata-melding" hidden style="margin:0;"></p>
+    <p class="sub" id="product-herbestel-leeg" hidden style="margin:16px 0 0;">
+      Nog geen product heeft genoeg historie (minimaal 28 dagen per product) voor een betrouwbaar advies.
+    </p>
+    <div class="teamlijst" id="product-herbestel-lijst"></div>
+  </div>
+
   <div class="kaart" id="api-keys-kaart" hidden>
     <p class="sub" style="margin:0;">
       API-keys geven programmatische toegang tot de voorspellings-API namens jouw organisatie.

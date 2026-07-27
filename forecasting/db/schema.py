@@ -139,6 +139,24 @@ eigen_verkoopdata = Table(
     UniqueConstraint("organisatie_id", "datum", name="uq_organisatie_datum"),
 )
 
+eigen_product_verkoopdata = Table(
+    "eigen_product_verkoopdata",
+    metadata,
+    Column("id", Integer, primary_key=True),
+    Column("organisatie_id", Integer, ForeignKey("organisaties.id"), nullable=False),
+    Column("datum", String, nullable=False),
+    Column("product", String, nullable=False),
+    # Aantal verkochte stuks, niet omzet — het herbestel-advies per product
+    # (Fase 5, premium) heeft geen prijs-omrekening nodig als de brondata al
+    # in stuks is. Een 0 is een verplichte rij (geen verkoop die dag voor
+    # dat product), geen ontbrekende rij — zie serving/product_verkoopdata.
+    # py: zonder expliciete nul-rijen zou het dag-van-de-week-gemiddelde
+    # structureel te hoog uitvallen.
+    Column("aantal", Integer, nullable=False),
+    Column("aangemaakt_op", DateTime, nullable=False),
+    UniqueConstraint("organisatie_id", "product", "datum", name="uq_organisatie_product_datum"),
+)
+
 sessies = Table(
     "sessies",
     metadata,

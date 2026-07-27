@@ -26,6 +26,7 @@ from db import api_keys as db_api_keys
 from db import gebruiker_winkels as db_gebruiker_winkels
 from db import gebruikers as db_gebruikers
 from db import organisaties as db_organisaties
+from db import product_verkoopdata as db_product_verkoopdata
 from db import sessies as db_sessies
 from db import verkoopdata as db_verkoopdata
 from db import wachtwoord_reset as db_wachtwoord_reset
@@ -38,6 +39,7 @@ from security.api_keys import hash_key
 from serving.betaalintegratie import OngeldigeWebhookSignature, lees_webhook_event, maak_checkout_sessie
 from serving.config import laad_settings
 from serving.eigen_voorspelling import MINIMUM_DAGEN, bereken_eigen_voorspelling
+from serving.herbestel_advies_per_product import bereken_herbestel_advies_per_product
 from serving.forecast import (
     HorizonBuitenBereik,
     OnbekendeWinkel,
@@ -67,6 +69,8 @@ from serving.schemas import (
     OrganisatieInstellingenVerzoek,
     PortfolioKpi,
     PortfolioResponse,
+    ProductHerbestelAdviesResponse,
+    ProductVerkoopdataUploadResponse,
     SignupResponse,
     SignupVerzoek,
     VerkoopdataResponse,
@@ -79,6 +83,7 @@ from serving.schemas import (
     WinkelToewijzingResponse,
     WinkelToewijzingVerzoek,
 )
+from serving.product_verkoopdata import OngeldigeProductVerkoopdata, parse_product_verkoopdata_csv
 from serving.verkoopdata import OngeldigeVerkoopdata, parse_verkoopdata_csv
 from training.artifact import laad_artefact, lijst_metadata_per_versie
 
@@ -572,6 +577,43 @@ def eigen_voorspelling_lezen(
         totaal_p10=resultaat["totaal_p10"], totaal_p50=resultaat["totaal_p50"], totaal_p90=resultaat["totaal_p90"],
         herbestel_advies=HerbestelAdvies(**advies) if advies else None,
     )
+
+
+@app.post("/organisatie/product-verkoopdata", response_model=ProductVerkoopdataUploadResponse)
+def product_verkoopdata_uploaden(
+    bestand: UploadFile, eigenaar: GeauthenticeerdeGebruiker = Depends(vereis_eigenaar)
+) -> ProductVerkoopdataUploadResponse:
+    # Herbestel-advies per product is een premium-functie (zelfde reden
+    # als self-serve API-keys hierboven) — nooit beschikbaar tijdens de
+    # proefperiode.
+    if db_organisaties.is_in_proefperiode(tenants_db, eigenaar.organisatie_id):
+        raise HTTPException(
+            status_code=403,
+            detail="Herbestel-advies per product is een premium-functie, niet beschikbaar in je proefperiode.",
+        )
+    inhoud = bestand.file.read().decode("utf-8", errors="replace")
+    try:
+        rijen = parse_product_verkoopdata_csv(inhoud)
+    except OngeldigeProductVerkoopdata as e:
+        raise HTTPException(status_code=422, detail=str(e))
+    db_product_verkoopdata.vervang_product_verkoopdata(tenants_db, organisatie_id=eigenaar.organisatie_id, rijen=rijen)
+    return ProductVerkoopdataUploadResponse(aantal_rijen=len(rijen))
+
+
+@app.get("/organisatie/herbestel-advies-per-product", response_model=ProductHerbestelAdviesResponse)
+def herbestel_advies_per_product_lezen(
+    horizon_dagen: int = Query(7, gt=0), gebruiker: GeauthenticeerdeGebruiker = Depends(vereis_sessie)
+) -> ProductHerbestelAdviesResponse:
+    """Leesbaar voor elke ingelogde gebruiker, net als /organisatie/
+    eigen-voorspelling — alleen het uploaden is eigenaar-only."""
+    if db_organisaties.is_in_proefperiode(tenants_db, gebruiker.organisatie_id):
+        raise HTTPException(
+            status_code=403,
+            detail="Herbestel-advies per product is een premium-functie, niet beschikbaar in je proefperiode.",
+        )
+    rijen = db_product_verkoopdata.haal_product_verkoopdata(tenants_db, organisatie_id=gebruiker.organisatie_id)
+    items = bereken_herbestel_advies_per_product(rijen, horizon_dagen=horizon_dagen, vanaf=date.today())
+    return ProductHerbestelAdviesResponse(items=items)
 
 
 @app.post("/api-keys", response_model=NieuweApiKeyResponse, status_code=201)

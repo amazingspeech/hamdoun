@@ -613,6 +613,89 @@ function pasApiKeysPremiumStatusToe(inProefperiode) {
   document.getElementById("nieuwe-key-knop").disabled = inProefperiode;
 }
 
+function pasProductVerkoopdataPremiumStatusToe(inProefperiode) {
+  document.getElementById("product-verkoopdata-premium-badge").hidden = !inProefperiode;
+  document.getElementById("product-verkoopdata-proefperiode-melding").hidden = !inProefperiode;
+  const form = document.getElementById("product-verkoopdata-form");
+  if (inProefperiode) {
+    form.setAttribute("data-premium-vergrendeld", "");
+  } else {
+    form.removeAttribute("data-premium-vergrendeld");
+  }
+  document.getElementById("product-verkoopdata-bestand").disabled = inProefperiode;
+  document.getElementById("product-verkoopdata-knop").disabled = inProefperiode;
+}
+
+async function haalProductHerbestelAdvies() {
+  const resp = await fetch(`${API_BASIS}/organisatie/herbestel-advies-per-product`, { credentials: "same-origin" });
+  if (!resp.ok) throw new Error(`Kon herbestel-advies per product niet ophalen (${resp.status})`);
+  return resp.json();
+}
+
+async function uploadProductVerkoopdata(bestand) {
+  const formData = new FormData();
+  formData.append("bestand", bestand);
+  const resp = await fetch(`${API_BASIS}/organisatie/product-verkoopdata`, {
+    method: "POST",
+    credentials: "same-origin",
+    body: formData,
+  });
+  if (!resp.ok) {
+    const detail = await resp.json().catch(() => ({}));
+    throw new Error(detail.detail || `Uploaden mislukt (${resp.status})`);
+  }
+  return resp.json();
+}
+
+function toonProductHerbestelAdvies(items) {
+  const lijst = document.getElementById("product-herbestel-lijst");
+  const leeg = document.getElementById("product-herbestel-leeg");
+  lijst.replaceChildren();
+  if (items.length === 0) {
+    leeg.hidden = false;
+    return;
+  }
+  leeg.hidden = true;
+  for (const item of items) {
+    const rij = document.createElement("div");
+    rij.className = "teamlid";
+    const naam = document.createElement("span");
+    naam.className = "email";
+    naam.textContent = item.product;
+    const advies = document.createElement("span");
+    advies.className = "rol";
+    advies.textContent = `~${Math.round(item.aantal_p50)} stuks (${Math.round(item.aantal_p10)}–${Math.round(item.aantal_p90)})`;
+    rij.append(naam, advies);
+    lijst.appendChild(rij);
+  }
+}
+
+function initProductVerkoopdataForm() {
+  const form = document.getElementById("product-verkoopdata-form");
+  if (!form) return;
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const knop = document.getElementById("product-verkoopdata-knop");
+    const bestandVeld = document.getElementById("product-verkoopdata-bestand");
+    knop.disabled = true;
+    toonFout("product-verkoopdata-fout", "");
+    document.getElementById("product-verkoopdata-melding").hidden = true;
+    try {
+      const bestand = bestandVeld.files[0];
+      const resultaat = await uploadProductVerkoopdata(bestand);
+      const melding = document.getElementById("product-verkoopdata-melding");
+      melding.textContent = `${resultaat.aantal_rijen} rijen geüpload.`;
+      melding.hidden = false;
+      bestandVeld.value = "";
+      toonProductHerbestelAdvies((await haalProductHerbestelAdvies()).items);
+    } catch (e) {
+      toonFout("product-verkoopdata-fout", e.message);
+    } finally {
+      knop.disabled = false;
+    }
+  });
+}
+
 function initNieuweKeyForm() {
   const form = document.getElementById("nieuwe-key-form");
   if (!form) return;
@@ -695,6 +778,22 @@ async function initTeamPagina() {
     toonFout("fout", e.message);
   }
   if (kanBeheren) initVerkoopdataForm();
+
+  // Zelfde eigenaar/lid-verdeling als hierboven, plus de premium-gate:
+  // tijdens de proefperiode is /organisatie/herbestel-advies-per-product
+  // hard geblokkeerd (403) server-side, dus die aanroep overslaan i.p.v.
+  // een verwachte fout in de generieke foutmelding te tonen.
+  document.getElementById("product-verkoopdata-kaart").hidden = false;
+  document.getElementById("product-verkoopdata-form").hidden = !kanBeheren;
+  pasProductVerkoopdataPremiumStatusToe(me.in_proefperiode);
+  if (!me.in_proefperiode) {
+    try {
+      toonProductHerbestelAdvies((await haalProductHerbestelAdvies()).items);
+    } catch (e) {
+      toonFout("fout", e.message);
+    }
+  }
+  if (kanBeheren) initProductVerkoopdataForm();
 
   initNieuwLidForm(kanBeheren, alleWinkels);
   initUitloggenLink();

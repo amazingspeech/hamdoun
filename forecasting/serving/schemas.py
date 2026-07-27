@@ -140,6 +140,21 @@ class EigenVoorspellingResponse(BaseModel):
     herbestel_advies: Optional[HerbestelAdvies] = None
 
 
+class ProductVerkoopdataUploadResponse(BaseModel):
+    aantal_rijen: int
+
+
+class ProductHerbestelAdviesItem(BaseModel):
+    product: str
+    aantal_p10: float
+    aantal_p50: float
+    aantal_p90: float
+
+
+class ProductHerbestelAdviesResponse(BaseModel):
+    items: list[ProductHerbestelAdviesItem] = []
+
+
 class WinkelToewijzingVerzoek(BaseModel):
     winkel_ids: list[int] = []
 
