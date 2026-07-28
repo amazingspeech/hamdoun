@@ -55,12 +55,15 @@ async function logout() {
   await fetch(`${API_BASIS}/logout`, { method: "POST", credentials: "same-origin" });
 }
 
-async function meldAan(organisatieNaam, email, wachtwoord) {
+async function meldAan(organisatieNaam, email, wachtwoord, kvkNummer, aantalLeden, aantalWinkels) {
   const resp = await fetch(`${API_BASIS}/signup`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     credentials: "same-origin",
-    body: JSON.stringify({ organisatie_naam: organisatieNaam, email, wachtwoord }),
+    body: JSON.stringify({
+      organisatie_naam: organisatieNaam, email, wachtwoord,
+      kvk_nummer: kvkNummer, aantal_leden: aantalLeden, aantal_winkels: aantalWinkels,
+    }),
   });
   if (!resp.ok) {
     const detail = await resp.json().catch(() => ({}));
@@ -72,6 +75,21 @@ async function meldAan(organisatieNaam, email, wachtwoord) {
 function initSignupPagina() {
   const form = document.getElementById("signup-form");
   if (!form) return;
+
+  const werkPrijsPreviewBij = () => {
+    const ledenEl = document.getElementById("aantal-leden");
+    const winkelsEl = document.getElementById("aantal-winkels");
+    const previewEl = document.getElementById("prijs-preview");
+    if (!ledenEl || !winkelsEl || !previewEl) return;
+    const leden = Math.max(1, parseInt(ledenEl.value, 10) || 1);
+    const winkels = Math.max(1, parseInt(winkelsEl.value, 10) || 1);
+    const totaal = 29 + (leden - 1) * 5 + (winkels - 1) * 10;
+    previewEl.textContent = `Totaal: ${euro.format(totaal)} per maand`;
+  };
+  document.getElementById("aantal-leden")?.addEventListener("input", werkPrijsPreviewBij);
+  document.getElementById("aantal-winkels")?.addEventListener("input", werkPrijsPreviewBij);
+  werkPrijsPreviewBij();
+
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
     const knop = document.getElementById("signup-knop");
@@ -82,6 +100,9 @@ function initSignupPagina() {
         document.getElementById("organisatie-naam").value,
         document.getElementById("email").value,
         document.getElementById("wachtwoord").value,
+        document.getElementById("kvk-nummer").value,
+        parseInt(document.getElementById("aantal-leden").value, 10) || 1,
+        parseInt(document.getElementById("aantal-winkels").value, 10) || 1,
       );
       window.location.href = checkoutUrl;
     } catch (e) {

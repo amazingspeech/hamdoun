@@ -16,7 +16,7 @@
     <div class="kop">
       <p class="eyebrow">Vraagvoorspelling</p>
       <h1>Maak je account aan</h1>
-      <p class="sub">7 dagen gratis proberen, daarna € 49 per maand. Geen sales-gesprek, geen installatie.</p>
+      <p class="sub">14 dagen gratis proberen, daarna vanaf € 29 per maand. Geen sales-gesprek, geen installatie.</p>
     </div>
   </header>
 
@@ -26,6 +26,10 @@
       <input type="text" id="organisatie-naam" required autocomplete="organization">
     </div>
     <div class="veld">
+      <label for="kvk-nummer">KVK-nummer</label>
+      <input type="text" id="kvk-nummer" required pattern="\d{8}" maxlength="8" inputmode="numeric" autocomplete="off">
+    </div>
+    <div class="veld">
       <label for="email">E-mailadres</label>
       <input type="email" id="email" required autocomplete="email">
     </div>
@@ -33,6 +37,21 @@
       <label for="wachtwoord">Wachtwoord</label>
       <input type="password" id="wachtwoord" required minlength="8" autocomplete="new-password">
     </div>
+    <div class="veld">
+      <label for="aantal-leden">Totaal aantal gebruikers (inclusief jezelf)</label>
+      <input type="number" id="aantal-leden" min="1" value="1" required>
+    </div>
+    <div class="veld">
+      <div class="veld-label-rij">
+        <label for="aantal-winkels">Aantal vestigingen</label>
+        <details class="info">
+          <summary aria-label="Wat betekent vestigingen?">?</summary>
+          <p class="info-inhoud">De eerste vestiging is gratis inbegrepen. Elke vestiging daarna kost € 10 per maand extra.</p>
+        </details>
+      </div>
+      <input type="number" id="aantal-winkels" min="1" value="1" required>
+    </div>
+    <p class="sub" id="prijs-preview" style="margin:0 0 8px;">Totaal: € 29 per maand</p>
     <button type="submit" class="btn" id="signup-knop">Verder naar betaalgegevens</button>
     <p class="fout" id="fout" hidden></p>
   </form>
