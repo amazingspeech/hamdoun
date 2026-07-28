@@ -1,6 +1,6 @@
 # Release checklist — forecasting
 
-Herbruikbaar per release naar `forecasting-demo.tessar.nl`. Loop 'm van boven
+Herbruikbaar per release naar `prospero.tessar.nl`. Loop 'm van boven
 naar beneden af; sla geen stap over omdat "het toch wel goed zal zijn" — dat
 is precies waar dit document voor is.
 
@@ -64,7 +64,7 @@ echte, losstaande staging rechtvaardigt.
 
 ## Post-release
 
-- [ ] Smoke test op productie: `curl https://forecasting-demo.tessar.nl/health`
+- [ ] Smoke test op productie: `curl https://prospero.tessar.nl/health`
       geeft `{"status":"ok","model_versie":"<verwachte versie>"}`.
 - [ ] Dashboard handmatig geopend in een browser: winkel kiezen, voorspellen,
       controleren dat de startdatum automatisch op de dag ná de
@@ -76,7 +76,7 @@ echte, losstaande staging rechtvaardigt.
       dezelfde server nog steeds normaal bereikbaar — verplicht na elke
       Caddy-wijziging, sowieso een goede gewoonte na elke deploy op deze
       gedeelde server.
-- [ ] Caddy-logs (`/var/log/caddy/forecasting-demo.log`) een paar minuten
+- [ ] Caddy-logs (`/var/log/caddy/prospero.log`) een paar minuten
       gevolgd op ongewone errors na de release.
 
 ## Rollback
