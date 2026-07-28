@@ -160,3 +160,30 @@ def test_wijzig_wachtwoord(tmp_path):
 
     assert verifieer_inloggegevens(engine, email="test@klant.nl", wachtwoord="oud-wachtwoord") is None
     assert verifieer_inloggegevens(engine, email="test@klant.nl", wachtwoord="nieuw-wachtwoord") == gebruiker_id
+
+
+def test_aantal_actieve_gebruikers(tmp_path):
+    from db.bootstrap import bootstrap_organisatie
+    from db.gebruikers import aantal_actieve_gebruikers, maak_gebruiker
+    from db.schema import maak_database
+
+    engine = maak_database(tmp_path / "tenants.db")
+    org_id = bootstrap_organisatie(engine, naam="Bakkerij De Vries", slug="bakkerij-de-vries", store_ids=[])
+    maak_gebruiker(engine, organisatie_id=org_id, email="eigenaar@voorbeeld.nl", wachtwoord="wachtwoord-1", rol="eigenaar")
+    maak_gebruiker(engine, organisatie_id=org_id, email="lid@voorbeeld.nl", wachtwoord="wachtwoord-2", rol="lid")
+
+    assert aantal_actieve_gebruikers(engine, org_id) == 2
+
+
+def test_aantal_actieve_gebruikers_negeert_andere_organisatie(tmp_path):
+    from db.bootstrap import bootstrap_organisatie
+    from db.gebruikers import aantal_actieve_gebruikers, maak_gebruiker
+    from db.schema import maak_database
+
+    engine = maak_database(tmp_path / "tenants.db")
+    org_a = bootstrap_organisatie(engine, naam="Organisatie A", slug="org-a", store_ids=[])
+    org_b = bootstrap_organisatie(engine, naam="Organisatie B", slug="org-b", store_ids=[])
+    maak_gebruiker(engine, organisatie_id=org_a, email="eigenaar-a@voorbeeld.nl", wachtwoord="wachtwoord-1", rol="eigenaar")
+    maak_gebruiker(engine, organisatie_id=org_b, email="eigenaar-b@voorbeeld.nl", wachtwoord="wachtwoord-2", rol="eigenaar")
+
+    assert aantal_actieve_gebruikers(engine, org_a) == 1

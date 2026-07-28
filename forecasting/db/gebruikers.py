@@ -8,7 +8,7 @@ from __future__ import annotations
 from datetime import datetime, timezone
 from typing import Optional
 
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.engine import Connection, Engine
 
 from db.schema import gebruikers
@@ -29,6 +29,15 @@ def maak_gebruiker(engine: Engine, organisatie_id: int, email: str, wachtwoord: 
                 aangemaakt_op=datetime.now(timezone.utc),
             )
         ).inserted_primary_key[0]
+
+
+def aantal_actieve_gebruikers(engine: Engine, organisatie_id: int) -> int:
+    with engine.connect() as conn:
+        return conn.execute(
+            select(func.count()).select_from(gebruikers).where(
+                gebruikers.c.organisatie_id == organisatie_id, gebruikers.c.actief.is_(True)
+            )
+        ).scalar_one()
 
 
 def _maak_gebruiker_met_hash_op_connectie(
