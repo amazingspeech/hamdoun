@@ -13,12 +13,15 @@ from db.schema import organisaties, winkels
 
 
 def _bootstrap_organisatie_op_connectie(
-    conn: Connection, naam: str, slug: str, store_ids: list[int], trial_verloopt_op: Optional[datetime] = None
+    conn: Connection, naam: str, slug: str, store_ids: list[int], trial_verloopt_op: Optional[datetime] = None,
+    kvk_nummer: Optional[str] = None, ingekochte_leden: Optional[int] = None,
+    ingekochte_winkels: Optional[int] = None,
 ) -> int:
     nu = datetime.now(timezone.utc)
     org_id = conn.execute(
         organisaties.insert().values(
-            naam=naam, slug=slug, actief=True, aangemaakt_op=nu, trial_verloopt_op=trial_verloopt_op
+            naam=naam, slug=slug, actief=True, aangemaakt_op=nu, trial_verloopt_op=trial_verloopt_op,
+            kvk_nummer=kvk_nummer, ingekochte_leden=ingekochte_leden, ingekochte_winkels=ingekochte_winkels,
         )
     ).inserted_primary_key[0]
 
@@ -41,7 +44,8 @@ def _bootstrap_organisatie_op_connectie(
 
 def bootstrap_organisatie(
     engine: Engine, naam: str, slug: str, store_ids: list[int], conn: Optional[Connection] = None,
-    trial_verloopt_op: Optional[datetime] = None,
+    trial_verloopt_op: Optional[datetime] = None, kvk_nummer: Optional[str] = None,
+    ingekochte_leden: Optional[int] = None, ingekochte_winkels: Optional[int] = None,
 ) -> int:
     """Maakt één organisatie aan en koppelt elke store_id uit store_ids
     eraan als winkel. Geeft het id van de aangemaakte organisatie terug.
@@ -57,8 +61,17 @@ def bootstrap_organisatie(
     trial_verloopt_op: optioneel, alleen door de Stripe-webhook meegegeven
     zodat de lokale proefperiode-status (db.organisaties.is_in_proefperiode)
     Stripe's eigen trial_period_days volgt. Standaard None — een handmatige
-    bootstrap (db/cli.py) is per ontwerp nooit trial-beperkt."""
+    bootstrap (db/cli.py) is per ontwerp nooit trial-beperkt.
+
+    kvk_nummer/ingekochte_leden/ingekochte_winkels: optioneel, alleen door
+    de Stripe-webhook meegegeven voor self-serve organisaties (Fase 6
+    prijsmodel) — een handmatige bootstrap heeft hier per ontwerp nooit
+    waarden voor (geen KVK-check, geen zetel-limiet)."""
     if conn is not None:
-        return _bootstrap_organisatie_op_connectie(conn, naam, slug, store_ids, trial_verloopt_op)
+        return _bootstrap_organisatie_op_connectie(
+            conn, naam, slug, store_ids, trial_verloopt_op, kvk_nummer, ingekochte_leden, ingekochte_winkels
+        )
     with engine.begin() as eigen_conn:
-        return _bootstrap_organisatie_op_connectie(eigen_conn, naam, slug, store_ids, trial_verloopt_op)
+        return _bootstrap_organisatie_op_connectie(
+            eigen_conn, naam, slug, store_ids, trial_verloopt_op, kvk_nummer, ingekochte_leden, ingekochte_winkels
+        )

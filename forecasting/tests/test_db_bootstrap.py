@@ -75,3 +75,30 @@ def test_bootstrap_organisatie_met_trial_verloopt_op_slaat_die_op(tmp_path):
     # ingeschreven — zelfde reden als db.sessies._als_utc / db.organisaties.
     # _als_utc, hier alleen relevant voor de vergelijking in deze test.
     assert org_rij.trial_verloopt_op == verloopt_op.replace(tzinfo=None)
+
+
+def test_bootstrap_organisatie_slaat_kvk_en_aantallen_op(tmp_path):
+    engine = maak_database(tmp_path / "tenants.db")
+
+    org_id = bootstrap_organisatie(
+        engine, naam="Bakkerij De Vries", slug="bakkerij-de-vries", store_ids=[],
+        kvk_nummer="12345678", ingekochte_leden=3, ingekochte_winkels=2,
+    )
+
+    with engine.connect() as conn:
+        org = conn.execute(select(organisaties).where(organisaties.c.id == org_id)).one()
+    assert org.kvk_nummer == "12345678"
+    assert org.ingekochte_leden == 3
+    assert org.ingekochte_winkels == 2
+
+
+def test_bootstrap_organisatie_zonder_kvk_en_aantallen_geeft_none(tmp_path):
+    engine = maak_database(tmp_path / "tenants.db")
+
+    org_id = bootstrap_organisatie(engine, naam="Handmatige Klant", slug="handmatige-klant", store_ids=[])
+
+    with engine.connect() as conn:
+        org = conn.execute(select(organisaties).where(organisaties.c.id == org_id)).one()
+    assert org.kvk_nummer is None
+    assert org.ingekochte_leden is None
+    assert org.ingekochte_winkels is None
