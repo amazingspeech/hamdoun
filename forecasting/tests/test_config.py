@@ -145,3 +145,16 @@ def test_laad_settings_leest_stripeconfig(monkeypatch, tmp_path):
     assert settings.stripe_webhook_secret == "whsec_geheim"
     assert settings.stripe_price_id == "price_abc"
     assert settings.app_basis_url == "http://127.0.0.1:8000"
+
+
+def test_laad_settings_zonder_voorbeeld_store_id_geeft_none(monkeypatch, tmp_path):
+    _basis_env(monkeypatch, tmp_path)
+    monkeypatch.delenv("VOORBEELD_STORE_ID", raising=False)
+    settings = config.laad_settings()
+    assert settings.voorbeeld_store_id is None
+
+
+def test_laad_settings_leest_voorbeeld_store_id(monkeypatch, tmp_path):
+    _basis_env(monkeypatch, tmp_path, VOORBEELD_STORE_ID="1")
+    settings = config.laad_settings()
+    assert settings.voorbeeld_store_id == 1

@@ -42,6 +42,14 @@ class Settings:
     # success_url/cancel_url naar de juiste plek te laten wijzen (Stripe kan
     # dit niet zelf afleiden uit het inkomende verzoek).
     app_basis_url: Optional[str] = None
+    # Fase "tier omhoog" onboarding: welk store_id uit het gedeelde
+    # modelartefact als publiek, niet-tenant-gebonden voorbeeld dient voor
+    # GET /voorbeeld/forecast (zie serving/app.py) — een self-serve
+    # organisatie heeft nooit een eigen winkelbinding (zie
+    # FASE4-SAAS-FOUNDATION.md beslissing 4), dus zonder dit voorbeeld ziet
+    # zo'n organisatie wekenlang nooit een werkende voorspelling. Optioneel:
+    # zonder ingesteld voorbeeld geeft dat endpoint een nette 503, geen crash.
+    voorbeeld_store_id: Optional[int] = None
 
 
 def laad_settings() -> Settings:
@@ -100,6 +108,9 @@ def laad_settings() -> Settings:
     mail_smtp_poort_ruw = os.environ.get("MAIL_SMTP_POORT")
     mail_smtp_poort = int(mail_smtp_poort_ruw) if mail_smtp_poort_ruw else None
 
+    ruwe_voorbeeld_store_id = os.environ.get("VOORBEELD_STORE_ID")
+    voorbeeld_store_id = int(ruwe_voorbeeld_store_id) if ruwe_voorbeeld_store_id else None
+
     return Settings(
         model_version=model_version,
         models_dir=models_dir,
@@ -120,4 +131,5 @@ def laad_settings() -> Settings:
         stripe_webhook_secret=os.environ.get("STRIPE_WEBHOOK_SECRET"),
         stripe_price_id=os.environ.get("STRIPE_PRICE_ID"),
         app_basis_url=os.environ.get("APP_BASIS_URL"),
+        voorbeeld_store_id=voorbeeld_store_id,
     )
