@@ -83,6 +83,18 @@ class SignupVerzoek(BaseModel):
     # is dit het enige wachtwoord voor een gloednieuw, zelf-aangemaakt
     # account zonder toezicht van een operator.
     wachtwoord: str = Field(..., min_length=8)
+    # Nederlands KVK-nummer: alleen formaat gecontroleerd (8 cijfers), niet
+    # tegen het echte KVK-register geverifieerd — zie de spec voor de
+    # afweging. Gebruikt om "hetzelfde bedrijf meldt zich opnieuw aan" te
+    # herkennen (dan geen gratis proefperiode).
+    kvk_nummer: str = Field(..., pattern=r"^\d{8}$")
+    # Totaal gewenst aantal gebruikers, INCLUSIEF de eigenaar (niet "extra"
+    # bovenop de eigenaar) — moet exact overeenkomen met wat het
+    # aanmeldformulier als label toont.
+    aantal_leden: int = Field(default=1, ge=1)
+    # Gewenst aantal vestigingen — puur voor prijsberekening in deze fase,
+    # geen technische winkel-koppeling (zie spec, "Explicitly out of scope").
+    aantal_winkels: int = Field(default=1, ge=1)
 
 
 class SignupResponse(BaseModel):

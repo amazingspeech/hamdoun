@@ -327,7 +327,10 @@ def signup(request: Request, verzoek: SignupVerzoek) -> SignupResponse:
     proefperiode. De organisatie + eigenaar-account bestaan hierna nog
     NIET; die ontstaan pas als Stripe de betaling bevestigt via
     POST /webhooks/stripe. Zie db/aanmeldingen.py voor de tussentoestand."""
-    if not all([settings.stripe_secret_key, settings.stripe_price_id, settings.app_basis_url]):
+    if not all([
+        settings.stripe_secret_key, settings.stripe_price_id, settings.stripe_price_id_extra_lid,
+        settings.stripe_price_id_extra_winkel, settings.app_basis_url,
+    ]):
         raise HTTPException(status_code=503, detail="Self-serve aanmelden is nog niet geconfigureerd.")
 
     if db_gebruikers.email_is_in_gebruik(tenants_db, email=verzoek.email):
@@ -336,6 +339,21 @@ def signup(request: Request, verzoek: SignupVerzoek) -> SignupResponse:
     wachtwoord_hash, wachtwoord_salt = hash_key(verzoek.wachtwoord)
     slug = db_aanmeldingen.genereer_unieke_organisatie_slug(tenants_db, verzoek.organisatie_naam)
 
+    # Herhaalde KVK-aanmelding wordt bewust NIET geblokkeerd (de eigenaar
+    # wil juist meerdere bedrijven onder één KVK aanmoedigen), maar krijgt
+    # geen gratis proefperiode meer — zie spec.
+    was_kvk_herhaling = db_organisaties.kvk_nummer_heeft_organisatie(tenants_db, verzoek.kvk_nummer)
+
+    extra_line_items = []
+    if verzoek.aantal_leden > 1:
+        extra_line_items.append(
+            {"price": settings.stripe_price_id_extra_lid, "quantity": verzoek.aantal_leden - 1}
+        )
+    if verzoek.aantal_winkels > 1:
+        extra_line_items.append(
+            {"price": settings.stripe_price_id_extra_winkel, "quantity": verzoek.aantal_winkels - 1}
+        )
+
     sessie = maak_checkout_sessie(
         stripe_secret_key=settings.stripe_secret_key,
         price_id=settings.stripe_price_id,
@@ -343,7 +361,8 @@ def signup(request: Request, verzoek: SignupVerzoek) -> SignupResponse:
         success_url=f"{settings.app_basis_url}/signup-gelukt.html",
         cancel_url=f"{settings.app_basis_url}/signup.html",
         metadata={"organisatie_naam": verzoek.organisatie_naam},
-        proefperiode_dagen=SIGNUP_PROEFPERIODE_DAGEN,
+        proefperiode_dagen=None if was_kvk_herhaling else SIGNUP_PROEFPERIODE_DAGEN,
+        extra_line_items=extra_line_items or None,
     )
 
     db_aanmeldingen.maak_aanmelding(
@@ -354,6 +373,10 @@ def signup(request: Request, verzoek: SignupVerzoek) -> SignupResponse:
         wachtwoord_hash=wachtwoord_hash,
         wachtwoord_salt=wachtwoord_salt,
         stripe_checkout_session_id=sessie.id,
+        kvk_nummer=verzoek.kvk_nummer,
+        aantal_leden=verzoek.aantal_leden,
+        aantal_winkels=verzoek.aantal_winkels,
+        was_kvk_herhaling=was_kvk_herhaling,
     )
     return SignupResponse(checkout_url=sessie.checkout_url)
 

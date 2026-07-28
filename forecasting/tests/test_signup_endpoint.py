@@ -35,9 +35,14 @@ def _bouw_omgeving(tmp_path, monkeypatch, met_stripe_config=True):
         monkeypatch.setenv("STRIPE_SECRET_KEY", "sk_test_geheim")
         monkeypatch.setenv("STRIPE_WEBHOOK_SECRET", "whsec_geheim")
         monkeypatch.setenv("STRIPE_PRICE_ID", "price_abc")
+        monkeypatch.setenv("STRIPE_PRICE_ID_EXTRA_LID", "price_extra_lid")
+        monkeypatch.setenv("STRIPE_PRICE_ID_EXTRA_WINKEL", "price_extra_winkel")
         monkeypatch.setenv("APP_BASIS_URL", "http://127.0.0.1:8000")
     else:
-        for var in ("STRIPE_SECRET_KEY", "STRIPE_WEBHOOK_SECRET", "STRIPE_PRICE_ID", "APP_BASIS_URL"):
+        for var in (
+            "STRIPE_SECRET_KEY", "STRIPE_WEBHOOK_SECRET", "STRIPE_PRICE_ID",
+            "STRIPE_PRICE_ID_EXTRA_LID", "STRIPE_PRICE_ID_EXTRA_WINKEL", "APP_BASIS_URL",
+        ):
             monkeypatch.delenv(var, raising=False)
 
     if "serving.app" in sys.modules:
@@ -88,6 +93,7 @@ def test_signup_geeft_checkout_url_terug(tmp_path, monkeypatch):
 
     resp = client.post("/signup", json={
         "organisatie_naam": "Bakkerij De Vries", "email": "devries@voorbeeld.nl", "wachtwoord": "correct-paard",
+        "kvk_nummer": "12345678",
     })
 
     assert resp.status_code == 200, resp.text
@@ -105,6 +111,7 @@ def test_signup_legt_aanmelding_vast_met_gehasht_wachtwoord(tmp_path, monkeypatc
 
     client.post("/signup", json={
         "organisatie_naam": "Bakkerij De Vries", "email": "devries@voorbeeld.nl", "wachtwoord": "correct-paard",
+        "kvk_nummer": "12345678",
     })
 
     from db.aanmeldingen import haal_aanmelding_bij_sessie
@@ -127,6 +134,7 @@ def test_signup_met_al_bestaand_email_geeft_409(tmp_path, monkeypatch):
 
     resp = client.post("/signup", json={
         "organisatie_naam": "Bakkerij De Vries", "email": "devries@voorbeeld.nl", "wachtwoord": "correct-paard",
+        "kvk_nummer": "12345678",
     })
 
     assert resp.status_code == 409
@@ -147,6 +155,7 @@ def test_signup_zonder_stripeconfig_geeft_503(tmp_path, monkeypatch):
 
     resp = client.post("/signup", json={
         "organisatie_naam": "Bakkerij De Vries", "email": "devries@voorbeeld.nl", "wachtwoord": "correct-paard",
+        "kvk_nummer": "12345678",
     })
 
     assert resp.status_code == 503
@@ -158,6 +167,103 @@ def test_signup_te_kort_wachtwoord_geeft_422(tmp_path, monkeypatch):
 
     resp = client.post("/signup", json={
         "organisatie_naam": "Bakkerij De Vries", "email": "devries@voorbeeld.nl", "wachtwoord": "kort",
+        "kvk_nummer": "12345678",
     })
 
     assert resp.status_code == 422
+
+
+def test_signup_zonder_kvk_nummer_geeft_422(tmp_path, monkeypatch):
+    module, client, engine = _bouw_omgeving(tmp_path, monkeypatch)
+    _fake_checkout_sessie(module, monkeypatch)
+
+    resp = client.post("/signup", json={
+        "organisatie_naam": "Bakkerij De Vries", "email": "devries@voorbeeld.nl", "wachtwoord": "correct-paard",
+    })
+
+    assert resp.status_code == 422
+
+
+def test_signup_met_ongeldig_kvk_nummer_geeft_422(tmp_path, monkeypatch):
+    module, client, engine = _bouw_omgeving(tmp_path, monkeypatch)
+    _fake_checkout_sessie(module, monkeypatch)
+
+    resp = client.post("/signup", json={
+        "organisatie_naam": "Bakkerij De Vries", "email": "devries@voorbeeld.nl", "wachtwoord": "correct-paard",
+        "kvk_nummer": "niet-acht-cijfers",
+    })
+
+    assert resp.status_code == 422
+
+
+def test_signup_default_aantallen_geeft_geen_extra_line_items(tmp_path, monkeypatch):
+    module, client, engine = _bouw_omgeving(tmp_path, monkeypatch)
+    aangeroepen_met = _fake_checkout_sessie(module, monkeypatch)
+
+    client.post("/signup", json={
+        "organisatie_naam": "Bakkerij De Vries", "email": "devries@voorbeeld.nl", "wachtwoord": "correct-paard",
+        "kvk_nummer": "12345678",
+    })
+
+    assert aangeroepen_met["extra_line_items"] is None
+    assert aangeroepen_met["proefperiode_dagen"] == 14
+
+
+def test_signup_met_extra_leden_en_winkels_bouwt_line_items(tmp_path, monkeypatch):
+    module, client, engine = _bouw_omgeving(tmp_path, monkeypatch)
+    aangeroepen_met = _fake_checkout_sessie(module, monkeypatch)
+
+    client.post("/signup", json={
+        "organisatie_naam": "Bakkerij De Vries", "email": "devries@voorbeeld.nl", "wachtwoord": "correct-paard",
+        "kvk_nummer": "12345678", "aantal_leden": 3, "aantal_winkels": 2,
+    })
+
+    assert aangeroepen_met["extra_line_items"] == [
+        {"price": "price_extra_lid", "quantity": 2},
+        {"price": "price_extra_winkel", "quantity": 1},
+    ]
+
+
+def test_signup_herhaald_kvk_nummer_slaat_proefperiode_over(tmp_path, monkeypatch):
+    module, client, engine = _bouw_omgeving(tmp_path, monkeypatch)
+    aangeroepen_met = _fake_checkout_sessie(module, monkeypatch)
+    from db.bootstrap import bootstrap_organisatie
+    bootstrap_organisatie(engine, naam="Bestaande Vestiging", slug="bestaande-vestiging", store_ids=[], kvk_nummer="12345678")
+
+    client.post("/signup", json={
+        "organisatie_naam": "Tweede Vestiging", "email": "tweede@voorbeeld.nl", "wachtwoord": "correct-paard",
+        "kvk_nummer": "12345678",
+    })
+
+    assert aangeroepen_met["proefperiode_dagen"] is None
+
+
+def test_signup_slaat_kvk_en_aantallen_op_in_aanmelding(tmp_path, monkeypatch):
+    module, client, engine = _bouw_omgeving(tmp_path, monkeypatch)
+    _fake_checkout_sessie(module, monkeypatch)
+
+    client.post("/signup", json={
+        "organisatie_naam": "Bakkerij De Vries", "email": "devries@voorbeeld.nl", "wachtwoord": "correct-paard",
+        "kvk_nummer": "12345678", "aantal_leden": 3, "aantal_winkels": 2,
+    })
+
+    from db.aanmeldingen import haal_aanmelding_bij_sessie
+    rij = haal_aanmelding_bij_sessie(engine, "cs_test_123")
+    assert rij.kvk_nummer == "12345678"
+    assert rij.aantal_leden == 3
+    assert rij.aantal_winkels == 2
+    assert rij.was_kvk_herhaling is False
+
+
+def test_signup_zonder_extra_prijs_configuratie_geeft_503(tmp_path, monkeypatch):
+    module, client, engine = _bouw_omgeving(tmp_path, monkeypatch)
+    monkeypatch.delenv("STRIPE_PRICE_ID_EXTRA_LID", raising=False)
+    import dataclasses
+    module.settings = dataclasses.replace(module.settings, stripe_price_id_extra_lid=None)
+
+    resp = client.post("/signup", json={
+        "organisatie_naam": "Bakkerij De Vries", "email": "devries@voorbeeld.nl", "wachtwoord": "correct-paard",
+        "kvk_nummer": "12345678",
+    })
+
+    assert resp.status_code == 503
