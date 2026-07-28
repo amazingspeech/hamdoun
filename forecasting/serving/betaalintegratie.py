@@ -6,7 +6,7 @@ koppeling aan serving.config, en de api_key wordt per aanroep meegegeven
 tussen requests of tests."""
 from __future__ import annotations
 
-from typing import NamedTuple
+from typing import NamedTuple, Optional
 
 import stripe
 
@@ -27,16 +27,25 @@ def maak_checkout_sessie(
     success_url: str,
     cancel_url: str,
     metadata: dict,
-    proefperiode_dagen: int,
+    proefperiode_dagen: Optional[int],
+    extra_line_items: Optional[list[dict]] = None,
 ) -> CheckoutSessie:
+    line_items = [{"price": price_id, "quantity": 1}]
+    if extra_line_items:
+        line_items.extend(extra_line_items)
+    # Stripe accepteert geen trial_period_days van 0 (moet een positief
+    # getal zijn als het veld aanwezig is) — voor "geen proefperiode" laat
+    # dit het veld helemaal weg i.p.v. een 0 te sturen die Stripe zou
+    # afwijzen.
+    subscription_data = {"trial_period_days": proefperiode_dagen} if proefperiode_dagen else {}
     sessie = stripe.checkout.Session.create(
         api_key=stripe_secret_key,
         mode="subscription",
-        line_items=[{"price": price_id, "quantity": 1}],
+        line_items=line_items,
         customer_email=klant_email,
         success_url=success_url,
         cancel_url=cancel_url,
-        subscription_data={"trial_period_days": proefperiode_dagen},
+        subscription_data=subscription_data,
         metadata=metadata,
     )
     return CheckoutSessie(id=sessie.id, checkout_url=sessie.url)

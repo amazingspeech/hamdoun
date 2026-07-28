@@ -41,6 +41,55 @@ def test_maak_checkout_sessie_geeft_id_en_url_terug(monkeypatch):
     assert aangeroepen_met["metadata"] == {"aanmelding_id": "42"}
 
 
+def test_maak_checkout_sessie_zonder_proefperiode_stuurt_geen_trial_period_days(monkeypatch):
+    aangeroepen_met = {}
+
+    def _nep_create(**kwargs):
+        aangeroepen_met.update(kwargs)
+        return _NepSessie(id="cs_test_123", url="https://checkout.stripe.com/c/pay/cs_test_123")
+
+    monkeypatch.setattr(betaalintegratie.stripe.checkout.Session, "create", _nep_create)
+
+    betaalintegratie.maak_checkout_sessie(
+        stripe_secret_key="sk_test_geheim",
+        price_id="price_abc",
+        klant_email="devries@voorbeeld.nl",
+        success_url="https://app.voorbeeld.nl/signup-gelukt.html",
+        cancel_url="https://app.voorbeeld.nl/signup.html",
+        metadata={"aanmelding_id": "42"},
+        proefperiode_dagen=None,
+    )
+
+    assert aangeroepen_met["subscription_data"] == {}
+
+
+def test_maak_checkout_sessie_met_extra_line_items(monkeypatch):
+    aangeroepen_met = {}
+
+    def _nep_create(**kwargs):
+        aangeroepen_met.update(kwargs)
+        return _NepSessie(id="cs_test_123", url="https://checkout.stripe.com/c/pay/cs_test_123")
+
+    monkeypatch.setattr(betaalintegratie.stripe.checkout.Session, "create", _nep_create)
+
+    betaalintegratie.maak_checkout_sessie(
+        stripe_secret_key="sk_test_geheim",
+        price_id="price_abc",
+        klant_email="devries@voorbeeld.nl",
+        success_url="https://app.voorbeeld.nl/signup-gelukt.html",
+        cancel_url="https://app.voorbeeld.nl/signup.html",
+        metadata={"aanmelding_id": "42"},
+        proefperiode_dagen=14,
+        extra_line_items=[{"price": "price_extra_lid", "quantity": 2}, {"price": "price_extra_winkel", "quantity": 1}],
+    )
+
+    assert aangeroepen_met["line_items"] == [
+        {"price": "price_abc", "quantity": 1},
+        {"price": "price_extra_lid", "quantity": 2},
+        {"price": "price_extra_winkel", "quantity": 1},
+    ]
+
+
 def test_lees_webhook_event_geldige_signature(monkeypatch):
     verwacht_event = {"type": "checkout.session.completed"}
 
