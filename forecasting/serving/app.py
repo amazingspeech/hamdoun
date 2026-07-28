@@ -317,6 +317,8 @@ def me(gebruiker: GeauthenticeerdeGebruiker = Depends(vereis_sessie)) -> dict:
         "email": gebruiker.email, "rol": gebruiker.rol, "organisatie_id": gebruiker.organisatie_id,
         "in_proefperiode": db_organisaties.is_in_proefperiode(tenants_db, gebruiker.organisatie_id),
         "trial_verloopt_op": trial_verloopt_op.date().isoformat() if trial_verloopt_op else None,
+        "ingekochte_leden": db_organisaties.haal_ingekochte_leden(tenants_db, gebruiker.organisatie_id),
+        "ingekochte_winkels": db_organisaties.haal_ingekochte_winkels(tenants_db, gebruiker.organisatie_id),
     }
 
 
@@ -460,6 +462,20 @@ async def stripe_webhook(request: Request) -> dict:
 def gebruiker_aanmaken(
     verzoek: GebruikerAanmakenVerzoek, eigenaar: GeauthenticeerdeGebruiker = Depends(vereis_eigenaar)
 ) -> GebruikerResponse:
+    # NULL ingekochte_leden = geen limiet — elke organisatie van vóór dit
+    # prijsmodel (en elke handmatig aangemaakte organisatie) heeft dit, en
+    # moet nooit geblokkeerd worden.
+    ingekochte_leden = db_organisaties.haal_ingekochte_leden(tenants_db, eigenaar.organisatie_id)
+    if ingekochte_leden is not None:
+        huidig_aantal = db_gebruikers.aantal_actieve_gebruikers(tenants_db, eigenaar.organisatie_id)
+        if huidig_aantal >= ingekochte_leden:
+            raise HTTPException(
+                status_code=403,
+                detail=(
+                    f"Je hebt het maximum aantal teamleden ({ingekochte_leden}) bereikt voor je huidige "
+                    "abonnement. Neem contact op om uit te breiden."
+                ),
+            )
     # Een zelf-aangemaakte gebruiker is altijd "lid" — een tweede eigenaar
     # toevoegen kan alleen via db/gebruikers_cli.py (operatorhandeling),
     # om onbedoelde privilege-escalatie via dit endpoint uit te sluiten.
