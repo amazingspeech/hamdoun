@@ -22,6 +22,10 @@ def maak_aanmelding(
     wachtwoord_hash: str,
     wachtwoord_salt: str,
     stripe_checkout_session_id: str,
+    kvk_nummer: str,
+    aantal_leden: int,
+    aantal_winkels: int,
+    was_kvk_herhaling: bool,
 ) -> int:
     with engine.begin() as conn:
         return conn.execute(
@@ -32,6 +36,10 @@ def maak_aanmelding(
                 wachtwoord_hash=wachtwoord_hash,
                 wachtwoord_salt=wachtwoord_salt,
                 stripe_checkout_session_id=stripe_checkout_session_id,
+                kvk_nummer=kvk_nummer,
+                aantal_leden=aantal_leden,
+                aantal_winkels=aantal_winkels,
+                was_kvk_herhaling=was_kvk_herhaling,
                 organisatie_id=None,
                 voltooid_op=None,
                 aangemaakt_op=datetime.now(timezone.utc),

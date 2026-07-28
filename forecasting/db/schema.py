@@ -190,6 +190,16 @@ aanmeldingen = Table(
     # delivery) — de webhook-handler gebruikt deze kolom om een sessie te
     # herkennen die al verwerkt is, dus uniek.
     Column("stripe_checkout_session_id", String, nullable=False, unique=True),
+    # Fase 6 prijsmodel: KVK-nummer en gewenste aantallen, vastgelegd bij
+    # /signup en overgenomen op de organisatie zodra de webhook de
+    # aanmelding voltooit (zie serving/app.py). was_kvk_herhaling wordt bij
+    # /signup bepaald en hier bewaard (niet opnieuw afgeleid in de webhook),
+    # zodat een gelijktijdige tweede aanmelding onder hetzelfde, nieuwe
+    # KVK-nummer niet per ongeluk allebei als "eerste" tellen.
+    Column("kvk_nummer", String, nullable=True),
+    Column("aantal_leden", Integer, nullable=True),
+    Column("aantal_winkels", Integer, nullable=True),
+    Column("was_kvk_herhaling", Boolean, nullable=True),
     # NULL tot de betaling bevestigd is (checkout.session.completed) — pas
     # dan bestaat de echte organisatie en wordt dit gevuld.
     Column("organisatie_id", Integer, ForeignKey("organisaties.id"), nullable=True),

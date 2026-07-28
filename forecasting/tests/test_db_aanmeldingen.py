@@ -17,6 +17,10 @@ def _maak_aanmelding(engine, sessie_id="cs_test_123"):
         wachtwoord_hash="x",
         wachtwoord_salt="y",
         stripe_checkout_session_id=sessie_id,
+        kvk_nummer="12345678",
+        aantal_leden=1,
+        aantal_winkels=1,
+        was_kvk_herhaling=False,
     )
 
 
@@ -94,6 +98,24 @@ def test_genereer_unieke_organisatie_slug_wijkt_uit_bij_openstaande_aanmelding(t
         engine, organisatie_naam="Bakkerij De Vries", organisatie_slug="bakkerij-de-vries",
         email="eerste@voorbeeld.nl", wachtwoord_hash="x", wachtwoord_salt="y",
         stripe_checkout_session_id="cs_test_eerste",
+        kvk_nummer="12345678", aantal_leden=1, aantal_winkels=1, was_kvk_herhaling=False,
     )
 
     assert genereer_unieke_organisatie_slug(engine, "Bakkerij De Vries") == "bakkerij-de-vries-2"
+
+
+def test_maak_aanmelding_slaat_kvk_en_aantallen_op(tmp_path):
+    engine = maak_database(tmp_path / "tenants.db")
+
+    maak_aanmelding(
+        engine, organisatie_naam="Bakkerij De Vries", organisatie_slug="bakkerij-de-vries",
+        email="devries@voorbeeld.nl", wachtwoord_hash="hash", wachtwoord_salt="salt",
+        stripe_checkout_session_id="cs_test_123",
+        kvk_nummer="12345678", aantal_leden=3, aantal_winkels=2, was_kvk_herhaling=False,
+    )
+
+    rij = haal_aanmelding_bij_sessie(engine, "cs_test_123")
+    assert rij.kvk_nummer == "12345678"
+    assert rij.aantal_leden == 3
+    assert rij.aantal_winkels == 2
+    assert rij.was_kvk_herhaling is False
