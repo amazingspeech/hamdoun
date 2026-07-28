@@ -543,3 +543,18 @@ details.scenario-vergelijking { margin-top:32px; border-top:1px solid var(--line
   align-self:flex-start; background:none; border:none; padding:0; margin:0;
   font:400 0.8125rem/1.2 var(--font-body); color:var(--ink-faint); cursor:pointer; text-decoration:underline;
 }
+
+/* Voorbeeld-voorspelling: op index.html, alleen voor een eigenaar van een
+   zelfbediening-organisatie zonder eigen winkelbinding (zie
+   dashboard.js's winkels.length === 0-tak). Bewust een neutrale, niet
+   premium-gekleurde badge (.voorbeeld-badge) — dit is gratis en voor
+   iedereen zichtbaar, geen premium-functie, dus geen visuele verwarring
+   met .premium-badge. */
+.voorbeeld-kaart { gap:8px; }
+.voorbeeld-titel { display:flex; align-items:center; gap:8px; font:600 0.9375rem/1.2 var(--font-body); margin:0; color:var(--ink); }
+.voorbeeld-tekst { font:400 0.9375rem/1.5 var(--font-body); margin:0; color:var(--ink-soft); }
+.voorbeeld-badge {
+  display:inline-flex; align-items:center; font:600 0.6875rem/1.2 var(--font-body);
+  color:var(--ink-faint); background:var(--paper); border:1px solid var(--line-strong); border-radius:999px;
+  padding:3px 9px; letter-spacing:0.02em; text-transform:uppercase;
+}

@@ -841,9 +841,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     // met een lege toewijzing gewoon nog niet is ingesteld door de
     // eigenaar — een normale, verwachte tussenstap na het toevoegen van
     // een teamlid, geen organisatiebreed probleem.
-    document.getElementById("leeg").textContent = me.rol === "lid"
-      ? "Er zijn nog geen winkels aan jou toegewezen. Vraag de eigenaar van je organisatie om dit in te stellen via Team beheren."
-      : "Er zijn nog geen winkels aan jouw organisatie gekoppeld. Neem contact op om dit in te laten stellen.";
+    if (me.rol === "lid") {
+      document.getElementById("leeg").textContent =
+        "Er zijn nog geen winkels aan jou toegewezen. Vraag de eigenaar van je organisatie om dit in te stellen via Team beheren.";
+    } else {
+      document.getElementById("leeg").textContent =
+        "Er zijn nog geen winkels aan jouw organisatie gekoppeld.";
+      toonVoorbeeldVoorspelling();
+    }
     return;
   }
   alleWinkelsCache = winkels;

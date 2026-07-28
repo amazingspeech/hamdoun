@@ -107,3 +107,38 @@ async function initOnboarding(me) {
     // verstoren.
   }
 }
+
+async function toonVoorbeeldVoorspelling() {
+  const wrap = document.getElementById("voorbeeld-voorspelling");
+  if (!wrap) return;
+  try {
+    const resp = await fetch(`${ONBOARDING_API_BASIS}/voorbeeld/forecast`, { credentials: "same-origin" });
+    if (!resp.ok) return;
+    const data = await resp.json();
+
+    const totaalP50 = data.voorspellingen.reduce((som, v) => som + Math.max(0, v.p50), 0);
+    const totaalP10 = data.voorspellingen.reduce((som, v) => som + Math.max(0, v.p10), 0);
+    const totaalP90 = data.voorspellingen.reduce((som, v) => som + Math.max(0, v.p90), 0);
+
+    const badge = document.createElement("span");
+    badge.className = "voorbeeld-badge";
+    badge.textContent = "Voorbeeld";
+
+    const titel = document.createElement("p");
+    titel.className = "voorbeeld-titel";
+    titel.append("Zo ziet een voorspelling eruit ", badge);
+
+    const tekst = document.createElement("p");
+    tekst.className = "voorbeeld-tekst";
+    tekst.textContent =
+      `Winkel ${data.store_id} verkoopt de komende ${data.voorspellingen.length} dagen waarschijnlijk ongeveer ` +
+      `${onboardingFormatEuro(Math.round(totaalP50))} (bandbreedte ${onboardingFormatEuro(Math.round(totaalP10))}` +
+      `–${onboardingFormatEuro(Math.round(totaalP90))}). Upload je eigen verkoopdata op Team beheren om dit voor ` +
+      `jouw winkel te zien.`;
+
+    wrap.replaceChildren(titel, tekst);
+    wrap.hidden = false;
+  } catch (e) {
+    // Stille fout — zelfde principe als initOnboarding hierboven.
+  }
+}
