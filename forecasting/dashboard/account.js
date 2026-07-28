@@ -731,6 +731,7 @@ async function initTeamPagina() {
   document.getElementById("wie-ben-ik-mobiel").textContent = `Ingelogd als ${me.email} (${me.rol}).`;
   document.getElementById("wie-ben-ik").textContent = me.email;
   initPortfolioSidebar(me);
+  initOnboarding(me);
 
   const kanBeheren = me.rol === "eigenaar";
   let alleWinkels = [];

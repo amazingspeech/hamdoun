@@ -818,6 +818,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   initUitloggenLink();
   pasPremiumStatusToe(me.in_proefperiode);
   initPortfolioSidebar(me);
+  initOnboarding(me);
 
   const knop = document.getElementById("voorspel");
   document.addEventListener("click", sluitAndereInfoKnopjes);

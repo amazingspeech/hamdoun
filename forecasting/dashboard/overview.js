@@ -244,5 +244,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   document.getElementById("meer-laden").addEventListener("click", laadMeer);
 
   initPortfolioSidebar(me);
+  initOnboarding(me);
   await laadMeer();
 });
