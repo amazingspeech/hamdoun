@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<title>Inloggen — Prospero</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+<div class="wrap smal">
+  <header class="top">
+    <div class="kop">
+      <p class="eyebrow">Prospero</p>
+      <p class="eyebrow-sub">Vraagvoorspelling</p>
+      <h1>Log in op je team</h1>
+      <p class="sub">Beheer wie er namens jouw organisatie kan inloggen.</p>
+    </div>
+  </header>
+
+  <form class="kaart" id="login-form">
+    <div class="veld">
+      <label for="email">E-mailadres</label>
+      <input type="email" id="email" required autocomplete="username">
+    </div>
+    <div class="veld">
+      <label for="wachtwoord">Wachtwoord</label>
+      <input type="password" id="wachtwoord" required autocomplete="current-password">
+    </div>
+    <button type="submit" class="btn" id="login-knop">Inloggen</button>
+    <p class="fout" id="fout" hidden></p>
+  </form>
+
+  <p class="account-nav" style="margin-top:20px;"><a href="./wachtwoord-vergeten.html">Wachtwoord vergeten?</a></p>
+  <p class="account-nav">Nog geen account? <a href="./signup.html">Meld je aan</a> · <a href="./index.html">← Terug naar de voorspelling</a></p>
+</div>
+<script src="./config.js"></script>
+<script src="./account.js"></script>
+</body>
+</html>

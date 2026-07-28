@@ -1,0 +1,11 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+tests/
+data/
+models/
+.env
+api_keys.json
+audit.log
+deploy/

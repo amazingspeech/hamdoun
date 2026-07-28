@@ -1,0 +1,35 @@
+services:
+  api:
+    build:
+      context: ..
+    ports:
+      - "8010:8000"
+    env_file:
+      - .env
+    volumes:
+      - ../models:/app/models
+      - ../dashboard:/app/dashboard
+      - ../api_keys.json:/app/api_keys.json
+      - ../audit.log:/app/audit.log
+      - ../tenants.db:/app/tenants.db
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health', timeout=3)"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    networks:
+      - default
+      - caddy-net
+
+networks:
+  default: {}
+  # Extern, gedeeld met de losstaande tessar/docker-compose.yml-stack die
+  # de gecontaineriseerde Caddy draait — laat die Caddy "api:8000" bij naam
+  # bereiken zonder de 8010-hostpoort te hoeven gebruiken. Zie DEPLOY.md
+  # stap 6: `docker network create caddy-net` (eenmalig) moet al bestaan
+  # vóór de eerste `docker compose up` hier, anders faalt die met "network
+  # caddy-net declared as external, but could not be found".
+  caddy-net:
+    external: true

@@ -13,16 +13,18 @@ patroon als Certo's `KNOWN-LIMITATIONS.md`.
   als werkwaarde voor latere lag-features. Fouten kunnen zich opstapelen
   over een langere horizon — dit is inherent aan de recursieve aanpak, niet
   een bug.
-- **Promotie- en schoolvakantie-features standaard nul.** Bij meerdaagse 
-  recursieve voorspellingen stellen toekomstige `Promo` en `SchoolHoliday` 
-  waarden zich standaard op 0 (geen promotie, geen schoolvakantie) in, omdat 
-  hun werkelijke toekomstige waarden op voorspellingstijdstip onbekend zijn. 
-  Dit veroorzaakt een systematische neerwaartse bias in voorspellingen op 
-  dagen waarop een promotie daadwerkelijk plaatsvindt. Omdat de voorspelling 
-  recursief is, voeden deze vertekende uitkomsten terug in de lag-features 
-  voor volgende dagen, wat de bias verder in de horizon versterkt. Dit is 
-  een onderscheiden bron van systematische fout, los van de reeds 
-  gedocumenteerde foutsamenstellingen over lange horizons.
+- **Promotie- en schoolvakantie-features standaard nul, tenzij opgegeven.**
+  ~~Bij meerdaagse recursieve voorspellingen stonden toekomstige `Promo`- en
+  `SchoolHoliday`-waarden altijd hardcoded op 0~~ — sinds 2026-07-27 kan de
+  aanroeper (via `promo_van`/`promo_tot`/`schoolvakantie_van`/
+  `schoolvakantie_tot` op `POST /forecast`, of het uitklapbare veld op het
+  dashboard) een geplande periode opgeven, die dan per dag wordt meegegeven
+  aan het model i.p.v. altijd 0. **Resterende beperking:** dagen die de
+  aanroeper niet opgeeft, gebruiken nog steeds 0 — als een winkelier een
+  promotie niet vooraf weet of vergeet op te geven, blijft de bekende
+  neerwaartse bias bestaan (en versterkt die zich verder in de horizon via
+  de recursieve lag-features, zoals hierboven). Dit is dus niet langer een
+  onvermijdelijke modelbeperking, maar een input-afhankelijkheid.
 - **Rate limiting is per-instance.** De in-memory rate limiter houdt geen
   gedeelde staat bij tussen meerdere gelijktijdige API-instances. Geldig
   voor deze fase (één instance), niet voor een horizontaal geschaalde
@@ -31,29 +33,53 @@ patroon als Certo's `KNOWN-LIMITATIONS.md`.
   met eigen gebruiksvoorwaarden — geverifieerd tijdens implementatie, zie
   README.md sectie 1. Deze toolkit toont er nooit ruwe cijfers uit op een
   publiek kanaal; alleen afgeleide, gevalideerde nauwkeurigheidscijfers.
-- **Geen CI-pipeline.** `pip-audit` en de testsuite zijn handmatige
-  controles vóór oplevering, geen geautomatiseerde build-gate — die bestaat
-  in deze fase niet.
-- **9 pip-audit-bevindingen, gebonden aan de lokale ontwikkelomgeving, niet
-  aan de toolkit-code.** `pip-audit` (uitgevoerd tijdens Task 20, finale
-  verificatie) vond 9 bekende kwetsbaarheden in `click`, `starlette` (x5),
-  `pyarrow`, `pytest` en `python-dotenv`. Elke gepatchte versie vereist
-  Python ≥3.10; deze lokale ontwikkelmachine heeft alleen Python 3.9.6
-  (Xcode's meegeleverde interpreter) beschikbaar, en een upgrade naar een
-  nieuwere Python via Homebrew bleek geblokkeerd: het vereist een Xcode-versie
-  die op zijn beurt een nieuwere macOS vereist dan deze machine draait (macOS
-  15.5) — een macOS-upgrade is disproportioneel voor het sluiten van
-  dependency-audit-bevindingen op een lokale toolkit. `requirements.in`
-  bevat alleen ondergrenzen (`>=`), dus een `pip install --upgrade` op een
-  machine met Python ≥3.10 lost dit direct op — maar de Docker-image bouwt
-  uit `requirements.txt`, een exact-gepinde lock-file die hier onder Python
-  3.9 is gegenereerd en dus dezelfde kwetsbare versies bevat. `python:3.11-
-  slim` in de `Dockerfile` lost dit dus niet automatisch op: `requirements.txt`
-  moet eerst opnieuw gegenereerd worden (`pip install --upgrade -r
-  requirements.in && pip freeze > requirements.txt`) op een machine met
-  Python ≥3.10, en dat gecommit, vóórdat een Docker-build de patches
-  daadwerkelijk oppikt.
+- **CI-pipeline (2026-07-26).** `.github/workflows/forecasting-ci.yml` draait
+  lint (`ruff`) + de testsuite + een Docker-build-verificatie bij elke
+  push/PR die `forecasting/**` raakt. Nog geen CD-stap naar een staging-
+  omgeving — die bestaat momenteel niet als apart concept naast de ene
+  productieserver (zie DEPLOY.md).
+- **Pip-audit: schoon per 2026-07-26** (`pip-audit -r requirements.txt`,
+  0 kwetsbaarheden). De eerder hier gedocumenteerde 9 bevindingen
+  (`click`, `starlette` x5, `pyarrow`, `pytest`, `python-dotenv`) komen niet
+  meer terug bij een herrun — of dat komt doordat `requirements.txt` tussentijds
+  is bijgewerkt of doordat de kwetsbaarheidsdatabase sindsdien is aangepast is
+  niet met zekerheid vastgesteld, alleen de huidige uitkomst. Blijf dit
+  periodiek herhalen; er is geen geautomatiseerde dependency-scan in de
+  CI-pipeline (alleen lint+tests+build).
+- **Geen ondergrens van 0 op voorspelde omzet.** Kwantielregressie legt
+  geen niet-negativiteit af — bij lage-omzet winkels of lange horizons kan
+  een p10 (of in theorie zelfs p50/p90) negatief uitkomen. De API
+  (`/forecast`) geeft dat ongewijzigd terug; alleen het dashboard klemt
+  weergavewaarden op 0 (`dashboard.js`, in `voorspel()`), puur cosmetisch.
+  Een andere consument van de API kan dus nog steeds een negatief getal
+  krijgen. Structureel oplossen (het model zelf een ondergrens geven, of
+  de API-response al klemmen) is bewust niet gedaan — dat raakt de
+  training-/serving-pijplijn en hoort bij Fase 3 (Forecast Intelligence),
+  niet bij een cosmetische dashboard-fix.
+- **Klantisolatie is nu afgedwongen (Fase 4 Stap 2), maar er is nog maar
+  één klant.** `serving/app.py` checkt sinds Stap 2 per `/forecast`-verzoek
+  of het gevraagde `store_id` bij de organisatie van de gebruikte API-key
+  hoort (zie `FASE4-SAAS-FOUNDATION.md`). Op dit moment is er precies één
+  gebootstrapte organisatie ("Tessar demo") die alle 1115 winkels uit het
+  modelartefact bezit, dus dit is in de praktijk nog niet getoetst tegen
+  een echte tweede klant — alleen in de testsuite
+  (`tests/test_tenant_isolatie.py`). Accounts/self-service (Stap 3+) zijn
+  nog niet gebouwd; nieuwe organisaties/klanten worden nu handmatig via
+  `db.cli`/`db.migreer_keys_cli` aangemaakt.
 - **Geen live deployment.** Draait lokaal via Docker Compose. Live
   deployment (bv. naast Certo, met een Caddy-reverse-proxy) en de
   daadwerkelijke website-demo-integratie zijn bewuste, losse
   vervolgstappen.
+- **Zelf-serve klanten krijgen 28 dagen lang geen voorspelling.** Het
+  gedeelde model (Rossmann-getraind) kan nooit een nieuwe, niet-getrainde
+  winkel voorspellen (`serving/forecast.py`: `OnbekendeWinkel`) — elke
+  self-serve aanmelding (Fase 5 NODIG 5) heeft dus per ontwerp géén winkel
+  in dat model. Sinds 2026-07-27 vult `serving/eigen_voorspelling.py` dit
+  aan met een lichte, eigen voorspelling op basis van de geüploade
+  verkoopdata (NODIG 2) — een naïef dag-van-de-week-gemiddelde met een
+  bandbreedte uit de eigen historische afwijking, bewust geen ML-model
+  (te weinig data per klant om overfitting te vermijden). **Resterende
+  beperking:** dit vereist minstens 28 dagen geüploade verkoopdata (zie
+  `MINIMUM_DAGEN`) — een gloednieuwe klant ziet die eerste 4 weken alleen
+  een voortgangsindicator, geen voorspelling. Bewuste keuze (minder data
+  zou een te wankel dag-patroon opleveren), niet per ongeluk.

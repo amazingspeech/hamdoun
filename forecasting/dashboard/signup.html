@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<title>Aanmelden — Prospero</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+<div class="wrap smal">
+  <header class="top">
+    <div class="kop">
+      <p class="eyebrow">Prospero</p>
+      <p class="eyebrow-sub">Vraagvoorspelling</p>
+      <h1>Maak je account aan</h1>
+      <p class="sub">14 dagen gratis proberen, daarna vanaf € 29 per maand. Geen sales-gesprek, geen installatie.</p>
+    </div>
+  </header>
+
+  <form class="kaart" id="signup-form">
+    <div class="veld">
+      <label for="organisatie-naam">Bedrijfsnaam</label>
+      <input type="text" id="organisatie-naam" required autocomplete="organization">
+    </div>
+    <div class="veld">
+      <label for="kvk-nummer">KVK-nummer</label>
+      <input type="text" id="kvk-nummer" required pattern="\d{8}" maxlength="8" inputmode="numeric" autocomplete="off">
+    </div>
+    <div class="veld">
+      <label for="email">E-mailadres</label>
+      <input type="email" id="email" required autocomplete="email">
+    </div>
+    <div class="veld">
+      <label for="wachtwoord">Wachtwoord</label>
+      <input type="password" id="wachtwoord" required minlength="8" autocomplete="new-password">
+    </div>
+    <div class="veld">
+      <label for="aantal-leden">Totaal aantal gebruikers (inclusief jezelf)</label>
+      <input type="number" id="aantal-leden" min="1" max="100" value="1" required>
+    </div>
+    <div class="veld">
+      <div class="veld-label-rij">
+        <label for="aantal-winkels">Aantal vestigingen</label>
+        <details class="info">
+          <summary aria-label="Wat betekent vestigingen?">?</summary>
+          <p class="info-inhoud">De eerste vestiging is gratis inbegrepen. Elke vestiging daarna kost € 10 per maand extra.</p>
+        </details>
+      </div>
+      <input type="number" id="aantal-winkels" min="1" max="100" value="1" required>
+    </div>
+    <p class="sub" id="prijs-preview" style="margin:0 0 8px;">Totaal: € 29 per maand</p>
+    <button type="submit" class="btn" id="signup-knop">Verder naar betaalgegevens</button>
+    <p class="fout" id="fout" hidden></p>
+  </form>
+
+  <p class="account-nav" style="margin-top:20px;">Heb je al een account? <a href="./login.html">Log in</a></p>
+</div>
+<script src="./config.js"></script>
+<script src="./account.js"></script>
+</body>
+</html>

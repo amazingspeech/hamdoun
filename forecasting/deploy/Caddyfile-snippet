@@ -1,0 +1,37 @@
+# Toe te voegen aan de bestaande, gedeelde Caddyfile op de server
+# (naast de blokken voor vandijkprotocol.tessar.nl en n8n.tessar.nl).
+# Zelfde stijl/headers als Certo's blok — zie DEPLOY.md voor de precieze
+# toepas-stappen.
+#
+# LET OP: Caddy draait hier als container (tessar-caddy-1, onderdeel van
+# ~/tessar/docker-compose.yml), niet als host-proces — "127.0.0.1" vanuit
+# die container is de container zelf, niet de host. reverse_proxy verwijst
+# daarom naar de forecasting-api-container bij naam (api:8000), bereikbaar
+# via het gedeelde externe caddy-net-netwerk — zie DEPLOY.md stap 6.
+
+prospero.tessar.nl {
+	reverse_proxy api:8000
+
+	encode gzip
+
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		X-Frame-Options "DENY"
+		X-Content-Type-Options "nosniff"
+		Referrer-Policy "same-origin"
+		Content-Security-Policy "default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; script-src 'self'; connect-src 'self'"
+		-Server
+	}
+
+	log {
+		output file /var/log/caddy/prospero.log
+		format json
+	}
+}
+
+# Permanente redirect vanaf het oude adres — bestaande bookmarks/links
+# blijven werken, komen automatisch op het nieuwe domein uit. {uri} behoudt
+# het pad en de querystring.
+forecasting-demo.tessar.nl {
+	redir https://prospero.tessar.nl{uri} permanent
+}

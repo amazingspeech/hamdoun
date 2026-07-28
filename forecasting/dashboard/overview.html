@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<title>Overzicht — Prospero</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+<div class="portfolio-shell">
+  <nav class="portfolio-sidebar">
+    <p class="portfolio-sidebar-merk">Prospero</p>
+    <p class="portfolio-sidebar-submerk">Vraagvoorspelling</p>
+
+    <div class="portfolio-sidebar-groep">
+      <p class="portfolio-sidebar-groepslabel">Voorspellen</p>
+      <ul class="portfolio-sidebar-nav">
+        <li>
+          <a href="./overview.html">
+            Overzicht
+            <span class="trend-pijl" id="trend-pijl" hidden></span>
+          </a>
+        </li>
+        <li><a href="./index.html">Voorspelling</a></li>
+      </ul>
+    </div>
+
+    <div class="portfolio-sidebar-groep">
+      <p class="portfolio-sidebar-groepslabel">Beheer</p>
+      <ul class="portfolio-sidebar-nav">
+        <li><a href="./team.html">Team beheren</a></li>
+        <li><a href="./team.html#api-keys-kaart">API-keys</a></li>
+        <li><a href="./hoe-werkt-dit.html">Hoe dit werkt</a></li>
+      </ul>
+    </div>
+
+    <div class="portfolio-sidebar-kpis" id="sidebar-kpis" hidden>
+      <div class="portfolio-sidebar-kpi">
+        <span class="waarde" id="sidebar-kpi-winkels">–</span>
+        <span class="label">winkels</span>
+      </div>
+      <div class="portfolio-sidebar-kpi">
+        <span class="waarde" id="sidebar-kpi-nauwkeurigheid">–</span>
+        <span class="label">nauwkeurig</span>
+      </div>
+    </div>
+    <p class="portfolio-sidebar-kpis-caveat" id="sidebar-kpis-caveat" hidden></p>
+
+    <div class="portfolio-sidebar-recent" id="sidebar-recent" hidden>
+      <p class="portfolio-sidebar-groepslabel">Recent bekeken</p>
+      <ul class="portfolio-sidebar-nav" id="sidebar-recent-lijst"></ul>
+    </div>
+
+    <div class="portfolio-sidebar-onder">
+      <p class="portfolio-sidebar-abonnement" id="sidebar-abonnement"></p>
+      <p class="portfolio-sidebar-status"><span class="live-stip" aria-hidden="true"></span>Bijgewerkt zojuist</p>
+      <p class="portfolio-sidebar-wie" id="wie-ben-ik">Bezig met laden…</p>
+      <a href="#" id="uitloggen">Uitloggen</a>
+      <p class="portfolio-sidebar-versie" id="sidebar-versie"></p>
+    </div>
+  </nav>
+
+  <div class="wrap portfolio-main">
+    <div id="onboarding-checklist" class="kaart onboarding-checklist" hidden></div>
+    <header class="top">
+      <div class="kop">
+        <p class="eyebrow">Overzicht</p>
+        <h1>Al je winkels in één overzicht</h1>
+      </div>
+      <p class="account-nav">
+        <a href="./index.html">Voorspelling</a> · <a href="./team.html">Team beheren</a> ·
+        <a href="#" id="uitloggen-mobiel">Uitloggen</a>
+      </p>
+    </header>
+
+    <div class="cockpit-strip" id="portfolio-kpis"></div>
+
+    <p class="leeg" id="leeg" hidden></p>
+
+    <div class="portfolio-werkbalk">
+      <div class="portfolio-zoek">
+        <label for="zoeken">Zoeken</label>
+        <input type="search" id="zoeken" placeholder="Winkelnaam of -nummer">
+      </div>
+    </div>
+
+    <div class="portfolio-tabel-wrap">
+      <table class="portfolio-tabel">
+        <thead>
+          <tr>
+            <th>Winkel</th>
+            <th class="cijfer">
+              <button type="button" class="sorteerbaar" data-sorteer="totaal_p50">Verwachte omzet</button>
+            </th>
+            <th>Trend</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="portfolio-rijen"></tbody>
+      </table>
+    </div>
+
+    <p class="fout" id="fout" hidden></p>
+    <button class="btn zacht" id="meer-laden" hidden>Meer winkels laden</button>
+  </div>
+</div>
+<script src="./config.js"></script>
+<script src="./sidebar.js"></script>
+<script src="./onboarding.js"></script>
+<script src="./overview.js"></script>
+</body>
+</html>

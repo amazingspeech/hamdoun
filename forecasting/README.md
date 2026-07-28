@@ -40,16 +40,32 @@ Dit print de RMSPE en coverage, en schrijft een geversieerd artefact naar
 MODEL_VERSION=<versie uit de output>
 ```
 
-Voeg minimaal één API-key toe voordat je de server start:
+Voeg minimaal één API-key toe voordat je de server start. Sinds Fase 4
+Stap 2 verifieert de server keys via de database, niet meer via
+`api_keys.json` — dat bestand blijft nog wel verplicht aanwezig (zie
+`serving/config.py`), maar de daadwerkelijke authenticatie/isolatie loopt
+via `tenants.db`:
 
 ```bash
 python3 -c "from pathlib import Path; from security import api_keys; api_keys.voeg_key_toe(Path('api_keys.json'), 'lokaal-testen', 'kies-een-eigen-key')"
+python3 -m db.cli --models-dir models --model-version <versie uit stap 2> \
+  --organisatie-naam "Lokaal testen" --organisatie-slug lokaal-testen
+python3 -m db.migreer_keys_cli --api-keys-json api_keys.json \
+  --database-pad tenants.db --organisatie-slug lokaal-testen
 ```
 
-Maak een lege `audit.log`-bestand aan; Docker zou dit anders als directory aanmaken, wat de app breekt:
+(`db.cli` bootstrapt één organisatie en koppelt er alle store-ID's uit het
+modelartefact aan; `db.migreer_keys_cli` zet de zojuist aangemaakte key
+over. Zonder deze twee stappen faalt elke `/forecast`/`/metrics`-aanroep
+met 401, ook met een geldige key in `api_keys.json`.)
+
+Maak een lege `audit.log`-bestand aan; Docker zou dit anders als directory aanmaken, wat de app breekt.
+De container draait als een niet-root gebruiker (zie `Dockerfile`) die dit host-bestand niet bezit, dus
+moet het schrijfbaar zijn voor die gebruiker:
 
 ```bash
 touch audit.log
+chmod 666 audit.log
 ```
 
 ## 3. Lokaal draaien
@@ -61,9 +77,15 @@ docker compose up api
 Dashboard: `http://localhost:8000/`. API: `http://localhost:8000/forecast`,
 `http://localhost:8000/metrics` (beide vereisen de `X-API-Key`-header).
 
-Hertrainen zonder rebuild:
+Hertrainen zonder rebuild. De `training`-service deelt dezelfde niet-root
+container-gebruiker als `api` (zie `Dockerfile`) en schrijft een nieuwe
+versiemap onder `models/` — die map moet dus ook voor die gebruiker
+beschrijfbaar zijn, met het execute-bit erbij (nodig om nieuwe submappen
+aan te maken, chmod 666 alleen volstaat hier niet zoals bij een los
+bestand):
 
 ```bash
+chmod 777 models
 docker compose run --rm training --train data/train.csv --winkels data/store.csv
 ```
 

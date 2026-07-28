@@ -123,3 +123,41 @@ def test_bewaar_winkel_metadata_selecteert_juiste_kolommen():
     })
     resultaat = artifact.bewaar_winkel_metadata(winkels)
     assert list(resultaat.columns) == ["Store", "CompetitionDistance"]
+
+
+def _schrijf_testartefact(basis_map, rmspe, coverage=0.8):
+    modellen = _getraind_modellenset()
+    historie = pd.DataFrame({
+        "Store": [1], "Date": pd.to_datetime(["2015-07-01"]), "Sales": [1000.0], "Open": [1],
+    })
+    winkel_metadata = pd.DataFrame({"Store": [1], "CompetitionDistance": [500.0]})
+    return artifact.schrijf_artefact(
+        basis_map=basis_map, modellen=modellen, historie=historie, winkel_metadata=winkel_metadata,
+        metrics={"rmspe": rmspe, "coverage_p10_p90": coverage, "n_observaties": 100},
+        trainingsperiode=(pd.Timestamp("2015-01-01"), pd.Timestamp("2015-06-30")),
+        gevalideerde_horizon_dagen=48, versleuteld=False,
+    )
+
+
+def test_lijst_metadata_per_versie_sorteert_chronologisch(tmp_path):
+    versie_1 = _schrijf_testartefact(tmp_path, rmspe=0.15)
+    versie_2 = _schrijf_testartefact(tmp_path, rmspe=0.12)
+
+    resultaten = artifact.lijst_metadata_per_versie(tmp_path)
+
+    assert [r["versie"] for r in resultaten] == [versie_1, versie_2]
+    assert [r["rmspe"] for r in resultaten] == [0.15, 0.12]
+    assert all("coverage_p10_p90" in r and "aangemaakt_op" in r for r in resultaten)
+
+
+def test_lijst_metadata_per_versie_negeert_map_zonder_metadata(tmp_path):
+    versie_1 = _schrijf_testartefact(tmp_path, rmspe=0.15)
+    (tmp_path / "onvolledige-versie").mkdir()
+
+    resultaten = artifact.lijst_metadata_per_versie(tmp_path)
+
+    assert [r["versie"] for r in resultaten] == [versie_1]
+
+
+def test_lijst_metadata_per_versie_leeg_bij_ontbrekende_map(tmp_path):
+    assert artifact.lijst_metadata_per_versie(tmp_path / "bestaat-niet") == []

@@ -1,0 +1,120 @@
+/* =========================================================================
+   Tessar design tokens — canonieke bron
+   =========================================================================
+   Dit is dé plek waar Tessar-kleuren, -fonts, -spacing en -elevation
+   gedefinieerd staan. Productrepo's (Protocolchecker-template,
+   Boekingsassistent) nemen hier een kopie van op met een bronverwijzing in
+   de header — wijzig waarden éérst hier, kopieer dan door.
+
+   Alle kleurwaarden komen letterlijk uit de live site (hamdoun/index.html);
+   de spacing-/typografieschaal is de bewezen 4px/1.2-ratio-structuur uit
+   Certo (protocolchecker/public/style.css). Zie
+   docs → tessar-design-system-spec.md voor onderbouwing per token.
+
+   Fonts: producten hosten IBM Plex zelf (woff2, latin-subset) — dit bestand
+   declareert bewust géén @font-face, omdat de bestandspaden per product
+   verschillen. Verwachte families: 'IBM Plex Sans' 400/500/600/700 en
+   'IBM Plex Mono' 400/500/600.
+   ========================================================================= */
+
+:root {
+  /* --- Kleur: licht thema (standaard) --- */
+  --bg: oklch(100% 0 0);
+  --panel: oklch(98% 0.004 90);
+  --border: oklch(91% 0.006 90);
+  --text: oklch(18% 0.02 255);
+  --text-dim: oklch(46% 0.012 140);
+  --accent: oklch(48% 0.12 230);
+  --accent-hover: oklch(42% 0.12 230);
+  --accent-dim: oklch(96% 0.01 230);
+
+  /* --- Semantische kleuren (uit de voor/na-sectie van de live site) --- */
+  --ok-bg: oklch(98% 0.02 165);
+  --ok-border: oklch(85% 0.05 165);
+  --ok-text: oklch(45% 0.14 165);
+  --danger-bg: oklch(98% 0.01 25);
+  --danger-border: oklch(88% 0.03 30);
+  --danger-text: oklch(52% 0.15 30);
+
+  /* --- Het Tessar-gradient (identiek in licht en donker thema) --- */
+  --gradient-primary: linear-gradient(135deg, oklch(72% 0.15 210), oklch(62% 0.14 235));
+  --gradient-primary-hover: linear-gradient(135deg, oklch(68% 0.15 210), oklch(58% 0.14 235));
+  --on-gradient: #001a2e;
+  --gradient-text: linear-gradient(135deg, oklch(80% 0.14 200), oklch(74% 0.17 230) 55%, oklch(78% 0.15 190));
+
+  /* --- Typografie --- */
+  --font-body: "IBM Plex Sans", -apple-system, "Segoe UI", sans-serif;
+  --font-display: "IBM Plex Sans", -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* --- Typografische schaal (rem, ratio ~1.2) --- */
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.1875rem;
+  --text-xl: 1.4375rem;
+  --text-2xl: 1.75rem;
+  --text-display: 2.125rem;
+
+  /* --- Spacing-schaal (basis 4px) --- */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+
+  /* --- Elevation --- */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.18);
+}
+
+/* --- Donker thema: navy als basis, geen inversie van het lichte ontwerp.
+   Achtergronden houden altijd een blauwzweem (hue 250–260); accent wordt
+   lichter binnen dezelfde tintfamilie; vullingen zijn solide mengsels,
+   geen alpha-overlays. --- */
+:root[data-theme="dark"] {
+  --bg: oklch(14% 0.025 260);
+  --panel: oklch(18% 0.025 258);
+  --border: oklch(30% 0.02 250);
+  --text: oklch(95% 0.01 250);
+  --text-dim: oklch(65% 0.02 250);
+  --accent: oklch(70% 0.14 220);
+  --accent-hover: oklch(76% 0.13 215);
+  --accent-dim: oklch(25% 0.045 235);
+  --ok-bg: oklch(22% 0.04 165);
+  --ok-border: oklch(40% 0.07 165);
+  --ok-text: oklch(75% 0.12 160);
+  --danger-bg: oklch(24% 0.04 30);
+  --danger-border: oklch(46% 0.08 30);
+  --danger-text: oklch(78% 0.10 30);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.6);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: oklch(14% 0.025 260);
+    --panel: oklch(18% 0.025 258);
+    --border: oklch(30% 0.02 250);
+    --text: oklch(95% 0.01 250);
+    --text-dim: oklch(65% 0.02 250);
+    --accent: oklch(70% 0.14 220);
+    --accent-hover: oklch(76% 0.13 215);
+    --accent-dim: oklch(25% 0.045 235);
+    --ok-bg: oklch(22% 0.04 165);
+    --ok-border: oklch(40% 0.07 165);
+    --ok-text: oklch(75% 0.12 160);
+    --danger-bg: oklch(24% 0.04 30);
+    --danger-border: oklch(46% 0.08 30);
+    --danger-text: oklch(78% 0.10 30);
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5);
+    --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.6);
+  }
+}

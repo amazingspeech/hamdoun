@@ -3,7 +3,8 @@ periode-controle staat bewust niet hier — die vereist het geladen
 modelartefact, dat pas bij de endpoint-handler bekend is (zie serving/app.py)."""
 from __future__ import annotations
 
-from datetime import date
+from datetime import date, datetime
+from typing import Literal, Optional
 
 from pydantic import BaseModel, Field
 
@@ -12,6 +13,14 @@ class ForecastVerzoek(BaseModel):
     store_id: int = Field(..., gt=0)
     start_datum: date
     horizon_dagen: int = Field(..., gt=0)
+    # Optioneel: geplande promotie-/schoolvakantieperiode binnen de horizon.
+    # Zonder opgave blijft het gedrag zoals voorheen (elke dag telt als
+    # "geen promotie, geen schoolvakantie") — zie serving/forecast.py's
+    # dagreeks() voor hoe dit wordt omgezet naar losse dagen.
+    promo_van: Optional[date] = None
+    promo_tot: Optional[date] = None
+    schoolvakantie_van: Optional[date] = None
+    schoolvakantie_tot: Optional[date] = None
 
 
 class DagVoorspelling(BaseModel):
@@ -21,9 +30,202 @@ class DagVoorspelling(BaseModel):
     p90: float
 
 
+class FactorBijdrage(BaseModel):
+    naam: str
+    richting: Literal["hoger", "lager"]
+
+
+class HerbestelAdvies(BaseModel):
+    stuks_p10: int
+    stuks_p50: int
+    stuks_p90: int
+
+
 class ForecastResponse(BaseModel):
     store_id: int
     voorspellingen: list[DagVoorspelling]
+    belangrijkste_factoren: list[FactorBijdrage] = []
+    # Som van de werkelijke omzet over de horizon_dagen open dagen direct
+    # voorafgaand aan start_datum — None als daar niet genoeg historie voor
+    # is. Zie serving.forecast.vorige_periode_omzet().
+    vorige_periode_omzet: Optional[float] = None
+    # None tenzij de organisatie een gemiddelde-omzet-per-stuk heeft
+    # ingesteld (Fase 5 NODIG 1) — zie serving.forecast.herbestel_advies().
+    herbestel_advies: Optional[HerbestelAdvies] = None
+
+
+class LoginVerzoek(BaseModel):
+    email: str
+    wachtwoord: str = Field(..., min_length=1)
+
+
+class WachtwoordResetAanvraagVerzoek(BaseModel):
+    email: str
+
+
+class WachtwoordResetVoltooienVerzoek(BaseModel):
+    token: str = Field(..., min_length=1)
+    # Zelfde ondergrens als SignupVerzoek.wachtwoord — dit is een
+    # zelf-gekozen wachtwoord zonder toezicht van een operator.
+    nieuw_wachtwoord: str = Field(..., min_length=8)
+
+
+class GebruikerAanmakenVerzoek(BaseModel):
+    email: str
+    wachtwoord: str = Field(..., min_length=1)
+
+
+class SignupVerzoek(BaseModel):
+    organisatie_naam: str = Field(..., min_length=1)
+    email: str
+    # Strengere ondergrens dan GebruikerAanmakenVerzoek (min_length=1): daar
+    # kiest een eigenaar zelf een tijdelijk wachtwoord voor een teamlid, hier
+    # is dit het enige wachtwoord voor een gloednieuw, zelf-aangemaakt
+    # account zonder toezicht van een operator.
+    wachtwoord: str = Field(..., min_length=8)
+    # Nederlands KVK-nummer: alleen formaat gecontroleerd (8 cijfers), niet
+    # tegen het echte KVK-register geverifieerd — zie de spec voor de
+    # afweging. Gebruikt om "hetzelfde bedrijf meldt zich opnieuw aan" te
+    # herkennen (dan geen gratis proefperiode).
+    kvk_nummer: str = Field(..., pattern=r"^[0-9]{8}$")
+    # Totaal gewenst aantal gebruikers, INCLUSIEF de eigenaar (niet "extra"
+    # bovenop de eigenaar) — moet exact overeenkomen met wat het
+    # aanmeldformulier als label toont.
+    aantal_leden: int = Field(default=1, ge=1, le=100)
+    # Gewenst aantal vestigingen — puur voor prijsberekening in deze fase,
+    # geen technische winkel-koppeling (zie spec, "Explicitly out of scope").
+    aantal_winkels: int = Field(default=1, ge=1, le=100)
+
+
+class SignupResponse(BaseModel):
+    checkout_url: str
+
+
+class GebruikerResponse(BaseModel):
+    id: int
+    email: str
+    rol: str
+    actief: bool
+
+
+class OrganisatieInstellingenVerzoek(BaseModel):
+    gemiddelde_omzet_per_stuk: float = Field(..., gt=0)
+
+
+class OrganisatieInstellingenResponse(BaseModel):
+    gemiddelde_omzet_per_stuk: Optional[float] = None
+
+
+class VerkoopdataRij(BaseModel):
+    datum: date
+    omzet: float
+
+
+class VerkoopdataResponse(BaseModel):
+    rijen: list[VerkoopdataRij]
+
+
+class VerkoopdataUploadResponse(BaseModel):
+    aantal_rijen: int
+
+
+class EigenVoorspellingDag(BaseModel):
+    datum: date
+    p10: float
+    p50: float
+    p90: float
+
+
+class EigenVoorspellingResponse(BaseModel):
+    # False zolang er nog geen serving.eigen_voorspelling.MINIMUM_DAGEN dagen
+    # verkoopdata verzameld zijn — dagen_verzameld/dagen_nodig laten het
+    # dashboard een voortgangsindicatie tonen i.p.v. alleen "nog niet
+    # beschikbaar" (zie de afweging met de gebruiker over 'geen halve
+    # voorspelling tonen op te weinig data').
+    beschikbaar: bool
+    dagen_verzameld: int
+    dagen_nodig: int
+    voorspellingen: list[EigenVoorspellingDag] = []
+    totaal_p10: Optional[float] = None
+    totaal_p50: Optional[float] = None
+    totaal_p90: Optional[float] = None
+    herbestel_advies: Optional[HerbestelAdvies] = None
+
+
+class ProductVerkoopdataUploadResponse(BaseModel):
+    aantal_rijen: int
+
+
+class ProductHerbestelAdviesItem(BaseModel):
+    product: str
+    aantal_p10: float
+    aantal_p50: float
+    aantal_p90: float
+
+
+class ProductHerbestelAdviesResponse(BaseModel):
+    items: list[ProductHerbestelAdviesItem] = []
+
+
+class WinkelToewijzingVerzoek(BaseModel):
+    winkel_ids: list[int] = []
+
+
+class WinkelToewijzingResponse(BaseModel):
+    winkel_ids: list[int]
+
+
+class ApiKeyAanmakenVerzoek(BaseModel):
+    naam: str = Field(..., min_length=1)
+
+
+class ApiKeyResponse(BaseModel):
+    id: int
+    naam: str
+    actief: bool
+    aangemaakt_op: datetime
+
+
+class NieuweApiKeyResponse(BaseModel):
+    id: int
+    naam: str
+    ruwe_key: str
+
+
+class WinkelResponse(BaseModel):
+    extern_store_id: int
+    naam: Optional[str] = None
+
+
+class WinkelSamenvatting(BaseModel):
+    extern_store_id: int
+    naam: Optional[str] = None
+    totaal_p50: float
+    totaal_p10: float
+    totaal_p90: float
+    sparkline: list[float]
+    afwijkend: bool
+
+
+class PortfolioKpi(BaseModel):
+    totale_verwachte_omzet: float
+    model_nauwkeurigheid_rmspe: float
+    aantal_afwijkend: int
+
+
+class PortfolioResponse(BaseModel):
+    winkels: list[WinkelSamenvatting]
+    totaal_winkels: int
+    offset: int
+    limiet: int
+    kpi: PortfolioKpi
+
+
+class ModelVersieMetric(BaseModel):
+    versie: str
+    aangemaakt_op: str
+    rmspe: float
+    coverage_p10_p90: float
 
 
 class MetricsResponse(BaseModel):
@@ -32,3 +234,7 @@ class MetricsResponse(BaseModel):
     coverage_p10_p90: float
     n_observaties: int
     gevalideerde_horizon_dagen: int
+    trainingsperiode_eind: date
+    # Chronologisch (oudste eerst), voor de nauwkeurigheid-als-trend-weergave
+    # in het dashboard — zie training.artifact.lijst_metadata_per_versie().
+    geschiedenis: list[ModelVersieMetric] = []
