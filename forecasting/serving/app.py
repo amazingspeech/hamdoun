@@ -429,7 +429,13 @@ async def stripe_webhook(request: Request) -> dict:
     with tenants_db.begin() as conn:
         org_id = bootstrap_organisatie(
             tenants_db, naam=aanmelding.organisatie_naam, slug=aanmelding.organisatie_slug, store_ids=[], conn=conn,
-            trial_verloopt_op=datetime.now(timezone.utc) + timedelta(days=SIGNUP_PROEFPERIODE_DAGEN),
+            trial_verloopt_op=(
+                None if aanmelding.was_kvk_herhaling
+                else datetime.now(timezone.utc) + timedelta(days=SIGNUP_PROEFPERIODE_DAGEN)
+            ),
+            kvk_nummer=aanmelding.kvk_nummer,
+            ingekochte_leden=aanmelding.aantal_leden,
+            ingekochte_winkels=aanmelding.aantal_winkels,
         )
         db_gebruikers.maak_gebruiker_met_hash(
             tenants_db, organisatie_id=org_id, email=aanmelding.email,

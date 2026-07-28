@@ -98,12 +98,13 @@ def _subscription_deleted_event(subscription_id):
     }
 
 
-def _leg_aanmelding_vast(engine, sessie_id="cs_test_123"):
+def _leg_aanmelding_vast(engine, sessie_id="cs_test_123", kvk_nummer="12345678", was_kvk_herhaling=False):
     hash_hex, salt_hex = hash_key("correct-paard")
     return maak_aanmelding(
         engine, organisatie_naam="Bakkerij De Vries", organisatie_slug="bakkerij-de-vries",
         email="devries@voorbeeld.nl", wachtwoord_hash=hash_hex, wachtwoord_salt=salt_hex,
-        stripe_checkout_session_id=sessie_id,
+        stripe_checkout_session_id=sessie_id, kvk_nummer=kvk_nummer, aantal_leden=1, aantal_winkels=1,
+        was_kvk_herhaling=was_kvk_herhaling,
     )
 
 
@@ -159,6 +160,47 @@ def test_checkout_completed_zet_trial_verloopt_op(tmp_path, monkeypatch):
     verwachte_ondergrens = (voor + timedelta(days=module.SIGNUP_PROEFPERIODE_DAGEN)).replace(tzinfo=None)
     verwachte_bovengrens = (na + timedelta(days=module.SIGNUP_PROEFPERIODE_DAGEN)).replace(tzinfo=None)
     assert verwachte_ondergrens <= org.trial_verloopt_op <= verwachte_bovengrens
+
+
+def test_checkout_completed_zet_kvk_en_aantallen_op_organisatie(tmp_path, monkeypatch):
+    from sqlalchemy import select
+
+    from db.schema import organisaties
+
+    module, client, engine = _bouw_omgeving(tmp_path, monkeypatch)
+    _leg_aanmelding_vast(engine)
+    monkeypatch.setattr(module, "lees_webhook_event", lambda **kw: _checkout_completed_event("cs_test_123"))
+
+    resp = client.post("/webhooks/stripe", content=b"ruwe-payload", headers={"stripe-signature": "t=1,v1=geldig"})
+
+    assert resp.status_code == 200, resp.text
+    aanmelding = haal_aanmelding_bij_sessie(engine, "cs_test_123")
+    with engine.connect() as conn:
+        org = conn.execute(select(organisaties).where(organisaties.c.id == aanmelding.organisatie_id)).one()
+    assert org.kvk_nummer == "12345678"
+    assert org.ingekochte_leden == 1
+    assert org.ingekochte_winkels == 1
+
+
+def test_checkout_completed_herhaalde_kvk_zet_trial_verloopt_op_op_none(tmp_path, monkeypatch):
+    from sqlalchemy import select
+
+    from db.schema import organisaties
+
+    module, client, engine = _bouw_omgeving(tmp_path, monkeypatch)
+    _leg_aanmelding_vast(engine, was_kvk_herhaling=True)
+    monkeypatch.setattr(module, "lees_webhook_event", lambda **kw: _checkout_completed_event("cs_test_123"))
+
+    resp = client.post("/webhooks/stripe", content=b"ruwe-payload", headers={"stripe-signature": "t=1,v1=geldig"})
+
+    assert resp.status_code == 200, resp.text
+    aanmelding = haal_aanmelding_bij_sessie(engine, "cs_test_123")
+    with engine.connect() as conn:
+        org = conn.execute(select(organisaties).where(organisaties.c.id == aanmelding.organisatie_id)).one()
+    assert org.trial_verloopt_op is None
+
+    from db.organisaties import is_in_proefperiode
+    assert is_in_proefperiode(engine, aanmelding.organisatie_id) is False
 
 
 def test_nieuwe_eigenaar_kan_meteen_inloggen(tmp_path, monkeypatch):
