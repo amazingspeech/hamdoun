@@ -6,13 +6,13 @@
   --ink-faint: oklch(60% 0.015 150);
   --line: oklch(89% 0.012 95);
   --line-strong: oklch(80% 0.015 95);
-  --accent: oklch(66% 0.17 60);
-  --accent-ink: oklch(38% 0.14 60);
+  --accent: oklch(52% 0.13 155);
+  --accent-ink: oklch(30% 0.11 155);
   --band: oklch(88% 0.05 150);
   --band-line: oklch(55% 0.09 150);
   --warn: oklch(55% 0.17 32);
   --warn-soft: oklch(94% 0.035 32);
-  --accent-soft: oklch(94% 0.035 60);
+  --accent-soft: oklch(94% 0.03 155);
   --fout: oklch(52% 0.19 25);
 
   --font-display: 'Bricolage Grotesque', -apple-system, sans-serif;
@@ -28,13 +28,13 @@
   --ink-faint: oklch(58% 0.012 95);
   --line: oklch(32% 0.025 55);
   --line-strong: oklch(40% 0.025 55);
-  --accent: oklch(74% 0.15 60);
-  --accent-ink: oklch(84% 0.12 60);
+  --accent: oklch(76% 0.14 155);
+  --accent-ink: oklch(84% 0.11 155);
   --band: oklch(30% 0.05 150);
   --band-line: oklch(62% 0.08 150);
   --warn: oklch(70% 0.15 35);
   --warn-soft: oklch(28% 0.06 35);
-  --accent-soft: oklch(28% 0.06 60);
+  --accent-soft: oklch(30% 0.07 155);
   --fout: oklch(70% 0.17 25);
 }
 
@@ -47,13 +47,13 @@
     --ink-faint: oklch(58% 0.012 95);
     --line: oklch(32% 0.025 55);
     --line-strong: oklch(40% 0.025 55);
-    --accent: oklch(74% 0.15 60);
-    --accent-ink: oklch(84% 0.12 60);
+    --accent: oklch(76% 0.14 155);
+    --accent-ink: oklch(84% 0.11 155);
     --band: oklch(30% 0.05 150);
     --band-line: oklch(62% 0.08 150);
     --warn: oklch(70% 0.15 35);
     --warn-soft: oklch(28% 0.06 35);
-    --accent-soft: oklch(28% 0.06 60);
+    --accent-soft: oklch(30% 0.07 155);
     --fout: oklch(70% 0.17 25);
   }
 }
@@ -61,7 +61,7 @@
 * { box-sizing: border-box; }
 html, body { margin:0; padding:0; background:var(--paper); color:var(--ink); font-family:var(--font-body); }
 body { overflow-x:hidden; }
-::selection { background:oklch(85% 0.08 60 / 0.4); }
+::selection { background:oklch(85% 0.08 155 / 0.4); }
 
 .wrap { max-width:900px; margin:0 auto; padding:clamp(24px,6vw,56px) clamp(16px,4vw,32px) 80px; }
 .wrap.smal { max-width:420px; }
@@ -69,6 +69,7 @@ body { overflow-x:hidden; }
 header.top { margin-bottom:clamp(28px,5vw,44px); display:flex; justify-content:space-between; align-items:start; gap:16px; flex-wrap:wrap; }
 header.top .kop { flex:1 1 320px; }
 .eyebrow { font:600 0.8125rem/1.2 var(--font-body); color:var(--accent-ink); margin:0 0 10px; }
+.eyebrow-sub { font:400 0.6875rem/1.2 var(--font-body); color:var(--ink-faint); margin:-8px 0 10px; letter-spacing:0.01em; }
 h1 { font:600 clamp(1.75rem,4vw,2.375rem)/1.15 var(--font-display); letter-spacing:-0.01em; text-wrap:balance; margin:0 0 8px; }
 .sub { font-size:0.9375rem; color:var(--ink-soft); margin:0; max-width:50ch; line-height:1.55; }
 
@@ -105,7 +106,7 @@ label { font:600 0.8125rem/1.2 var(--font-body); color:var(--ink-soft); }
 }
 .aanbeveling::before {
   content:"→"; flex:none; display:grid; place-items:center; width:18px; height:18px; border-radius:50%;
-  background:var(--accent); color:oklch(15% 0.02 60); font:700 0.8125rem var(--font-mono); margin-top:1px;
+  background:var(--accent); color:oklch(15% 0.02 155); font:700 0.8125rem var(--font-mono); margin-top:1px;
 }
 select, input {
   font:400 0.9375rem/1.4 var(--font-body); padding:9px 12px; border:1px solid var(--line-strong);
@@ -116,10 +117,10 @@ select:focus-visible, input:focus-visible, button:focus-visible, summary:focus-v
 }
 .btn {
   font:600 0.9375rem/1.4 var(--font-body); padding:10px 20px; border:none; border-radius:8px;
-  background:var(--accent); color:oklch(15% 0.02 60); cursor:pointer;
+  background:var(--accent); color:oklch(15% 0.02 155); cursor:pointer;
   transition:transform 0.12s ease, box-shadow 0.12s ease;
 }
-.btn:hover:not(:disabled) { box-shadow:0 3px 10px oklch(50% 0.15 60 / 0.35); }
+.btn:hover:not(:disabled) { box-shadow:0 3px 10px oklch(50% 0.15 155 / 0.35); }
 .btn:active:not(:disabled) { transform:translateY(1px); }
 .btn:disabled { opacity:0.5; cursor:not-allowed; }
 .btn.zacht {
@@ -435,6 +436,9 @@ details.scenario-vergelijking { margin-top:32px; border-top:1px solid var(--line
   }
   .portfolio-sidebar-merk {
     font:600 1rem/1.2 var(--font-display); letter-spacing:-0.005em; color:var(--ink); margin:0 0 4px;
+  }
+  .portfolio-sidebar-submerk {
+    font:400 0.6875rem/1.2 var(--font-body); color:var(--ink-faint); margin:-2px 0 0;
   }
   .portfolio-sidebar-nav { list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:2px; }
   .portfolio-sidebar-nav a {
