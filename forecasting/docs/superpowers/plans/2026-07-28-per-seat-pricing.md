@@ -1412,7 +1412,7 @@ scp /Users/hamdeco/development/hamdoun/forecasting/dashboard/signup.html \
 Using claude-in-chrome, navigate to `https://forecasting-demo.tessar.nl/signup.html` and verify:
 - The header now reads "14 dagen gratis proberen, daarna vanaf € 29 per maand."
 - KVK-nummer, "Totaal aantal gebruikers," and "Aantal vestigingen" fields are all present, defaulting to empty/1/1.
-- Changing "Totaal aantal gebruikers" to 3 and "Aantal vestigingen" to 2 updates the price line to "Totaal: € 54 per maand" (29 + 2×5 + 1×10) immediately, with no page reload.
+- Changing "Totaal aantal gebruikers" to 3 and "Aantal vestigingen" to 2 updates the price line to "Totaal: € 49 per maand" (29 + 2×5 + 1×10) immediately, with no page reload.
 - Entering a non-8-digit value in KVK-nummer and submitting shows the browser's native validation message (the `pattern`/`required` attributes) rather than silently submitting.
 - Do NOT complete the actual Stripe checkout (entering card data is out of scope) — verifying the form builds a checkout session at all (e.g. that submitting with valid data navigates away to a `checkout.stripe.com` URL) is sufficient; do not go further than confirming that redirect happens.
 
