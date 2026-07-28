@@ -13,6 +13,7 @@
 // "onboarding"/"ONBOARDING_", zelfde patroon als sidebar.js met
 // SIDEBAR_API_BASIS/sidebarSleutel.
 const ONBOARDING_API_BASIS = window.TESSAR_FORECAST_API_BASIS || "";
+const ONBOARDING_VOLTOOID_HERCHECK_DAGEN = 30;
 
 function onboardingFormatEuro(bedrag) {
   return new Intl.NumberFormat("nl-NL", { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(bedrag);
@@ -24,6 +25,13 @@ function onboardingSleutel(organisatieId) {
 
 function onboardingVoltooidSleutel(organisatieId) {
   return `vraagvoorspelling_onboarding_voltooid_org${organisatieId}`;
+}
+
+function onboardingVoltooidNogGeldig(organisatieId) {
+  const opgeslagen = localStorage.getItem(onboardingVoltooidSleutel(organisatieId));
+  if (!opgeslagen) return false;
+  const dagenGeleden = (Date.now() - Number(opgeslagen)) / (1000 * 60 * 60 * 24);
+  return dagenGeleden < ONBOARDING_VOLTOOID_HERCHECK_DAGEN;
 }
 
 async function haalOnboardingStatus() {
@@ -46,7 +54,7 @@ function toonOnboardingChecklist(status, organisatieId) {
 
   const volledig = status.verkoopdataGeupload && status.prijsIngesteld;
   if (volledig) {
-    localStorage.setItem(onboardingVoltooidSleutel(organisatieId), "true");
+    localStorage.setItem(onboardingVoltooidSleutel(organisatieId), String(Date.now()));
     kaart.hidden = true;
     return;
   }
@@ -99,7 +107,7 @@ async function initOnboarding(me) {
   // heeft voor een lid dus sowieso nooit een zinvolle volgende stap.
   if (me.rol === "lid") return;
   if (localStorage.getItem(onboardingSleutel(me.organisatie_id)) === "verborgen") return;
-  if (localStorage.getItem(onboardingVoltooidSleutel(me.organisatie_id)) === "true") return;
+  if (onboardingVoltooidNogGeldig(me.organisatie_id)) return;
   try {
     const winkelsResp = await fetch(`${ONBOARDING_API_BASIS}/winkels`, { credentials: "same-origin" });
     if (!winkelsResp.ok) return;
