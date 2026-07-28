@@ -123,7 +123,7 @@ def _rate_limit_key(request: Request) -> str:
 limiter = Limiter(key_func=_rate_limit_key)
 
 app = FastAPI(
-    title="Tessar Vraagvoorspelling",
+    title="Prospero (by Tessar)",
     docs_url="/docs" if settings.expose_docs else None,
     redoc_url="/redoc" if settings.expose_docs else None,
     openapi_url="/openapi.json" if settings.expose_docs else None,
@@ -286,7 +286,7 @@ def wachtwoord_reset_aanvragen(request: Request, verzoek: WachtwoordResetAanvraa
                 smtp_wachtwoord=settings.mail_smtp_wachtwoord,
                 ontvanger=verzoek.email, onderwerp="Wachtwoord resetten",
                 tekst=(
-                    "Je hebt een wachtwoord-reset aangevraagd voor Vraagvoorspelling.\n\n"
+                    "Je hebt een wachtwoord-reset aangevraagd voor Prospero.\n\n"
                     f"Klik op deze link om een nieuw wachtwoord in te stellen: {link}\n\n"
                     "Deze link is 1 uur geldig. Heb je dit niet aangevraagd, negeer dan deze e-mail."
                 ),

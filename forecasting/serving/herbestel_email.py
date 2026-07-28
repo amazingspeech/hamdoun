@@ -89,7 +89,7 @@ def bouw_email_inhoud(
     else:
         kern_alinea = omzet_alinea
     tekst = (
-        f"Hallo,\n\nDit is je wekelijkse update van Vraagvoorspelling voor {organisatie_naam}.\n\n"
+        f"Hallo,\n\nDit is je wekelijkse update van Prospero voor {organisatie_naam}.\n\n"
         f"{omzet_alinea}\n\n{kern_alinea}\n\nLog in op je dashboard voor de details.\n"
     )
     return onderwerp, tekst
