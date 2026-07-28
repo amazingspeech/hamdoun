@@ -158,3 +158,22 @@ def test_laad_settings_leest_voorbeeld_store_id(monkeypatch, tmp_path):
     _basis_env(monkeypatch, tmp_path, VOORBEELD_STORE_ID="1")
     settings = config.laad_settings()
     assert settings.voorbeeld_store_id == 1
+
+
+def test_laad_settings_zonder_extra_prijzen_geeft_none(monkeypatch, tmp_path):
+    _basis_env(monkeypatch, tmp_path)
+    for var in ("STRIPE_PRICE_ID_EXTRA_LID", "STRIPE_PRICE_ID_EXTRA_WINKEL"):
+        monkeypatch.delenv(var, raising=False)
+    settings = config.laad_settings()
+    assert settings.stripe_price_id_extra_lid is None
+    assert settings.stripe_price_id_extra_winkel is None
+
+
+def test_laad_settings_leest_extra_prijzen(monkeypatch, tmp_path):
+    _basis_env(
+        monkeypatch, tmp_path,
+        STRIPE_PRICE_ID_EXTRA_LID="price_extra_lid", STRIPE_PRICE_ID_EXTRA_WINKEL="price_extra_winkel",
+    )
+    settings = config.laad_settings()
+    assert settings.stripe_price_id_extra_lid == "price_extra_lid"
+    assert settings.stripe_price_id_extra_winkel == "price_extra_winkel"

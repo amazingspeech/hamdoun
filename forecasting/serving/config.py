@@ -38,6 +38,8 @@ class Settings:
     stripe_secret_key: Optional[str] = None
     stripe_webhook_secret: Optional[str] = None
     stripe_price_id: Optional[str] = None
+    stripe_price_id_extra_lid: Optional[str] = None
+    stripe_price_id_extra_winkel: Optional[str] = None
     # Basis-URL van de draaiende app, nodig om Stripe Checkout's
     # success_url/cancel_url naar de juiste plek te laten wijzen (Stripe kan
     # dit niet zelf afleiden uit het inkomende verzoek).
@@ -130,6 +132,8 @@ def laad_settings() -> Settings:
         stripe_secret_key=os.environ.get("STRIPE_SECRET_KEY"),
         stripe_webhook_secret=os.environ.get("STRIPE_WEBHOOK_SECRET"),
         stripe_price_id=os.environ.get("STRIPE_PRICE_ID"),
+        stripe_price_id_extra_lid=os.environ.get("STRIPE_PRICE_ID_EXTRA_LID"),
+        stripe_price_id_extra_winkel=os.environ.get("STRIPE_PRICE_ID_EXTRA_WINKEL"),
         app_basis_url=os.environ.get("APP_BASIS_URL"),
         voorbeeld_store_id=voorbeeld_store_id,
     )
