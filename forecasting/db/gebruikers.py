@@ -31,6 +31,26 @@ def maak_gebruiker(engine: Engine, organisatie_id: int, email: str, wachtwoord: 
         ).inserted_primary_key[0]
 
 
+def deactiveer_gebruiker(engine: Engine, organisatie_id: int, gebruiker_id: int) -> bool:
+    """Zet een teamlid op inactief, alleen als hij bij organisatie_id hoort
+    én rol 'lid' heeft — een eigenaar kan zichzelf of een andere eigenaar
+    hier bewust niet mee deactiveren (zelfde privilege-uitsluiting als
+    maak_gebruiker() dat via het publieke endpoint alleen 'lid'-accounts
+    aanmaakt). Geeft False terug bij een onbekend/andermans/eigenaar-
+    account — geen wijziging, zodat de aanroepende laag hetzelfde
+    404-gedrag kan geven als db.api_keys.deactiveer_api_key()."""
+    with engine.begin() as conn:
+        resultaat = conn.execute(
+            gebruikers.update()
+            .where(
+                gebruikers.c.id == gebruiker_id, gebruikers.c.organisatie_id == organisatie_id,
+                gebruikers.c.rol == "lid",
+            )
+            .values(actief=False)
+        )
+    return resultaat.rowcount > 0
+
+
 def aantal_actieve_gebruikers(engine: Engine, organisatie_id: int) -> int:
     with engine.connect() as conn:
         return conn.execute(

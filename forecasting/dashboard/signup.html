@@ -39,7 +39,7 @@
     </div>
     <div class="veld">
       <label for="aantal-leden">Totaal aantal gebruikers (inclusief jezelf)</label>
-      <input type="number" id="aantal-leden" min="1" value="1" required>
+      <input type="number" id="aantal-leden" min="1" max="100" value="1" required>
     </div>
     <div class="veld">
       <div class="veld-label-rij">
@@ -49,7 +49,7 @@
           <p class="info-inhoud">De eerste vestiging is gratis inbegrepen. Elke vestiging daarna kost € 10 per maand extra.</p>
         </details>
       </div>
-      <input type="number" id="aantal-winkels" min="1" value="1" required>
+      <input type="number" id="aantal-winkels" min="1" max="100" value="1" required>
     </div>
     <p class="sub" id="prijs-preview" style="margin:0 0 8px;">Totaal: € 29 per maand</p>
     <button type="submit" class="btn" id="signup-knop">Verder naar betaalgegevens</button>

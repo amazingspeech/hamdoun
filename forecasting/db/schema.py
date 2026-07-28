@@ -203,8 +203,14 @@ aanmeldingen = Table(
     # /signup en overgenomen op de organisatie zodra de webhook de
     # aanmelding voltooit (zie serving/app.py). was_kvk_herhaling wordt bij
     # /signup bepaald en hier bewaard (niet opnieuw afgeleid in de webhook),
-    # zodat een gelijktijdige tweede aanmelding onder hetzelfde, nieuwe
-    # KVK-nummer niet per ongeluk allebei als "eerste" tellen.
+    # zodat de webhook een aanmelding altijd afhandelt met exact het
+    # trial-besluit dat destijds ook echt aan Stripe is doorgegeven — dit
+    # voorkomt dat de lokale trial-status van een organisatie ooit afwijkt
+    # van wat Stripe voor die specifieke aanmelding kreeg te horen. Het
+    # voorkomt niet dat twee gelijktijdige eerste aanmeldingen onder
+    # hetzelfde, nieuwe KVK-nummer allebei een proefperiode krijgen — beide
+    # lezen organisaties vóórdat de ander voltooit, dus die race blijft
+    # mogelijk.
     Column("kvk_nummer", String, nullable=True),
     Column("aantal_leden", Integer, nullable=True),
     Column("aantal_winkels", Integer, nullable=True),

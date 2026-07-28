@@ -187,3 +187,52 @@ def test_aantal_actieve_gebruikers_negeert_andere_organisatie(tmp_path):
     maak_gebruiker(engine, organisatie_id=org_b, email="eigenaar-b@voorbeeld.nl", wachtwoord="wachtwoord-2", rol="eigenaar")
 
     assert aantal_actieve_gebruikers(engine, org_a) == 1
+
+
+def test_deactiveer_gebruiker(tmp_path):
+    from db.bootstrap import bootstrap_organisatie
+    from db.gebruikers import deactiveer_gebruiker, maak_gebruiker
+    from db.schema import maak_database
+
+    engine = maak_database(tmp_path / "tenants.db")
+    org_id = bootstrap_organisatie(engine, naam="Bakkerij De Vries", slug="bakkerij-de-vries", store_ids=[])
+    lid_id = maak_gebruiker(engine, organisatie_id=org_id, email="lid@voorbeeld.nl", wachtwoord="wachtwoord-1", rol="lid")
+
+    gelukt = deactiveer_gebruiker(engine, organisatie_id=org_id, gebruiker_id=lid_id)
+
+    assert gelukt is True
+    from sqlalchemy import select
+
+    from db.schema import gebruikers
+    with engine.connect() as conn:
+        rij = conn.execute(select(gebruikers.c.actief).where(gebruikers.c.id == lid_id)).one()
+    assert rij.actief is False
+
+
+def test_deactiveer_gebruiker_kan_geen_eigenaar_deactiveren(tmp_path):
+    from db.bootstrap import bootstrap_organisatie
+    from db.gebruikers import deactiveer_gebruiker, maak_gebruiker
+    from db.schema import maak_database
+
+    engine = maak_database(tmp_path / "tenants.db")
+    org_id = bootstrap_organisatie(engine, naam="Bakkerij De Vries", slug="bakkerij-de-vries", store_ids=[])
+    eigenaar_id = maak_gebruiker(engine, organisatie_id=org_id, email="eigenaar@voorbeeld.nl", wachtwoord="wachtwoord-1", rol="eigenaar")
+
+    gelukt = deactiveer_gebruiker(engine, organisatie_id=org_id, gebruiker_id=eigenaar_id)
+
+    assert gelukt is False
+
+
+def test_deactiveer_gebruiker_andere_organisatie_geeft_false(tmp_path):
+    from db.bootstrap import bootstrap_organisatie
+    from db.gebruikers import deactiveer_gebruiker, maak_gebruiker
+    from db.schema import maak_database
+
+    engine = maak_database(tmp_path / "tenants.db")
+    org_a = bootstrap_organisatie(engine, naam="Organisatie A", slug="org-a", store_ids=[])
+    org_b = bootstrap_organisatie(engine, naam="Organisatie B", slug="org-b", store_ids=[])
+    lid_id = maak_gebruiker(engine, organisatie_id=org_a, email="lid-a@voorbeeld.nl", wachtwoord="wachtwoord-1", rol="lid")
+
+    gelukt = deactiveer_gebruiker(engine, organisatie_id=org_b, gebruiker_id=lid_id)
+
+    assert gelukt is False

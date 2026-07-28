@@ -42,9 +42,11 @@ nano .env
 # https://forecasting-demo.tessar.nl, en de MAIL_SMTP_*-waarden (nodig voor
 # wachtwoord-reset én de wekelijkse herbestel-mail — zie .env.example voor
 # uitleg per variabele). Laat STRIPE_SECRET_KEY/STRIPE_PRICE_ID/
+# STRIPE_PRICE_ID_EXTRA_LID/STRIPE_PRICE_ID_EXTRA_WINKEL/
 # STRIPE_WEBHOOK_SECRET leeg tenzij je bewust self-serve signup met een
 # geverifieerd live Stripe-account wilt aanzetten — leeg = POST /signup
-# geeft een nette 503, verder werkt alles normaal.
+# geeft een nette 503, verder werkt alles normaal. Alle vijf moeten samen
+# gezet zijn, anders blijft self-serve aanmelden uit.
 ```
 
 Maak eerst lege `api_keys.json`- en `audit.log`-bestanden aan op de server,
@@ -248,7 +250,8 @@ Zie ook `forecasting/KNOWN-LIMITATIONS.md`. Specifiek voor deze deployment:
   opnieuw) — geen automatische "laatste versie" promotie, met opzet (zie
   het oorspronkelijke ontwerp: nooit een impliciet gepromoveerd model).
 - **Self-serve signup (Fase 5 NODIG 5) staat bewust uit bij een eerste
-  soft-launch.** Zonder `STRIPE_SECRET_KEY`/`STRIPE_PRICE_ID` in `.env`
+  soft-launch.** Zonder `STRIPE_SECRET_KEY`/`STRIPE_PRICE_ID`/
+  `STRIPE_PRICE_ID_EXTRA_LID`/`STRIPE_PRICE_ID_EXTRA_WINKEL` in `.env`
   geeft `POST /signup` een nette 503 — alleen de handmatig gebootstrapte
   organisatie(s) uit stap 3 kunnen inloggen. Pas invullen zodra het
   Stripe-account voor live-modus geverifieerd is (zie `.env.example`).

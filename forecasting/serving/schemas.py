@@ -87,14 +87,14 @@ class SignupVerzoek(BaseModel):
     # tegen het echte KVK-register geverifieerd — zie de spec voor de
     # afweging. Gebruikt om "hetzelfde bedrijf meldt zich opnieuw aan" te
     # herkennen (dan geen gratis proefperiode).
-    kvk_nummer: str = Field(..., pattern=r"^\d{8}$")
+    kvk_nummer: str = Field(..., pattern=r"^[0-9]{8}$")
     # Totaal gewenst aantal gebruikers, INCLUSIEF de eigenaar (niet "extra"
     # bovenop de eigenaar) — moet exact overeenkomen met wat het
     # aanmeldformulier als label toont.
-    aantal_leden: int = Field(default=1, ge=1)
+    aantal_leden: int = Field(default=1, ge=1, le=100)
     # Gewenst aantal vestigingen — puur voor prijsberekening in deze fase,
     # geen technische winkel-koppeling (zie spec, "Explicitly out of scope").
-    aantal_winkels: int = Field(default=1, ge=1)
+    aantal_winkels: int = Field(default=1, ge=1, le=100)
 
 
 class SignupResponse(BaseModel):

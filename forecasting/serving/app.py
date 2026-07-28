@@ -497,6 +497,25 @@ def gebruikers_lijst(gebruiker: GeauthenticeerdeGebruiker = Depends(vereis_sessi
     return [GebruikerResponse(id=r.id, email=r.email, rol=r.rol, actief=r.actief) for r in rijen]
 
 
+@app.delete("/gebruikers/{gebruiker_id}", status_code=204)
+def gebruiker_verwijderen(
+    gebruiker_id: int, eigenaar: GeauthenticeerdeGebruiker = Depends(vereis_eigenaar)
+) -> None:
+    # Zelfde 404-i.p.v.-403-redenering als api_key_intrekken hierboven, en
+    # zelfde privilege-uitsluiting als POST /gebruikers: alleen een
+    # "lid"-account kan hiermee verwijderd worden, nooit een eigenaar (ook
+    # niet de aanroeper zelf) — voorkomt zowel een organisatie zonder
+    # eigenaar als een ingelogde eigenaar die zichzelf per ongeluk
+    # buitensluit. Deactiveren (niet hard verwijderen) maakt de ingekochte
+    # seat weer beschikbaar voor een nieuw teamlid, zie db.gebruikers.
+    # aantal_actieve_gebruikers().
+    gelukt = db_gebruikers.deactiveer_gebruiker(
+        tenants_db, organisatie_id=eigenaar.organisatie_id, gebruiker_id=gebruiker_id
+    )
+    if not gelukt:
+        raise HTTPException(status_code=404, detail=f"Onbekend teamlid: {gebruiker_id}")
+
+
 @app.get("/gebruikers/{gebruiker_id}/winkels", response_model=WinkelToewijzingResponse)
 def winkeltoewijzing_lezen(
     gebruiker_id: int, eigenaar: GeauthenticeerdeGebruiker = Depends(vereis_eigenaar)

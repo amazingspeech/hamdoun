@@ -293,6 +293,28 @@ function maakTeamlidEl(lid, kanBeheren, alleWinkels) {
 
   if (!kanBeheren || lid.rol !== "lid") return [rij];
 
+  if (lid.actief) {
+    const verwijderKnop = document.createElement("button");
+    verwijderKnop.type = "button";
+    verwijderKnop.className = "btn zacht";
+    verwijderKnop.textContent = "Verwijderen";
+    verwijderKnop.addEventListener("click", async () => {
+      verwijderKnop.disabled = true;
+      try {
+        await verwijderTeamlid(lid.id);
+        await verversTeamlijst(kanBeheren, alleWinkels);
+      } catch (e) {
+        toonFout("fout", e.message);
+        verwijderKnop.disabled = false;
+      }
+    });
+    rij.append(verwijderKnop);
+  } else {
+    rol.textContent = "verwijderd";
+  }
+
+  if (!lid.actief) return [rij];
+
   const details = document.createElement("details");
   details.className = "winkeltoewijzing";
   const summary = document.createElement("summary");
@@ -570,6 +592,11 @@ async function maakApiKey(naam) {
 async function trekApiKeyIn(keyId) {
   const resp = await fetch(`${API_BASIS}/api-keys/${keyId}`, { method: "DELETE", credentials: "same-origin" });
   if (!resp.ok) throw new Error(`Intrekken mislukt (${resp.status})`);
+}
+
+async function verwijderTeamlid(gebruikerId) {
+  const resp = await fetch(`${API_BASIS}/gebruikers/${gebruikerId}`, { method: "DELETE", credentials: "same-origin" });
+  if (!resp.ok) throw new Error(`Verwijderen mislukt (${resp.status})`);
 }
 
 function maakApiKeyEl(rij) {
