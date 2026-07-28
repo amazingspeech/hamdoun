@@ -480,6 +480,7 @@ details.scenario-vergelijking { margin-top:32px; border-top:1px solid var(--line
   }
   .portfolio-sidebar-onder a { font:600 0.8125rem/1.3 var(--font-body); color:var(--accent-ink); text-decoration:none; }
   .portfolio-sidebar-onder a:hover { text-decoration:underline; }
+  .portfolio-sidebar-versie { font-size:0.6875rem; color:var(--ink-faint); margin:10px 0 0; }
 
   .portfolio-main.wrap { max-width:1400px; margin:0; padding:36px 48px 80px; }
   .portfolio-shell .account-nav { display:none; }

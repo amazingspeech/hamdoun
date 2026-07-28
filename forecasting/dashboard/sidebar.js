@@ -6,9 +6,22 @@
 // Geladen ná config.js, vóór het pagina-eigen script.
 
 const SIDEBAR_API_BASIS = window.TESSAR_FORECAST_API_BASIS || "";
-const RECENTE_WINKELS_SLEUTEL = "vraagvoorspelling_recente_winkels";
-const VORIGE_OMZET_SLEUTEL = "vraagvoorspelling_vorige_sidebar_omzet";
 const MAX_RECENTE_WINKELS = 5;
+const APP_VERSIE = "1.0.0";
+
+// Genamespacet per organisatie_id — zonder dit zou op een gedeelde
+// browser (bv. dezelfde laptop, twee klanten na elkaar ingelogd) de
+// ene organisatie de winkelnamen en omzettrend van de andere te zien
+// krijgen, want localStorage is niet vanzelf gescheiden per sessie.
+function sidebarSleutel(naam, organisatieId) {
+  return `vraagvoorspelling_${naam}_org${organisatieId}`;
+}
+
+// Gezet door initPortfolioSidebar() zodra /me bekend is — de overige
+// zijbalk-functies (aangeroepen vanuit dashboard.js/overview.js, ook ná
+// initPortfolioSidebar) lezen 'm hiervandaan i.p.v. dat elke aanroeper
+// zelf organisatie_id moet doorgeven.
+let huidigeOrganisatieId = null;
 
 function markeerActieveSidebarLink() {
   const huidige = window.location.pathname.split("/").pop() || "index.html";
@@ -59,7 +72,8 @@ function toonSidebarKpis(data) {
 function toonOmzetTrend(huidigeOmzet, isVolledigeSet) {
   const pijl = document.getElementById("trend-pijl");
   if (!pijl || !isVolledigeSet) return;
-  const vorige = localStorage.getItem(VORIGE_OMZET_SLEUTEL);
+  const sleutel = sidebarSleutel("vorige_sidebar_omzet", huidigeOrganisatieId);
+  const vorige = localStorage.getItem(sleutel);
   if (vorige !== null) {
     const verschil = huidigeOmzet - parseFloat(vorige);
     // Kleine, bewust ongevoelige marge (0,5%) zodat een verwaarloosbaar
@@ -72,19 +86,20 @@ function toonOmzetTrend(huidigeOmzet, isVolledigeSet) {
       pijl.hidden = false;
     }
   }
-  localStorage.setItem(VORIGE_OMZET_SLEUTEL, String(huidigeOmzet));
+  localStorage.setItem(sleutel, String(huidigeOmzet));
 }
 
 function voegRecentWinkelToe(winkel) {
+  const sleutel = sidebarSleutel("recente_winkels", huidigeOrganisatieId);
   let lijst = [];
   try {
-    lijst = JSON.parse(localStorage.getItem(RECENTE_WINKELS_SLEUTEL) || "[]");
+    lijst = JSON.parse(localStorage.getItem(sleutel) || "[]");
   } catch (e) {
     lijst = [];
   }
   lijst = lijst.filter((w) => w.id !== winkel.id);
   lijst.unshift(winkel);
-  localStorage.setItem(RECENTE_WINKELS_SLEUTEL, JSON.stringify(lijst.slice(0, MAX_RECENTE_WINKELS)));
+  localStorage.setItem(sleutel, JSON.stringify(lijst.slice(0, MAX_RECENTE_WINKELS)));
 }
 
 function toonRecenteWinkels() {
@@ -93,7 +108,7 @@ function toonRecenteWinkels() {
   if (!wrap) return;
   let lijst = [];
   try {
-    lijst = JSON.parse(localStorage.getItem(RECENTE_WINKELS_SLEUTEL) || "[]");
+    lijst = JSON.parse(localStorage.getItem(sidebarSleutel("recente_winkels", huidigeOrganisatieId)) || "[]");
   } catch (e) {
     lijst = [];
   }
@@ -110,10 +125,17 @@ function toonRecenteWinkels() {
   wrap.hidden = false;
 }
 
+function toonVersieEnMaker() {
+  const el = document.getElementById("sidebar-versie");
+  if (el) el.textContent = `Vraagvoorspelling v${APP_VERSIE} · © ${new Date().getFullYear()} Tessar`;
+}
+
 function initPortfolioSidebar(me) {
+  huidigeOrganisatieId = me.organisatie_id;
   markeerActieveSidebarLink();
   toonAbonnementStatus(me);
   toonRecenteWinkels();
+  toonVersieEnMaker();
   // Bewust GEEN eigen /portfolio-aanroep hier: dat endpoint berekent een
   // echte voorspelling per winkel (kostbaar — zie serving/app.py's eigen
   // toelichting bij een volledige 1115-winkel-berekening: ~88s). Een
