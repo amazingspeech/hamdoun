@@ -22,6 +22,10 @@ function onboardingSleutel(organisatieId) {
   return `vraagvoorspelling_onboarding_verborgen_org${organisatieId}`;
 }
 
+function onboardingVoltooidSleutel(organisatieId) {
+  return `vraagvoorspelling_onboarding_voltooid_org${organisatieId}`;
+}
+
 async function haalOnboardingStatus() {
   const [verkoopdataResp, instellingenResp] = await Promise.all([
     fetch(`${ONBOARDING_API_BASIS}/organisatie/verkoopdata`, { credentials: "same-origin" }),
@@ -42,6 +46,7 @@ function toonOnboardingChecklist(status, organisatieId) {
 
   const volledig = status.verkoopdataGeupload && status.prijsIngesteld;
   if (volledig) {
+    localStorage.setItem(onboardingVoltooidSleutel(organisatieId), "true");
     kaart.hidden = true;
     return;
   }
@@ -88,12 +93,13 @@ function toonOnboardingChecklist(status, organisatieId) {
 }
 
 async function initOnboarding(me) {
-  // Een "lid" zonder toegewezen winkels zit in een heel andere situatie
-  // dan een zelfbediening-organisatie zonder eigen data — de organisatie
-  // zelf heeft dan gewoon al winkels, alleen is dit specifieke teamlid er
-  // nog niet aan gekoppeld. Zelfde eigenaar/lid-redenering als het
-  // bestaande "geen winkels"-bericht in dashboard.js.
+  // Een lid kan geen van beide checklist-acties zelf uitvoeren (verkoopdata
+  // uploaden en de herbestel-prijs instellen zijn beide eigenaar-only, zie
+  // serving/app.py's vereis_eigenaar-afhankelijke endpoints) — de checklist
+  // heeft voor een lid dus sowieso nooit een zinvolle volgende stap.
   if (me.rol === "lid") return;
+  if (localStorage.getItem(onboardingSleutel(me.organisatie_id)) === "verborgen") return;
+  if (localStorage.getItem(onboardingVoltooidSleutel(me.organisatie_id)) === "true") return;
   try {
     const winkelsResp = await fetch(`${ONBOARDING_API_BASIS}/winkels`, { credentials: "same-origin" });
     if (!winkelsResp.ok) return;

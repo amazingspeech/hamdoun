@@ -756,7 +756,10 @@ def forecast(
 
 
 @app.get("/voorbeeld/forecast", response_model=ForecastResponse)
-def voorbeeld_forecast(gebruiker: GeauthenticeerdeGebruiker = Depends(vereis_sessie)) -> ForecastResponse:
+@limiter.limit(f"{settings.rate_limit_per_minute}/minute")
+def voorbeeld_forecast(
+    request: Request, gebruiker: GeauthenticeerdeGebruiker = Depends(vereis_sessie)
+) -> ForecastResponse:
     # Bewust NOOIT tenant-geïsoleerd — geen db_winkels/hoort_store_bij_
     # organisatie-check, in tegenstelling tot POST /forecast hierboven. Dit
     # is geen versoepelde variant van die controle, maar een apart pad
@@ -765,34 +768,57 @@ def voorbeeld_forecast(gebruiker: GeauthenticeerdeGebruiker = Depends(vereis_ses
     # minimaal MINIMUM_DAGEN dagen eigen data nodig vóór de eigen
     # voorspelling iets teruggeeft — zonder dit voorbeeld zou zo'n
     # organisatie wekenlang nooit een werkende voorspelling zien.
-    if settings.voorbeeld_store_id is None:
-        raise HTTPException(status_code=503, detail="Voorbeeldvoorspelling is nog niet geconfigureerd.")
-
+    start = time.monotonic()
+    statuscode = 500
     horizon_dagen = 14
-    start_datum = pd.Timestamp(artefact["metadata"]["trainingsperiode_eind"][:10]) + pd.Timedelta(days=1)
     try:
-        resultaat = voorspel_periode(
-            modellen=artefact["modellen"],
-            historie=artefact["historie"],
-            winkel_metadata=artefact["winkel_metadata"],
-            store_id=settings.voorbeeld_store_id,
-            start_datum=start_datum,
-            horizon_dagen=horizon_dagen,
-            verklaar=False,
-        )
-    except (OnbekendeWinkel, HorizonBuitenBereik):
-        raise HTTPException(status_code=503, detail="Voorbeeldvoorspelling is momenteel niet beschikbaar.")
+        if settings.voorbeeld_store_id is None:
+            statuscode = 503
+            raise HTTPException(status_code=503, detail="Voorbeeldvoorspelling is nog niet geconfigureerd.")
 
-    return ForecastResponse(
-        store_id=settings.voorbeeld_store_id,
-        voorspellingen=[
-            DagVoorspelling(datum=rij["Date"].date(), p10=rij["p10"], p50=rij["p50"], p90=rij["p90"])
-            for _, rij in resultaat.voorspellingen.iterrows()
-        ],
-        belangrijkste_factoren=[],
-        vorige_periode_omzet=None,
-        herbestel_advies=None,
-    )
+        gevalideerde_horizon = artefact["metadata"]["gevalideerde_horizon_dagen"]
+        if horizon_dagen > gevalideerde_horizon:
+            statuscode = 503
+            raise HTTPException(status_code=503, detail="Voorbeeldvoorspelling is momenteel niet beschikbaar.")
+
+        start_datum = pd.Timestamp(artefact["metadata"]["trainingsperiode_eind"][:10]) + pd.Timedelta(days=1)
+        try:
+            resultaat = voorspel_periode(
+                modellen=artefact["modellen"],
+                historie=artefact["historie"],
+                winkel_metadata=artefact["winkel_metadata"],
+                store_id=settings.voorbeeld_store_id,
+                start_datum=start_datum,
+                horizon_dagen=horizon_dagen,
+                verklaar=False,
+            )
+        except (OnbekendeWinkel, HorizonBuitenBereik):
+            statuscode = 503
+            raise HTTPException(status_code=503, detail="Voorbeeldvoorspelling is momenteel niet beschikbaar.")
+
+        statuscode = 200
+        return ForecastResponse(
+            store_id=settings.voorbeeld_store_id,
+            voorspellingen=[
+                DagVoorspelling(datum=rij["Date"].date(), p10=rij["p10"], p50=rij["p50"], p90=rij["p90"])
+                for _, rij in resultaat.voorspellingen.iterrows()
+            ],
+            belangrijkste_factoren=[],
+            vorige_periode_omzet=None,
+            herbestel_advies=None,
+        )
+    finally:
+        audit.log(
+            settings.audit_log_file,
+            {
+                "gebruiker": gebruiker.email,
+                "organisatie_id": gebruiker.organisatie_id,
+                "store_id": settings.voorbeeld_store_id,
+                "statuscode": statuscode,
+                "latency_ms": round((time.monotonic() - start) * 1000, 1),
+            },
+            versleuteld=settings.encrypt_at_rest,
+        )
 
 
 @app.get("/metrics", response_model=MetricsResponse)

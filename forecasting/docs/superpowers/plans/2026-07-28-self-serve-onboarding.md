@@ -722,7 +722,7 @@ Append to `dashboard/styles.css`:
 Deploy Task 2's backend change if not already live (see Task 2 Step 6-equivalent in Task 5 below), then set the example store id in production. Pick any real `store_id` present in the currently-loaded model artifact's `historie["Store"]` (e.g. `1`, consistent with every test fixture in this plan) by adding to the server's `.env`:
 
 ```bash
-ssh job@157.90.244.24 "echo 'VOORBEELD_STORE_ID=1' >> /home/job/forecasting-demo/.env"
+ssh job@157.90.244.24 "echo 'VOORBEELD_STORE_ID=1' >> /home/job/forecasting-demo/deploy/.env"
 ssh job@157.90.244.24 "cd /home/job/forecasting-demo/deploy && docker compose up -d"
 ```
 

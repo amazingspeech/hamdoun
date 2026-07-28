@@ -845,8 +845,12 @@ document.addEventListener("DOMContentLoaded", async () => {
       document.getElementById("leeg").textContent =
         "Er zijn nog geen winkels aan jou toegewezen. Vraag de eigenaar van je organisatie om dit in te stellen via Team beheren.";
     } else {
-      document.getElementById("leeg").textContent =
-        "Er zijn nog geen winkels aan jouw organisatie gekoppeld.";
+      const leegEl = document.getElementById("leeg");
+      leegEl.replaceChildren("Er zijn nog geen winkels aan jouw organisatie gekoppeld. ");
+      const link = document.createElement("a");
+      link.href = "./team.html";
+      link.textContent = "Upload je verkoopdata op Team beheren om te beginnen.";
+      leegEl.appendChild(link);
       toonVoorbeeldVoorspelling();
     }
     return;
