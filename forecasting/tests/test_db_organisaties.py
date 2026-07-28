@@ -6,10 +6,13 @@ from db.bootstrap import bootstrap_organisatie
 from db.organisaties import (
     deactiveer_organisatie,
     haal_gemiddelde_omzet_per_stuk,
+    haal_ingekochte_leden,
+    haal_ingekochte_winkels,
     haal_organisatie_id_bij_stripe_subscription,
     haal_trial_verloopt_op,
     is_actief,
     is_in_proefperiode,
+    kvk_nummer_heeft_organisatie,
     lijst_actieve_organisaties,
     stel_gemiddelde_omzet_per_stuk_in,
     stel_stripe_koppeling_in,
@@ -168,3 +171,32 @@ def test_haal_trial_verloopt_op_geeft_ingestelde_waarde_terug(tmp_path):
         conn.execute(organisaties.update().where(organisaties.c.id == org_id).values(trial_verloopt_op=verloopt_op))
 
     assert haal_trial_verloopt_op(engine, organisatie_id=org_id) == verloopt_op.replace(tzinfo=None)
+
+
+def test_kvk_nummer_heeft_organisatie_onbekend_geeft_false(tmp_path):
+    engine = maak_database(tmp_path / "tenants.db")
+    assert kvk_nummer_heeft_organisatie(engine, "12345678") is False
+
+
+def test_kvk_nummer_heeft_organisatie_bekend_geeft_true(tmp_path):
+    engine = maak_database(tmp_path / "tenants.db")
+    bootstrap_organisatie(engine, naam="Bakkerij De Vries", slug="bakkerij-de-vries", store_ids=[], kvk_nummer="12345678")
+    assert kvk_nummer_heeft_organisatie(engine, "12345678") is True
+
+
+def test_haal_ingekochte_leden_zonder_waarde_geeft_none(tmp_path):
+    engine = maak_database(tmp_path / "tenants.db")
+    org_id = bootstrap_organisatie(engine, naam="Handmatige Klant", slug="handmatige-klant", store_ids=[])
+    assert haal_ingekochte_leden(engine, org_id) is None
+
+
+def test_haal_ingekochte_leden_met_waarde(tmp_path):
+    engine = maak_database(tmp_path / "tenants.db")
+    org_id = bootstrap_organisatie(engine, naam="Bakkerij De Vries", slug="bakkerij-de-vries", store_ids=[], ingekochte_leden=3)
+    assert haal_ingekochte_leden(engine, org_id) == 3
+
+
+def test_haal_ingekochte_winkels_met_waarde(tmp_path):
+    engine = maak_database(tmp_path / "tenants.db")
+    org_id = bootstrap_organisatie(engine, naam="Bakkerij De Vries", slug="bakkerij-de-vries", store_ids=[], ingekochte_winkels=2)
+    assert haal_ingekochte_winkels(engine, org_id) == 2

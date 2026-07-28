@@ -61,6 +61,15 @@ organisaties = Table(
     # zijn per ontwerp nooit trial-beperkt, zie db.organisaties.
     # is_in_proefperiode().
     Column("trial_verloopt_op", DateTime, nullable=True),
+    # Fase 6 prijsmodel: alleen gevuld voor self-serve organisaties (via
+    # /signup) — handmatig aangemaakte organisaties (db/bootstrap.py) hebben
+    # deze niet. ingekochte_leden/ingekochte_winkels: NULL betekent "geen
+    # limiet" — zowel voor elke organisatie van vóór dit prijsmodel als voor
+    # elke handmatig aangemaakte organisatie. Zie db.organisaties.
+    # haal_ingekochte_leden() en de aanroep in POST /gebruikers.
+    Column("kvk_nummer", String, nullable=True),
+    Column("ingekochte_leden", Integer, nullable=True),
+    Column("ingekochte_winkels", Integer, nullable=True),
 )
 
 winkels = Table(

@@ -133,3 +133,23 @@ def stel_stripe_koppeling_in(
         return
     with engine.begin() as eigen_conn:
         _stel_stripe_koppeling_in_op_connectie(eigen_conn, organisatie_id, stripe_customer_id, stripe_subscription_id)
+
+
+def kvk_nummer_heeft_organisatie(engine: Engine, kvk_nummer: str) -> bool:
+    with engine.connect() as conn:
+        rij = conn.execute(select(organisaties.c.id).where(organisaties.c.kvk_nummer == kvk_nummer)).first()
+    return rij is not None
+
+
+def haal_ingekochte_leden(engine: Engine, organisatie_id: int) -> Optional[int]:
+    with engine.connect() as conn:
+        return conn.execute(
+            select(organisaties.c.ingekochte_leden).where(organisaties.c.id == organisatie_id)
+        ).scalar_one_or_none()
+
+
+def haal_ingekochte_winkels(engine: Engine, organisatie_id: int) -> Optional[int]:
+    with engine.connect() as conn:
+        return conn.execute(
+            select(organisaties.c.ingekochte_winkels).where(organisaties.c.id == organisatie_id)
+        ).scalar_one_or_none()
