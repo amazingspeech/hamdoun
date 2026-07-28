@@ -752,6 +752,16 @@ async function initTeamPagina() {
   document.getElementById("wie-ben-ik-mobiel").textContent = `Ingelogd als ${me.email} (${me.rol}).`;
   document.getElementById("wie-ben-ik").textContent = me.email;
   initPortfolioSidebar(me);
+  if (me.ingekochte_leden !== null || me.ingekochte_winkels !== null) {
+    const el = document.getElementById("abonnement-aantallen");
+    if (el) {
+      const delen = [];
+      if (me.ingekochte_leden !== null) delen.push(`${me.ingekochte_leden} teamleden`);
+      if (me.ingekochte_winkels !== null) delen.push(`${me.ingekochte_winkels} vestigingen`);
+      el.textContent = `Abonnement: ${delen.join(", ")} inbegrepen.`;
+      el.hidden = false;
+    }
+  }
   initOnboarding(me);
 
   const kanBeheren = me.rol === "eigenaar";
