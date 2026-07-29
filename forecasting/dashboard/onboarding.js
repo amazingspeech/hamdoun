@@ -35,16 +35,18 @@ function onboardingVoltooidNogGeldig(organisatieId) {
 }
 
 async function haalOnboardingStatus() {
-  const [verkoopdataResp, instellingenResp] = await Promise.all([
-    fetch(`${ONBOARDING_API_BASIS}/organisatie/verkoopdata`, { credentials: "same-origin" }),
-    fetch(`${ONBOARDING_API_BASIS}/organisatie/instellingen`, { credentials: "same-origin" }),
-  ]);
-  if (!verkoopdataResp.ok || !instellingenResp.ok) throw new Error("Kon onboarding-status niet ophalen");
-  const verkoopdata = await verkoopdataResp.json();
-  const instellingen = await instellingenResp.json();
+  // Eén aanroep i.p.v. twee (was: /organisatie/verkoopdata +
+  // /organisatie/instellingen, allebei org-breed) — verkoopdata en prijs
+  // zijn sinds de eigen-winkels-feature per winkel, niet meer org-breed;
+  // GET /organisatie/eigen-winkels levert beide statussen al per winkel,
+  // dus hier alleen "geldt voor minstens één winkel" checken, geen losse
+  // fetch per winkel nodig.
+  const resp = await fetch(`${ONBOARDING_API_BASIS}/organisatie/eigen-winkels`, { credentials: "same-origin" });
+  if (!resp.ok) throw new Error("Kon onboarding-status niet ophalen");
+  const winkels = await resp.json();
   return {
-    verkoopdataGeupload: verkoopdata.rijen.length > 0,
-    prijsIngesteld: instellingen.gemiddelde_omzet_per_stuk !== null,
+    verkoopdataGeupload: winkels.some((w) => w.heeft_verkoopdata),
+    prijsIngesteld: winkels.some((w) => w.gemiddelde_omzet_per_stuk !== null || w.automatische_prijs_per_stuk !== null),
   };
 }
 
@@ -64,7 +66,7 @@ function toonOnboardingChecklist(status, organisatieId) {
   }
 
   const items = [
-    ["Upload je verkoopdata", status.verkoopdataGeupload, "./team.html"],
+    ["Maak een eigen winkel aan en upload je verkoopdata", status.verkoopdataGeupload, "./team.html"],
     ["Stel je herbestel-prijs in", status.prijsIngesteld, "./team.html"],
   ];
   const lijst = document.createElement("ul");
