@@ -111,12 +111,12 @@ label { font:600 0.8125rem/1.2 var(--font-body); color:var(--ink-soft); }
 
 .aanbeveling {
   display:flex; gap:10px; align-items:flex-start;
-  background:var(--accent-soft); border-radius:8px; padding:12px 16px; margin:24px 0 0;
+  border-left:2px solid var(--accent); border-radius:8px; padding:12px 16px; margin:24px 0 0;
   font-size:0.875rem; line-height:1.55; color:var(--ink);
 }
 .aanbeveling::before {
   content:"→"; flex:none; display:grid; place-items:center; width:18px; height:18px; border-radius:50%;
-  background:var(--accent); color:oklch(15% 0.02 155); font:700 0.8125rem var(--font-mono); margin-top:1px;
+  background:var(--ink); color:var(--paper); font:700 0.8125rem var(--font-mono); margin-top:1px;
 }
 select, input {
   font:400 0.9375rem/1.4 var(--font-body); padding:9px 12px; border:1px solid var(--line-strong);
@@ -130,14 +130,13 @@ select:focus-visible, input:focus-visible, button:focus-visible, summary:focus-v
   background:var(--ink); color:var(--paper); cursor:pointer;
   transition:transform 0.12s ease, opacity 0.12s ease;
 }
-.btn:hover:not(:disabled) { opacity:0.85; }
+.btn:not(.zacht):hover:not(:disabled) { opacity:0.85; }
 .btn:active:not(:disabled) { transform:translateY(1px); }
 .btn:disabled { opacity:0.5; cursor:not-allowed; }
 .btn.zacht {
   background:transparent; color:var(--ink-soft); border:1px solid var(--line-strong);
-  box-shadow:none;
 }
-.btn.zacht:hover:not(:disabled) { border-color:var(--accent); color:var(--accent-ink); box-shadow:none; }
+.btn.zacht:hover:not(:disabled) { border-color:var(--accent); color:var(--accent-ink); }
 
 .leeg { border:1px dashed var(--line-strong); border-radius:12px; padding:48px 20px; text-align:center; color:var(--ink-faint); font-size:0.9375rem; margin-top:24px; }
 
@@ -167,20 +166,19 @@ select:focus-visible, input:focus-visible, button:focus-visible, summary:focus-v
 
 .secundair { display:flex; gap:clamp(20px,4vw,40px); flex-wrap:wrap; margin:24px 0 28px; padding-top:20px; border-top:1px solid var(--line); }
 .stat .label { font:600 0.8125rem/1.2 var(--font-body); color:var(--ink-soft); margin-bottom:5px; }
-.stat .waarde { font:600 1.125rem/1.3 var(--font-body); color:var(--ink); font-variant-numeric:tabular-nums; }
+.stat .waarde { font:600 1.125rem/1.3 var(--font-mono); color:var(--ink); font-variant-numeric:tabular-nums; }
 .stat .toelichting { font-size:0.75rem; color:var(--ink-faint); margin-top:3px; max-width:28ch; line-height:1.4; }
 
 .inzichten-paneel {
-  display:flex; gap:0; flex-wrap:wrap; margin:20px 0 0;
+  display:flex; gap:16px; flex-wrap:wrap; margin:20px 0 0;
   padding-top:20px; border-top:1px solid var(--line);
 }
 .inzicht-kaart {
-  flex:1 1 200px; padding:0 20px; display:flex; flex-direction:column; gap:4px;
-  border-left:1px solid var(--line);
+  flex:1 1 200px; padding:14px 16px; display:flex; flex-direction:column; gap:4px;
+  background:var(--paper-raised); border:1px solid var(--line); border-radius:8px;
 }
-.inzicht-kaart:first-child { padding-left:0; border-left:none; }
 .inzicht-titel { font:600 0.75rem/1.2 var(--font-body); color:var(--ink-soft); text-transform:uppercase; letter-spacing:0.03em; }
-.inzicht-waarde { font:600 1.0625rem/1.3 var(--font-body); color:var(--ink); font-variant-numeric:tabular-nums; }
+.inzicht-waarde { font:600 1.0625rem/1.3 var(--font-mono); color:var(--ink); font-variant-numeric:tabular-nums; }
 .inzicht-toelichting { font-size:0.75rem; color:var(--ink-faint); line-height:1.4; }
 
 #chart-container { position:relative; border:1px solid var(--line); border-radius:8px; background:var(--paper-raised); padding:clamp(14px,4vw,24px); overflow-x:auto; }
@@ -247,13 +245,15 @@ details.model-info { margin-top:32px; border-top:1px solid var(--line); padding-
 }
 .promo-vinkjes .vinkje input { width:18px; height:18px; accent-color:var(--accent); cursor:pointer; }
 .metrics {
-  display:flex; gap:0; margin:16px 0 0; flex-wrap:wrap;
+  display:flex; gap:16px; margin:16px 0 0; flex-wrap:wrap;
   padding-top:16px; border-top:1px solid var(--line);
 }
-.metric { flex:1 1 220px; padding:0 16px; border-left:1px solid var(--line); }
-.metric:first-child { padding-left:0; border-left:none; }
+.metric {
+  flex:1 1 220px; padding:14px 16px;
+  background:var(--paper-raised); border:1px solid var(--line); border-radius:8px;
+}
 .metric .label { font:600 0.8125rem/1.2 var(--font-body); color:var(--ink-soft); }
-.metric .value { font:600 1.25rem/1.3 var(--font-body); color:var(--ink); margin-top:4px; }
+.metric .value { font:600 1.25rem/1.3 var(--font-mono); color:var(--ink); margin-top:4px; }
 .metric .uitleg { font-size:0.75rem; color:var(--ink-faint); margin-top:6px; line-height:1.5; }
 
 .nauwkeurigheid-trend { margin:16px 0 0; }
@@ -368,11 +368,11 @@ details.scenario-vergelijking { margin-top:32px; border-top:1px solid var(--line
 }
 .scenario-resultaat-kaart .titel { font:600 0.8125rem/1.2 var(--font-body); color:var(--ink-soft); margin:0 0 6px; }
 .scenario-resultaat-kaart .waarde {
-  font:600 1.625rem/1.2 var(--font-display); color:var(--ink); font-variant-numeric:tabular-nums; margin:0;
+  font:600 1.625rem/1.2 var(--font-mono); color:var(--ink); font-variant-numeric:tabular-nums; margin:0;
 }
 .scenario-resultaat-kaart .bandbreedte { font-size:0.8125rem; color:var(--ink-faint); margin:6px 0 0; }
 .scenario-verschil {
-  flex-basis:100%; font-size:0.9375rem; color:var(--ink); background:var(--accent-soft);
+  flex-basis:100%; font-size:0.9375rem; color:var(--ink); border-left:2px solid var(--accent);
   border-radius:8px; padding:12px 16px; margin:0;
 }
 
@@ -393,7 +393,7 @@ details.scenario-vergelijking { margin-top:32px; border-top:1px solid var(--line
 .skelet-resultaat { display:flex; flex-direction:column; gap:12px; padding:28px 0 8px; }
 .skelet-regel { height:18px; }
 .skelet-groot { height:64px; margin-top:4px; }
-.skelet-kaart { height:200px; margin-top:20px; border-radius:14px; }
+.skelet-kaart { height:200px; margin-top:20px; border-radius:8px; }
 .skelet-tabelregel { height:16px; }
 
 /* Command palette (Ctrl/Cmd+K) */
@@ -447,7 +447,7 @@ details.scenario-vergelijking { margin-top:32px; border-top:1px solid var(--line
 .cockpit-strip { display:flex; gap:16px; margin:16px 0 0; flex-wrap:wrap; }
 .cockpit-item { flex:1 1 220px; border:1px solid var(--line); border-radius:10px; padding:14px 16px; background:var(--paper-raised); }
 .cockpit-item .label { font:600 0.8125rem/1.2 var(--font-body); color:var(--ink-soft); }
-.cockpit-item .value { font:600 1.25rem/1.3 var(--font-body); color:var(--ink); margin-top:4px; }
+.cockpit-item .value { font:600 1.25rem/1.3 var(--font-mono); color:var(--ink); margin-top:4px; }
 .cockpit-item .uitleg { font-size:0.75rem; color:var(--ink-faint); margin-top:6px; line-height:1.5; }
 
 .status-normaal { font-size:0.8125rem; color:var(--ink-faint); }
@@ -547,6 +547,25 @@ details.scenario-vergelijking { margin-top:32px; border-top:1px solid var(--line
   .portfolio-tabel-wrap { margin-top:16px; }
   .portfolio-tabel th, .portfolio-tabel td { padding:9px 16px; font-size:0.875rem; }
   .portfolio-tabel tbody tr:hover { background:var(--paper); }
+
+  /* Zelfde instrumentenpaneel-signature als .cockpit-strip hierboven: op
+     brede viewports wrapt deze rij nooit, dus de dunne scheidingslijn
+     tussen items is hier veilig — op smalle viewports (zie mobiel-basis
+     hierboven) zou dat de kapotte :first-child/border-left-bug uit de
+     final-review reproduceren. */
+  .inzichten-paneel { gap:0; }
+  .inzicht-kaart {
+    padding:0 20px; background:none; border:none; border-radius:0;
+    border-left:1px solid var(--line);
+  }
+  .inzicht-kaart:first-child { padding-left:0; border-left:none; }
+
+  .metrics { gap:0; }
+  .metric {
+    padding:0 16px; background:none; border:none; border-radius:0;
+    border-left:1px solid var(--line);
+  }
+  .metric:first-child { padding-left:0; border-left:none; }
 }
 
 /* Inhoudspagina's (bv. hoe-werkt-dit.html): platte, leesbare tekstopmaak
