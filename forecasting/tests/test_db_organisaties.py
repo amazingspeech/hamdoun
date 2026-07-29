@@ -5,6 +5,7 @@ from sqlalchemy import select
 from db.aanmeldingen import maak_aanmelding, voltooi_aanmelding
 from db.api_keys import maak_api_key
 from db.bootstrap import bootstrap_organisatie
+from db.eigen_winkels import maak_eigen_winkel
 from db.gebruiker_winkels import stel_toewijzingen_in
 from db.gebruikers import maak_gebruiker
 from db.organisaties import (
@@ -28,6 +29,7 @@ from db.schema import (
     api_keys,
     eigen_product_verkoopdata,
     eigen_verkoopdata,
+    eigen_winkels,
     gebruiker_winkels,
     gebruikers,
     maak_database,
@@ -292,8 +294,9 @@ def test_verwijder_organisatie_verwijdert_alles(tmp_path):
     maak_reset_token(engine, gebruiker_id=gebruiker_id)
     maak_api_key(engine, organisatie_id=org_id, naam="hoofdkey")
     stel_toewijzingen_in(engine, gebruiker_id=gebruiker_id, extern_store_ids=[42])
-    vervang_verkoopdata(engine, organisatie_id=org_id, rijen=[("2026-01-01", 100.0)])
-    vervang_product_verkoopdata(engine, organisatie_id=org_id, rijen=[("2026-01-01", "Brood", 10)])
+    eigen_winkel_id = maak_eigen_winkel(engine, organisatie_id=org_id, naam="Webshop A")
+    vervang_verkoopdata(engine, eigen_winkel_id=eigen_winkel_id, rijen=[("2026-01-01", 100.0)])
+    vervang_product_verkoopdata(engine, eigen_winkel_id=eigen_winkel_id, rijen=[("2026-01-01", "Brood", 10)])
     aanmelding_id = maak_aanmelding(
         engine, organisatie_naam="Klant", organisatie_slug="klant-aanmelding", email="eigenaar@klant.nl",
         wachtwoord_hash="hash", wachtwoord_salt="salt", stripe_checkout_session_id="cs_test_123",
@@ -315,10 +318,13 @@ def test_verwijder_organisatie_verwijdert_alles(tmp_path):
         assert conn.execute(
             select(gebruiker_winkels).where(gebruiker_winkels.c.gebruiker_id == gebruiker_id)
         ).first() is None
-        assert conn.execute(select(eigen_verkoopdata).where(eigen_verkoopdata.c.organisatie_id == org_id)).first() is None
         assert conn.execute(
-            select(eigen_product_verkoopdata).where(eigen_product_verkoopdata.c.organisatie_id == org_id)
+            select(eigen_verkoopdata).where(eigen_verkoopdata.c.eigen_winkel_id == eigen_winkel_id)
         ).first() is None
+        assert conn.execute(
+            select(eigen_product_verkoopdata).where(eigen_product_verkoopdata.c.eigen_winkel_id == eigen_winkel_id)
+        ).first() is None
+        assert conn.execute(select(eigen_winkels).where(eigen_winkels.c.id == eigen_winkel_id)).first() is None
         aanmelding_rij = conn.execute(select(aanmeldingen).where(aanmeldingen.c.id == aanmelding_id)).one()
     assert aanmelding_rij.organisatie_id is None
 
@@ -334,8 +340,9 @@ def test_verwijder_organisatie_laat_andere_organisatie_ongemoeid(tmp_path):
     maak_reset_token(engine, gebruiker_id=gebruiker_b)
     maak_api_key(engine, organisatie_id=org_b, naam="key-b")
     stel_toewijzingen_in(engine, gebruiker_id=gebruiker_b, extern_store_ids=[2])
-    vervang_verkoopdata(engine, organisatie_id=org_b, rijen=[("2026-01-01", 50.0)])
-    vervang_product_verkoopdata(engine, organisatie_id=org_b, rijen=[("2026-01-01", "Brood", 5)])
+    eigen_winkel_b = maak_eigen_winkel(engine, organisatie_id=org_b, naam="Webshop B")
+    vervang_verkoopdata(engine, eigen_winkel_id=eigen_winkel_b, rijen=[("2026-01-01", 50.0)])
+    vervang_product_verkoopdata(engine, eigen_winkel_id=eigen_winkel_b, rijen=[("2026-01-01", "Brood", 5)])
     aanmelding_b_id = maak_aanmelding(
         engine, organisatie_naam="Org B", organisatie_slug="org-b-aanmelding", email="eigenaar@orgb.nl",
         wachtwoord_hash="hash", wachtwoord_salt="salt", stripe_checkout_session_id="cs_test_orgb",
@@ -351,7 +358,9 @@ def test_verwijder_organisatie_laat_andere_organisatie_ongemoeid(tmp_path):
         assert conn.execute(select(winkels).where(winkels.c.organisatie_id == org_b)).first() is not None
         assert conn.execute(select(api_keys).where(api_keys.c.organisatie_id == org_b)).first() is not None
         assert conn.execute(select(sessies).where(sessies.c.gebruiker_id == gebruiker_b)).first() is not None
-        assert conn.execute(select(eigen_verkoopdata).where(eigen_verkoopdata.c.organisatie_id == org_b)).first() is not None
+        assert conn.execute(
+            select(eigen_verkoopdata).where(eigen_verkoopdata.c.eigen_winkel_id == eigen_winkel_b)
+        ).first() is not None
         assert conn.execute(
             select(wachtwoord_reset_tokens).where(wachtwoord_reset_tokens.c.gebruiker_id == gebruiker_b)
         ).first() is not None
@@ -359,7 +368,8 @@ def test_verwijder_organisatie_laat_andere_organisatie_ongemoeid(tmp_path):
             select(gebruiker_winkels).where(gebruiker_winkels.c.gebruiker_id == gebruiker_b)
         ).first() is not None
         assert conn.execute(
-            select(eigen_product_verkoopdata).where(eigen_product_verkoopdata.c.organisatie_id == org_b)
+            select(eigen_product_verkoopdata).where(eigen_product_verkoopdata.c.eigen_winkel_id == eigen_winkel_b)
         ).first() is not None
+        assert conn.execute(select(eigen_winkels).where(eigen_winkels.c.id == eigen_winkel_b)).first() is not None
         aanmelding_b_rij = conn.execute(select(aanmeldingen).where(aanmeldingen.c.id == aanmelding_b_id)).one()
     assert aanmelding_b_rij.organisatie_id == org_b
