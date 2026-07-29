@@ -2,7 +2,11 @@ from datetime import datetime, timedelta, timezone
 
 from sqlalchemy import select
 
+from db.aanmeldingen import maak_aanmelding, voltooi_aanmelding
+from db.api_keys import maak_api_key
 from db.bootstrap import bootstrap_organisatie
+from db.gebruiker_winkels import stel_toewijzingen_in
+from db.gebruikers import maak_gebruiker
 from db.organisaties import (
     deactiveer_organisatie,
     haal_gemiddelde_omzet_per_stuk,
@@ -17,8 +21,25 @@ from db.organisaties import (
     lijst_actieve_organisaties,
     stel_gemiddelde_omzet_per_stuk_in,
     stel_stripe_koppeling_in,
+    verwijder_organisatie,
 )
-from db.schema import maak_database, organisaties
+from db.product_verkoopdata import vervang_product_verkoopdata
+from db.schema import (
+    aanmeldingen,
+    api_keys,
+    eigen_product_verkoopdata,
+    eigen_verkoopdata,
+    gebruiker_winkels,
+    gebruikers,
+    maak_database,
+    organisaties,
+    sessies,
+    wachtwoord_reset_tokens,
+    winkels,
+)
+from db.sessies import maak_sessie
+from db.verkoopdata import vervang_verkoopdata
+from db.wachtwoord_reset import maak_reset_token
 
 
 def test_zonder_ingestelde_prijs_geeft_none(tmp_path):
@@ -261,3 +282,66 @@ def test_haal_te_verwijderen_organisaties_negeert_org_zonder_gedeactiveerd_op(tm
     resultaat = haal_te_verwijderen_organisaties(engine, nu=over_31_dagen)
 
     assert org_id not in resultaat
+
+
+def test_verwijder_organisatie_verwijdert_alles(tmp_path):
+    engine = maak_database(tmp_path / "tenants.db")
+    org_id = bootstrap_organisatie(engine, naam="Klant", slug="klant", store_ids=[42])
+    gebruiker_id = maak_gebruiker(
+        engine, organisatie_id=org_id, email="eigenaar@klant.nl", wachtwoord="geheim123", rol="eigenaar"
+    )
+    maak_sessie(engine, gebruiker_id=gebruiker_id)
+    maak_reset_token(engine, gebruiker_id=gebruiker_id)
+    maak_api_key(engine, organisatie_id=org_id, naam="hoofdkey")
+    stel_toewijzingen_in(engine, gebruiker_id=gebruiker_id, extern_store_ids=[42])
+    vervang_verkoopdata(engine, organisatie_id=org_id, rijen=[("2026-01-01", 100.0)])
+    vervang_product_verkoopdata(engine, organisatie_id=org_id, rijen=[("2026-01-01", "Brood", 10)])
+    aanmelding_id = maak_aanmelding(
+        engine, organisatie_naam="Klant", organisatie_slug="klant-aanmelding", email="eigenaar@klant.nl",
+        wachtwoord_hash="hash", wachtwoord_salt="salt", stripe_checkout_session_id="cs_test_123",
+        kvk_nummer="12345678", aantal_leden=1, aantal_winkels=1, was_kvk_herhaling=False,
+    )
+    voltooi_aanmelding(engine, aanmelding_id=aanmelding_id, organisatie_id=org_id)
+
+    verwijder_organisatie(engine, organisatie_id=org_id)
+
+    with engine.connect() as conn:
+        assert conn.execute(select(organisaties).where(organisaties.c.id == org_id)).first() is None
+        assert conn.execute(select(gebruikers).where(gebruikers.c.organisatie_id == org_id)).first() is None
+        assert conn.execute(select(winkels).where(winkels.c.organisatie_id == org_id)).first() is None
+        assert conn.execute(select(api_keys).where(api_keys.c.organisatie_id == org_id)).first() is None
+        assert conn.execute(select(sessies).where(sessies.c.gebruiker_id == gebruiker_id)).first() is None
+        assert conn.execute(
+            select(wachtwoord_reset_tokens).where(wachtwoord_reset_tokens.c.gebruiker_id == gebruiker_id)
+        ).first() is None
+        assert conn.execute(
+            select(gebruiker_winkels).where(gebruiker_winkels.c.gebruiker_id == gebruiker_id)
+        ).first() is None
+        assert conn.execute(select(eigen_verkoopdata).where(eigen_verkoopdata.c.organisatie_id == org_id)).first() is None
+        assert conn.execute(
+            select(eigen_product_verkoopdata).where(eigen_product_verkoopdata.c.organisatie_id == org_id)
+        ).first() is None
+        aanmelding_rij = conn.execute(select(aanmeldingen).where(aanmeldingen.c.id == aanmelding_id)).one()
+    assert aanmelding_rij.organisatie_id is None
+
+
+def test_verwijder_organisatie_laat_andere_organisatie_ongemoeid(tmp_path):
+    engine = maak_database(tmp_path / "tenants.db")
+    org_a = bootstrap_organisatie(engine, naam="Org A", slug="org-a", store_ids=[1])
+    org_b = bootstrap_organisatie(engine, naam="Org B", slug="org-b", store_ids=[2])
+    gebruiker_b = maak_gebruiker(
+        engine, organisatie_id=org_b, email="eigenaar@orgb.nl", wachtwoord="geheim123", rol="eigenaar"
+    )
+    maak_sessie(engine, gebruiker_id=gebruiker_b)
+    maak_api_key(engine, organisatie_id=org_b, naam="key-b")
+    vervang_verkoopdata(engine, organisatie_id=org_b, rijen=[("2026-01-01", 50.0)])
+
+    verwijder_organisatie(engine, organisatie_id=org_a)
+
+    with engine.connect() as conn:
+        assert conn.execute(select(organisaties).where(organisaties.c.id == org_b)).first() is not None
+        assert conn.execute(select(gebruikers).where(gebruikers.c.id == gebruiker_b)).first() is not None
+        assert conn.execute(select(winkels).where(winkels.c.organisatie_id == org_b)).first() is not None
+        assert conn.execute(select(api_keys).where(api_keys.c.organisatie_id == org_b)).first() is not None
+        assert conn.execute(select(sessies).where(sessies.c.gebruiker_id == gebruiker_b)).first() is not None
+        assert conn.execute(select(eigen_verkoopdata).where(eigen_verkoopdata.c.organisatie_id == org_b)).first() is not None

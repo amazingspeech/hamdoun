@@ -10,7 +10,18 @@ from typing import Optional
 from sqlalchemy import select
 from sqlalchemy.engine import Connection, Engine
 
-from db.schema import organisaties
+from db.schema import (
+    aanmeldingen,
+    api_keys,
+    eigen_product_verkoopdata,
+    eigen_verkoopdata,
+    gebruiker_winkels,
+    gebruikers,
+    organisaties,
+    sessies,
+    wachtwoord_reset_tokens,
+    winkels,
+)
 
 
 def _als_utc(moment: datetime) -> datetime:
@@ -121,6 +132,35 @@ def haal_te_verwijderen_organisaties(engine: Engine, nu: datetime, wachtdagen: i
                 organisaties.c.gedeactiveerd_op < grens,
             )
         ).scalars().all()
+
+
+def verwijder_organisatie(engine: Engine, organisatie_id: int) -> None:
+    """Definitieve, onomkeerbare verwijdering (AVG-vereiste, beslissing 9
+    in FASE4-SAAS-FOUNDATION.md) — aangeroepen door db.opschonen_cli, 30
+    dagen na deactiveer_organisatie(). Eén transactie: alle betrokken
+    tabellen worden leeggemaakt vóór de organisaties-rij zelf verdwijnt,
+    zodat er nooit een tussentoestand met wees-rijen op schijf staat.
+    aanmeldingen blijft als historisch aanmeld-record bestaan (het bevat
+    op zichzelf geen persoonsgegevens meer zodra gebruikers/organisaties
+    weg zijn), alleen de FK-verwijzing wordt losgekoppeld. De audit-log
+    (security/audit.py) blijft bewust buiten dit bereik — zie de
+    designspec voor de reden."""
+    with engine.begin() as conn:
+        gebruiker_ids = select(gebruikers.c.id).where(gebruikers.c.organisatie_id == organisatie_id)
+        winkel_ids = select(winkels.c.id).where(winkels.c.organisatie_id == organisatie_id)
+
+        conn.execute(sessies.delete().where(sessies.c.gebruiker_id.in_(gebruiker_ids)))
+        conn.execute(wachtwoord_reset_tokens.delete().where(wachtwoord_reset_tokens.c.gebruiker_id.in_(gebruiker_ids)))
+        conn.execute(gebruiker_winkels.delete().where(gebruiker_winkels.c.winkel_id.in_(winkel_ids)))
+        conn.execute(api_keys.delete().where(api_keys.c.organisatie_id == organisatie_id))
+        conn.execute(eigen_verkoopdata.delete().where(eigen_verkoopdata.c.organisatie_id == organisatie_id))
+        conn.execute(eigen_product_verkoopdata.delete().where(eigen_product_verkoopdata.c.organisatie_id == organisatie_id))
+        conn.execute(winkels.delete().where(winkels.c.organisatie_id == organisatie_id))
+        conn.execute(gebruikers.delete().where(gebruikers.c.organisatie_id == organisatie_id))
+        conn.execute(
+            aanmeldingen.update().where(aanmeldingen.c.organisatie_id == organisatie_id).values(organisatie_id=None)
+        )
+        conn.execute(organisaties.delete().where(organisaties.c.id == organisatie_id))
 
 
 def haal_organisatie_id_bij_stripe_subscription(engine: Engine, stripe_subscription_id: str) -> Optional[int]:
