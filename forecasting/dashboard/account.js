@@ -636,28 +636,55 @@ function tekenVerkoopdataGrafiek(rijen) {
 
   const x = (i) => marge.links + (i / (rijen.length - 1)) * plotBreedte;
   const y = (waarde) => marge.boven + plotHoogte - ((waarde - minY) / (maxY - minY || 1)) * plotHoogte;
+  const midY = (minY + maxY) / 2;
+
+  svg.appendChild(maakSvgEl("line", {
+    class: "as-gridline", x1: marge.links, x2: breedte - marge.rechts, y1: y(midY), y2: y(midY),
+  }));
 
   svg.appendChild(maakSvgEl("polyline", {
     class: "lijn",
     points: rijen.map((r, i) => `${x(i)},${y(r.omzet)}`).join(" "),
   }));
 
-  for (const waarde of [minY, maxY]) {
+  for (const waarde of [minY, midY, maxY]) {
     const label = maakSvgEl("text", {
       class: "as-label", x: marge.links - 10, y: y(waarde) + 4, "text-anchor": "end",
     });
     label.textContent = euro.format(Math.round(waarde));
     svg.appendChild(label);
   }
-  const eersteLabel = maakSvgEl("text", {
-    class: "as-label", x: marge.links, y: hoogte - 4, "text-anchor": "start",
+
+  // Om en nabij elke 5e datapunt een x-as-label, altijd inclusief het
+  // eerste en laatste punt, gelijk verdeeld i.p.v. alleen begin/eind.
+  const aantalLabels = Math.min(rijen.length, Math.max(2, Math.round(rijen.length / 5) + 1));
+  const stap = (rijen.length - 1) / (aantalLabels - 1);
+  for (let k = 0; k < aantalLabels; k++) {
+    const i = Math.round(k * stap);
+    const label = maakSvgEl("text", {
+      class: "as-label", x: x(i), y: hoogte - 4,
+      "text-anchor": i === 0 ? "start" : i === rijen.length - 1 ? "end" : "middle",
+    });
+    label.textContent = rijen[i].datum;
+    svg.appendChild(label);
+  }
+
+  // Hover-hit-target per punt: een onzichtbaar breed staafje (niet enkel
+  // een kleine cirkel op het punt zelf) zodat de tooltip ook tussen twee
+  // datapunten in makkelijk te raken is, met een native <title> voor de
+  // exacte datum + het bedrag — zelfde lichte, library-vrije aanpak als
+  // de rest van dit dashboard.
+  const hitBreedte = plotBreedte / (rijen.length - 1) || plotBreedte;
+  rijen.forEach((r, i) => {
+    const staaf = maakSvgEl("rect", {
+      class: "hover-hit", x: x(i) - hitBreedte / 2, y: marge.boven, width: hitBreedte, height: plotHoogte,
+      fill: "transparent",
+    });
+    const titel = maakSvgEl("title", {});
+    titel.textContent = `${r.datum}: ${euro.format(Math.round(r.omzet))}`;
+    staaf.appendChild(titel);
+    svg.appendChild(staaf);
   });
-  eersteLabel.textContent = rijen[0].datum;
-  const laatsteLabel = maakSvgEl("text", {
-    class: "as-label", x: breedte - marge.rechts, y: hoogte - 4, "text-anchor": "end",
-  });
-  laatsteLabel.textContent = rijen[rijen.length - 1].datum;
-  svg.append(eersteLabel, laatsteLabel);
 }
 
 function toonVerkoopdata(rijen) {
