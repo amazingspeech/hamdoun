@@ -93,8 +93,10 @@ git commit -m "rename: KwantIQ in backend-generated text (API title, emails)"
 
 ### Task 2: Frontend text rename + logo/favicon wiring
 
+**Corrected 2026-07-29 by the final whole-branch reviewer after cross-checking the committed plan against shipped code** (see `.superpowers/sdd/2026-07-29-kwantiq-rename-completion/final-review.md` Minor #4): the file inventory below originally listed `index.html:5,16` only, omitting the page-level `.eyebrow` at line 71 — Task 2's implementer correctly found and fixed that third occurrence (matching what the design spec already specified), but the plan itself was never back-filled. Corrected to `index.html:5,16,71` to match reality.
+
 **Files:**
-- Modify: `forecasting/dashboard/index.html:5,16` (title, `.portfolio-sidebar-merk`) + add favicon link + wrap merk in icon
+- Modify: `forecasting/dashboard/index.html:5,16,71` (title, `.portfolio-sidebar-merk`, `.eyebrow`) + add favicon link + wrap merk in icon
 - Modify: `forecasting/dashboard/team.html:5,16,71` (title, `.portfolio-sidebar-merk`, `.eyebrow`) + favicon + icon wiring on both
 - Modify: `forecasting/dashboard/overview.html:5,16` (title, `.portfolio-sidebar-merk`) + favicon + icon wiring
 - Modify: `forecasting/dashboard/login.html:5,17` (title, `.eyebrow`) + favicon + icon wiring
@@ -258,7 +260,10 @@ Expected: no output (no matches).
 - [ ] **Step 8: Verify every HTML file has exactly one favicon link and one merk-icoon SVG**
 
 Run: `for f in forecasting/dashboard/*.html; do echo "$f: favicon=$(grep -c 'rel="icon"' "$f") icoon=$(grep -c 'merk-icoon' "$f")"; done`
-Expected: `index.html`, `team.html`, `overview.html` show `favicon=1 icoon=1` each (`team.html` shows `icoon=2` since it has both sidebar-merk and its own eyebrow); `login.html`, `signup.html`, `signup-gelukt.html`, `wachtwoord-vergeten.html`, `wachtwoord-resetten.html`, `hoe-werkt-dit.html` show `favicon=1 icoon=1` each.
+
+**Corrected 2026-07-29 by the final whole-branch reviewer after cross-checking the committed plan against shipped code** (see `.superpowers/sdd/2026-07-29-kwantiq-rename-completion/final-review.md` Minor #4): the expected output below originally said `index.html` shows `icoon=1`, which was wrong even at the time it was written — Task 2's implementer correctly wired `index.html` with both a sidebar merk and a page eyebrow (same as `team.html`), matching the corrected file inventory above (`index.html:5,16,71`). Corrected to reflect what Task 2 actually discovered and shipped.
+
+Expected: `index.html` and `team.html` show `favicon=1 icoon=2` each (both have sidebar-merk and their own eyebrow); `overview.html` shows `favicon=1 icoon=1`; `login.html`, `signup.html`, `signup-gelukt.html`, `wachtwoord-vergeten.html`, `wachtwoord-resetten.html`, `hoe-werkt-dit.html` show `favicon=1 icoon=1` each.
 
 - [ ] **Step 9: Visual verification in claude-in-chrome (light + dark theme)**
 
