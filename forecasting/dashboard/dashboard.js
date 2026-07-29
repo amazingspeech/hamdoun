@@ -485,6 +485,90 @@ function toonPeriodeVergelijking(totaalP50, vorigePeriodeOmzet) {
   el.hidden = false;
 }
 
+// Gemiddelde relatieve bandbreedte (p90-p10)/p50 over de horizon, vertaald
+// naar een van drie kwalitatieve niveaus. Grenzen: <15% Stabiel, 15-30%
+// Gemiddeld, >30% Wisselvallig (vastgelegd in de designspec, niet ter
+// plekke verzonnen).
+function berekenBetrouwbaarheid(voorspellingen) {
+  const relatieveBreedtes = voorspellingen.map((v) => (v.p50 > 0 ? (v.p90 - v.p10) / v.p50 : 0));
+  const gemiddelde = relatieveBreedtes.reduce((a, b) => a + b, 0) / relatieveBreedtes.length;
+  const percentage = Math.round(gemiddelde * 100);
+  let label;
+  if (gemiddelde < 0.15) label = "Stabiel";
+  else if (gemiddelde < 0.30) label = "Gemiddeld";
+  else label = "Wisselvallig";
+  return { label, percentage };
+}
+
+function maakInzichtKaart(titel, waarde, toelichting) {
+  const kaart = document.createElement("div");
+  kaart.className = "inzicht-kaart";
+  const titelEl = document.createElement("p");
+  titelEl.className = "inzicht-titel";
+  titelEl.textContent = titel;
+  const waardeEl = document.createElement("p");
+  waardeEl.className = "inzicht-waarde";
+  waardeEl.textContent = waarde;
+  const toelichtingEl = document.createElement("p");
+  toelichtingEl.className = "inzicht-toelichting";
+  toelichtingEl.textContent = toelichting;
+  kaart.append(titelEl, waardeEl, toelichtingEl);
+  return kaart;
+}
+
+// Drie kaarten, elk optioneel: kaart 2 (sterkste patroon) blijft weg zonder
+// SHAP-factoren, kaart 3 (portfolio-vergelijking) blijft weg zonder cache
+// (zie dashboard/sidebar.js::haalPortfolioOmzetCache) — nooit een gokwaarde
+// tonen. totaalP50/n is de al elders berekende gemiddelde omzet per dag
+// voor déze winkel (zelfde berekening als de bestaande "Gemiddeld per
+// dag"-stat in toonSamenvatting), vergeleken met het portfolio-gemiddelde
+// per winkel per dag — beide genormaliseerd naar "per dag" omdat de
+// portfolio-cache een vaste 7-dagen-horizon gebruikt (overview.js'
+// HORIZON_DAGEN) terwijl deze winkel een andere, door de gebruiker
+// gekozen horizon kan hebben.
+function toonInzichten(voorspellingen, factoren, totaalP50, n) {
+  const paneel = document.getElementById("inzichten-paneel");
+  const kaarten = [];
+
+  const { label, percentage } = berekenBetrouwbaarheid(voorspellingen);
+  kaarten.push(maakInzichtKaart(
+    "Betrouwbaarheid",
+    `${label} — ±${percentage}%`,
+    "Gemiddelde bandbreedte over de voorspelde periode, relatief aan de verwachte omzet.",
+  ));
+
+  if (factoren && factoren.length > 0) {
+    const sterkste = factoren[0];
+    kaarten.push(maakInzichtKaart(
+      "Sterkste patroon",
+      `${sterkste.naam} — ${sterkste.richting}`,
+      "De factor met de grootste invloed op deze voorspelling.",
+    ));
+  }
+
+  const portfolioCache = haalPortfolioOmzetCache();
+  if (portfolioCache && portfolioCache.aantalWinkels > 0 && portfolioCache.horizonDagen > 0) {
+    const portfolioGemiddeldePerWinkelPerDag =
+      portfolioCache.totaleOmzet / portfolioCache.aantalWinkels / portfolioCache.horizonDagen;
+    if (portfolioGemiddeldePerWinkelPerDag > 0) {
+      const dezeWinkelPerDag = totaalP50 / n;
+      const verschilPct = Math.round(
+        ((dezeWinkelPerDag - portfolioGemiddeldePerWinkelPerDag) / portfolioGemiddeldePerWinkelPerDag) * 100,
+      );
+      const richtingTekst =
+        Math.abs(verschilPct) < 2 ? "Vergelijkbaar" : verschilPct > 0 ? `${verschilPct}% hoger` : `${Math.abs(verschilPct)}% lager`;
+      kaarten.push(maakInzichtKaart(
+        "T.o.v. je andere winkels",
+        richtingTekst,
+        "Gemiddelde omzet per dag, vergeleken met het gemiddelde over je hele portfolio (laatst bekende stand).",
+      ));
+    }
+  }
+
+  paneel.replaceChildren(...kaarten);
+  paneel.hidden = kaarten.length === 0;
+}
+
 function toonSamenvatting(voorspellingen, storeId, vorigePeriodeOmzet, herbestelAdvies) {
   const totaalP50 = voorspellingen.reduce((som, v) => som + v.p50, 0);
   const totaalP10 = voorspellingen.reduce((som, v) => som + v.p10, 0);
@@ -645,6 +729,8 @@ async function voorspel() {
     tekenGrafiek(voorspellingen);
     toonKanttekening(Boolean(promoVakantie.promoVan), Boolean(promoVakantie.vakantieVan));
     toonFactoren(data.belangrijkste_factoren);
+    const totaalP50VoorInzichten = voorspellingen.reduce((som, v) => som + v.p50, 0);
+    toonInzichten(voorspellingen, data.belangrijkste_factoren, totaalP50VoorInzichten, voorspellingen.length);
     laatsteVoorspelling = { voorspellingen, storeId: data.store_id };
     toonExportKnoppen(true);
     synchroniseerUrl();
