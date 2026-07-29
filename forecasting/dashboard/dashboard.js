@@ -274,12 +274,20 @@ function initGrafiekTooltip(svg, voorspellingen, x, y) {
   // resultaat als een correcte offsetLeft/offsetTop zou geven, min het
   // container-eigen randje (clientLeft/clientTop, hier 1px border) dat
   // anders zou meetellen.
+  // #chart-container heeft overflow-x:auto (de SVG is een vaste 920px
+  // breed en kan op smalle schermen overlopen) — de tooltip is een sibling
+  // van de SVG binnen datzelfde scroll-element, dus haar CSS left/top moet
+  // scroll-onafhankelijk zijn (ze schuift toch al automatisch mee met de
+  // rest van de inhoud). getBoundingClientRect() geeft juist
+  // viewport-relatieve, dus wél scroll-afhankelijke coördinaten — zonder
+  // scrollLeft/scrollTop terug op te tellen zou de tooltip bij elke pixel
+  // horizontale scroll evenveel te ver naar links belanden.
   function svgOffsetInContainer() {
     const svgRect = svg.getBoundingClientRect();
     const containerRect = container.getBoundingClientRect();
     return {
-      left: svgRect.left - containerRect.left - container.clientLeft,
-      top: svgRect.top - containerRect.top - container.clientTop,
+      left: svgRect.left - containerRect.left - container.clientLeft + container.scrollLeft,
+      top: svgRect.top - containerRect.top - container.clientTop + container.scrollTop,
     };
   }
   voorspellingen.forEach((v, i) => {
