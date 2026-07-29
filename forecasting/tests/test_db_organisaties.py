@@ -333,8 +333,17 @@ def test_verwijder_organisatie_laat_andere_organisatie_ongemoeid(tmp_path):
         engine, organisatie_id=org_b, email="eigenaar@orgb.nl", wachtwoord="geheim123", rol="eigenaar"
     )
     maak_sessie(engine, gebruiker_id=gebruiker_b)
+    maak_reset_token(engine, gebruiker_id=gebruiker_b)
     maak_api_key(engine, organisatie_id=org_b, naam="key-b")
+    stel_toewijzingen_in(engine, gebruiker_id=gebruiker_b, extern_store_ids=[2])
     vervang_verkoopdata(engine, organisatie_id=org_b, rijen=[("2026-01-01", 50.0)])
+    vervang_product_verkoopdata(engine, organisatie_id=org_b, rijen=[("2026-01-01", "Brood", 5)])
+    aanmelding_b_id = maak_aanmelding(
+        engine, organisatie_naam="Org B", organisatie_slug="org-b-aanmelding", email="eigenaar@orgb.nl",
+        wachtwoord_hash="hash", wachtwoord_salt="salt", stripe_checkout_session_id="cs_test_orgb",
+        kvk_nummer="87654321", aantal_leden=1, aantal_winkels=1, was_kvk_herhaling=False,
+    )
+    voltooi_aanmelding(engine, aanmelding_id=aanmelding_b_id, organisatie_id=org_b)
 
     verwijder_organisatie(engine, organisatie_id=org_a)
 
@@ -345,3 +354,14 @@ def test_verwijder_organisatie_laat_andere_organisatie_ongemoeid(tmp_path):
         assert conn.execute(select(api_keys).where(api_keys.c.organisatie_id == org_b)).first() is not None
         assert conn.execute(select(sessies).where(sessies.c.gebruiker_id == gebruiker_b)).first() is not None
         assert conn.execute(select(eigen_verkoopdata).where(eigen_verkoopdata.c.organisatie_id == org_b)).first() is not None
+        assert conn.execute(
+            select(wachtwoord_reset_tokens).where(wachtwoord_reset_tokens.c.gebruiker_id == gebruiker_b)
+        ).first() is not None
+        assert conn.execute(
+            select(gebruiker_winkels).where(gebruiker_winkels.c.gebruiker_id == gebruiker_b)
+        ).first() is not None
+        assert conn.execute(
+            select(eigen_product_verkoopdata).where(eigen_product_verkoopdata.c.organisatie_id == org_b)
+        ).first() is not None
+        aanmelding_b_rij = conn.execute(select(aanmeldingen).where(aanmeldingen.c.id == aanmelding_b_id)).one()
+    assert aanmelding_b_rij.organisatie_id == org_b
