@@ -46,3 +46,11 @@ def test_parse_verkoopdata_csv_negatieve_omzet_faalt_hard():
 def test_parse_verkoopdata_csv_dubbele_datum_faalt_hard():
     with pytest.raises(OngeldigeVerkoopdata, match="dubbel"):
         parse_verkoopdata_csv("datum,omzet\n2026-01-01,100\n2026-01-01,200\n")
+
+
+def test_parse_verkoopdata_csv_accepteert_puntkomma_als_scheidingsteken():
+    inhoud = "datum;omzet\n2026-01-01;120.5\n2026-01-02;98\n"
+
+    rijen = parse_verkoopdata_csv(inhoud)
+
+    assert rijen == [("2026-01-01", 120.5), ("2026-01-02", 98.0)]

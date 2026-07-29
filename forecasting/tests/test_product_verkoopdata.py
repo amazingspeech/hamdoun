@@ -72,3 +72,11 @@ def test_parse_product_verkoopdata_csv_zelfde_datum_ander_product_mag():
     rijen = parse_product_verkoopdata_csv(inhoud)
 
     assert len(rijen) == 2
+
+
+def test_parse_product_verkoopdata_csv_accepteert_puntkomma_als_scheidingsteken():
+    inhoud = "datum;product;aantal\n2026-01-01;Brood;10\n2026-01-01;Melk;4\n"
+
+    rijen = parse_product_verkoopdata_csv(inhoud)
+
+    assert rijen == [("2026-01-01", "Brood", 10), ("2026-01-01", "Melk", 4)]

@@ -18,13 +18,25 @@ class OngeldigeVerkoopdata(Exception):
     pass
 
 
+def _detecteer_scheidingsteken(inhoud: str) -> str:
+    """Herkent ',' of ';' als kolomscheidingsteken (Nederlandse/EU CSV-
+    exports, bv. uit een bankrekening, gebruiken vaak ';'). Valt terug op
+    ',' als er niets herkenbaars in de kopregel staat."""
+    kopregel = inhoud.split("\n", 1)[0]
+    try:
+        return csv.Sniffer().sniff(kopregel, delimiters=",;").delimiter
+    except csv.Error:
+        return ","
+
+
 def parse_verkoopdata_csv(inhoud: str) -> list[tuple[str, float]]:
     """Leest een CSV met kolommen datum,omzet (kolomnamen hoofdletter-
-    ongevoelig) en geeft (datum-string, omzet) per rij terug, gesorteerd
-    zoals ze in het bestand staan. Faalt hard — nooit een rij stilzwijgend
-    overslaan — bij ontbrekende kolommen, een ongeldige datum, een
-    ongeldig of negatief omzetgetal, of een dubbele datum."""
-    lezer = csv.DictReader(io.StringIO(inhoud))
+    ongevoelig, scheidingsteken ',' of ';') en geeft (datum-string, omzet)
+    per rij terug, gesorteerd zoals ze in het bestand staan. Faalt hard —
+    nooit een rij stilzwijgend overslaan — bij ontbrekende kolommen, een
+    ongeldige datum, een ongeldig of negatief omzetgetal, of een dubbele
+    datum."""
+    lezer = csv.DictReader(io.StringIO(inhoud), delimiter=_detecteer_scheidingsteken(inhoud))
     kolommen = {(naam or "").strip().lower() for naam in (lezer.fieldnames or [])}
     if not VERPLICHTE_KOLOMMEN <= kolommen:
         raise OngeldigeVerkoopdata(

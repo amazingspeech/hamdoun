@@ -18,14 +18,26 @@ class OngeldigeProductVerkoopdata(Exception):
     pass
 
 
+def _detecteer_scheidingsteken(inhoud: str) -> str:
+    """Herkent ',' of ';' als kolomscheidingsteken (Nederlandse/EU CSV-
+    exports gebruiken vaak ';'). Valt terug op ',' als er niets
+    herkenbaars in de kopregel staat."""
+    kopregel = inhoud.split("\n", 1)[0]
+    try:
+        return csv.Sniffer().sniff(kopregel, delimiters=",;").delimiter
+    except csv.Error:
+        return ","
+
+
 def parse_product_verkoopdata_csv(inhoud: str) -> list[tuple[str, str, int]]:
     """Leest een CSV met kolommen datum,product,aantal (kolomnamen
-    hoofdletter-ongevoelig) en geeft (datum-string, product, aantal) per
-    rij terug, gesorteerd zoals ze in het bestand staan. Faalt hard —
-    nooit een rij stilzwijgend overslaan — bij ontbrekende kolommen, een
-    ongeldige datum, een lege productnaam, een ongeldig/negatief/niet-heel
-    aantal, of een dubbele datum+product-combinatie."""
-    lezer = csv.DictReader(io.StringIO(inhoud))
+    hoofdletter-ongevoelig, scheidingsteken ',' of ';') en geeft
+    (datum-string, product, aantal) per rij terug, gesorteerd zoals ze in
+    het bestand staan. Faalt hard — nooit een rij stilzwijgend overslaan —
+    bij ontbrekende kolommen, een ongeldige datum, een lege productnaam,
+    een ongeldig/negatief/niet-heel aantal, of een dubbele
+    datum+product-combinatie."""
+    lezer = csv.DictReader(io.StringIO(inhoud), delimiter=_detecteer_scheidingsteken(inhoud))
     kolommen = {(naam or "").strip().lower() for naam in (lezer.fieldnames or [])}
     if not VERPLICHTE_KOLOMMEN <= kolommen:
         raise OngeldigeProductVerkoopdata(
