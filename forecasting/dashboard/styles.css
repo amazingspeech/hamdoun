@@ -205,7 +205,7 @@ select:focus-visible, input:focus-visible, button:focus-visible, summary:focus-v
 .lijn { fill:none; stroke:var(--accent); stroke-width:2.5; stroke-linecap:round; stroke-linejoin:round; }
 .stip { fill:var(--accent); }
 .as { stroke:var(--line); stroke-width:1; }
-.as-label { font:400 0.6875rem var(--font-mono); fill:var(--ink-faint); }
+.as-label { font:400 0.6875rem var(--font-mono); font-variant-numeric:tabular-nums; fill:var(--ink-faint); }
 .hit-stip { fill:transparent; cursor:pointer; }
 .grafiek-tooltip {
   position:absolute; transform:translate(-50%,-100%); pointer-events:none;
@@ -327,7 +327,7 @@ details.model-info { margin-top:32px; border-top:1px solid var(--line); padding-
 .portfolio-tabel button.sorteerbaar:hover { color:var(--accent-ink); }
 .portfolio-tabel tbody tr { border-bottom:1px solid var(--line); }
 .portfolio-tabel tbody tr:last-child { border-bottom:none; }
-.portfolio-tabel td.cijfer, .portfolio-tabel th.cijfer { text-align:right; font-variant-numeric:tabular-nums; }
+.portfolio-tabel td.cijfer, .portfolio-tabel th.cijfer { text-align:right; font-variant-numeric:tabular-nums; font-family:var(--font-mono); }
 .portfolio-tabel a { color:var(--ink); text-decoration:none; font-weight:600; }
 .portfolio-tabel a:hover { color:var(--accent-ink); text-decoration:underline; }
 
@@ -546,7 +546,6 @@ details.scenario-vergelijking { margin-top:32px; border-top:1px solid var(--line
 
   .portfolio-tabel-wrap { margin-top:16px; }
   .portfolio-tabel th, .portfolio-tabel td { padding:9px 16px; font-size:0.875rem; }
-  .portfolio-tabel td.cijfer { font-family:var(--font-mono); }
   .portfolio-tabel tbody tr:hover { background:var(--paper); }
 }
 
