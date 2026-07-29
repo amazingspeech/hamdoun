@@ -23,6 +23,8 @@ from sqlalchemy.exc import IntegrityError
 
 from db import aanmeldingen as db_aanmeldingen
 from db import api_keys as db_api_keys
+from db import eigen_winkel_instellingen as db_eigen_winkel_instellingen
+from db import eigen_winkels as db_eigen_winkels
 from db import gebruiker_winkels as db_gebruiker_winkels
 from db import gebruikers as db_gebruikers
 from db import organisaties as db_organisaties
@@ -40,6 +42,7 @@ from serving.betaalintegratie import OngeldigeWebhookSignature, lees_webhook_eve
 from serving.config import laad_settings
 from serving.eigen_voorspelling import MINIMUM_DAGEN, bereken_eigen_voorspelling
 from serving.herbestel_advies_per_product import bereken_herbestel_advies_per_product
+from serving.prijs_per_stuk import bereken_gemiddelde_prijs_per_stuk
 from serving.forecast import (
     HorizonBuitenBereik,
     OnbekendeWinkel,
@@ -55,6 +58,10 @@ from serving.schemas import (
     DagVoorspelling,
     EigenVoorspellingDag,
     EigenVoorspellingResponse,
+    EigenWinkelAanmakenVerzoek,
+    EigenWinkelHernoemenVerzoek,
+    EigenWinkelInstellingenVerzoek,
+    EigenWinkelResponse,
     FactorBijdrage,
     ForecastResponse,
     ForecastVerzoek,
@@ -65,8 +72,6 @@ from serving.schemas import (
     MetricsResponse,
     ModelVersieMetric,
     NieuweApiKeyResponse,
-    OrganisatieInstellingenResponse,
-    OrganisatieInstellingenVerzoek,
     PortfolioKpi,
     PortfolioResponse,
     ProductHerbestelAdviesResponse,
@@ -580,25 +585,77 @@ def winkeltoewijzing_instellen(
     return WinkelToewijzingResponse(winkel_ids=winkel_ids)
 
 
-@app.get("/organisatie/instellingen", response_model=OrganisatieInstellingenResponse)
-def organisatie_instellingen_lezen(
-    gebruiker: GeauthenticeerdeGebruiker = Depends(vereis_sessie),
-) -> OrganisatieInstellingenResponse:
-    # Leesbaar voor elke ingelogde gebruiker (niet alleen eigenaar-only
-    # zoals het wijzigen): een lid heeft de prijs nodig om het herbestel-
-    # advies op /forecast te kunnen zien. De prijs zelf is geen geheim.
-    prijs = db_organisaties.haal_gemiddelde_omzet_per_stuk(tenants_db, organisatie_id=gebruiker.organisatie_id)
-    return OrganisatieInstellingenResponse(gemiddelde_omzet_per_stuk=prijs)
-
-
-@app.put("/organisatie/instellingen", response_model=OrganisatieInstellingenResponse)
-def organisatie_instellingen_instellen(
-    verzoek: OrganisatieInstellingenVerzoek, eigenaar: GeauthenticeerdeGebruiker = Depends(vereis_eigenaar)
-) -> OrganisatieInstellingenResponse:
-    db_organisaties.stel_gemiddelde_omzet_per_stuk_in(
-        tenants_db, organisatie_id=eigenaar.organisatie_id, bedrag=verzoek.gemiddelde_omzet_per_stuk
+def _bouw_eigen_winkel_response(eigen_winkel_id: int, naam: str, heeft_verkoopdata: bool) -> EigenWinkelResponse:
+    handmatige_prijs = db_eigen_winkel_instellingen.haal_prijs(tenants_db, eigen_winkel_id=eigen_winkel_id)
+    automatische_prijs = bereken_gemiddelde_prijs_per_stuk(
+        db_verkoopdata.haal_verkoopdata(tenants_db, eigen_winkel_id=eigen_winkel_id),
+        db_product_verkoopdata.haal_product_verkoopdata(tenants_db, eigen_winkel_id=eigen_winkel_id),
     )
-    return OrganisatieInstellingenResponse(gemiddelde_omzet_per_stuk=verzoek.gemiddelde_omzet_per_stuk)
+    return EigenWinkelResponse(
+        id=eigen_winkel_id, naam=naam, heeft_verkoopdata=heeft_verkoopdata,
+        gemiddelde_omzet_per_stuk=handmatige_prijs, automatische_prijs_per_stuk=automatische_prijs,
+    )
+
+
+@app.post("/organisatie/eigen-winkels", response_model=EigenWinkelResponse, status_code=201)
+def eigen_winkel_aanmaken(
+    verzoek: EigenWinkelAanmakenVerzoek, eigenaar: GeauthenticeerdeGebruiker = Depends(vereis_eigenaar)
+) -> EigenWinkelResponse:
+    try:
+        winkel_id = db_eigen_winkels.maak_eigen_winkel(tenants_db, organisatie_id=eigenaar.organisatie_id, naam=verzoek.naam)
+    except IntegrityError:
+        raise HTTPException(status_code=409, detail=f"Eigen winkel {verzoek.naam!r} bestaat al.")
+    return _bouw_eigen_winkel_response(winkel_id, verzoek.naam, heeft_verkoopdata=False)
+
+
+@app.get("/organisatie/eigen-winkels", response_model=list[EigenWinkelResponse])
+def eigen_winkels_lijst(gebruiker: GeauthenticeerdeGebruiker = Depends(vereis_sessie)) -> list[EigenWinkelResponse]:
+    winkels = db_eigen_winkels.lijst_eigen_winkels(tenants_db, organisatie_id=gebruiker.organisatie_id)
+    return [_bouw_eigen_winkel_response(w["id"], w["naam"], w["heeft_verkoopdata"]) for w in winkels]
+
+
+@app.patch("/organisatie/eigen-winkels/{eigen_winkel_id}", response_model=EigenWinkelResponse)
+def eigen_winkel_hernoemen(
+    eigen_winkel_id: int, verzoek: EigenWinkelHernoemenVerzoek,
+    eigenaar: GeauthenticeerdeGebruiker = Depends(vereis_eigenaar),
+) -> EigenWinkelResponse:
+    try:
+        gelukt = db_eigen_winkels.hernoem_eigen_winkel(
+            tenants_db, organisatie_id=eigenaar.organisatie_id, eigen_winkel_id=eigen_winkel_id, nieuwe_naam=verzoek.naam
+        )
+    except IntegrityError:
+        raise HTTPException(status_code=409, detail=f"Eigen winkel {verzoek.naam!r} bestaat al.")
+    if not gelukt:
+        raise HTTPException(status_code=404, detail=f"Onbekende eigen winkel: {eigen_winkel_id}")
+    winkels = db_eigen_winkels.lijst_eigen_winkels(tenants_db, organisatie_id=eigenaar.organisatie_id)
+    winkel = next(w for w in winkels if w["id"] == eigen_winkel_id)
+    return _bouw_eigen_winkel_response(winkel["id"], winkel["naam"], winkel["heeft_verkoopdata"])
+
+
+@app.delete("/organisatie/eigen-winkels/{eigen_winkel_id}", status_code=204)
+def eigen_winkel_verwijderen(
+    eigen_winkel_id: int, eigenaar: GeauthenticeerdeGebruiker = Depends(vereis_eigenaar)
+) -> None:
+    gelukt = db_eigen_winkels.verwijder_eigen_winkel(
+        tenants_db, organisatie_id=eigenaar.organisatie_id, eigen_winkel_id=eigen_winkel_id
+    )
+    if not gelukt:
+        raise HTTPException(status_code=404, detail=f"Onbekende eigen winkel: {eigen_winkel_id}")
+
+
+@app.put("/organisatie/eigen-winkels/{eigen_winkel_id}/instellingen", response_model=EigenWinkelResponse)
+def eigen_winkel_instellingen_instellen(
+    eigen_winkel_id: int, verzoek: EigenWinkelInstellingenVerzoek,
+    eigenaar: GeauthenticeerdeGebruiker = Depends(vereis_eigenaar),
+) -> EigenWinkelResponse:
+    winkels = db_eigen_winkels.lijst_eigen_winkels(tenants_db, organisatie_id=eigenaar.organisatie_id)
+    winkel = next((w for w in winkels if w["id"] == eigen_winkel_id), None)
+    if winkel is None:
+        raise HTTPException(status_code=404, detail=f"Onbekende eigen winkel: {eigen_winkel_id}")
+    db_eigen_winkel_instellingen.stel_prijs_in(
+        tenants_db, eigen_winkel_id=eigen_winkel_id, bedrag=verzoek.gemiddelde_omzet_per_stuk
+    )
+    return _bouw_eigen_winkel_response(winkel["id"], winkel["naam"], winkel["heeft_verkoopdata"])
 
 
 @app.get("/organisatie/verkoopdata", response_model=VerkoopdataResponse)
