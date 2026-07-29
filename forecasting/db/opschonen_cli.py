@@ -35,7 +35,12 @@ def main() -> list[int]:
         try:
             verwijder_organisatie(engine, organisatie_id)
         except Exception as e:
-            print(f"FOUT bij verwijderen van organisatie {organisatie_id}: {e}")
+            # Alleen het exceptietype loggen, nooit str(e): een toekomstige
+            # wijziging in verwijder_organisatie() of een onverwacht
+            # exception-type zou anders PII (naam/e-mail) in de foutmelding
+            # kunnen laten lekken. Dit is een structurele garantie, geen
+            # aanname over de huidige foutinhoud.
+            print(f"FOUT bij verwijderen van organisatie {organisatie_id}: {type(e).__name__}")
             continue
         verwijderd.append(organisatie_id)
         print(f"organisatie {organisatie_id} verwijderd op {nu.isoformat()}")

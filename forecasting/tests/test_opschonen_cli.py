@@ -6,7 +6,7 @@ from db import opschonen_cli
 from db.bootstrap import bootstrap_organisatie
 from db.gebruikers import maak_gebruiker
 from db.organisaties import deactiveer_organisatie
-from db.schema import gebruikers, maak_database, organisaties
+from db.schema import maak_database, organisaties
 
 
 def _maak_gedeactiveerde_organisatie(engine, naam, slug, dagen_geleden):
@@ -78,4 +78,27 @@ def test_main_logt_geen_naam_of_email(tmp_path, monkeypatch, capsys):
     output = capsys.readouterr().out
     assert "Geheime Bakkerij BV" not in output
     assert "eigenaar@geheimebakkerij.nl" not in output
+    assert str(org_id) in output
+
+
+def test_main_logt_geen_uitzonderingstekst_bij_fout(tmp_path, monkeypatch, capsys):
+    # Structurele garantie: zelfs als een toekomstige/onverwachte exceptie
+    # gevoelige tekst in str(e) bevat, mag die tekst nooit in de output
+    # terechtkomen — alleen het exceptietype mag gelogd worden.
+    db_pad = tmp_path / "tenants.db"
+    engine = maak_database(db_pad)
+    org_id = _maak_gedeactiveerde_organisatie(engine, "Geheime Bakkerij BV", "geheime-bakkerij", dagen_geleden=31)
+    monkeypatch.setenv("TENANTS_DB_PAD", str(db_pad))
+
+    def _mislukt(engine, organisatie_id):
+        raise RuntimeError("gesimuleerde fout voor Geheime Bakkerij BV <eigenaar@geheimebakkerij.nl>")
+    monkeypatch.setattr(opschonen_cli, "verwijder_organisatie", _mislukt)
+
+    verwijderd = opschonen_cli.main()
+
+    output = capsys.readouterr().out
+    assert verwijderd == []
+    assert "Geheime Bakkerij BV" not in output
+    assert "eigenaar@geheimebakkerij.nl" not in output
+    assert "RuntimeError" in output
     assert str(org_id) in output
