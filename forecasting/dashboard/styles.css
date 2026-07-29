@@ -445,8 +445,24 @@ details.scenario-vergelijking { margin-top:32px; border-top:1px solid var(--line
    Alle regels hier zijn nieuw en scoped onder .portfolio-shell/
    .portfolio-sidebar/.cockpit-*/.status-normaal — geen bestaande regel
    (.wrap, .metric, .metrics, ...) is aangepast, dus index.html/
-   login.html/team.html blijven ongewijzigd. */
-.portfolio-sidebar { display:none; }
+   login.html/team.html blijven ongewijzigd.
+
+   Bewust in een eigen max-width-media-query + !important i.p.v. een
+   kale basisregel die door de losse @media (min-width:961px)-regel
+   verderop wordt overschreven: op minstens één echt mobiel toestel
+   (gemeld door de gebruiker, niet reproduceerbaar via de gebruikelijke
+   viewport-resize-tooling) bleef de sidebar zichtbaar en volledig
+   ongestyled — vrijwel alle overige sidebar-opmaak (nav-linkkleur,
+   merk-typografie, enz.) bestaat namelijk uitsluitend binnen diezelfde
+   @media (min-width:961px)-regel, dus als alleen déze ene regel om wat
+   voor reden dan ook niet toepast, oogt het resultaat als kale
+   browser-standaardopmaak — precies wat gemeld werd. De exacte oorzaak
+   op dat toestel is niet met zekerheid vastgesteld; dit maakt de regel
+   onafhankelijk van cascade-volgorde en dus robuust ongeacht de
+   oorzaak. */
+@media (max-width: 960.98px) {
+  .portfolio-sidebar { display:none !important; }
+}
 
 .portfolio-werkbalk { display:flex; align-items:flex-end; gap:16px; }
 
