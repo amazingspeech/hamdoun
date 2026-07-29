@@ -183,6 +183,14 @@ daarvan: één e-mail per organisatie zoals nu, met een apart tekstblok per
 eigen winkel die genoeg historie heeft (`bouw_email_inhoud()` krijgt een
 lijst van (winkelnaam, forecast, advies)-items i.p.v. één set totalen).
 
+**`db/organisaties.py:verwijder_organisatie()`** (AVG hard-delete-cascade bij
+organisatie-offboarding): verwijdert vandaag `eigen_verkoopdata`/
+`eigen_product_verkoopdata` rechtstreeks via `organisatie_id`. Wordt: eerst
+de `eigen_winkel_id`'s van de organisatie ophalen (zelfde
+subquery-patroon als de bestaande `winkel_ids`/`gebruiker_ids` in diezelfde
+functie), dan de twee verkoopdata-tabellen via `eigen_winkel_id.in_(...)`
+verwijderen, dan pas de `eigen_winkels`-rijen zelf.
+
 **`dashboard/onboarding.js`** (self-serve-onboardingchecklist,
 `haalOnboardingStatus()`): las tot nu toe `/organisatie/verkoopdata` (org-breed,
 zonder parameter) en `/organisatie/instellingen`. Beide bestaan straks niet
