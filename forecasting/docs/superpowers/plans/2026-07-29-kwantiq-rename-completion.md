@@ -286,27 +286,36 @@ git commit -m "rename: KwantIQ across dashboard frontend, wire logo icon + favic
 - Consumes: the committed state of Tasks 1-2.
 - Produces: nothing (terminal task).
 
+**Corrected 2026-07-29 by the controller after Task 3's implementer stopped and correctly diagnosed two real defects in this task's original Steps 1-3 via read-only production investigation** (see `.superpowers/sdd/2026-07-29-kwantiq-rename-completion/task-3-report.md` for the full evidence trail): (1) the rsync source below must be the executing worktree's own `forecasting/` checkout, never a hardcoded absolute path to a sibling checkout that may be on a different, stale branch — running this from the wrong source would push pre-rename code to production while looking successful; (2) the live container (`deploy-api-1`, joined to Caddy's `caddy-net` network) is built and managed from `/home/job/forecasting-demo/deploy/docker-compose.yml`, NOT the top-level `docker-compose.yml` — the top-level file's container never joins `caddy-net` and is unreachable from the live domain, so rebuilding it would silently do nothing; (3) `/openapi.json` 404s in production (docs disabled via `expose_docs` setting) — confirmed pre-existing and unrelated to this rename — so the title cannot be verified via that endpoint; verify via SSH file content instead.
+
 - [ ] **Step 1: Sync updated code to the production server**
 
+Run from the root of whichever checkout has Tasks 1-2's commits (verify first: `git log --oneline -3` should show the frontend-rename and backend-rename commits) — substitute `<THIS_CHECKOUT>/forecasting/` with that checkout's actual absolute path:
+
 ```bash
-rsync -avz --exclude '.git' --exclude '__pycache__' \
-  /Users/hamdeco/development/hamdoun/forecasting/ \
+rsync -avz --exclude '.git' --exclude '__pycache__' --exclude '.venv' \
+  --exclude '.env' --exclude 'api_keys.json' --exclude 'audit.log' \
+  --exclude 'tenants.db' --exclude 'tenants.db.bak-*' --exclude 'data' \
+  --exclude 'models' --exclude 'config.js' \
+  <THIS_CHECKOUT>/forecasting/ \
   job@157.90.244.24:/home/job/forecasting-demo/
 ```
+
+The extra excludes beyond `.git`/`__pycache__`/`.venv` matter: `deploy/docker-compose.yml`'s `api` service bind-mounts `api_keys.json`, `audit.log`, `tenants.db`, and `models` from the server's `/home/job/forecasting-demo/` directly into the live container — an rsync without these excludes overwrites live production secrets/data/model state with whatever (likely absent or stale) copies exist in the local checkout. `config.js` is a server-side-generated file present only on the server (not tracked in this checkout) — excluding it prevents deleting it.
 
 - [ ] **Step 2: Rebuild and restart the API container**
 
 ```bash
-ssh job@157.90.244.24 'cd /home/job/forecasting-demo && docker compose build api && docker compose up -d api'
+ssh job@157.90.244.24 'cd /home/job/forecasting-demo/deploy && docker compose build api && docker compose up -d api'
 ```
 
-- [ ] **Step 3: Verify the API is healthy and reports the new title**
+- [ ] **Step 3: Verify the deployed source has the new title (production docs endpoint is disabled, so verify via the deployed file directly)**
 
 ```bash
 curl -s https://kwantiq.tessar.nl/health
-curl -s https://kwantiq.tessar.nl/openapi.json | grep -o '"title":"[^"]*"'
+ssh job@157.90.244.24 'grep -n "title=" /home/job/forecasting-demo/serving/app.py'
 ```
-Expected: `/health` returns `{"status":"ok",...}`; the openapi title shows `"title":"KwantIQ (by Tessar)"`.
+Expected: `/health` returns `{"status":"ok",...}`; the ssh grep shows `title="KwantIQ (by Tessar)",`.
 
 - [ ] **Step 4: Verify the frontend is serving the renamed pages**
 
