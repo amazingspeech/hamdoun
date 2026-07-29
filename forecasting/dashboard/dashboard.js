@@ -252,22 +252,45 @@ function maakBandGradient(svg) {
 // gewoon HTML-element (geen SVG), gepositioneerd via de al berekende
 // x(i)/y(v.p50)-coördinaten van de plot.
 function initGrafiekTooltip(svg, voorspellingen, x, y) {
+  const container = document.getElementById("chart-container");
   let tooltip = document.getElementById("grafiek-tooltip");
   if (!tooltip) {
     tooltip = document.createElement("div");
     tooltip.id = "grafiek-tooltip";
     tooltip.className = "grafiek-tooltip";
     tooltip.hidden = true;
-    document.getElementById("chart-container").appendChild(tooltip);
+    container.appendChild(tooltip);
+  }
+  // svg.offsetLeft/offsetTop zouden hier de voor de hand liggende manier
+  // lijken om SVG-interne coördinaten (x(i)/y(v.p50)) om te rekenen naar
+  // het coördinatenstelsel van #chart-container (waarin de tooltip als
+  // position:absolute leeft) — maar offsetLeft/offsetTop bestaan alleen op
+  // HTMLElement, niet op SVGSVGElement, dus svg.offsetLeft is `undefined`
+  // in elke browser. `${undefined + x(i)}px` wordt dan "NaNpx", een
+  // ongeldige CSS-waarde die de browser stilzwijgend negeert — de tooltip
+  // zou dan nooit gepositioneerd worden. getBoundingClientRect() bestaat
+  // wél op elk element (SVG inbegrepen); door de rect van svg en container
+  // in viewport-coördinaten van elkaar af te trekken krijgen we hetzelfde
+  // resultaat als een correcte offsetLeft/offsetTop zou geven, min het
+  // container-eigen randje (clientLeft/clientTop, hier 1px border) dat
+  // anders zou meetellen.
+  function svgOffsetInContainer() {
+    const svgRect = svg.getBoundingClientRect();
+    const containerRect = container.getBoundingClientRect();
+    return {
+      left: svgRect.left - containerRect.left - container.clientLeft,
+      top: svgRect.top - containerRect.top - container.clientTop,
+    };
   }
   voorspellingen.forEach((v, i) => {
     const hitCirkel = maakSVGEl("circle", { class: "hit-stip", cx: x(i), cy: y(v.p50), r: 10 });
     hitCirkel.addEventListener("mouseenter", () => {
+      const offset = svgOffsetInContainer();
       tooltip.innerHTML =
         `<strong>${formatDatumKort(v.datum)}</strong><br>` +
         `${euro.format(Math.round(v.p50))} (${euro.format(Math.round(v.p10))}–${euro.format(Math.round(v.p90))})`;
-      tooltip.style.left = `${x(i)}px`;
-      tooltip.style.top = `${y(v.p50) - 12}px`;
+      tooltip.style.left = `${offset.left + x(i)}px`;
+      tooltip.style.top = `${offset.top + y(v.p50) - 12}px`;
       tooltip.hidden = false;
     });
     hitCirkel.addEventListener("mouseleave", () => { tooltip.hidden = true; });
@@ -494,8 +517,8 @@ function berekenBetrouwbaarheid(voorspellingen) {
   const gemiddelde = relatieveBreedtes.reduce((a, b) => a + b, 0) / relatieveBreedtes.length;
   const percentage = Math.round(gemiddelde * 100);
   let label;
-  if (gemiddelde < 0.15) label = "Stabiel";
-  else if (gemiddelde < 0.30) label = "Gemiddeld";
+  if (percentage < 15) label = "Stabiel";
+  else if (percentage < 30) label = "Gemiddeld";
   else label = "Wisselvallig";
   return { label, percentage };
 }
@@ -557,10 +580,22 @@ function toonInzichten(voorspellingen, factoren, totaalP50, n) {
       );
       const richtingTekst =
         Math.abs(verschilPct) < 2 ? "Vergelijkbaar" : verschilPct > 0 ? `${verschilPct}% hoger` : `${Math.abs(verschilPct)}% lager`;
+      // Alleen "je hele portfolio" claimen als de cache daadwerkelijk alle
+      // winkels van de organisatie meenam — bij een organisatie met meer
+      // winkels dan overview.js' PAGINA_GROOTTE (50) dekt de cache maar de
+      // eerste pagina, en moet de toelichting dat expliciet zeggen i.p.v.
+      // een claim te doen die niet klopt. totaalWinkels ontbreekt op een
+      // oudere cache van vóór deze fix — dan terugvallen op de oorspronkelijke
+      // tekst i.p.v. crashen of "undefined" te tonen.
+      const isVolledigePortfolio =
+        portfolioCache.totaalWinkels === undefined || portfolioCache.aantalWinkels >= portfolioCache.totaalWinkels;
+      const portfolioToelichting = isVolledigePortfolio
+        ? "Gemiddelde omzet per dag, vergeleken met het gemiddelde over je hele portfolio (laatst bekende stand)."
+        : `Gemiddelde omzet per dag, vergeleken met het gemiddelde over de eerste ${portfolioCache.aantalWinkels} van ${portfolioCache.totaalWinkels} winkels (laatst bekende stand).`;
       kaarten.push(maakInzichtKaart(
         "T.o.v. je andere winkels",
         richtingTekst,
-        "Gemiddelde omzet per dag, vergeleken met het gemiddelde over je hele portfolio (laatst bekende stand).",
+        portfolioToelichting,
       ));
     }
   }

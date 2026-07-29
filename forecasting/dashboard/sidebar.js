@@ -67,7 +67,7 @@ function toonSidebarKpis(data) {
   }
 
   toonOmzetTrend(data.kpi.totale_verwachte_omzet, geladen === data.totaal_winkels);
-  cachePortfolioOmzet(data.kpi.totale_verwachte_omzet, data.winkels.length);
+  cachePortfolioOmzet(data.kpi.totale_verwachte_omzet, data.winkels.length, data.totaal_winkels);
 }
 
 // Voor de "T.o.v. je andere winkels"-inzichtkaart op index.html (zie
@@ -78,12 +78,22 @@ function toonSidebarKpis(data) {
 // omzetsom daadwerkelijk berekend is), niet data.totaal_winkels — die twee
 // lopen uiteen zodra paginering actief is, en delen door het verkeerde
 // getal zou het gemiddelde per winkel structureel te laag laten uitkomen.
+// totaalWinkels (= data.totaal_winkels, de echte organisatiebrede
+// winkeltelling) wordt apart meegecachet zodat dashboard.js kan
+// onderscheiden of aantalWinkels de volledige portfolio dekte of maar de
+// eerste pagina (overview.js' PAGINA_GROOTTE) — en de kaarttekst daarop
+// kan aanpassen i.p.v. altijd "je hele portfolio" te claimen.
 // horizonDagen ligt vast op de HORIZON_DAGEN-constante uit overview.js
 // (vandaag 7) — apart gecachet i.p.v. aangenomen, zodat een toekomstige
 // wijziging van die constante deze vergelijking niet stilzwijgend scheef
 // trekt.
-function cachePortfolioOmzet(totaleOmzet, aantalWinkels) {
-  const waarde = JSON.stringify({ totaleOmzet, aantalWinkels, horizonDagen: 7 });
+function cachePortfolioOmzet(totaleOmzet, aantalWinkels, totaalWinkels) {
+  const waarde = JSON.stringify({
+    totaleOmzet,
+    aantalWinkels,
+    totaalWinkels,
+    horizonDagen: typeof HORIZON_DAGEN !== "undefined" ? HORIZON_DAGEN : 7,
+  });
   localStorage.setItem(sidebarSleutel("portfolio_omzet_cache", huidigeOrganisatieId), waarde);
 }
 
