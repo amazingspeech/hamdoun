@@ -189,6 +189,15 @@ select:focus-visible, input:focus-visible, button:focus-visible, summary:focus-v
    op smalle schermen. Vaste grootte + horizontaal scrollen op de
    container is hier de bewuste, veilige keuze (zie ook FASE2-notities). */
 #chart { display:block; }
+/* Zichtbaar affordance dat de grafiek scrollbaar is i.p.v. simpelweg
+   afgekapt — de vaste 920px-breedte zelf blijft bewust ongewijzigd (zie
+   toelichting hierboven), deze tekst maakt alleen duidelijk dát er meer
+   te zien is. Getoond/verborgen door dashboard.js op basis van de
+   werkelijke scrollWidth/clientWidth-verhouding, dus nooit zichtbaar
+   wanneer de grafiek toch al helemaal past. */
+.chart-scroll-hint {
+  font-size:0.75rem; color:var(--ink-faint); margin:8px 0 0; text-align:right;
+}
 .chart-titel { font:600 0.9375rem/1.3 var(--font-body); margin:0 0 14px; color:var(--ink); }
 .legenda { display:flex; gap:20px; flex-wrap:wrap; margin-top:14px; font-size:0.8125rem; color:var(--ink-soft); }
 .legenda span { display:inline-flex; align-items:center; gap:7px; }

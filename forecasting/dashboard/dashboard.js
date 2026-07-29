@@ -369,6 +369,15 @@ function tekenGrafiek(voorspellingen) {
 
   initGrafiekTooltip(svg, voorspellingen, x, y);
 
+  // De grafiek heeft een vaste 920px-breedte (zie styles.css bij
+  // #chart-container voor de reden) en kan dus op smalle schermen
+  // overlopen. Zonder enig signaal ziet dat eruit als een simpelweg
+  // afgekapte grafiek i.p.v. een bewust scrollbare — deze hint toont zich
+  // alleen wanneer er daadwerkelijk meer te scrollen valt.
+  const scrollHint = document.getElementById("chart-scroll-hint");
+  const chartContainer = document.getElementById("chart-container");
+  if (scrollHint) scrollHint.hidden = chartContainer.scrollWidth <= chartContainer.clientWidth;
+
   // De lijn "tekent" zichzelf in via stroke-dasharray/-dashoffset. Twee
   // geneste rAF's: de eerste laat de browser de startstand (volledig
   // ingekort) daadwerkelijk schilderen vóórdat de tweede 'm naar 0
