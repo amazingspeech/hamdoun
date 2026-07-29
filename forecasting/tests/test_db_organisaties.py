@@ -10,6 +10,7 @@ from db.gebruiker_winkels import stel_toewijzingen_in
 from db.gebruikers import maak_gebruiker
 from db.organisaties import (
     deactiveer_organisatie,
+    haal_gemiddelde_omzet_per_stuk,
     haal_ingekochte_leden,
     haal_ingekochte_winkels,
     haal_organisatie_id_bij_stripe_subscription,
@@ -20,6 +21,7 @@ from db.organisaties import (
     is_in_proefperiode,
     kvk_nummer_heeft_organisatie,
     lijst_actieve_organisaties,
+    stel_gemiddelde_omzet_per_stuk_in,
     stel_stripe_koppeling_in,
     verwijder_organisatie,
 )
@@ -41,6 +43,41 @@ from db.schema import (
 from db.sessies import maak_sessie
 from db.verkoopdata import vervang_verkoopdata
 from db.wachtwoord_reset import maak_reset_token
+
+
+def test_zonder_ingestelde_prijs_geeft_none(tmp_path):
+    engine = maak_database(tmp_path / "tenants.db")
+    org_id = bootstrap_organisatie(engine, naam="Klant", slug="klant", store_ids=[])
+
+    assert haal_gemiddelde_omzet_per_stuk(engine, organisatie_id=org_id) is None
+
+
+def test_prijs_instellen_en_teruglezen(tmp_path):
+    engine = maak_database(tmp_path / "tenants.db")
+    org_id = bootstrap_organisatie(engine, naam="Klant", slug="klant", store_ids=[])
+
+    stel_gemiddelde_omzet_per_stuk_in(engine, organisatie_id=org_id, bedrag=12.5)
+
+    assert haal_gemiddelde_omzet_per_stuk(engine, organisatie_id=org_id) == 12.5
+
+
+def test_prijs_instellen_overschrijft_vorige_waarde(tmp_path):
+    engine = maak_database(tmp_path / "tenants.db")
+    org_id = bootstrap_organisatie(engine, naam="Klant", slug="klant", store_ids=[])
+    stel_gemiddelde_omzet_per_stuk_in(engine, organisatie_id=org_id, bedrag=12.5)
+
+    stel_gemiddelde_omzet_per_stuk_in(engine, organisatie_id=org_id, bedrag=9.0)
+
+    assert haal_gemiddelde_omzet_per_stuk(engine, organisatie_id=org_id) == 9.0
+
+
+def test_prijs_is_geisoleerd_per_organisatie(tmp_path):
+    engine = maak_database(tmp_path / "tenants.db")
+    org_a = bootstrap_organisatie(engine, naam="Org A", slug="org-a", store_ids=[])
+    org_b = bootstrap_organisatie(engine, naam="Org B", slug="org-b", store_ids=[])
+    stel_gemiddelde_omzet_per_stuk_in(engine, organisatie_id=org_a, bedrag=12.5)
+
+    assert haal_gemiddelde_omzet_per_stuk(engine, organisatie_id=org_b) is None
 
 
 def test_stel_stripe_koppeling_in(tmp_path):

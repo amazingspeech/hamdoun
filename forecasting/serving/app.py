@@ -11,7 +11,7 @@ from typing import NamedTuple, Optional
 
 import pandas as pd
 from dotenv import load_dotenv
-from fastapi import Depends, FastAPI, HTTPException, Query, Request, Response, Security, UploadFile
+from fastapi import Depends, FastAPI, Form, HTTPException, Query, Request, Response, Security, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import APIKeyHeader
 from fastapi.staticfiles import StaticFiles
@@ -72,6 +72,8 @@ from serving.schemas import (
     MetricsResponse,
     ModelVersieMetric,
     NieuweApiKeyResponse,
+    OrganisatieInstellingenResponse,
+    OrganisatieInstellingenVerzoek,
     PortfolioKpi,
     PortfolioResponse,
     ProductHerbestelAdviesResponse,
@@ -585,6 +587,29 @@ def winkeltoewijzing_instellen(
     return WinkelToewijzingResponse(winkel_ids=winkel_ids)
 
 
+@app.get("/organisatie/instellingen", response_model=OrganisatieInstellingenResponse)
+def organisatie_instellingen_lezen(
+    gebruiker: GeauthenticeerdeGebruiker = Depends(vereis_sessie),
+) -> OrganisatieInstellingenResponse:
+    # Org-brede prijs voor het echte /forecast (ML-model-winkels) — niet
+    # te verwarren met de per-eigen-winkel prijs hieronder. Leesbaar voor
+    # elke ingelogde gebruiker (niet alleen eigenaar-only zoals het
+    # wijzigen): een lid heeft de prijs nodig om het herbestel-advies op
+    # /forecast te kunnen zien. De prijs zelf is geen geheim.
+    prijs = db_organisaties.haal_gemiddelde_omzet_per_stuk(tenants_db, organisatie_id=gebruiker.organisatie_id)
+    return OrganisatieInstellingenResponse(gemiddelde_omzet_per_stuk=prijs)
+
+
+@app.put("/organisatie/instellingen", response_model=OrganisatieInstellingenResponse)
+def organisatie_instellingen_instellen(
+    verzoek: OrganisatieInstellingenVerzoek, eigenaar: GeauthenticeerdeGebruiker = Depends(vereis_eigenaar)
+) -> OrganisatieInstellingenResponse:
+    db_organisaties.stel_gemiddelde_omzet_per_stuk_in(
+        tenants_db, organisatie_id=eigenaar.organisatie_id, bedrag=verzoek.gemiddelde_omzet_per_stuk
+    )
+    return OrganisatieInstellingenResponse(gemiddelde_omzet_per_stuk=verzoek.gemiddelde_omzet_per_stuk)
+
+
 def _bouw_eigen_winkel_response(eigen_winkel_id: int, naam: str, heeft_verkoopdata: bool) -> EigenWinkelResponse:
     handmatige_prijs = db_eigen_winkel_instellingen.haal_prijs(tenants_db, eigen_winkel_id=eigen_winkel_id)
     automatische_prijs = bereken_gemiddelde_prijs_per_stuk(
@@ -658,41 +683,57 @@ def eigen_winkel_instellingen_instellen(
     return _bouw_eigen_winkel_response(winkel["id"], winkel["naam"], winkel["heeft_verkoopdata"])
 
 
+def _vereis_eigen_winkel(organisatie_id: int, eigen_winkel_id: int) -> None:
+    winkels = db_eigen_winkels.lijst_eigen_winkels(tenants_db, organisatie_id=organisatie_id)
+    if not any(w["id"] == eigen_winkel_id for w in winkels):
+        raise HTTPException(status_code=404, detail=f"Onbekende eigen winkel: {eigen_winkel_id}")
+
+
 @app.get("/organisatie/verkoopdata", response_model=VerkoopdataResponse)
-def verkoopdata_lezen(gebruiker: GeauthenticeerdeGebruiker = Depends(vereis_sessie)) -> VerkoopdataResponse:
+def verkoopdata_lezen(
+    eigen_winkel_id: int = Query(...), gebruiker: GeauthenticeerdeGebruiker = Depends(vereis_sessie)
+) -> VerkoopdataResponse:
     # Leesbaar voor elke ingelogde gebruiker, net als de herbestel-prijs —
     # alleen het uploaden (wijzigen) is eigenaar-only.
-    rijen = db_verkoopdata.haal_verkoopdata(tenants_db, organisatie_id=gebruiker.organisatie_id)
+    _vereis_eigen_winkel(gebruiker.organisatie_id, eigen_winkel_id)
+    rijen = db_verkoopdata.haal_verkoopdata(tenants_db, eigen_winkel_id=eigen_winkel_id)
     return VerkoopdataResponse(rijen=[VerkoopdataRij(**r) for r in rijen])
 
 
 @app.post("/organisatie/verkoopdata", response_model=VerkoopdataUploadResponse)
 def verkoopdata_uploaden(
-    bestand: UploadFile, eigenaar: GeauthenticeerdeGebruiker = Depends(vereis_eigenaar)
+    bestand: UploadFile, eigen_winkel_id: int = Form(...),
+    eigenaar: GeauthenticeerdeGebruiker = Depends(vereis_eigenaar),
 ) -> VerkoopdataUploadResponse:
+    _vereis_eigen_winkel(eigenaar.organisatie_id, eigen_winkel_id)
     inhoud = bestand.file.read().decode("utf-8", errors="replace")
     try:
         rijen = parse_verkoopdata_csv(inhoud)
     except OngeldigeVerkoopdata as e:
         raise HTTPException(status_code=422, detail=str(e))
-    db_verkoopdata.vervang_verkoopdata(tenants_db, organisatie_id=eigenaar.organisatie_id, rijen=rijen)
+    db_verkoopdata.vervang_verkoopdata(tenants_db, eigen_winkel_id=eigen_winkel_id, rijen=rijen)
     return VerkoopdataUploadResponse(aantal_rijen=len(rijen))
 
 
 @app.get("/organisatie/eigen-voorspelling", response_model=EigenVoorspellingResponse)
 def eigen_voorspelling_lezen(
-    horizon_dagen: int = Query(7, gt=0), gebruiker: GeauthenticeerdeGebruiker = Depends(vereis_sessie)
+    eigen_winkel_id: int = Query(...), horizon_dagen: int = Query(7, gt=0),
+    gebruiker: GeauthenticeerdeGebruiker = Depends(vereis_sessie),
 ) -> EigenVoorspellingResponse:
-    """Voorspelling op basis van de eigen geüploade verkoopdata, voor
-    organisaties zonder winkel in het gedeelde model (elke self-serve
-    signup) — zie serving/eigen_voorspelling.py. Leesbaar voor elke
-    ingelogde gebruiker, net als /organisatie/verkoopdata zelf."""
-    rijen = db_verkoopdata.haal_verkoopdata(tenants_db, organisatie_id=gebruiker.organisatie_id)
+    """Voorspelling op basis van de eigen geüploade verkoopdata van één
+    eigen winkel, voor organisaties zonder winkel in het gedeelde model
+    (elke self-serve signup) — zie serving/eigen_voorspelling.py. Leesbaar
+    voor elke ingelogde gebruiker, net als /organisatie/verkoopdata zelf."""
+    _vereis_eigen_winkel(gebruiker.organisatie_id, eigen_winkel_id)
+    rijen = db_verkoopdata.haal_verkoopdata(tenants_db, eigen_winkel_id=eigen_winkel_id)
     if len(rijen) < MINIMUM_DAGEN:
         return EigenVoorspellingResponse(beschikbaar=False, dagen_verzameld=len(rijen), dagen_nodig=MINIMUM_DAGEN)
 
     resultaat = bereken_eigen_voorspelling(rijen, horizon_dagen=horizon_dagen, vanaf=date.today())
-    prijs = db_organisaties.haal_gemiddelde_omzet_per_stuk(tenants_db, organisatie_id=gebruiker.organisatie_id)
+    product_rijen = db_product_verkoopdata.haal_product_verkoopdata(tenants_db, eigen_winkel_id=eigen_winkel_id)
+    prijs = bereken_gemiddelde_prijs_per_stuk(rijen, product_rijen)
+    if prijs is None:
+        prijs = db_eigen_winkel_instellingen.haal_prijs(tenants_db, eigen_winkel_id=eigen_winkel_id)
     advies = herbestel_advies(resultaat["totaal_p10"], resultaat["totaal_p50"], resultaat["totaal_p90"], prijs)
     return EigenVoorspellingResponse(
         beschikbaar=True, dagen_verzameld=len(rijen), dagen_nodig=MINIMUM_DAGEN,
@@ -704,7 +745,8 @@ def eigen_voorspelling_lezen(
 
 @app.post("/organisatie/product-verkoopdata", response_model=ProductVerkoopdataUploadResponse)
 def product_verkoopdata_uploaden(
-    bestand: UploadFile, eigenaar: GeauthenticeerdeGebruiker = Depends(vereis_eigenaar)
+    bestand: UploadFile, eigen_winkel_id: int = Form(...),
+    eigenaar: GeauthenticeerdeGebruiker = Depends(vereis_eigenaar),
 ) -> ProductVerkoopdataUploadResponse:
     # Herbestel-advies per product is een premium-functie (zelfde reden
     # als self-serve API-keys hierboven) — nooit beschikbaar tijdens de
@@ -714,18 +756,20 @@ def product_verkoopdata_uploaden(
             status_code=403,
             detail="Herbestel-advies per product is een premium-functie, niet beschikbaar in je proefperiode.",
         )
+    _vereis_eigen_winkel(eigenaar.organisatie_id, eigen_winkel_id)
     inhoud = bestand.file.read().decode("utf-8", errors="replace")
     try:
         rijen = parse_product_verkoopdata_csv(inhoud)
     except OngeldigeProductVerkoopdata as e:
         raise HTTPException(status_code=422, detail=str(e))
-    db_product_verkoopdata.vervang_product_verkoopdata(tenants_db, organisatie_id=eigenaar.organisatie_id, rijen=rijen)
+    db_product_verkoopdata.vervang_product_verkoopdata(tenants_db, eigen_winkel_id=eigen_winkel_id, rijen=rijen)
     return ProductVerkoopdataUploadResponse(aantal_rijen=len(rijen))
 
 
 @app.get("/organisatie/herbestel-advies-per-product", response_model=ProductHerbestelAdviesResponse)
 def herbestel_advies_per_product_lezen(
-    horizon_dagen: int = Query(7, gt=0), gebruiker: GeauthenticeerdeGebruiker = Depends(vereis_sessie)
+    eigen_winkel_id: int = Query(...), horizon_dagen: int = Query(7, gt=0),
+    gebruiker: GeauthenticeerdeGebruiker = Depends(vereis_sessie),
 ) -> ProductHerbestelAdviesResponse:
     """Leesbaar voor elke ingelogde gebruiker, net als /organisatie/
     eigen-voorspelling — alleen het uploaden is eigenaar-only."""
@@ -734,7 +778,8 @@ def herbestel_advies_per_product_lezen(
             status_code=403,
             detail="Herbestel-advies per product is een premium-functie, niet beschikbaar in je proefperiode.",
         )
-    rijen = db_product_verkoopdata.haal_product_verkoopdata(tenants_db, organisatie_id=gebruiker.organisatie_id)
+    _vereis_eigen_winkel(gebruiker.organisatie_id, eigen_winkel_id)
+    rijen = db_product_verkoopdata.haal_product_verkoopdata(tenants_db, eigen_winkel_id=eigen_winkel_id)
     items = bereken_herbestel_advies_per_product(rijen, horizon_dagen=horizon_dagen, vanaf=date.today())
     return ProductHerbestelAdviesResponse(items=items)
 

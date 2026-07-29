@@ -1,7 +1,11 @@
 """Organisatie-brede instellingen en levenscyclus (activeren/deactiveren/
-verwijderen, Stripe-koppeling, proefperiode). De gemiddelde omzet per
-verkocht stuk verhuisde naar db/eigen_winkel_instellingen.py — die is nu
-per eigen winkel ingesteld, niet meer org-breed."""
+verwijderen, Stripe-koppeling, proefperiode). gemiddelde_omzet_per_stuk
+hier is org-breed en voedt uitsluitend het echte, ML-model-gekoppelde
+/forecast (bv. "Winkel 1") — niet te verwarren met
+db/eigen_winkel_instellingen.py, dat dezelfde soort prijs per eigen
+winkel bijhoudt voor de zelf-geüploade-verkoopdata-flow. Twee losse
+instellingen voor twee losse features die toevallig ooit één veld
+deelden."""
 from __future__ import annotations
 
 from datetime import datetime, timedelta, timezone
@@ -33,6 +37,22 @@ def _als_utc(moment: datetime) -> datetime:
     if moment.tzinfo is None:
         return moment.replace(tzinfo=timezone.utc)
     return moment
+
+
+def stel_gemiddelde_omzet_per_stuk_in(engine: Engine, organisatie_id: int, bedrag: float) -> None:
+    with engine.begin() as conn:
+        conn.execute(
+            organisaties.update()
+            .where(organisaties.c.id == organisatie_id)
+            .values(gemiddelde_omzet_per_stuk=bedrag)
+        )
+
+
+def haal_gemiddelde_omzet_per_stuk(engine: Engine, organisatie_id: int) -> Optional[float]:
+    with engine.connect() as conn:
+        return conn.execute(
+            select(organisaties.c.gemiddelde_omzet_per_stuk).where(organisaties.c.id == organisatie_id)
+        ).scalar_one_or_none()
 
 
 def _stel_stripe_koppeling_in_op_connectie(

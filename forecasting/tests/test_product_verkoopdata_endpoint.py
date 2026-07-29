@@ -1,6 +1,6 @@
-"""Herbestel-advies per product (premium, self-serve-only). Zelfde
-fixture-vorm als test_verkoopdata_endpoint.py — die endpoints bestaan
-al, dit dekt de nieuwe per-product-variant + de premium-gate."""
+"""Herbestel-advies per product (premium, self-serve-only), per eigen
+winkel. Zelfde fixture-vorm als test_verkoopdata_endpoint.py — die
+endpoints bestaan al, dit dekt de per-product-variant + de premium-gate."""
 import importlib
 import sys
 from datetime import datetime, timedelta, timezone
@@ -72,6 +72,12 @@ def _inloggen(client, email, wachtwoord):
     assert resp.status_code == 200, resp.text
 
 
+def _maak_eigen_winkel(client, naam="Webshop A"):
+    resp = client.post("/organisatie/eigen-winkels", json={"naam": naam})
+    assert resp.status_code == 201, resp.text
+    return resp.json()["id"]
+
+
 def _zet_in_proefperiode(engine, slug="org-a"):
     with engine.begin() as conn:
         org_id = conn.execute(select(organisaties_tabel.c.id).where(organisaties_tabel.c.slug == slug)).scalar_one()
@@ -93,10 +99,13 @@ def _geldige_csv_35_dagen():
 def test_eigenaar_kan_csv_uploaden_en_teruglezen(tmp_path, monkeypatch):
     client, _ = _bouw_omgeving(tmp_path, monkeypatch)
     _inloggen(client, "eigenaar-a@klant.nl", "wachtwoord-a")
+    winkel_id = _maak_eigen_winkel(client)
     csv_inhoud = "datum,product,aantal\n2026-01-01,Brood,10\n2026-01-01,Melk,4\n"
 
     upload_resp = client.post(
-        "/organisatie/product-verkoopdata", files={"bestand": ("verkoop.csv", csv_inhoud, "text/csv")}
+        "/organisatie/product-verkoopdata",
+        files={"bestand": ("verkoop.csv", csv_inhoud, "text/csv")},
+        data={"eigen_winkel_id": str(winkel_id)},
     )
 
     assert upload_resp.status_code == 200, upload_resp.text
@@ -105,11 +114,15 @@ def test_eigenaar_kan_csv_uploaden_en_teruglezen(tmp_path, monkeypatch):
 
 def test_lid_mag_niet_uploaden(tmp_path, monkeypatch):
     client, _ = _bouw_omgeving(tmp_path, monkeypatch)
+    _inloggen(client, "eigenaar-a@klant.nl", "wachtwoord-a")
+    winkel_id = _maak_eigen_winkel(client)
+    client.post("/logout")
     _inloggen(client, "lid-a@klant.nl", "wachtwoord-a-lid")
 
     resp = client.post(
         "/organisatie/product-verkoopdata",
         files={"bestand": ("verkoop.csv", "datum,product,aantal\n2026-01-01,Brood,10\n", "text/csv")},
+        data={"eigen_winkel_id": str(winkel_id)},
     )
 
     assert resp.status_code == 403
@@ -118,9 +131,12 @@ def test_lid_mag_niet_uploaden(tmp_path, monkeypatch):
 def test_ongeldige_csv_geeft_422(tmp_path, monkeypatch):
     client, _ = _bouw_omgeving(tmp_path, monkeypatch)
     _inloggen(client, "eigenaar-a@klant.nl", "wachtwoord-a")
+    winkel_id = _maak_eigen_winkel(client)
 
     resp = client.post(
-        "/organisatie/product-verkoopdata", files={"bestand": ("verkoop.csv", "verkeerde,kolommen\n1,2\n", "text/csv")}
+        "/organisatie/product-verkoopdata",
+        files={"bestand": ("verkoop.csv", "verkeerde,kolommen\n1,2\n", "text/csv")},
+        data={"eigen_winkel_id": str(winkel_id)},
     )
 
     assert resp.status_code == 422
@@ -129,12 +145,14 @@ def test_ongeldige_csv_geeft_422(tmp_path, monkeypatch):
 def test_advies_geeft_lege_lijst_zonder_genoeg_historie(tmp_path, monkeypatch):
     client, _ = _bouw_omgeving(tmp_path, monkeypatch)
     _inloggen(client, "eigenaar-a@klant.nl", "wachtwoord-a")
+    winkel_id = _maak_eigen_winkel(client)
     client.post(
         "/organisatie/product-verkoopdata",
         files={"bestand": ("v.csv", "datum,product,aantal\n2026-01-01,Brood,10\n", "text/csv")},
+        data={"eigen_winkel_id": str(winkel_id)},
     )
 
-    resp = client.get("/organisatie/herbestel-advies-per-product")
+    resp = client.get("/organisatie/herbestel-advies-per-product", params={"eigen_winkel_id": winkel_id})
 
     assert resp.status_code == 200
     assert resp.json() == {"items": []}
@@ -143,12 +161,14 @@ def test_advies_geeft_lege_lijst_zonder_genoeg_historie(tmp_path, monkeypatch):
 def test_advies_met_genoeg_historie(tmp_path, monkeypatch):
     client, _ = _bouw_omgeving(tmp_path, monkeypatch)
     _inloggen(client, "eigenaar-a@klant.nl", "wachtwoord-a")
+    winkel_id = _maak_eigen_winkel(client)
     client.post(
         "/organisatie/product-verkoopdata",
         files={"bestand": ("v.csv", _geldige_csv_35_dagen(), "text/csv")},
+        data={"eigen_winkel_id": str(winkel_id)},
     )
 
-    resp = client.get("/organisatie/herbestel-advies-per-product")
+    resp = client.get("/organisatie/herbestel-advies-per-product", params={"eigen_winkel_id": winkel_id})
 
     assert resp.status_code == 200
     items = resp.json()["items"]
@@ -159,12 +179,14 @@ def test_advies_met_genoeg_historie(tmp_path, monkeypatch):
 
 def test_eigenaar_in_proefperiode_mag_niet_uploaden(tmp_path, monkeypatch):
     client, engine = _bouw_omgeving(tmp_path, monkeypatch)
-    _zet_in_proefperiode(engine)
     _inloggen(client, "eigenaar-a@klant.nl", "wachtwoord-a")
+    winkel_id = _maak_eigen_winkel(client)
+    _zet_in_proefperiode(engine)
 
     resp = client.post(
         "/organisatie/product-verkoopdata",
         files={"bestand": ("v.csv", "datum,product,aantal\n2026-01-01,Brood,10\n", "text/csv")},
+        data={"eigen_winkel_id": str(winkel_id)},
     )
 
     assert resp.status_code == 403
@@ -174,27 +196,32 @@ def test_eigenaar_in_proefperiode_mag_niet_uploaden(tmp_path, monkeypatch):
 def test_advies_niet_beschikbaar_tijdens_proefperiode(tmp_path, monkeypatch):
     client, engine = _bouw_omgeving(tmp_path, monkeypatch)
     _inloggen(client, "eigenaar-a@klant.nl", "wachtwoord-a")
+    winkel_id = _maak_eigen_winkel(client)
     client.post(
         "/organisatie/product-verkoopdata",
         files={"bestand": ("v.csv", _geldige_csv_35_dagen(), "text/csv")},
+        data={"eigen_winkel_id": str(winkel_id)},
     )
     _zet_in_proefperiode(engine)
 
-    resp = client.get("/organisatie/herbestel-advies-per-product")
+    resp = client.get("/organisatie/herbestel-advies-per-product", params={"eigen_winkel_id": winkel_id})
 
     assert resp.status_code == 403
     assert "proefperiode" in resp.json()["detail"].lower()
 
 
-def test_product_verkoopdata_blijft_geisoleerd_tussen_organisaties(tmp_path, monkeypatch):
+def test_product_verkoopdata_endpoint_isoleert_tussen_organisaties(tmp_path, monkeypatch):
     client, _ = _bouw_omgeving(tmp_path, monkeypatch)
     _inloggen(client, "eigenaar-a@klant.nl", "wachtwoord-a")
+    winkel_id = _maak_eigen_winkel(client)
     client.post(
         "/organisatie/product-verkoopdata",
         files={"bestand": ("v.csv", _geldige_csv_35_dagen(), "text/csv")},
+        data={"eigen_winkel_id": str(winkel_id)},
     )
+    client.post("/logout")
 
     _inloggen(client, "eigenaar-b@klant.nl", "wachtwoord-b")
-    resp = client.get("/organisatie/herbestel-advies-per-product")
+    resp = client.get("/organisatie/herbestel-advies-per-product", params={"eigen_winkel_id": winkel_id})
 
-    assert resp.json() == {"items": []}
+    assert resp.status_code == 404

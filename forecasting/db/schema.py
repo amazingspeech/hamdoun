@@ -39,6 +39,18 @@ organisaties = Table(
     Column("slug", String, nullable=False, unique=True),
     Column("actief", Boolean, nullable=False, default=True),
     Column("aangemaakt_op", DateTime, nullable=False),
+    # Fase 5 NODIG 1 (herbestel-advies): een winkelier vult dit één keer
+    # zelf in voor het echte, ML-model-gekoppelde /forecast (bv. "Winkel
+    # 1") — er is nergens in dit systeem echte product-/inventarisdata
+    # (het model voorspelt totale omzet, geen losse stuks), dus dit is de
+    # enige eerlijke manier om een omzetvoorspelling om te rekenen naar een
+    # aantal-stuks-schatting zonder een verzonnen prijs te gebruiken.
+    # Optioneel: zonder ingevulde waarde toont het dashboard geen
+    # stuks-advies, alleen het bestaande omzetgetal. Los van
+    # eigen_winkel_instellingen.gemiddelde_omzet_per_stuk — dat is de
+    # prijs per eigen winkel voor de zelf-geüploade-verkoopdata-flow, dit
+    # hier is org-breed en voedt uitsluitend het echte /forecast.
+    Column("gemiddelde_omzet_per_stuk", Float, nullable=True),
     # Fase 5 NODIG 5 (self-serve signup): alleen gevuld voor organisaties die
     # via /signup + Stripe Checkout zijn aangemaakt. Handmatig aangemaakte
     # organisaties (db/bootstrap.py) hebben deze niet — beide paden blijven

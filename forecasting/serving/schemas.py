@@ -108,6 +108,14 @@ class GebruikerResponse(BaseModel):
     actief: bool
 
 
+class OrganisatieInstellingenVerzoek(BaseModel):
+    gemiddelde_omzet_per_stuk: float = Field(..., gt=0)
+
+
+class OrganisatieInstellingenResponse(BaseModel):
+    gemiddelde_omzet_per_stuk: Optional[float] = None
+
+
 class EigenWinkelAanmakenVerzoek(BaseModel):
     naam: str = Field(..., min_length=1)
 
