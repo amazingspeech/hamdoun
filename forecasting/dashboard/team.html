@@ -119,6 +119,25 @@
     <p class="sub" id="herbestel-melding" hidden style="margin:0;"></p>
   </div>
 
+  <div class="kaart" id="eigen-winkels-kaart" hidden>
+    <p class="sub" style="margin:0;">
+      Eigen winkels groeperen je geüploade verkoopdata (webshop, marktkraam, ...) elk apart — geen koppeling met
+      het gedeelde voorspelmodel, puur een naam om je eigen CSV-uploads onder te ordenen.
+    </p>
+    <form id="eigen-winkel-aanmaken-form" style="display:flex; gap:14px; align-items:end; flex-wrap:wrap;">
+      <div class="veld">
+        <label for="eigen-winkel-naam">Naam</label>
+        <input type="text" id="eigen-winkel-naam" required>
+      </div>
+      <button type="submit" class="btn" id="eigen-winkel-aanmaken-knop">Aanmaken</button>
+    </form>
+    <p class="fout" id="eigen-winkel-aanmaken-fout" hidden></p>
+    <div class="teamlijst" id="eigen-winkels-lijst"></div>
+    <p class="sub" id="eigen-winkels-leeg" hidden style="margin:16px 0 0;">
+      Nog geen eigen winkel — maak er hierboven één aan om verkoopdata te kunnen uploaden.
+    </p>
+  </div>
+
   <div class="kaart" id="verkoopdata-kaart" hidden>
     <p class="sub" style="margin:0;">
       Geen koppeling met je webshop? Upload je eigen verkoopdata als CSV-bestand (kolommen "datum" en

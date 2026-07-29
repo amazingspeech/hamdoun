@@ -406,18 +406,188 @@ function initHerbestelForm() {
       const melding = document.getElementById("herbestel-melding");
       melding.textContent = "Opgeslagen.";
       melding.hidden = false;
-      // De eigen-voorspelling-kaart toont een herbestel-advies i.p.v. een
-      // omzetbedrag zodra er een prijs is ingesteld — die moet dus meteen
-      // verversen, anders blijft de oude (omzet-)tekst staan tot een
-      // volgende paginaherlaad.
-      try {
-        toonEigenVoorspelling(await haalEigenVoorspelling());
-      } catch (_e) {
-        // Niet kritisch voor deze form-submit — de prijs zelf is al
-        // succesvol opgeslagen, dus geen foutmelding hierover tonen.
-      }
+      // Deze prijs voedt uitsluitend het herbestel-advies op het echte
+      // /forecast (index.html/dashboard.js) — dat heeft hier geen
+      // rechtstreeks zichtbaar effect op deze pagina, dus geen lokale
+      // kaart om na te verversen (in tegenstelling tot de per-eigen-
+      // winkel prijs, zie stelEigenWinkelPrijsIn()).
     } catch (e) {
       toonFout("herbestel-fout", e.message);
+    } finally {
+      knop.disabled = false;
+    }
+  });
+}
+
+async function haalEigenWinkels() {
+  const resp = await fetch(`${API_BASIS}/organisatie/eigen-winkels`, { credentials: "same-origin" });
+  if (!resp.ok) throw new Error(`Kon eigen winkels niet ophalen (${resp.status})`);
+  return resp.json();
+}
+
+async function maakEigenWinkel(naam) {
+  const resp = await fetch(`${API_BASIS}/organisatie/eigen-winkels`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    credentials: "same-origin",
+    body: JSON.stringify({ naam }),
+  });
+  if (!resp.ok) {
+    const detail = await resp.json().catch(() => ({}));
+    throw new Error(detail.detail || `Aanmaken mislukt (${resp.status})`);
+  }
+  return resp.json();
+}
+
+async function hernoemEigenWinkel(id, naam) {
+  const resp = await fetch(`${API_BASIS}/organisatie/eigen-winkels/${id}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    credentials: "same-origin",
+    body: JSON.stringify({ naam }),
+  });
+  if (!resp.ok) {
+    const detail = await resp.json().catch(() => ({}));
+    throw new Error(detail.detail || `Hernoemen mislukt (${resp.status})`);
+  }
+  return resp.json();
+}
+
+async function verwijderEigenWinkel(id) {
+  const resp = await fetch(`${API_BASIS}/organisatie/eigen-winkels/${id}`, { method: "DELETE", credentials: "same-origin" });
+  if (!resp.ok) throw new Error(`Verwijderen mislukt (${resp.status})`);
+}
+
+async function stelEigenWinkelPrijsIn(id, bedrag) {
+  const resp = await fetch(`${API_BASIS}/organisatie/eigen-winkels/${id}/instellingen`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    credentials: "same-origin",
+    body: JSON.stringify({ gemiddelde_omzet_per_stuk: bedrag }),
+  });
+  if (!resp.ok) {
+    const detail = await resp.json().catch(() => ({}));
+    throw new Error(detail.detail || `Opslaan mislukt (${resp.status})`);
+  }
+  return resp.json();
+}
+
+function maakEigenWinkelEl(winkel, opGewijzigd) {
+  const rij = document.createElement("div");
+  rij.className = "teamlid";
+
+  const naam = document.createElement("span");
+  naam.className = "email";
+  naam.textContent = winkel.naam;
+
+  const rechts = document.createElement("span");
+  rechts.className = "rechts";
+
+  const prijsVeld = document.createElement("input");
+  prijsVeld.type = "number";
+  prijsVeld.min = "0.01";
+  prijsVeld.step = "0.01";
+  prijsVeld.style.width = "90px";
+  prijsVeld.placeholder = winkel.automatische_prijs_per_stuk !== null
+    ? `auto: €${winkel.automatische_prijs_per_stuk.toFixed(2)}` : "prijs/stuk";
+  if (winkel.gemiddelde_omzet_per_stuk !== null) prijsVeld.value = winkel.gemiddelde_omzet_per_stuk;
+  const prijsKnop = document.createElement("button");
+  prijsKnop.type = "button";
+  prijsKnop.className = "btn zacht";
+  prijsKnop.textContent = "Opslaan";
+  prijsKnop.addEventListener("click", async () => {
+    prijsKnop.disabled = true;
+    try {
+      await stelEigenWinkelPrijsIn(winkel.id, Number(prijsVeld.value));
+      await opGewijzigd();
+    } catch (e) {
+      toonFout("eigen-winkel-aanmaken-fout", e.message);
+    } finally {
+      prijsKnop.disabled = false;
+    }
+  });
+
+  const hernoemKnop = document.createElement("button");
+  hernoemKnop.type = "button";
+  hernoemKnop.className = "btn zacht";
+  hernoemKnop.textContent = "Hernoemen";
+  hernoemKnop.addEventListener("click", async () => {
+    const nieuweNaam = window.prompt("Nieuwe naam:", winkel.naam);
+    if (!nieuweNaam || nieuweNaam === winkel.naam) return;
+    try {
+      await hernoemEigenWinkel(winkel.id, nieuweNaam);
+      await opGewijzigd();
+    } catch (e) {
+      toonFout("eigen-winkel-aanmaken-fout", e.message);
+    }
+  });
+
+  const verwijderKnop = document.createElement("button");
+  verwijderKnop.type = "button";
+  verwijderKnop.className = "btn zacht";
+  verwijderKnop.textContent = "Verwijderen";
+  verwijderKnop.addEventListener("click", async () => {
+    if (!window.confirm(`"${winkel.naam}" en al zijn geüploade verkoopdata verwijderen? Dit kan niet ongedaan worden gemaakt.`)) return;
+    verwijderKnop.disabled = true;
+    try {
+      await verwijderEigenWinkel(winkel.id);
+      await opGewijzigd();
+    } catch (e) {
+      toonFout("eigen-winkel-aanmaken-fout", e.message);
+      verwijderKnop.disabled = false;
+    }
+  });
+
+  rechts.append(prijsVeld, prijsKnop, hernoemKnop, verwijderKnop);
+  rij.append(naam, rechts);
+  return rij;
+}
+
+let alleEigenWinkels = [];
+
+function vulEigenWinkelSelects(winkels) {
+  for (const selectId of ["verkoopdata-eigen-winkel", "product-verkoopdata-eigen-winkel"]) {
+    const select = document.getElementById(selectId);
+    if (!select) continue;
+    const huidige = select.value;
+    select.replaceChildren(...winkels.map((w) => {
+      const optie = document.createElement("option");
+      optie.value = String(w.id);
+      optie.textContent = w.naam;
+      return optie;
+    }));
+    if (winkels.some((w) => String(w.id) === huidige)) select.value = huidige;
+    select.disabled = winkels.length === 0;
+  }
+  const verkoopdataKnop = document.getElementById("verkoopdata-knop");
+  const productKnop = document.getElementById("product-verkoopdata-knop");
+  if (verkoopdataKnop) verkoopdataKnop.disabled = winkels.length === 0;
+  if (productKnop) productKnop.disabled = winkels.length === 0;
+}
+
+async function verversEigenWinkelsKaart() {
+  alleEigenWinkels = await haalEigenWinkels();
+  const lijstEl = document.getElementById("eigen-winkels-lijst");
+  lijstEl.replaceChildren(...alleEigenWinkels.map((w) => maakEigenWinkelEl(w, verversEigenWinkelsKaart)));
+  document.getElementById("eigen-winkels-leeg").hidden = alleEigenWinkels.length > 0;
+  vulEigenWinkelSelects(alleEigenWinkels);
+}
+
+function initEigenWinkelAanmakenForm() {
+  const form = document.getElementById("eigen-winkel-aanmaken-form");
+  if (!form) return;
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const knop = document.getElementById("eigen-winkel-aanmaken-knop");
+    knop.disabled = true;
+    toonFout("eigen-winkel-aanmaken-fout", "");
+    try {
+      const naamVeld = document.getElementById("eigen-winkel-naam");
+      await maakEigenWinkel(naamVeld.value);
+      naamVeld.value = "";
+      await verversEigenWinkelsKaart();
+    } catch (e) {
+      toonFout("eigen-winkel-aanmaken-fout", e.message);
     } finally {
       knop.disabled = false;
     }
@@ -827,6 +997,26 @@ async function initTeamPagina() {
       toonFout("fout", e.message);
     }
     initNieuweKeyForm();
+
+    document.getElementById("eigen-winkels-kaart").hidden = false;
+    try {
+      await verversEigenWinkelsKaart();
+    } catch (e) {
+      toonFout("fout", e.message);
+    }
+    initEigenWinkelAanmakenForm();
+  } else {
+    // Een lid kan geen eigen winkel aanmaken/beheren (eigenaar-only, zie
+    // serving/app.py), maar moet wel de bestaande winkels in de
+    // upload-kaart-dropdowns kunnen zien (die kaarten zijn voor iedereen
+    // zichtbaar, zie hieronder) — vul de selects zonder de beheerkaart te
+    // tonen.
+    try {
+      alleEigenWinkels = await haalEigenWinkels();
+      vulEigenWinkelSelects(alleEigenWinkels);
+    } catch (e) {
+      toonFout("fout", e.message);
+    }
   }
 
   // Verkoopdata-kaart: voor iedereen zichtbaar (je eigen verkoophistorie
