@@ -1,4 +1,4 @@
-# Live deployment — prospero.tessar.nl
+# Live deployment — kwantiq.tessar.nl
 
 Dit stappenplan zet de vraagvoorspelling-demo live op de bestaande
 Hetzner-server (`157.90.244.24`), naast de al draaiende Certo/n8n-stack,
@@ -6,7 +6,7 @@ zonder die stack aan te raken.
 
 **Vereist voordat je begint:**
 - SSH-toegang tot `157.90.244.24`.
-- Een DNS A-record voor `prospero.tessar.nl` naar dat IP — moet al
+- Een DNS A-record voor `kwantiq.tessar.nl` naar dat IP — moet al
   actief zijn vóórdat Caddy een geldig HTTPS-certificaat kan ophalen.
 - Een lokaal getraind modelartefact, getraind op **echte** Rossmann-data
   (niet de synthetische testdata — zie `forecasting/README.md` secties 1-2).
@@ -39,7 +39,7 @@ cd /home/job/forecasting-demo/deploy
 cp .env.example .env
 nano .env
 # Zet MODEL_VERSION op de versie uit stap 2, APP_BASIS_URL op
-# https://prospero.tessar.nl, en de MAIL_SMTP_*-waarden (nodig voor
+# https://kwantiq.tessar.nl, en de MAIL_SMTP_*-waarden (nodig voor
 # wachtwoord-reset én de wekelijkse herbestel-mail — zie .env.example voor
 # uitleg per variabele). Laat STRIPE_SECRET_KEY/STRIPE_PRICE_ID/
 # STRIPE_PRICE_ID_EXTRA_LID/STRIPE_PRICE_ID_EXTRA_WINKEL/
@@ -138,7 +138,7 @@ vanuit die container naar zichzelf wijzen, niet naar de host. In plaats
 daarvan krijgt de forecasting-`api`-container een plek op een gedeeld
 extern Docker-netwerk, zodat Caddy 'm bij naam kan bereiken.
 
-**Vereist:** het DNS A-record voor `prospero.tessar.nl` moet al
+**Vereist:** het DNS A-record voor `kwantiq.tessar.nl` moet al
 actief zijn (zie de vereisten bovenaan dit document) — zonder geldige DNS
 kan Caddy straks geen HTTPS-certificaat voor dit blok ophalen.
 
@@ -189,7 +189,7 @@ caddy-container opnieuw starten.
 
 ## 7. Verifiëren
 
-Open `https://prospero.tessar.nl/login.html` in een browser en log
+Open `https://kwantiq.tessar.nl/login.html` in een browser en log
 in met het account uit stap 3. Je wordt automatisch naar het dashboard
 doorgestuurd (het dashboard vereist sinds deze stap een geldige sessie —
 zonder login redirect het permanent naar `login.html`). Kies een winkel,
