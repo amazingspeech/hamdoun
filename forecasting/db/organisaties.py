@@ -1,7 +1,11 @@
-"""Fase 5 NODIG 1 (herbestel-advies): per-organisatie instellingen die niet
-uit het modelartefact of een koppeling komen, maar door de winkelier zelf
-worden opgegeven — momenteel alleen de gemiddelde omzet per verkocht stuk,
-nodig om een omzetvoorspelling om te rekenen naar een stuks-schatting."""
+"""Organisatie-brede instellingen en levenscyclus (activeren/deactiveren/
+verwijderen, Stripe-koppeling, proefperiode). gemiddelde_omzet_per_stuk
+hier is org-breed en voedt uitsluitend het echte, ML-model-gekoppelde
+/forecast (bv. "Winkel 1") — niet te verwarren met
+db/eigen_winkel_instellingen.py, dat dezelfde soort prijs per eigen
+winkel bijhoudt voor de zelf-geüploade-verkoopdata-flow. Twee losse
+instellingen voor twee losse features die toevallig ooit één veld
+deelden."""
 from __future__ import annotations
 
 from datetime import datetime, timedelta, timezone
@@ -15,6 +19,8 @@ from db.schema import (
     api_keys,
     eigen_product_verkoopdata,
     eigen_verkoopdata,
+    eigen_winkel_instellingen,
+    eigen_winkels,
     gebruiker_winkels,
     gebruikers,
     organisaties,
@@ -170,13 +176,20 @@ def verwijder_organisatie(engine: Engine, organisatie_id: int) -> None:
     with engine.begin() as conn:
         gebruiker_ids = select(gebruikers.c.id).where(gebruikers.c.organisatie_id == organisatie_id)
         winkel_ids = select(winkels.c.id).where(winkels.c.organisatie_id == organisatie_id)
+        eigen_winkel_ids = select(eigen_winkels.c.id).where(eigen_winkels.c.organisatie_id == organisatie_id)
 
         conn.execute(sessies.delete().where(sessies.c.gebruiker_id.in_(gebruiker_ids)))
         conn.execute(wachtwoord_reset_tokens.delete().where(wachtwoord_reset_tokens.c.gebruiker_id.in_(gebruiker_ids)))
         conn.execute(gebruiker_winkels.delete().where(gebruiker_winkels.c.winkel_id.in_(winkel_ids)))
         conn.execute(api_keys.delete().where(api_keys.c.organisatie_id == organisatie_id))
-        conn.execute(eigen_verkoopdata.delete().where(eigen_verkoopdata.c.organisatie_id == organisatie_id))
-        conn.execute(eigen_product_verkoopdata.delete().where(eigen_product_verkoopdata.c.organisatie_id == organisatie_id))
+        conn.execute(eigen_verkoopdata.delete().where(eigen_verkoopdata.c.eigen_winkel_id.in_(eigen_winkel_ids)))
+        conn.execute(
+            eigen_product_verkoopdata.delete().where(eigen_product_verkoopdata.c.eigen_winkel_id.in_(eigen_winkel_ids))
+        )
+        conn.execute(
+            eigen_winkel_instellingen.delete().where(eigen_winkel_instellingen.c.eigen_winkel_id.in_(eigen_winkel_ids))
+        )
+        conn.execute(eigen_winkels.delete().where(eigen_winkels.c.organisatie_id == organisatie_id))
         conn.execute(winkels.delete().where(winkels.c.organisatie_id == organisatie_id))
         conn.execute(gebruikers.delete().where(gebruikers.c.organisatie_id == organisatie_id))
         conn.execute(

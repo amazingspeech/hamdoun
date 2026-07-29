@@ -1,7 +1,7 @@
 """Fase 5 NODIG 5-aanvulling: GET /organisatie/eigen-voorspelling — een
-lichte voorspelling rechtstreeks uit eigen_verkoopdata, voor organisaties
-zonder winkel in het gedeelde model (elke self-serve signup). Zelfde
-fixture-patroon als test_verkoopdata_endpoint.py."""
+lichte voorspelling rechtstreeks uit eigen_verkoopdata, per eigen winkel,
+voor organisaties zonder winkel in het gedeelde model (elke self-serve
+signup). Zelfde fixture-patroon als test_verkoopdata_endpoint.py."""
 import importlib
 import sys
 from datetime import date, timedelta
@@ -9,8 +9,9 @@ from datetime import date, timedelta
 from fastapi.testclient import TestClient
 
 from db.bootstrap import bootstrap_organisatie
+from db.eigen_winkel_instellingen import stel_prijs_in
+from db.eigen_winkels import maak_eigen_winkel
 from db.gebruikers import maak_gebruiker
-from db.organisaties import stel_gemiddelde_omzet_per_stuk_in
 from db.schema import maak_database
 from db.verkoopdata import vervang_verkoopdata
 from serving.eigen_voorspelling import MINIMUM_DAGEN
@@ -25,6 +26,7 @@ def _bouw_omgeving(tmp_path, monkeypatch):
     org_a = bootstrap_organisatie(engine, naam="Organisatie A", slug="org-a", store_ids=[])
     maak_gebruiker(engine, organisatie_id=org_a, email="eigenaar-a@klant.nl", wachtwoord="wachtwoord-a", rol="eigenaar")
     maak_gebruiker(engine, organisatie_id=org_a, email="lid-a@klant.nl", wachtwoord="wachtwoord-a-lid", rol="lid")
+    winkel_id = maak_eigen_winkel(engine, organisatie_id=org_a, naam="Webshop A")
 
     monkeypatch.setenv("MODEL_VERSION", _bootstrap_model(tmp_path))
     monkeypatch.setenv("MODELS_DIR", str(tmp_path / "models"))
@@ -39,7 +41,7 @@ def _bouw_omgeving(tmp_path, monkeypatch):
     if "serving.app" in sys.modules:
         del sys.modules["serving.app"]
     module = importlib.import_module("serving.app")
-    return TestClient(module.app), engine, org_a
+    return TestClient(module.app), engine, winkel_id
 
 
 def _bootstrap_model(tmp_path):
@@ -72,18 +74,18 @@ def _inloggen(client, email, wachtwoord):
     assert resp.status_code == 200, resp.text
 
 
-def _upload_dagen(engine, org_id, aantal_dagen, omzet=100.0):
+def _upload_dagen(engine, winkel_id, aantal_dagen, omzet=100.0):
     start = date(2026, 1, 1)
     rijen = [((start + timedelta(days=i)).isoformat(), omzet) for i in range(aantal_dagen)]
-    vervang_verkoopdata(engine, organisatie_id=org_id, rijen=rijen)
+    vervang_verkoopdata(engine, eigen_winkel_id=winkel_id, rijen=rijen)
 
 
 def test_te_weinig_data_geeft_beschikbaar_false_met_voortgang(tmp_path, monkeypatch):
-    client, engine, org_id = _bouw_omgeving(tmp_path, monkeypatch)
+    client, engine, winkel_id = _bouw_omgeving(tmp_path, monkeypatch)
     _inloggen(client, "eigenaar-a@klant.nl", "wachtwoord-a")
-    _upload_dagen(engine, org_id, aantal_dagen=10)
+    _upload_dagen(engine, winkel_id, aantal_dagen=10)
 
-    resp = client.get("/organisatie/eigen-voorspelling")
+    resp = client.get("/organisatie/eigen-voorspelling", params={"eigen_winkel_id": winkel_id})
 
     assert resp.status_code == 200
     data = resp.json()
@@ -94,11 +96,11 @@ def test_te_weinig_data_geeft_beschikbaar_false_met_voortgang(tmp_path, monkeypa
 
 
 def test_genoeg_data_geeft_voorspelling(tmp_path, monkeypatch):
-    client, engine, org_id = _bouw_omgeving(tmp_path, monkeypatch)
+    client, engine, winkel_id = _bouw_omgeving(tmp_path, monkeypatch)
     _inloggen(client, "eigenaar-a@klant.nl", "wachtwoord-a")
-    _upload_dagen(engine, org_id, aantal_dagen=MINIMUM_DAGEN)
+    _upload_dagen(engine, winkel_id, aantal_dagen=MINIMUM_DAGEN)
 
-    resp = client.get("/organisatie/eigen-voorspelling")
+    resp = client.get("/organisatie/eigen-voorspelling", params={"eigen_winkel_id": winkel_id})
 
     assert resp.status_code == 200
     data = resp.json()
@@ -108,21 +110,21 @@ def test_genoeg_data_geeft_voorspelling(tmp_path, monkeypatch):
 
 
 def test_herbestel_advies_wordt_meegegeven_als_prijs_ingesteld(tmp_path, monkeypatch):
-    client, engine, org_id = _bouw_omgeving(tmp_path, monkeypatch)
+    client, engine, winkel_id = _bouw_omgeving(tmp_path, monkeypatch)
     _inloggen(client, "eigenaar-a@klant.nl", "wachtwoord-a")
-    _upload_dagen(engine, org_id, aantal_dagen=MINIMUM_DAGEN, omzet=140.0)
-    stel_gemiddelde_omzet_per_stuk_in(engine, organisatie_id=org_id, bedrag=14.0)
+    _upload_dagen(engine, winkel_id, aantal_dagen=MINIMUM_DAGEN, omzet=140.0)
+    stel_prijs_in(engine, eigen_winkel_id=winkel_id, bedrag=14.0)
 
-    resp = client.get("/organisatie/eigen-voorspelling")
+    resp = client.get("/organisatie/eigen-voorspelling", params={"eigen_winkel_id": winkel_id})
 
     assert resp.json()["herbestel_advies"] is not None
 
 
 def test_lid_mag_eigen_voorspelling_lezen(tmp_path, monkeypatch):
-    client, engine, org_id = _bouw_omgeving(tmp_path, monkeypatch)
-    _upload_dagen(engine, org_id, aantal_dagen=MINIMUM_DAGEN)
+    client, engine, winkel_id = _bouw_omgeving(tmp_path, monkeypatch)
+    _upload_dagen(engine, winkel_id, aantal_dagen=MINIMUM_DAGEN)
     _inloggen(client, "lid-a@klant.nl", "wachtwoord-a-lid")
 
-    resp = client.get("/organisatie/eigen-voorspelling")
+    resp = client.get("/organisatie/eigen-voorspelling", params={"eigen_winkel_id": winkel_id})
 
     assert resp.status_code == 200

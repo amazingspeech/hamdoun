@@ -116,6 +116,26 @@ class OrganisatieInstellingenResponse(BaseModel):
     gemiddelde_omzet_per_stuk: Optional[float] = None
 
 
+class EigenWinkelAanmakenVerzoek(BaseModel):
+    naam: str = Field(..., min_length=1)
+
+
+class EigenWinkelHernoemenVerzoek(BaseModel):
+    naam: str = Field(..., min_length=1)
+
+
+class EigenWinkelInstellingenVerzoek(BaseModel):
+    gemiddelde_omzet_per_stuk: float = Field(..., gt=0)
+
+
+class EigenWinkelResponse(BaseModel):
+    id: int
+    naam: str
+    heeft_verkoopdata: bool
+    gemiddelde_omzet_per_stuk: Optional[float] = None
+    automatische_prijs_per_stuk: Optional[float] = None
+
+
 class VerkoopdataRij(BaseModel):
     datum: date
     omzet: float

@@ -40,12 +40,16 @@ organisaties = Table(
     Column("actief", Boolean, nullable=False, default=True),
     Column("aangemaakt_op", DateTime, nullable=False),
     # Fase 5 NODIG 1 (herbestel-advies): een winkelier vult dit één keer
-    # zelf in — er is nergens in dit systeem echte product-/inventarisdata
+    # zelf in voor het echte, ML-model-gekoppelde /forecast (bv. "Winkel
+    # 1") — er is nergens in dit systeem echte product-/inventarisdata
     # (het model voorspelt totale omzet, geen losse stuks), dus dit is de
     # enige eerlijke manier om een omzetvoorspelling om te rekenen naar een
     # aantal-stuks-schatting zonder een verzonnen prijs te gebruiken.
     # Optioneel: zonder ingevulde waarde toont het dashboard geen
-    # stuks-advies, alleen het bestaande omzetgetal.
+    # stuks-advies, alleen het bestaande omzetgetal. Los van
+    # eigen_winkel_instellingen.gemiddelde_omzet_per_stuk — dat is de
+    # prijs per eigen winkel voor de zelf-geüploade-verkoopdata-flow, dit
+    # hier is org-breed en voedt uitsluitend het echte /forecast.
     Column("gemiddelde_omzet_per_stuk", Float, nullable=True),
     # Fase 5 NODIG 5 (self-serve signup): alleen gevuld voor organisaties die
     # via /signup + Stripe Checkout zijn aangemaakt. Handmatig aangemaakte
@@ -91,6 +95,28 @@ winkels = Table(
     Column("naam", String, nullable=True),
     Column("actief", Boolean, nullable=False, default=True),
     Column("aangemaakt_op", DateTime, nullable=False),
+)
+
+eigen_winkels = Table(
+    "eigen_winkels",
+    metadata,
+    Column("id", Integer, primary_key=True),
+    Column("organisatie_id", Integer, ForeignKey("organisaties.id"), nullable=False),
+    # Geen ML-model-koppeling (in tegenstelling tot `winkels` hierboven) —
+    # puur een naam om zelf geüploade verkoopdata onder te groeperen. Zie
+    # docs/superpowers/specs/2026-07-29-eigen-winkels-design.md.
+    Column("naam", String, nullable=False),
+    Column("aangemaakt_op", DateTime, nullable=False),
+    UniqueConstraint("organisatie_id", "naam", name="uq_organisatie_eigen_winkel_naam"),
+)
+
+eigen_winkel_instellingen = Table(
+    "eigen_winkel_instellingen",
+    metadata,
+    # eigen_winkel_id is zowel primary key als FK: hoogstens één
+    # instellingen-rij per eigen winkel, geen aparte surrogate id nodig.
+    Column("eigen_winkel_id", Integer, ForeignKey("eigen_winkels.id"), primary_key=True),
+    Column("gemiddelde_omzet_per_stuk", Float, nullable=True),
 )
 
 api_keys = Table(
@@ -144,21 +170,21 @@ eigen_verkoopdata = Table(
     "eigen_verkoopdata",
     metadata,
     Column("id", Integer, primary_key=True),
-    Column("organisatie_id", Integer, ForeignKey("organisaties.id"), nullable=False),
+    Column("eigen_winkel_id", Integer, ForeignKey("eigen_winkels.id"), nullable=False),
     # ISO-datumstring (JJJJ-MM-DD) i.p.v. Date: sorteert lexicografisch
     # identiek aan chronologisch, en komt al in dit formaat uit
     # serving.verkoopdata.parse_verkoopdata_csv() — geen conversie nodig.
     Column("datum", String, nullable=False),
     Column("omzet", Float, nullable=False),
     Column("aangemaakt_op", DateTime, nullable=False),
-    UniqueConstraint("organisatie_id", "datum", name="uq_organisatie_datum"),
+    UniqueConstraint("eigen_winkel_id", "datum", name="uq_eigen_winkel_datum"),
 )
 
 eigen_product_verkoopdata = Table(
     "eigen_product_verkoopdata",
     metadata,
     Column("id", Integer, primary_key=True),
-    Column("organisatie_id", Integer, ForeignKey("organisaties.id"), nullable=False),
+    Column("eigen_winkel_id", Integer, ForeignKey("eigen_winkels.id"), nullable=False),
     Column("datum", String, nullable=False),
     Column("product", String, nullable=False),
     # Aantal verkochte stuks, niet omzet — het herbestel-advies per product
@@ -169,7 +195,7 @@ eigen_product_verkoopdata = Table(
     # structureel te hoog uitvallen.
     Column("aantal", Integer, nullable=False),
     Column("aangemaakt_op", DateTime, nullable=False),
-    UniqueConstraint("organisatie_id", "product", "datum", name="uq_organisatie_product_datum"),
+    UniqueConstraint("eigen_winkel_id", "product", "datum", name="uq_eigen_winkel_product_datum"),
 )
 
 sessies = Table(

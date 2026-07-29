@@ -1,8 +1,7 @@
 """Fase 5 NODIG 2 (afgeslankt): eigenaar-only CSV-upload van eigen
-verkoopdata (GET is voor elke ingelogde gebruiker leesbaar, net als de
-herbestel-prijs — zie test_organisatie_instellingen_endpoint.py). Aparte
-fixture, geen model/artefact nodig aangezien deze endpoints niets met
-voorspellen te maken hebben."""
+verkoopdata, per eigen winkel (GET is voor elke ingelogde gebruiker
+leesbaar, net als de herbestel-prijs). Aparte fixture, geen model/artefact
+nodig aangezien deze endpoints niets met voorspellen te maken hebben."""
 import importlib
 import sys
 
@@ -71,11 +70,18 @@ def _inloggen(client, email, wachtwoord):
     assert resp.status_code == 200, resp.text
 
 
+def _maak_eigen_winkel(client, naam="Webshop A"):
+    resp = client.post("/organisatie/eigen-winkels", json={"naam": naam})
+    assert resp.status_code == 201, resp.text
+    return resp.json()["id"]
+
+
 def test_zonder_upload_geeft_lege_lijst(tmp_path, monkeypatch):
     client = _bouw_omgeving(tmp_path, monkeypatch)
     _inloggen(client, "eigenaar-a@klant.nl", "wachtwoord-a")
+    winkel_id = _maak_eigen_winkel(client)
 
-    resp = client.get("/organisatie/verkoopdata")
+    resp = client.get("/organisatie/verkoopdata", params={"eigen_winkel_id": winkel_id})
 
     assert resp.status_code == 200
     assert resp.json() == {"rijen": []}
@@ -84,15 +90,18 @@ def test_zonder_upload_geeft_lege_lijst(tmp_path, monkeypatch):
 def test_eigenaar_kan_csv_uploaden_en_teruglezen(tmp_path, monkeypatch):
     client = _bouw_omgeving(tmp_path, monkeypatch)
     _inloggen(client, "eigenaar-a@klant.nl", "wachtwoord-a")
+    winkel_id = _maak_eigen_winkel(client)
     csv_inhoud = "datum,omzet\n2026-01-01,100\n2026-01-02,150.5\n"
 
     upload_resp = client.post(
-        "/organisatie/verkoopdata", files={"bestand": ("verkoop.csv", csv_inhoud, "text/csv")}
+        "/organisatie/verkoopdata",
+        files={"bestand": ("verkoop.csv", csv_inhoud, "text/csv")},
+        data={"eigen_winkel_id": str(winkel_id)},
     )
     assert upload_resp.status_code == 200
     assert upload_resp.json()["aantal_rijen"] == 2
 
-    get_resp = client.get("/organisatie/verkoopdata")
+    get_resp = client.get("/organisatie/verkoopdata", params={"eigen_winkel_id": winkel_id})
     assert get_resp.json() == {"rijen": [
         {"datum": "2026-01-01", "omzet": 100.0}, {"datum": "2026-01-02", "omzet": 150.5},
     ]}
@@ -101,20 +110,34 @@ def test_eigenaar_kan_csv_uploaden_en_teruglezen(tmp_path, monkeypatch):
 def test_upload_vervangt_vorige_data(tmp_path, monkeypatch):
     client = _bouw_omgeving(tmp_path, monkeypatch)
     _inloggen(client, "eigenaar-a@klant.nl", "wachtwoord-a")
-    client.post("/organisatie/verkoopdata", files={"bestand": ("v1.csv", "datum,omzet\n2026-01-01,100\n", "text/csv")})
+    winkel_id = _maak_eigen_winkel(client)
+    client.post(
+        "/organisatie/verkoopdata",
+        files={"bestand": ("v1.csv", "datum,omzet\n2026-01-01,100\n", "text/csv")},
+        data={"eigen_winkel_id": str(winkel_id)},
+    )
 
-    client.post("/organisatie/verkoopdata", files={"bestand": ("v2.csv", "datum,omzet\n2026-02-01,200\n", "text/csv")})
+    client.post(
+        "/organisatie/verkoopdata",
+        files={"bestand": ("v2.csv", "datum,omzet\n2026-02-01,200\n", "text/csv")},
+        data={"eigen_winkel_id": str(winkel_id)},
+    )
 
-    resp = client.get("/organisatie/verkoopdata")
+    resp = client.get("/organisatie/verkoopdata", params={"eigen_winkel_id": winkel_id})
     assert resp.json() == {"rijen": [{"datum": "2026-02-01", "omzet": 200.0}]}
 
 
 def test_lid_mag_niet_uploaden(tmp_path, monkeypatch):
     client = _bouw_omgeving(tmp_path, monkeypatch)
+    _inloggen(client, "eigenaar-a@klant.nl", "wachtwoord-a")
+    winkel_id = _maak_eigen_winkel(client)
+    client.post("/logout")
     _inloggen(client, "lid-a@klant.nl", "wachtwoord-a-lid")
 
     resp = client.post(
-        "/organisatie/verkoopdata", files={"bestand": ("verkoop.csv", "datum,omzet\n2026-01-01,100\n", "text/csv")}
+        "/organisatie/verkoopdata",
+        files={"bestand": ("verkoop.csv", "datum,omzet\n2026-01-01,100\n", "text/csv")},
+        data={"eigen_winkel_id": str(winkel_id)},
     )
 
     assert resp.status_code == 403
@@ -122,9 +145,12 @@ def test_lid_mag_niet_uploaden(tmp_path, monkeypatch):
 
 def test_lid_mag_verkoopdata_wel_lezen(tmp_path, monkeypatch):
     client = _bouw_omgeving(tmp_path, monkeypatch)
+    _inloggen(client, "eigenaar-a@klant.nl", "wachtwoord-a")
+    winkel_id = _maak_eigen_winkel(client)
+    client.post("/logout")
     _inloggen(client, "lid-a@klant.nl", "wachtwoord-a-lid")
 
-    resp = client.get("/organisatie/verkoopdata")
+    resp = client.get("/organisatie/verkoopdata", params={"eigen_winkel_id": winkel_id})
 
     assert resp.status_code == 200
 
@@ -133,7 +159,9 @@ def test_upload_zonder_sessie_geeft_401(tmp_path, monkeypatch):
     client = _bouw_omgeving(tmp_path, monkeypatch)
 
     resp = client.post(
-        "/organisatie/verkoopdata", files={"bestand": ("verkoop.csv", "datum,omzet\n2026-01-01,100\n", "text/csv")}
+        "/organisatie/verkoopdata",
+        files={"bestand": ("verkoop.csv", "datum,omzet\n2026-01-01,100\n", "text/csv")},
+        data={"eigen_winkel_id": "1"},
     )
 
     assert resp.status_code == 401
@@ -142,22 +170,51 @@ def test_upload_zonder_sessie_geeft_401(tmp_path, monkeypatch):
 def test_ongeldige_csv_geeft_422(tmp_path, monkeypatch):
     client = _bouw_omgeving(tmp_path, monkeypatch)
     _inloggen(client, "eigenaar-a@klant.nl", "wachtwoord-a")
+    winkel_id = _maak_eigen_winkel(client)
 
     resp = client.post(
-        "/organisatie/verkoopdata", files={"bestand": ("verkoop.csv", "verkeerde,kolommen\n1,2\n", "text/csv")}
+        "/organisatie/verkoopdata",
+        files={"bestand": ("verkoop.csv", "verkeerde,kolommen\n1,2\n", "text/csv")},
+        data={"eigen_winkel_id": str(winkel_id)},
     )
 
     assert resp.status_code == 422
 
 
-def test_verkoopdata_blijft_geisoleerd_tussen_organisaties(tmp_path, monkeypatch):
+def test_verkoopdata_uploaden_zonder_eigen_winkel_id_faalt(tmp_path, monkeypatch):
     client = _bouw_omgeving(tmp_path, monkeypatch)
     _inloggen(client, "eigenaar-a@klant.nl", "wachtwoord-a")
-    client.post(
-        "/organisatie/verkoopdata", files={"bestand": ("verkoop.csv", "datum,omzet\n2026-01-01,100\n", "text/csv")}
+
+    resp = client.post(
+        "/organisatie/verkoopdata", files={"bestand": ("data.csv", "datum,omzet\n2026-01-01,100\n", "text/csv")}
     )
 
-    _inloggen(client, "eigenaar-b@klant.nl", "wachtwoord-b")
-    resp = client.get("/organisatie/verkoopdata")
+    assert resp.status_code == 422
 
-    assert resp.json() == {"rijen": []}
+
+def test_verkoopdata_uploaden_andermans_eigen_winkel_id_geeft_404(tmp_path, monkeypatch):
+    client = _bouw_omgeving(tmp_path, monkeypatch)
+    _inloggen(client, "eigenaar-a@klant.nl", "wachtwoord-a")
+    winkel_id = _maak_eigen_winkel(client)
+    client.post("/logout")
+    _inloggen(client, "eigenaar-b@klant.nl", "wachtwoord-b")
+
+    resp = client.post(
+        "/organisatie/verkoopdata",
+        files={"bestand": ("data.csv", "datum,omzet\n2026-01-01,100\n", "text/csv")},
+        data={"eigen_winkel_id": str(winkel_id)},
+    )
+
+    assert resp.status_code == 404
+
+
+def test_verkoopdata_lezen_andermans_eigen_winkel_id_geeft_404(tmp_path, monkeypatch):
+    client = _bouw_omgeving(tmp_path, monkeypatch)
+    _inloggen(client, "eigenaar-a@klant.nl", "wachtwoord-a")
+    winkel_id = _maak_eigen_winkel(client)
+    client.post("/logout")
+    _inloggen(client, "eigenaar-b@klant.nl", "wachtwoord-b")
+
+    resp = client.get("/organisatie/verkoopdata", params={"eigen_winkel_id": winkel_id})
+
+    assert resp.status_code == 404

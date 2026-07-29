@@ -4,6 +4,7 @@ import numpy as np
 import pandas as pd
 
 from db.bootstrap import bootstrap_organisatie
+from db.eigen_winkels import maak_eigen_winkel
 from db.gebruikers import maak_gebruiker
 from db.organisaties import stel_gemiddelde_omzet_per_stuk_in
 from db.schema import maak_database
@@ -38,19 +39,34 @@ MAIL_CONFIG = {
 }
 
 
-def test_bouw_email_inhoud_zonder_herbestel_advies():
-    onderwerp, tekst = bouw_email_inhoud("Bakkerij De Vries", 900.0, 1000.0, 1100.0, None)
+def test_bouw_email_inhoud_zonder_eigen_winkels():
+    gedeeld_model_forecast = {"totaal_p10": 900.0, "totaal_p50": 1000.0, "totaal_p90": 1100.0}
+    onderwerp, tekst = bouw_email_inhoud("Bakkerij De Vries", gedeeld_model_forecast, [])
     assert "Bakkerij De Vries" in onderwerp
     assert "1.000" in tekst or "1000" in tekst
     assert "stuks" not in tekst
 
 
-def test_bouw_email_inhoud_met_herbestel_advies():
-    advies = {"stuks_p10": 60, "stuks_p50": 67, "stuks_p90": 73}
-    onderwerp, tekst = bouw_email_inhoud("Bakkerij De Vries", 900.0, 1000.0, 1100.0, advies)
+def test_bouw_email_inhoud_met_herbestel_advies_per_eigen_winkel():
+    sectie = {
+        "naam": "Webshop A", "totaal_p10": 900.0, "totaal_p50": 1000.0, "totaal_p90": 1100.0,
+        "advies": {"stuks_p10": 60, "stuks_p50": 67, "stuks_p90": 73},
+    }
+    onderwerp, tekst = bouw_email_inhoud("Bakkerij De Vries", None, [sectie])
+    assert "Webshop A" in tekst
     assert "67 stuks" in tekst
     assert "73 stuks" in tekst
     assert "60 stuks" in tekst
+
+
+def test_bouw_email_inhoud_meerdere_eigen_winkels_krijgen_eigen_sectie():
+    secties = [
+        {"naam": "Webshop A", "totaal_p10": 90.0, "totaal_p50": 100.0, "totaal_p90": 110.0, "advies": None},
+        {"naam": "Marktkraam", "totaal_p10": 190.0, "totaal_p50": 200.0, "totaal_p90": 210.0, "advies": None},
+    ]
+    _, tekst = bouw_email_inhoud("Bakkerij De Vries", None, secties)
+    assert "Webshop A" in tekst
+    assert "Marktkraam" in tekst
 
 
 def test_organisatie_met_gedeeld_model_winkel_krijgt_mail(tmp_path, monkeypatch):
@@ -78,9 +94,10 @@ def test_organisatie_zonder_winkel_maar_met_eigen_verkoopdata_krijgt_mail(tmp_pa
     engine = maak_database(tmp_path / "tenants.db")
     org_id = bootstrap_organisatie(engine, naam="Bakkerij De Vries", slug="bakkerij-de-vries", store_ids=[])
     maak_gebruiker(engine, organisatie_id=org_id, email="devries@voorbeeld.nl", wachtwoord="x", rol="eigenaar")
+    winkel_id = maak_eigen_winkel(engine, organisatie_id=org_id, naam="Webshop")
     start = date(2026, 1, 1)
     rijen = [((start + pd.Timedelta(days=i)).isoformat(), 100.0) for i in range(MINIMUM_DAGEN)]
-    vervang_verkoopdata(engine, organisatie_id=org_id, rijen=rijen)
+    vervang_verkoopdata(engine, eigen_winkel_id=winkel_id, rijen=rijen)
 
     verzonden = []
     monkeypatch.setattr(
@@ -116,6 +133,37 @@ def test_organisatie_zonder_winkel_en_zonder_genoeg_eigen_data_wordt_overgeslage
 
     assert resultaat == []
     assert verzonden == []
+
+
+def test_organisatie_met_meerdere_eigen_winkels_krijgt_eigen_sectie_per_winkel(tmp_path, monkeypatch):
+    engine = maak_database(tmp_path / "tenants.db")
+    org_id = bootstrap_organisatie(engine, naam="Bakkerij De Vries", slug="bakkerij-de-vries", store_ids=[])
+    maak_gebruiker(engine, organisatie_id=org_id, email="devries@voorbeeld.nl", wachtwoord="x", rol="eigenaar")
+    winkel_a = maak_eigen_winkel(engine, organisatie_id=org_id, naam="Webshop A")
+    winkel_b = maak_eigen_winkel(engine, organisatie_id=org_id, naam="Marktkraam")
+    start = date(2026, 1, 1)
+    rijen = [((start + pd.Timedelta(days=i)).isoformat(), 100.0) for i in range(MINIMUM_DAGEN)]
+    vervang_verkoopdata(engine, eigen_winkel_id=winkel_a, rijen=rijen)
+    vervang_verkoopdata(engine, eigen_winkel_id=winkel_b, rijen=rijen)
+
+    verzonden_teksten = []
+    monkeypatch.setattr(
+        "serving.herbestel_email.mail.verstuur",
+        lambda **kwargs: verzonden_teksten.append(kwargs["tekst"]),
+    )
+
+    resultaat = verstuur_wekelijkse_herbestel_mails(
+        engine, modellen={q: _ConstantModel(1000.0) for q in (0.1, 0.5, 0.9)},
+        historie=_historie(), winkel_metadata=_winkel_metadata(),
+        mail_config=MAIL_CONFIG, start_datum=date(2026, 3, 2),
+    )
+
+    # Eén mail voor de hele organisatie, niet twee — met beide winkelnamen
+    # als aparte secties, niet opgeteld tot één cijfer.
+    assert resultaat == ["devries@voorbeeld.nl"]
+    assert len(verzonden_teksten) == 1
+    assert "Webshop A" in verzonden_teksten[0]
+    assert "Marktkraam" in verzonden_teksten[0]
 
 
 def test_herbestel_advies_wordt_meegenomen_als_prijs_ingesteld(tmp_path, monkeypatch):
