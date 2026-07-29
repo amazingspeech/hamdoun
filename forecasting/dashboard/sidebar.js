@@ -165,7 +165,7 @@ function toonRecenteWinkels() {
 
 function toonVersieEnMaker() {
   const el = document.getElementById("sidebar-versie");
-  if (el) el.textContent = `Prospero v${APP_VERSIE} · © ${new Date().getFullYear()} Tessar`;
+  if (el) el.textContent = `KwantIQ v${APP_VERSIE} · © ${new Date().getFullYear()} Tessar`;
 }
 
 function initPortfolioSidebar(me) {

@@ -70,6 +70,8 @@ header.top { margin-bottom:clamp(28px,5vw,44px); display:flex; justify-content:s
 header.top .kop { flex:1 1 320px; }
 .eyebrow { font:600 0.8125rem/1.2 var(--font-body); color:var(--accent-ink); margin:0 0 10px; }
 .eyebrow-sub { font:400 0.6875rem/1.2 var(--font-body); color:var(--ink-faint); margin:-8px 0 10px; letter-spacing:0.01em; }
+.eyebrow, .portfolio-sidebar-merk { display:flex; align-items:center; gap:6px; }
+.merk-icoon { width:16px; height:16px; flex-shrink:0; }
 h1 { font:600 clamp(1.75rem,4vw,2.375rem)/1.15 var(--font-display); letter-spacing:-0.01em; text-wrap:balance; margin:0 0 8px; }
 .sub { font-size:0.9375rem; color:var(--ink-soft); margin:0; max-width:50ch; line-height:1.55; }
 
