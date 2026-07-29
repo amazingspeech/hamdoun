@@ -70,6 +70,12 @@ organisaties = Table(
     Column("kvk_nummer", String, nullable=True),
     Column("ingekochte_leden", Integer, nullable=True),
     Column("ingekochte_winkels", Integer, nullable=True),
+    # Fase 4 hard-delete-cascade (AVG-vereiste, FASE4-SAAS-FOUNDATION.md
+    # beslissing 9): tijdstip waarop deactiveer_organisatie() draaide.
+    # NULL voor een nog-actieve organisatie. db.organisaties.
+    # haal_te_verwijderen_organisaties() gebruikt dit om de wachtperiode
+    # (30 dagen) te bepalen vóór definitieve verwijdering.
+    Column("gedeactiveerd_op", DateTime, nullable=True),
 )
 
 winkels = Table(

@@ -91,14 +91,18 @@ def is_in_proefperiode(engine: Engine, organisatie_id: int) -> bool:
 def deactiveer_organisatie(engine: Engine, organisatie_id: int) -> None:
     """Gezet door de webhook-handler zodra Stripe customer.subscription.
     deleted meldt (opzegging of einde van de betaalretry-cyclus) — zie
-    serving/app.py. Alleen toegang intrekken, geen data verwijderen: een
-    daadwerkelijke verwijdering (AVG-vereiste, beslissing 9 in
-    FASE4-SAAS-FOUNDATION.md) is een aparte, bewust nog niet gebouwde
-    stap — een geannuleerd abonnement kan nog binnen de betaalretry-cyclus
-    alsnog herstellen, en onomkeerbaar verwijderen op basis van één
-    webhook-event zou dat geen ruimte geven."""
+    serving/app.py. Zet ook gedeactiveerd_op, zodat db.opschonen_cli 30
+    dagen later weet welke organisaties definitief verwijderd mogen
+    worden (verwijder_organisatie() hieronder) — de daadwerkelijke
+    verwijdering gebeurt hier nog niet: een geannuleerd abonnement kan
+    nog binnen Stripe's eigen betaalretry-cyclus alsnog herstellen, en
+    onomkeerbaar verwijderen op basis van één webhook-event zou daar geen
+    ruimte voor geven."""
     with engine.begin() as conn:
-        conn.execute(organisaties.update().where(organisaties.c.id == organisatie_id).values(actief=False))
+        conn.execute(
+            organisaties.update().where(organisaties.c.id == organisatie_id)
+            .values(actief=False, gedeactiveerd_op=datetime.now(timezone.utc))
+        )
 
 
 def haal_organisatie_id_bij_stripe_subscription(engine: Engine, stripe_subscription_id: str) -> Optional[int]:

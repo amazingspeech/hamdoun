@@ -200,3 +200,17 @@ def test_haal_ingekochte_winkels_met_waarde(tmp_path):
     engine = maak_database(tmp_path / "tenants.db")
     org_id = bootstrap_organisatie(engine, naam="Bakkerij De Vries", slug="bakkerij-de-vries", store_ids=[], ingekochte_winkels=2)
     assert haal_ingekochte_winkels(engine, org_id) == 2
+
+
+def test_deactiveer_organisatie_zet_gedeactiveerd_op(tmp_path):
+    engine = maak_database(tmp_path / "tenants.db")
+    org_id = bootstrap_organisatie(engine, naam="Klant", slug="klant", store_ids=[])
+
+    voor = datetime.now(timezone.utc)
+    deactiveer_organisatie(engine, organisatie_id=org_id)
+    na = datetime.now(timezone.utc)
+
+    with engine.connect() as conn:
+        rij = conn.execute(select(organisaties.c.gedeactiveerd_op).where(organisaties.c.id == org_id)).one()
+    gedeactiveerd_op = rij.gedeactiveerd_op.replace(tzinfo=timezone.utc)
+    assert voor <= gedeactiveerd_op <= na
