@@ -742,6 +742,12 @@ function toonEigenVoorspelling(data) {
 
 async function toonVerkoopdataVoorSelectie() {
   const select = document.getElementById("verkoopdata-eigen-winkel");
+  // De upload-meldingen ("N dagen geüpload.") horen bij de vorige
+  // uploadactie, niet bij de nu geselecteerde winkel — zonder dit blijft
+  // bv. "30 dagen geüpload." zichtbaar staan nadat je wisselt naar een
+  // andere, nog lege winkel, wat lijkt te suggereren dat díe winkel ook
+  // data heeft.
+  document.getElementById("verkoopdata-melding").hidden = true;
   if (!select.value) {
     document.getElementById("verkoopdata-grafiek-wrap").hidden = true;
     document.getElementById("eigen-voorspelling-voortgang").hidden = true;
@@ -939,6 +945,7 @@ function toonProductHerbestelAdvies(items) {
 
 async function toonProductAdviesVoorSelectie() {
   const select = document.getElementById("product-verkoopdata-eigen-winkel");
+  document.getElementById("product-verkoopdata-melding").hidden = true;
   if (!select.value) return;
   toonProductHerbestelAdvies((await haalProductHerbestelAdvies(Number(select.value))).items);
 }
