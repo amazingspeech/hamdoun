@@ -189,6 +189,92 @@ function maakSVGEl(tag, attrs) {
   return el;
 }
 
+// Zet een reeks punten om in een vloeiend gebogen SVG-pad-string via
+// Catmull-Rom-naar-Bezier-conversie, in plaats van rechte lijnsegmenten
+// tussen elk punt. startCommando is "M" voor het eerste subpad in een
+// grotere path, of "L" om aan te sluiten op een al lopend pad (zie
+// bandPadData hieronder, die twee van deze segmenten aan elkaar plakt).
+function gladPadSegment(punten, startCommando) {
+  if (punten.length === 0) return "";
+  let d = `${startCommando} ${punten[0][0]},${punten[0][1]}`;
+  if (punten.length < 3) {
+    for (let i = 1; i < punten.length; i++) d += ` L ${punten[i][0]},${punten[i][1]}`;
+    return d;
+  }
+  for (let i = 0; i < punten.length - 1; i++) {
+    const p0 = punten[i === 0 ? i : i - 1];
+    const p1 = punten[i];
+    const p2 = punten[i + 1];
+    const p3 = punten[i + 2 < punten.length ? i + 2 : i + 1];
+    const cp1x = p1[0] + (p2[0] - p0[0]) / 6;
+    const cp1y = p1[1] + (p2[1] - p0[1]) / 6;
+    const cp2x = p2[0] - (p3[0] - p1[0]) / 6;
+    const cp2y = p2[1] - (p3[1] - p1[1]) / 6;
+    d += ` C ${cp1x},${cp1y} ${cp2x},${cp2y} ${p2[0]},${p2[1]}`;
+  }
+  return d;
+}
+
+function lijnPadData(voorspellingen, x, y) {
+  return gladPadSegment(voorspellingen.map((v, i) => [x(i), y(v.p50)]), "M");
+}
+
+// De band als één gesloten, vloeiend gebogen pad: de bovenrand (p90, van
+// links naar rechts) gevolgd door de onderrand (p10, van rechts naar
+// links) — zelfde punt-volgorde als de bestaande polygon-aanpak, nu als
+// twee aan elkaar geplakte gladde segmenten in plaats van rechte
+// polygon-zijden.
+function bandPadData(voorspellingen, x, y) {
+  const bovenPunten = voorspellingen.map((v, i) => [x(i), y(v.p90)]);
+  const onderPunten = [...voorspellingen].reverse().map((v, i) => [x(voorspellingen.length - 1 - i), y(v.p10)]);
+  return `${gladPadSegment(bovenPunten, "M")} ${gladPadSegment(onderPunten, "L")} Z`;
+}
+
+// Maakt (of hergebruikt) een <defs>-blok met de gradient-definitie voor de
+// bandvulling — een subtiele overgang van het accentkleur naar transparant,
+// in plaats van de bestaande vlakke --band-kleur.
+function maakBandGradient(svg) {
+  let defs = svg.querySelector("defs");
+  if (!defs) {
+    defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
+    svg.insertBefore(defs, svg.firstChild);
+  }
+  defs.innerHTML =
+    '<linearGradient id="band-gradient" x1="0" y1="0" x2="0" y2="1">' +
+    '<stop offset="0%" stop-color="var(--accent)" stop-opacity="0.35"/>' +
+    '<stop offset="100%" stop-color="var(--accent)" stop-opacity="0.05"/>' +
+    "</linearGradient>";
+}
+
+// Onzichtbare, ruimere hit-cirkels bovenop elk datapunt (straal 10, i.p.v.
+// de zichtbare 4px-eindpunt-stip) — een muis hoeft niet pixel-precies op de
+// dunne lijn te staan om de tooltip te zien. De tooltip zelf is een
+// gewoon HTML-element (geen SVG), gepositioneerd via de al berekende
+// x(i)/y(v.p50)-coördinaten van de plot.
+function initGrafiekTooltip(svg, voorspellingen, x, y) {
+  let tooltip = document.getElementById("grafiek-tooltip");
+  if (!tooltip) {
+    tooltip = document.createElement("div");
+    tooltip.id = "grafiek-tooltip";
+    tooltip.className = "grafiek-tooltip";
+    tooltip.hidden = true;
+    document.getElementById("chart-container").appendChild(tooltip);
+  }
+  voorspellingen.forEach((v, i) => {
+    const hitCirkel = maakSVGEl("circle", { class: "hit-stip", cx: x(i), cy: y(v.p50), r: 10 });
+    hitCirkel.addEventListener("mouseenter", () => {
+      tooltip.innerHTML =
+        `<strong>${formatDatumKort(v.datum)}</strong><br>` +
+        `${euro.format(Math.round(v.p50))} (${euro.format(Math.round(v.p10))}–${euro.format(Math.round(v.p90))})`;
+      tooltip.style.left = `${x(i)}px`;
+      tooltip.style.top = `${y(v.p50) - 12}px`;
+      tooltip.hidden = false;
+    });
+    hitCirkel.addEventListener("mouseleave", () => { tooltip.hidden = true; });
+    svg.appendChild(hitCirkel);
+  });
+}
+
 function tekenGrafiek(voorspellingen) {
   const svg = document.getElementById("chart");
   const breedte = 920, hoogte = 360, marge = { boven: 20, rechts: 20, onder: 34, links: 70 };
@@ -202,16 +288,11 @@ function tekenGrafiek(voorspellingen) {
   const x = (i) => marge.links + (i / (voorspellingen.length - 1 || 1)) * plotBreedte;
   const y = (waarde) => marge.boven + plotHoogte - ((waarde - minY) / (maxY - minY)) * plotHoogte;
 
-  const bandPunten = [
-    ...voorspellingen.map((v, i) => `${x(i)},${y(v.p90)}`),
-    ...[...voorspellingen].reverse().map((v, i) => `${x(voorspellingen.length - 1 - i)},${y(v.p10)}`),
-  ].join(" ");
-  const lijnPunten = voorspellingen.map((v, i) => `${x(i)},${y(v.p50)}`).join(" ");
-
   svg.replaceChildren();
+  maakBandGradient(svg);
 
-  svg.appendChild(maakSVGEl("polygon", { class: "band", points: bandPunten }));
-  const lijnEl = maakSVGEl("polyline", { class: "lijn", points: lijnPunten });
+  svg.appendChild(maakSVGEl("path", { class: "band", d: bandPadData(voorspellingen, x, y) }));
+  const lijnEl = maakSVGEl("path", { class: "lijn", d: lijnPadData(voorspellingen, x, y) });
   svg.appendChild(lijnEl);
   svg.appendChild(maakSVGEl("line", {
     class: "as", x1: marge.links, y1: marge.boven, x2: marge.links, y2: hoogte - marge.onder,
@@ -254,6 +335,8 @@ function tekenGrafiek(voorspellingen) {
   // Laatste dag als eindpunt benadrukken, zodat de lijn duidelijk "landt".
   const laatste = voorspellingen[n - 1];
   svg.appendChild(maakSVGEl("circle", { class: "stip", cx: x(n - 1), cy: y(laatste.p50), r: 4 }));
+
+  initGrafiekTooltip(svg, voorspellingen, x, y);
 
   // De lijn "tekent" zichzelf in via stroke-dasharray/-dashoffset. Twee
   // geneste rAF's: de eerste laat de browser de startstand (volledig
