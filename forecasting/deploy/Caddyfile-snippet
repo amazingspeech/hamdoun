@@ -29,15 +29,12 @@ kwantiq.tessar.nl {
 	}
 }
 
-# Permanente redirects vanaf oudere domeinnamen — bestaande bookmarks/links
-# blijven werken, komen automatisch op het huidige domein uit. {uri} behoudt
-# het pad en de querystring. prospero.tessar.nl was zelf ook al een eerdere
-# naam (vóór kwantiq.tessar.nl); forecasting-demo.tessar.nl was de
-# oorspronkelijke naam vóór dat.
-prospero.tessar.nl {
-	redir https://kwantiq.tessar.nl{uri} permanent
-}
-
-forecasting-demo.tessar.nl {
-	redir https://kwantiq.tessar.nl{uri} permanent
-}
+# Géén redirect-blokken voor prospero.tessar.nl of forecasting-demo.tessar.nl
+# (eerdere namen van dit product): geen van beide heeft nog een DNS
+# A-record (de gebruiker heeft het record vervangen i.p.v. ernaast te
+# zetten toen dit domein overging naar kwantiq.tessar.nl). Een redir-blok
+# voor een domein zonder A-record is dode configuratie die Caddy alleen
+# eindeloos laat blijven proberen een ACME-certificaat aan te vragen voor
+# een hostname die de HTTP-01-validatie nooit kan halen — ruis in de logs,
+# geen functioneel voordeel. Voeg zo'n blok pas weer toe als er bewust
+# opnieuw een A-record voor die naam wordt aangemaakt.
