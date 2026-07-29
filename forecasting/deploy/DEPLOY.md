@@ -223,6 +223,26 @@ geen crash). Test één keer handmatig vóór je de cron-regel aanzet:
 docker compose exec api python3 -m serving.herbestel_email_cli
 ```
 
+## 9. Dagelijkse opschoning van gedeactiveerde organisaties inplannen (AVG)
+
+Zelfde patroon als stap 8 — een cron-regel op de host draait
+`db.opschonen_cli` elke nacht binnen de al draaiende `api`-container. Dit
+verwijdert organisaties **definitief en onomkeerbaar** (AVG-vereiste, zie
+`FASE4-SAAS-FOUNDATION.md` beslissing 9) 30 dagen nadat Stripe
+`customer.subscription.deleted` meldde:
+```bash
+crontab -e
+# 0 3 * * * cd /home/job/forecasting-demo && docker compose exec -T api \
+#   python3 -m db.opschonen_cli >> /home/job/forecasting-demo/opschonen.log 2>&1
+```
+Dagelijks, niet wekelijks zoals stap 8 — een verwijdering hoeft niet
+wekenlang na de wachtperiode te blijven hangen. Test één keer handmatig
+vóór je de cron-regel aanzet:
+```bash
+docker compose exec api python3 -m db.opschonen_cli
+```
+Verwacht bij een lege/verse database: `0 organisatie(s) verwijderd: (geen)`.
+
 ## Bekende beperkingen van deze live opzet
 
 Zie ook `forecasting/KNOWN-LIMITATIONS.md`. Specifiek voor deze deployment:
