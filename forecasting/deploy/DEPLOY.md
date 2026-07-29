@@ -232,7 +232,7 @@ verwijdert organisaties **definitief en onomkeerbaar** (AVG-vereiste, zie
 `customer.subscription.deleted` meldde:
 ```bash
 crontab -e
-# 0 3 * * * cd /home/job/forecasting-demo && docker compose exec -T api \
+# 0 3 * * * cd /home/job/forecasting-demo && docker compose -f deploy/docker-compose.yml exec -T api \
 #   python3 -m db.opschonen_cli >> /home/job/forecasting-demo/opschonen.log 2>&1
 ```
 Dagelijks, niet wekelijks zoals stap 8 — een verwijdering hoeft niet
