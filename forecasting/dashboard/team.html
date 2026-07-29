@@ -145,6 +145,10 @@
     </p>
     <form id="verkoopdata-form" style="display:flex; gap:14px; align-items:end; flex-wrap:wrap;">
       <div class="veld">
+        <label for="verkoopdata-eigen-winkel">Eigen winkel</label>
+        <select id="verkoopdata-eigen-winkel" required></select>
+      </div>
+      <div class="veld">
         <label for="verkoopdata-bestand">CSV-bestand</label>
         <input type="file" id="verkoopdata-bestand" accept=".csv" required>
       </div>
@@ -171,6 +175,10 @@
       Niet beschikbaar tijdens je proefperiode — upgrade om herbestel-advies per product te gebruiken.
     </p>
     <form id="product-verkoopdata-form" style="display:flex; gap:14px; align-items:end; flex-wrap:wrap;">
+      <div class="veld">
+        <label for="product-verkoopdata-eigen-winkel">Eigen winkel</label>
+        <select id="product-verkoopdata-eigen-winkel" required></select>
+      </div>
       <div class="veld">
         <label for="product-verkoopdata-bestand">CSV-bestand</label>
         <input type="file" id="product-verkoopdata-bestand" accept=".csv" required>

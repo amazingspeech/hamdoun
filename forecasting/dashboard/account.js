@@ -594,14 +594,15 @@ function initEigenWinkelAanmakenForm() {
   });
 }
 
-async function haalVerkoopdata() {
-  const resp = await fetch(`${API_BASIS}/organisatie/verkoopdata`, { credentials: "same-origin" });
+async function haalVerkoopdata(eigenWinkelId) {
+  const resp = await fetch(`${API_BASIS}/organisatie/verkoopdata?eigen_winkel_id=${eigenWinkelId}`, { credentials: "same-origin" });
   if (!resp.ok) throw new Error(`Kon verkoopdata niet ophalen (${resp.status})`);
   return resp.json();
 }
 
-async function uploadVerkoopdata(bestand) {
+async function uploadVerkoopdata(eigenWinkelId, bestand) {
   const formData = new FormData();
+  formData.append("eigen_winkel_id", eigenWinkelId);
   formData.append("bestand", bestand);
   const resp = await fetch(`${API_BASIS}/organisatie/verkoopdata`, {
     method: "POST",
@@ -671,8 +672,8 @@ function toonVerkoopdata(rijen) {
   wrap.hidden = false;
 }
 
-async function haalEigenVoorspelling() {
-  const resp = await fetch(`${API_BASIS}/organisatie/eigen-voorspelling`, { credentials: "same-origin" });
+async function haalEigenVoorspelling(eigenWinkelId) {
+  const resp = await fetch(`${API_BASIS}/organisatie/eigen-voorspelling?eigen_winkel_id=${eigenWinkelId}`, { credentials: "same-origin" });
   if (!resp.ok) throw new Error(`Kon eigen voorspelling niet ophalen (${resp.status})`);
   return resp.json();
 }
@@ -712,25 +713,43 @@ function toonEigenVoorspelling(data) {
   aanbeveling.hidden = false;
 }
 
+async function toonVerkoopdataVoorSelectie() {
+  const select = document.getElementById("verkoopdata-eigen-winkel");
+  if (!select.value) {
+    document.getElementById("verkoopdata-grafiek-wrap").hidden = true;
+    document.getElementById("eigen-voorspelling-voortgang").hidden = true;
+    document.getElementById("eigen-voorspelling-aanbeveling").hidden = true;
+    return;
+  }
+  const eigenWinkelId = Number(select.value);
+  toonVerkoopdata((await haalVerkoopdata(eigenWinkelId)).rijen);
+  toonEigenVoorspelling(await haalEigenVoorspelling(eigenWinkelId));
+}
+
 function initVerkoopdataForm() {
   const form = document.getElementById("verkoopdata-form");
   if (!form) return;
+  document.getElementById("verkoopdata-eigen-winkel").addEventListener("change", () => {
+    toonVerkoopdataVoorSelectie().catch((e) => toonFout("fout", e.message));
+  });
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
     const knop = document.getElementById("verkoopdata-knop");
     const bestandVeld = document.getElementById("verkoopdata-bestand");
+    const eigenWinkelId = Number(document.getElementById("verkoopdata-eigen-winkel").value);
     knop.disabled = true;
     toonFout("verkoopdata-fout", "");
     document.getElementById("verkoopdata-melding").hidden = true;
     try {
       const bestand = bestandVeld.files[0];
-      const resultaat = await uploadVerkoopdata(bestand);
+      const resultaat = await uploadVerkoopdata(eigenWinkelId, bestand);
       const melding = document.getElementById("verkoopdata-melding");
       melding.textContent = `${resultaat.aantal_rijen} dagen geüpload.`;
       melding.hidden = false;
       bestandVeld.value = "";
-      toonVerkoopdata((await haalVerkoopdata()).rijen);
-      toonEigenVoorspelling(await haalEigenVoorspelling());
+      toonVerkoopdata((await haalVerkoopdata(eigenWinkelId)).rijen);
+      toonEigenVoorspelling(await haalEigenVoorspelling(eigenWinkelId));
+      await verversEigenWinkelsKaart();
     } catch (e) {
       toonFout("verkoopdata-fout", e.message);
     } finally {
@@ -846,14 +865,15 @@ function pasProductVerkoopdataPremiumStatusToe(inProefperiode) {
   document.getElementById("product-verkoopdata-knop").disabled = inProefperiode;
 }
 
-async function haalProductHerbestelAdvies() {
-  const resp = await fetch(`${API_BASIS}/organisatie/herbestel-advies-per-product`, { credentials: "same-origin" });
+async function haalProductHerbestelAdvies(eigenWinkelId) {
+  const resp = await fetch(`${API_BASIS}/organisatie/herbestel-advies-per-product?eigen_winkel_id=${eigenWinkelId}`, { credentials: "same-origin" });
   if (!resp.ok) throw new Error(`Kon herbestel-advies per product niet ophalen (${resp.status})`);
   return resp.json();
 }
 
-async function uploadProductVerkoopdata(bestand) {
+async function uploadProductVerkoopdata(eigenWinkelId, bestand) {
   const formData = new FormData();
+  formData.append("eigen_winkel_id", eigenWinkelId);
   formData.append("bestand", bestand);
   const resp = await fetch(`${API_BASIS}/organisatie/product-verkoopdata`, {
     method: "POST",
@@ -890,24 +910,35 @@ function toonProductHerbestelAdvies(items) {
   }
 }
 
+async function toonProductAdviesVoorSelectie() {
+  const select = document.getElementById("product-verkoopdata-eigen-winkel");
+  if (!select.value) return;
+  toonProductHerbestelAdvies((await haalProductHerbestelAdvies(Number(select.value))).items);
+}
+
 function initProductVerkoopdataForm() {
   const form = document.getElementById("product-verkoopdata-form");
   if (!form) return;
+  document.getElementById("product-verkoopdata-eigen-winkel").addEventListener("change", () => {
+    toonProductAdviesVoorSelectie().catch((e) => toonFout("fout", e.message));
+  });
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
     const knop = document.getElementById("product-verkoopdata-knop");
     const bestandVeld = document.getElementById("product-verkoopdata-bestand");
+    const eigenWinkelId = Number(document.getElementById("product-verkoopdata-eigen-winkel").value);
     knop.disabled = true;
     toonFout("product-verkoopdata-fout", "");
     document.getElementById("product-verkoopdata-melding").hidden = true;
     try {
       const bestand = bestandVeld.files[0];
-      const resultaat = await uploadProductVerkoopdata(bestand);
+      const resultaat = await uploadProductVerkoopdata(eigenWinkelId, bestand);
       const melding = document.getElementById("product-verkoopdata-melding");
       melding.textContent = `${resultaat.aantal_rijen} rijen geüpload.`;
       melding.hidden = false;
       bestandVeld.value = "";
-      toonProductHerbestelAdvies((await haalProductHerbestelAdvies()).items);
+      toonProductHerbestelAdvies((await haalProductHerbestelAdvies(eigenWinkelId)).items);
+      await verversEigenWinkelsKaart();
     } catch (e) {
       toonFout("product-verkoopdata-fout", e.message);
     } finally {
@@ -1022,11 +1053,12 @@ async function initTeamPagina() {
   // Verkoopdata-kaart: voor iedereen zichtbaar (je eigen verkoophistorie
   // bekijken is geen beheertaak), maar het upload-formulier zelf alleen
   // voor de eigenaar — zelfde eigenaar/lid-verdeling als de herbestel-prijs.
+  // De selects zijn hierboven al gevuld (verversEigenWinkelsKaart() voor
+  // een eigenaar, de losse haalEigenWinkels()-aanroep voor een lid).
   document.getElementById("verkoopdata-kaart").hidden = false;
   document.getElementById("verkoopdata-form").hidden = !kanBeheren;
   try {
-    toonVerkoopdata((await haalVerkoopdata()).rijen);
-    toonEigenVoorspelling(await haalEigenVoorspelling());
+    await toonVerkoopdataVoorSelectie();
   } catch (e) {
     toonFout("fout", e.message);
   }
@@ -1041,7 +1073,7 @@ async function initTeamPagina() {
   pasProductVerkoopdataPremiumStatusToe(me.in_proefperiode);
   if (!me.in_proefperiode) {
     try {
-      toonProductHerbestelAdvies((await haalProductHerbestelAdvies()).items);
+      await toonProductAdviesVoorSelectie();
     } catch (e) {
       toonFout("fout", e.message);
     }
