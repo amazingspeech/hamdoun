@@ -116,6 +116,28 @@ def deactiveer_organisatie(engine: Engine, organisatie_id: int) -> None:
         )
 
 
+def heractiveer_organisatie(engine: Engine, organisatie_id: int) -> None:
+    """Er bestaat vandaag geen geautomatiseerd reactivatie-pad (zie de
+    designspec) — dit is de functie die een operator's handmatige-reactivatie
+    tooling MOET aanroepen (nooit een kale `actief=True`-update) als een
+    wrongly-cancelled abonnement via directe SQL rechtgezet wordt. Zet
+    gedeactiveerd_op expliciet terug naar None in dezelfde update als
+    actief=True, zodat dat veld nooit stale kan blijven staan t.o.v. actief.
+    Zonder dit zou een oude gedeactiveerd_op-tijdstempel overleven, en bij
+    een latere, nieuwe deactivering (deactiveer_organisatie() zet 'm dan wel
+    opnieuw, maar tussen de handmatige reactivatie en die volgende
+    deactivering in kan haal_te_verwijderen_organisaties() nog steeds de
+    oude waarde zien als iemand direct SQL gebruikt) de organisatie meteen,
+    zonder enige nieuwe 30-dagen-wachtperiode, in aanmerking laten komen
+    voor definitieve verwijdering — precies de bug die de finale review van
+    deze branch blootlegde."""
+    with engine.begin() as conn:
+        conn.execute(
+            organisaties.update().where(organisaties.c.id == organisatie_id)
+            .values(actief=True, gedeactiveerd_op=None)
+        )
+
+
 def haal_te_verwijderen_organisaties(engine: Engine, nu: datetime, wachtdagen: int = 30) -> list[int]:
     """Voor db.opschonen_cli: welke organisaties zijn lang genoeg geleden
     gedeactiveerd om nu definitief verwijderd te mogen worden

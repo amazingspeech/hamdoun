@@ -15,6 +15,7 @@ from db.organisaties import (
     haal_organisatie_id_bij_stripe_subscription,
     haal_te_verwijderen_organisaties,
     haal_trial_verloopt_op,
+    heractiveer_organisatie,
     is_actief,
     is_in_proefperiode,
     kvk_nummer_heeft_organisatie,
@@ -236,6 +237,40 @@ def test_deactiveer_organisatie_zet_gedeactiveerd_op(tmp_path):
         rij = conn.execute(select(organisaties.c.gedeactiveerd_op).where(organisaties.c.id == org_id)).one()
     gedeactiveerd_op = rij.gedeactiveerd_op.replace(tzinfo=timezone.utc)
     assert voor <= gedeactiveerd_op <= na
+
+
+def test_heractiveer_organisatie_zet_actief_en_wist_gedeactiveerd_op(tmp_path):
+    engine = maak_database(tmp_path / "tenants.db")
+    org_id = bootstrap_organisatie(engine, naam="Klant", slug="klant", store_ids=[])
+    deactiveer_organisatie(engine, organisatie_id=org_id)
+
+    heractiveer_organisatie(engine, organisatie_id=org_id)
+
+    assert is_actief(engine, organisatie_id=org_id) is True
+    with engine.connect() as conn:
+        rij = conn.execute(select(organisaties.c.gedeactiveerd_op).where(organisaties.c.id == org_id)).one()
+    assert rij.gedeactiveerd_op is None
+
+
+def test_heractiveer_dan_opnieuw_deactiveren_geeft_verse_wachtperiode(tmp_path):
+    """Regressietest voor de bug uit de finale review: zonder
+    heractiveer_organisatie() (die gedeactiveerd_op expliciet terugzet naar
+    None) zou een organisatie die handmatig gereactiveerd en later opnieuw
+    gedeactiveerd wordt, meteen (met een stale oude gedeactiveerd_op) in
+    aanmerking komen voor verwijdering — zonder enige nieuwe wachtperiode."""
+    engine = maak_database(tmp_path / "tenants.db")
+    org_id = bootstrap_organisatie(engine, naam="Klant", slug="klant", store_ids=[])
+
+    deactiveer_organisatie(engine, organisatie_id=org_id)
+    heractiveer_organisatie(engine, organisatie_id=org_id)
+    deactiveer_organisatie(engine, organisatie_id=org_id)
+
+    resultaat_meteen = haal_te_verwijderen_organisaties(engine, nu=datetime.now(timezone.utc))
+    assert org_id not in resultaat_meteen
+
+    over_31_dagen = datetime.now(timezone.utc) + timedelta(days=31)
+    resultaat_na_wachtperiode = haal_te_verwijderen_organisaties(engine, nu=over_31_dagen)
+    assert org_id in resultaat_na_wachtperiode
 
 
 def test_haal_te_verwijderen_organisaties_negeert_nog_actieve_org(tmp_path):

@@ -83,3 +83,14 @@ patroon als Certo's `KNOWN-LIMITATIONS.md`.
   `MINIMUM_DAGEN`) — een gloednieuwe klant ziet die eerste 4 weken alleen
   een voortgangsindicator, geen voorspelling. Bewuste keuze (minder data
   zou een te wankel dag-patroon opleveren), niet per ongeluk.
+- **Audit-log bewaart e-mailadressen onbeperkt lang.** `security/audit.py`
+  is een gedeeld, append-only logbestand — buiten het bereik van de
+  hard-delete cascade in `db/opschonen_cli.py` (zie
+  `docs/superpowers/specs/2026-07-29-hard-delete-cascade-design.md`).
+  `serving/app.py` schrijft op minstens twee plekken een e-mailadres in
+  een audit-entry (`"key": eigenaar.email` bij winkeltoewijzing, en
+  `"gebruiker": gebruiker.email` bij `/voorbeeld/forecast`) — directe
+  persoonsgegevens die na een definitieve organisatie-verwijdering nog
+  altijd in dit logbestand blijven staan. Een toekomstige retentiebeleid
+  of scrubbing-pass zou dit apart moeten oplossen; niet gedekt door deze
+  taak.

@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta, timezone
 
+import pytest
 from sqlalchemy import select
 
 from db import opschonen_cli
@@ -79,6 +80,20 @@ def test_main_logt_geen_naam_of_email(tmp_path, monkeypatch, capsys):
     assert "Geheime Bakkerij BV" not in output
     assert "eigenaar@geheimebakkerij.nl" not in output
     assert str(org_id) in output
+
+
+def test_main_faalt_hard_bij_niet_bestaande_tenants_db_pad(tmp_path, monkeypatch):
+    # Voorkomt dat een misconfigureerde TENANTS_DB_PAD stilzwijgend een
+    # nieuwe, lege database aanmaakt (via db.schema.maak_database) en de
+    # cron daardoor "0 organisatie(s) verwijderd" rapporteert terwijl hij
+    # eigenlijk de verkeerde/geen database bekeek — zie serving/config.py's
+    # API_KEYS_FILE-check voor hetzelfde "fail hard on missing required
+    # config"-patroon.
+    niet_bestaand_pad = tmp_path / "deze-map-bestaat-niet" / "tenants.db"
+    monkeypatch.setenv("TENANTS_DB_PAD", str(niet_bestaand_pad))
+
+    with pytest.raises(RuntimeError):
+        opschonen_cli.main()
 
 
 def test_main_logt_geen_uitzonderingstekst_bij_fout(tmp_path, monkeypatch, capsys):

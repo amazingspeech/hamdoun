@@ -229,7 +229,16 @@ Zelfde patroon als stap 8 — een cron-regel op de host draait
 `db.opschonen_cli` elke nacht binnen de al draaiende `api`-container. Dit
 verwijdert organisaties **definitief en onomkeerbaar** (AVG-vereiste, zie
 `FASE4-SAAS-FOUNDATION.md` beslissing 9) 30 dagen nadat Stripe
-`customer.subscription.deleted` meldde:
+`customer.subscription.deleted` meldde.
+
+**Waarschuwing — handmatige reactivatie:** als een operator een
+gedeactiveerde organisatie handmatig rechtzet (bv. een ten onrechte
+opgezegd abonnement), MOET dat via `db.organisaties.heractiveer_organisatie()`
+gebeuren — niet via een kale `UPDATE organisaties SET actief=1`. Directe SQL
+moet in dezelfde statement ook `gedeactiveerd_op = NULL` zetten. Zonder dat
+blijft de oude `gedeactiveerd_op`-tijdstempel staan, en komt de organisatie
+bij een volgende suspensie meteen, met nul dagen respijt, in aanmerking voor
+deze onomkeerbare verwijdering.
 ```bash
 crontab -e
 # 0 3 * * * cd /home/job/forecasting-demo && docker compose -f deploy/docker-compose.yml exec -T api \
@@ -237,11 +246,14 @@ crontab -e
 ```
 Dagelijks, niet wekelijks zoals stap 8 — een verwijdering hoeft niet
 wekenlang na de wachtperiode te blijven hangen. Test één keer handmatig
-vóór je de cron-regel aanzet:
+vóór je de cron-regel aanzet (vanuit `/home/job/forecasting-demo/deploy`,
+zelfde aangenomen werkmap als de handmatige test in stap 8 hierboven):
 ```bash
+cd /home/job/forecasting-demo/deploy
 docker compose exec api python3 -m db.opschonen_cli
 ```
-Verwacht bij een lege/verse database: `0 organisatie(s) verwijderd: (geen)`.
+Verwacht bij een lege/verse database: `0 organisatie(s) verwijderd uit
+tenants.db: (geen)`.
 
 ## Bekende beperkingen van deze live opzet
 

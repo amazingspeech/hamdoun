@@ -25,6 +25,18 @@ from db.schema import maak_database
 def main() -> list[int]:
     load_dotenv()
     tenants_db_pad = Path(os.environ.get("TENANTS_DB_PAD", "tenants.db"))
+    # Fail hard i.p.v. maak_database() stilzwijgend een nieuwe, lege database
+    # laten aanmaken (zelfde "fail hard on missing required config"-patroon
+    # als serving/config.py's API_KEYS_FILE-check) — dit script is een AVG-
+    # nalevingscontrole, en een misconfigureerde TENANTS_DB_PAD zou anders
+    # elke nacht "0 organisatie(s) verwijderd" rapporteren, ononderscheidbaar
+    # van een correct geconfigureerde, lege wachtrij.
+    if not tenants_db_pad.exists():
+        raise RuntimeError(
+            f"TENANTS_DB_PAD ({tenants_db_pad}) bestaat niet. Dit script maakt "
+            "nooit stilzwijgend een nieuwe, lege database aan — controleer of "
+            "TENANTS_DB_PAD in de omgeving naar de juiste, bestaande database wijst."
+        )
     engine = maak_database(tenants_db_pad)
 
     nu = datetime.now(timezone.utc)
@@ -45,7 +57,10 @@ def main() -> list[int]:
         verwijderd.append(organisatie_id)
         print(f"organisatie {organisatie_id} verwijderd op {nu.isoformat()}")
 
-    print(f"{len(verwijderd)} organisatie(s) verwijderd: {verwijderd if verwijderd else '(geen)'}")
+    print(
+        f"{len(verwijderd)} organisatie(s) verwijderd uit {tenants_db_pad}: "
+        f"{verwijderd if verwijderd else '(geen)'}"
+    )
     return verwijderd
 
 
