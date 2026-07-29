@@ -9,6 +9,7 @@ from db.organisaties import (
     haal_ingekochte_leden,
     haal_ingekochte_winkels,
     haal_organisatie_id_bij_stripe_subscription,
+    haal_te_verwijderen_organisaties,
     haal_trial_verloopt_op,
     is_actief,
     is_in_proefperiode,
@@ -214,3 +215,49 @@ def test_deactiveer_organisatie_zet_gedeactiveerd_op(tmp_path):
         rij = conn.execute(select(organisaties.c.gedeactiveerd_op).where(organisaties.c.id == org_id)).one()
     gedeactiveerd_op = rij.gedeactiveerd_op.replace(tzinfo=timezone.utc)
     assert voor <= gedeactiveerd_op <= na
+
+
+def test_haal_te_verwijderen_organisaties_negeert_nog_actieve_org(tmp_path):
+    engine = maak_database(tmp_path / "tenants.db")
+    org_id = bootstrap_organisatie(engine, naam="Klant", slug="klant", store_ids=[])
+
+    resultaat = haal_te_verwijderen_organisaties(engine, nu=datetime.now(timezone.utc))
+
+    assert org_id not in resultaat
+
+
+def test_haal_te_verwijderen_organisaties_negeert_net_gedeactiveerde_org(tmp_path):
+    engine = maak_database(tmp_path / "tenants.db")
+    org_id = bootstrap_organisatie(engine, naam="Klant", slug="klant", store_ids=[])
+    deactiveer_organisatie(engine, organisatie_id=org_id)
+
+    resultaat = haal_te_verwijderen_organisaties(engine, nu=datetime.now(timezone.utc))
+
+    assert org_id not in resultaat
+
+
+def test_haal_te_verwijderen_organisaties_vindt_org_na_wachtperiode(tmp_path):
+    engine = maak_database(tmp_path / "tenants.db")
+    org_id = bootstrap_organisatie(engine, naam="Klant", slug="klant", store_ids=[])
+    deactiveer_organisatie(engine, organisatie_id=org_id)
+    over_31_dagen = datetime.now(timezone.utc) + timedelta(days=31)
+
+    resultaat = haal_te_verwijderen_organisaties(engine, nu=over_31_dagen)
+
+    assert org_id in resultaat
+
+
+def test_haal_te_verwijderen_organisaties_negeert_org_zonder_gedeactiveerd_op(tmp_path):
+    """Kan na deze wijziging niet meer voorkomen via deactiveer_organisatie()
+    zelf, maar defensief getest: een actief=False-rij zonder
+    gedeactiveerd_op (bv. een oude rij van vóór deze wijziging) mag nooit
+    een crash geven."""
+    engine = maak_database(tmp_path / "tenants.db")
+    org_id = bootstrap_organisatie(engine, naam="Klant", slug="klant", store_ids=[])
+    with engine.begin() as conn:
+        conn.execute(organisaties.update().where(organisaties.c.id == org_id).values(actief=False))
+    over_31_dagen = datetime.now(timezone.utc) + timedelta(days=31)
+
+    resultaat = haal_te_verwijderen_organisaties(engine, nu=over_31_dagen)
+
+    assert org_id not in resultaat

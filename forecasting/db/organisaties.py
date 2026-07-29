@@ -4,7 +4,7 @@ worden opgegeven — momenteel alleen de gemiddelde omzet per verkocht stuk,
 nodig om een omzetvoorspelling om te rekenen naar een stuks-schatting."""
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from typing import Optional
 
 from sqlalchemy import select
@@ -103,6 +103,24 @@ def deactiveer_organisatie(engine: Engine, organisatie_id: int) -> None:
             organisaties.update().where(organisaties.c.id == organisatie_id)
             .values(actief=False, gedeactiveerd_op=datetime.now(timezone.utc))
         )
+
+
+def haal_te_verwijderen_organisaties(engine: Engine, nu: datetime, wachtdagen: int = 30) -> list[int]:
+    """Voor db.opschonen_cli: welke organisaties zijn lang genoeg geleden
+    gedeactiveerd om nu definitief verwijderd te mogen worden
+    (verwijder_organisatie() hieronder). Los van die functie gehouden
+    zodat de selectielogica (wíé komt in aanmerking) apart getest kan
+    worden van de verwijdering zelf (wát er precies gebeurt als iemand
+    verwijderd wordt)."""
+    grens = nu - timedelta(days=wachtdagen)
+    with engine.connect() as conn:
+        return conn.execute(
+            select(organisaties.c.id).where(
+                organisaties.c.actief.is_(False),
+                organisaties.c.gedeactiveerd_op.isnot(None),
+                organisaties.c.gedeactiveerd_op < grens,
+            )
+        ).scalars().all()
 
 
 def haal_organisatie_id_bij_stripe_subscription(engine: Engine, stripe_subscription_id: str) -> Optional[int]:
