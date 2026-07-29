@@ -1,11 +1,11 @@
 :root {
-  --paper: oklch(97% 0.012 95);
+  --paper: oklch(98% 0.003 240);
   --paper-raised: oklch(100% 0 0);
-  --ink: oklch(21% 0.025 150);
-  --ink-soft: oklch(46% 0.02 150);
-  --ink-faint: oklch(60% 0.015 150);
-  --line: oklch(89% 0.012 95);
-  --line-strong: oklch(80% 0.015 95);
+  --ink: oklch(18% 0.006 240);
+  --ink-soft: oklch(44% 0.006 240);
+  --ink-faint: oklch(58% 0.005 240);
+  --line: oklch(90% 0.004 240);
+  --line-strong: oklch(82% 0.005 240);
   --accent: oklch(52% 0.13 155);
   --accent-ink: oklch(30% 0.11 155);
   --band: oklch(88% 0.05 150);
@@ -21,13 +21,13 @@
 }
 
 :root[data-theme="dark"] {
-  --paper: oklch(16% 0.02 55);
-  --paper-raised: oklch(20% 0.022 55);
-  --ink: oklch(93% 0.012 95);
-  --ink-soft: oklch(76% 0.015 95);
-  --ink-faint: oklch(58% 0.012 95);
-  --line: oklch(32% 0.025 55);
-  --line-strong: oklch(40% 0.025 55);
+  --paper: oklch(15% 0.004 240);
+  --paper-raised: oklch(19% 0.004 240);
+  --ink: oklch(94% 0.004 240);
+  --ink-soft: oklch(75% 0.005 240);
+  --ink-faint: oklch(56% 0.004 240);
+  --line: oklch(30% 0.006 240);
+  --line-strong: oklch(38% 0.006 240);
   --accent: oklch(76% 0.14 155);
   --accent-ink: oklch(84% 0.11 155);
   --band: oklch(30% 0.05 150);
@@ -43,13 +43,13 @@
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --paper: oklch(16% 0.02 55);
-    --paper-raised: oklch(20% 0.022 55);
-    --ink: oklch(93% 0.012 95);
-    --ink-soft: oklch(76% 0.015 95);
-    --ink-faint: oklch(58% 0.012 95);
-    --line: oklch(32% 0.025 55);
-    --line-strong: oklch(40% 0.025 55);
+    --paper: oklch(15% 0.004 240);
+    --paper-raised: oklch(19% 0.004 240);
+    --ink: oklch(94% 0.004 240);
+    --ink-soft: oklch(75% 0.005 240);
+    --ink-faint: oklch(56% 0.004 240);
+    --line: oklch(30% 0.006 240);
+    --line-strong: oklch(38% 0.006 240);
     --accent: oklch(76% 0.14 155);
     --accent-ink: oklch(84% 0.11 155);
     --band: oklch(30% 0.05 150);
@@ -127,10 +127,10 @@ select:focus-visible, input:focus-visible, button:focus-visible, summary:focus-v
 }
 .btn {
   font:600 0.9375rem/1.4 var(--font-body); padding:10px 20px; border:none; border-radius:8px;
-  background:var(--accent); color:oklch(15% 0.02 155); cursor:pointer;
-  transition:transform 0.12s ease, box-shadow 0.12s ease;
+  background:var(--ink); color:var(--paper); cursor:pointer;
+  transition:transform 0.12s ease, opacity 0.12s ease;
 }
-.btn:hover:not(:disabled) { box-shadow:0 3px 10px oklch(50% 0.15 155 / 0.35); }
+.btn:hover:not(:disabled) { opacity:0.85; }
 .btn:active:not(:disabled) { transform:translateY(1px); }
 .btn:disabled { opacity:0.5; cursor:not-allowed; }
 .btn.zacht {
