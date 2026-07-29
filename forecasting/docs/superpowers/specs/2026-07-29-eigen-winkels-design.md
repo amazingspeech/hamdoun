@@ -52,10 +52,17 @@ meerdere datareeksen naast elkaar kunnen bestaan.
   ("Tessar demo") met 30 testrijen in `eigen_verkoopdata` — geen echte
   klantdata. Deze rijen worden simpelweg niet overgezet; de tabellen worden
   leeg herbouwd met het nieuwe schema.
-- Alembic/migratietooling — nog steeds niet nodig op deze schaal (zie
-  `db/schema.py`'s bestaande toelichting); dit schema-verandering wordt
-  gedaan door de twee betrokken tabellen gericht te droppen en opnieuw door
-  `create_all()` te laten aanmaken.
+- Alembic/migratietooling — nog steeds niet nodig op deze schaal. Het
+  bestaande `_migreer_ontbrekende_kolommen()`-mechanisme (`db/schema.py`)
+  voegt alleen ontbrekende *kolommen* toe aan een bestaande tabel; het kan
+  geen kolom hernoemen, een constraint wijzigen, of een tabel herstructureren
+  — precies wat deze wijziging nodig heeft voor `eigen_verkoopdata`/
+  `eigen_product_verkoopdata`. In plaats daarvan: vóór de deploy die deze
+  wijziging bevat, eenmalig handmatig `DROP TABLE eigen_verkoopdata,
+  eigen_product_verkoopdata` op `tenants.db` (alleen deze twee — geen ander
+  data verloren). De daaropvolgende herstart roept, zoals bij elke deploy,
+  `serving/app.py`'s module-level `maak_database()` aan, die beide tabellen
+  automatisch opnieuw aanmaakt met het nieuwe schema via `create_all()`.
 
 ## Architecture
 
@@ -84,7 +91,19 @@ Nieuw, in `db/eigen_winkels.py` + endpoints in `serving/app.py`:
 - `POST /organisatie/eigen-winkels` (eigenaar-only) — `{naam}` → 201, nieuwe
   winkel. 409 bij dubbele naam binnen de organisatie.
 - `GET /organisatie/eigen-winkels` — lijst (elke ingelogde gebruiker, zelfde
-  leesrecht-patroon als `/organisatie/verkoopdata`).
+  leesrecht-patroon als `/organisatie/verkoopdata`). Elke winkel in de lijst
+  bevat naast `id`/`naam`: `gemiddelde_omzet_per_stuk` (handmatig ingesteld
+  bedrag, of `None`), `automatische_prijs_per_stuk` (het uit sectie 3
+  afgeleide bedrag, of `None` zonder overlappende data), en `heeft_verkoopdata`
+  (afgeleide boolean, zie sectie 4). `heeft_prijs` is dan simpelweg
+  `gemiddelde_omzet_per_stuk is not None or automatische_prijs_per_stuk is
+  not None` — client-side afleidbaar, dus geen apart veld nodig. Dit
+  onderscheid voorkomt dat de frontend `heeft_prijs=true` ziet zonder te
+  weten welk bedrag daadwerkelijk geldt (nodig omdat sectie 3 de automatische
+  waarde laat voorgaan op de handmatige).
+- `PUT /organisatie/eigen-winkels/{id}/instellingen` (eigenaar-only) —
+  `{gemiddelde_omzet_per_stuk}`, vervangt het huidige
+  `PUT /organisatie/instellingen` (zie sectie 4).
 - `PATCH /organisatie/eigen-winkels/{id}` (eigenaar-only) — hernoemen. 404
   voor een winkel van een andere organisatie (zelfde
   enumeratie-preventie-patroon als overal elders: nooit 403).
@@ -136,12 +155,55 @@ het per-product-herbestel-advies voedt, maar ook — als bijeffect — de
 prijsberekening voor het gewone omzet-gebaseerde advies kan verbeteren voor
 organisaties die de premium-functie gebruiken.
 
-### 4. Frontend (`dashboard/team.html` + `account.js`)
+### 4. Bestaande features die meeveranderen
+
+Twee al-gebouwde features lezen vandaag rechtstreeks de org-brede
+verkoopdata/prijs en zouden zonder aanpassing stilzwijgend breken —
+expliciet in scope van deze wijziging, niet los na te ruimen:
+
+**`GET`/`PUT /organisatie/instellingen`** had precies één veld
+(`gemiddelde_omzet_per_stuk`), dat nu per eigen winkel bestaat. Dit endpoint
+vervalt volledig. Het prijsformulier verhuist van een los blok op
+`team.html` naar een veld per rij in de nieuwe "Eigen winkels"-kaart, met een
+nieuw endpoint `PUT /organisatie/eigen-winkels/{id}/instellingen` (eigenaar-only,
+`{gemiddelde_omzet_per_stuk}`) — zelfde autorisatiepatroon als het huidige
+`PUT /organisatie/instellingen`.
+
+**`serving/herbestel_email.py`** (wekelijkse cron-mail): `_verzamel_forecast_via_eigen_data()`
+en `db_organisaties.haal_gemiddelde_omzet_per_stuk()` gebruiken vandaag
+precies één org-brede waarde per organisatie. Wordt: itereer over
+`db_eigen_winkels.lijst_eigen_winkels(engine, organisatie_id=org.id)`, bereken
+per eigen winkel een eigen forecast + prijs + advies (zelfde
+`bereken_eigen_voorspelling`/`herbestel_advies`-functies, nu per winkel
+aangeroepen i.p.v. één keer per organisatie). **Niet optellen** tot één
+org-totaal zoals de gedeeld-model-tak wel doet voor meerdere echte
+winkels — verschillende eigen winkels kunnen andere producten/prijzen
+hebben, dus een opgeteld stuks-advies zou betekenisloos zijn. In plaats
+daarvan: één e-mail per organisatie zoals nu, met een apart tekstblok per
+eigen winkel die genoeg historie heeft (`bouw_email_inhoud()` krijgt een
+lijst van (winkelnaam, forecast, advies)-items i.p.v. één set totalen).
+
+**`dashboard/onboarding.js`** (self-serve-onboardingchecklist,
+`haalOnboardingStatus()`): las tot nu toe `/organisatie/verkoopdata` (org-breed,
+zonder parameter) en `/organisatie/instellingen`. Beide bestaan straks niet
+meer in die vorm. Om N+1-fetches (één call per eigen winkel) te voorkomen,
+gebruikt de checklist voortaan uitsluitend `GET /organisatie/eigen-winkels`
+(zie sectie 2 hierboven voor de veldnamen): "Upload je verkoopdata" voltooid
+zodra minstens één eigen winkel `heeft_verkoopdata`; "Stel je
+herbestel-prijs in" voltooid zodra minstens één eigen winkel
+`gemiddelde_omzet_per_stuk` of `automatische_prijs_per_stuk` niet-`None`
+heeft.
+
+### 5. Frontend (`dashboard/team.html` + `account.js`)
 
 Nieuwe kaart bovenaan, vóór de bestaande upload-kaarten: **"Eigen winkels"**
 — tekstveld + "Aanmaken"-knop, lijst met bestaande winkels (naam,
-hernoemen-knop die het label inline editable maakt, verwijderen-knop met
-dezelfde bevestigingsstijl als teamlid-verwijderen).
+hernoemen-knop die het label inline editable maakt, verwijderen-knop).
+Verwijderen vraagt een `confirm()`-bevestiging vóór de aanroep — dit wijkt
+bewust af van `verwijderTeamlid()` (dat direct, zonder bevestiging,
+verwijdert): een teamlid kan opnieuw uitgenodigd worden, maar een eigen
+winkel verwijderen vernietigt cascaderend de geüploade verkoopdata, die niet
+zomaar opnieuw beschikbaar is als de bron-CSV niet meer bij de hand is.
 
 Beide bestaande upload-kaarten (`verkoopdata-kaart`,
 `product-verkoopdata-kaart`) krijgen een `<select>` met de eigen-winkel-lijst
@@ -193,11 +255,24 @@ melding + disabled velden toont.
 ## Testing
 
 - **Backend**: volledig TDD, zoals de rest van dit project. `db/eigen_winkels.py`
-  (aanmaken, dubbele naam, lijst, hernoemen, verwijderen+cascade),
-  `serving/prijs_per_stuk.py` (overlap-berekening, geen-overlap-geval),
-  endpoint-tests voor alle nieuwe en gewijzigde routes (inclusief de
-  tenant-isolatie-check: een `eigen_winkel_id` van organisatie A geeft 404
-  voor een gebruiker van organisatie B).
+  (aanmaken, dubbele naam, lijst met `heeft_verkoopdata`/`heeft_prijs`,
+  hernoemen, verwijderen+cascade), `serving/prijs_per_stuk.py`
+  (overlap-berekening, geen-overlap-geval), endpoint-tests voor alle nieuwe
+  en gewijzigde routes (inclusief de tenant-isolatie-check: een
+  `eigen_winkel_id` van organisatie A geeft 404 voor een gebruiker van
+  organisatie B).
+- **Bestaande tests die herschreven moeten worden, niet alleen uitgebreid**
+  (blast radius van sectie 4 hierboven): `tests/test_organisatie_instellingen_endpoint.py`
+  (endpoint verdwijnt, tests verhuizen naar de nieuwe
+  eigen-winkel-instellingen-tests), `tests/test_herbestel_email.py` (de
+  eigen-data-fallback-tak itereert nu per eigen winkel i.p.v. één org-brede
+  aanroep — bestaande fixtures/asserts moeten mee), `tests/test_eigen_voorspelling_endpoint.py`
+  en `tests/test_verkoopdata_endpoint.py` (verplichte `eigen_winkel_id`-parameter),
+  `tests/test_db_organisaties.py` (verliest de
+  `stel_gemiddelde_omzet_per_stuk_in`/`haal_gemiddelde_omzet_per_stuk`-tests,
+  die verhuizen naar `tests/test_db_eigen_winkel_instellingen.py`),
+  `tests/test_db_schema.py` (schema-assertions voor de gewijzigde/nieuwe
+  tabellen).
 - **Frontend**: geen automated JS-tests (consistent met eerdere
   dashboard-only rondes in dit project) — live geverifieerd in de browser:
   twee eigen winkels aanmaken, elk een eigen CSV uploaden, bevestigen dat de
