@@ -67,6 +67,34 @@ function toonSidebarKpis(data) {
   }
 
   toonOmzetTrend(data.kpi.totale_verwachte_omzet, geladen === data.totaal_winkels);
+  cachePortfolioOmzet(data.kpi.totale_verwachte_omzet, data.winkels.length);
+}
+
+// Voor de "T.o.v. je andere winkels"-inzichtkaart op index.html (zie
+// dashboard.js) — index.html haalt bewust nooit zelf /portfolio op (zie
+// initPortfolioSidebar hieronder), dus deze cache is de enige manier om
+// die vergelijking zonder een nieuwe, dure aanroep te tonen. aantalWinkels
+// is expliciet data.winkels.length (het aantal winkels waarover de
+// omzetsom daadwerkelijk berekend is), niet data.totaal_winkels — die twee
+// lopen uiteen zodra paginering actief is, en delen door het verkeerde
+// getal zou het gemiddelde per winkel structureel te laag laten uitkomen.
+// horizonDagen ligt vast op de HORIZON_DAGEN-constante uit overview.js
+// (vandaag 7) — apart gecachet i.p.v. aangenomen, zodat een toekomstige
+// wijziging van die constante deze vergelijking niet stilzwijgend scheef
+// trekt.
+function cachePortfolioOmzet(totaleOmzet, aantalWinkels) {
+  const waarde = JSON.stringify({ totaleOmzet, aantalWinkels, horizonDagen: 7 });
+  localStorage.setItem(sidebarSleutel("portfolio_omzet_cache", huidigeOrganisatieId), waarde);
+}
+
+function haalPortfolioOmzetCache() {
+  const ruw = localStorage.getItem(sidebarSleutel("portfolio_omzet_cache", huidigeOrganisatieId));
+  if (!ruw) return null;
+  try {
+    return JSON.parse(ruw);
+  } catch (e) {
+    return null;
+  }
 }
 
 function toonOmzetTrend(huidigeOmzet, isVolledigeSet) {
