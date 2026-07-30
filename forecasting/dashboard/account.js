@@ -500,6 +500,15 @@ function maakEigenWinkelEl(winkel, opGewijzigd) {
     try {
       await stelEigenWinkelPrijsIn(winkel.id, Number(prijsVeld.value));
       await opGewijzigd();
+      // opGewijzigd() (verversEigenWinkelsKaart) ververst alleen de
+      // "Eigen winkels"-lijst zelf — als de zojuist gewijzigde winkel ook
+      // de nu geselecteerde winkel in de verkoopdata-kaart is, moet die
+      // apart ververst worden, anders blijft het oude (omzet-)advies
+      // staan tot een handmatige her-selectie.
+      const geselecteerd = document.getElementById("verkoopdata-eigen-winkel");
+      if (geselecteerd && Number(geselecteerd.value) === winkel.id) {
+        await toonVerkoopdataVoorSelectie();
+      }
     } catch (e) {
       toonFout("eigen-winkel-aanmaken-fout", e.message);
     } finally {
