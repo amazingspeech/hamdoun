@@ -567,18 +567,72 @@ if (location.hostname === "amazingspeech.github.io") {
       <p style="font:400 clamp(0.95rem,1.5vw,1rem)/1.6 'IBM Plex Sans';color:oklch(75% 0.10 250);margin:0;">{{ contactSubtext }}</p>
     </div>
 
-    <form style="display:flex;flex-direction:column;gap:18px;">
-      <input type="text" placeholder="{{ formNamePlaceholder }}" style="background:oklch(100% 0 0 / 0.95);border:1px solid oklch(70% 0.14 220 / 0.3);border-radius:6px;padding:14px 18px;font:400 0.95rem/1.5 'IBM Plex Sans';color:oklch(18% 0.02 255);transition:all 200ms ease;" style-focus="border-color:oklch(70% 0.14 220);box-shadow:0 0 0 2px oklch(70% 0.14 220 / 0.1);outline:none;"/>
-      <input type="email" placeholder="{{ formEmailPlaceholder }}" style="background:oklch(100% 0 0 / 0.95);border:1px solid oklch(70% 0.14 220 / 0.3);border-radius:6px;padding:14px 18px;font:400 0.95rem/1.5 'IBM Plex Sans';color:oklch(18% 0.02 255);transition:all 200ms ease;" style-focus="border-color:oklch(70% 0.14 220);box-shadow:0 0 0 2px oklch(70% 0.14 220 / 0.1);outline:none;"/>
-      <select style="background:oklch(100% 0 0 / 0.95);border:1px solid oklch(70% 0.14 220 / 0.3);border-radius:6px;padding:14px 18px;font:400 0.95rem/1.5 'IBM Plex Sans';color:oklch(18% 0.02 255);transition:all 200ms ease;cursor:pointer;" style-focus="border-color:oklch(70% 0.14 220);outline:none;">
+    <form id="contact-form" style="display:flex;flex-direction:column;gap:18px;">
+      <input type="text" name="name" id="cf-name" required placeholder="{{ formNamePlaceholder }}" style="background:oklch(100% 0 0 / 0.95);border:1px solid oklch(70% 0.14 220 / 0.3);border-radius:6px;padding:14px 18px;font:400 0.95rem/1.5 'IBM Plex Sans';color:oklch(18% 0.02 255);transition:all 200ms ease;" style-focus="border-color:oklch(70% 0.14 220);box-shadow:0 0 0 2px oklch(70% 0.14 220 / 0.1);outline:none;"/>
+      <input type="email" name="email" id="cf-email" required placeholder="{{ formEmailPlaceholder }}" style="background:oklch(100% 0 0 / 0.95);border:1px solid oklch(70% 0.14 220 / 0.3);border-radius:6px;padding:14px 18px;font:400 0.95rem/1.5 'IBM Plex Sans';color:oklch(18% 0.02 255);transition:all 200ms ease;" style-focus="border-color:oklch(70% 0.14 220);box-shadow:0 0 0 2px oklch(70% 0.14 220 / 0.1);outline:none;"/>
+      <select name="industry" id="cf-industry" style="background:oklch(100% 0 0 / 0.95);border:1px solid oklch(70% 0.14 220 / 0.3);border-radius:6px;padding:14px 18px;font:400 0.95rem/1.5 'IBM Plex Sans';color:oklch(18% 0.02 255);transition:all 200ms ease;cursor:pointer;" style-focus="border-color:oklch(70% 0.14 220);outline:none;">
         <option value="">{{ formIndustryPlaceholder }}</option>
         <sc-for list="{{ industries }}" as="opt" hint-placeholder-count="0">
           <option value="{{ opt.title }}">{{ opt.title }}</option>
         </sc-for>
       </select>
-      <textarea placeholder="{{ formMessagePlaceholder }}" rows="4" style="background:oklch(100% 0 0 / 0.95);border:1px solid oklch(70% 0.14 220 / 0.3);border-radius:6px;padding:14px 18px;font:400 0.95rem/1.5 'IBM Plex Sans';color:oklch(18% 0.02 255);resize:none;transition:all 200ms ease;" style-focus="border-color:oklch(70% 0.14 220);box-shadow:0 0 0 2px oklch(70% 0.14 220 / 0.1);outline:none;"></textarea>
-      <button type="submit" style="background:linear-gradient(135deg, oklch(70% 0.14 220), oklch(60% 0.12 230));color:#001a2e;padding:14px 28px;border:none;border-radius:6px;font-weight:700;font-size:0.95rem;cursor:pointer;transition:all 280ms ease;" style-hover="transform:translateY(-3px);box-shadow:0 16px 48px rgba(0, 212, 255, 0.35);">{{ contactCTA }}</button>
+      <textarea name="message" id="cf-message" required placeholder="{{ formMessagePlaceholder }}" rows="4" style="background:oklch(100% 0 0 / 0.95);border:1px solid oklch(70% 0.14 220 / 0.3);border-radius:6px;padding:14px 18px;font:400 0.95rem/1.5 'IBM Plex Sans';color:oklch(18% 0.02 255);resize:none;transition:all 200ms ease;" style-focus="border-color:oklch(70% 0.14 220);box-shadow:0 0 0 2px oklch(70% 0.14 220 / 0.1);outline:none;"></textarea>
+      <input type="text" name="website" id="cf-website" autocomplete="off" tabindex="-1" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;">
+      <input type="hidden" name="started_at" id="cf-started-at">
+      <button type="submit" id="cf-submit" style="background:linear-gradient(135deg, oklch(70% 0.14 220), oklch(60% 0.12 230));color:#001a2e;padding:14px 28px;border:none;border-radius:6px;font-weight:700;font-size:0.95rem;cursor:pointer;transition:all 280ms ease;" style-hover="transform:translateY(-3px);box-shadow:0 16px 48px rgba(0, 212, 255, 0.35);">{{ contactCTA }}</button>
+      <p id="cf-status" role="status" style="font:400 0.9rem/1.5 'IBM Plex Sans';margin:0;min-height:1.4em;"></p>
     </form>
+    <script>
+    (function () {
+      var form = document.getElementById("contact-form");
+      var startedAt = document.getElementById("cf-started-at");
+      var submitBtn = document.getElementById("cf-submit");
+      var status = document.getElementById("cf-status");
+      startedAt.value = Date.now();
+
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        var originalBtnText = submitBtn.textContent;
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Versturen...";
+        status.textContent = "";
+        status.style.color = "";
+
+        fetch("/api/contact", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: document.getElementById("cf-name").value,
+            email: document.getElementById("cf-email").value,
+            industry: document.getElementById("cf-industry").value,
+            message: document.getElementById("cf-message").value,
+            website: document.getElementById("cf-website").value,
+            started_at: Number(startedAt.value)
+          })
+        })
+          .then(function (res) { return res.json().then(function (data) { return { ok: res.ok, data: data }; }); })
+          .then(function (result) {
+            if (result.ok && result.data.ok) {
+              form.reset();
+              startedAt.value = Date.now();
+              status.style.color = "oklch(70% 0.14 220)";
+              status.textContent = "Bedankt! We nemen zo snel mogelijk contact op.";
+            } else {
+              status.style.color = "oklch(65% 0.20 30)";
+              status.textContent = (result.data && result.data.error) || "Er ging iets mis, probeer het later opnieuw.";
+            }
+          })
+          .catch(function () {
+            status.style.color = "oklch(65% 0.20 30)";
+            status.textContent = "Er ging iets mis, probeer het later opnieuw.";
+          })
+          .finally(function () {
+            submitBtn.disabled = false;
+            submitBtn.textContent = originalBtnText;
+          });
+      });
+    })();
+    </script>
 
     <p style="font:400 clamp(0.8rem,1.2vw,0.85rem)/1.6 'IBM Plex Sans';color:oklch(70% 0.10 250);text-align:center;margin:28px 0 0;padding-top:28px;border-top:1px solid oklch(70% 0.14 220 / 0.2);">{{ contactFooter }}</p>
   </div>
