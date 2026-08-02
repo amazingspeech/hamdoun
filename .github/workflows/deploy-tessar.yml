@@ -27,10 +27,6 @@ jobs:
           157.90.244.24 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIANwrH/LKzkLoN2icyeR5EFEepMRHCjIjYbg6qK7bPRH
           EOF
 
-      - name: Debug SSH connectivity
-        run: |
-          ssh -vvv -i ~/.ssh/tessar_deploy_key -o StrictHostKeyChecking=yes -o BatchMode=yes deploy@157.90.244.24 'true' || true
-
       - name: Rsync site to server
         run: |
           rsync -avz --delete \
