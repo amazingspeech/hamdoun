@@ -21,7 +21,7 @@ jobs:
       - name: Install deploy key
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.TESSAR_DEPLOY_SSH_KEY }}" > ~/.ssh/tessar_deploy_key
+          echo "${{ secrets.TESSAR_DEPLOY_SSH_KEY }}" | base64 -d > ~/.ssh/tessar_deploy_key
           chmod 600 ~/.ssh/tessar_deploy_key
           cat >> ~/.ssh/known_hosts <<'EOF'
           157.90.244.24 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIANwrH/LKzkLoN2icyeR5EFEepMRHCjIjYbg6qK7bPRH
