@@ -1,0 +1,51 @@
+name: Deploy Tessar site
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - "forecasting/**"
+      - "docs/**"
+      - ".superpowers/**"
+      - ".claude/**"
+      - "_to_delete/**"
+      - "README.md"
+      - ".github/workflows/forecasting-ci.yml"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install deploy key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.TESSAR_DEPLOY_SSH_KEY }}" > ~/.ssh/tessar_deploy_key
+          chmod 600 ~/.ssh/tessar_deploy_key
+          cat >> ~/.ssh/known_hosts <<'EOF'
+          157.90.244.24 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIANwrH/LKzkLoN2icyeR5EFEepMRHCjIjYbg6qK7bPRH
+          EOF
+
+      - name: Rsync site to server
+        run: |
+          rsync -avz --delete \
+            -e "ssh -i ~/.ssh/tessar_deploy_key -o StrictHostKeyChecking=yes" \
+            --exclude='.git/' \
+            --exclude='.github/' \
+            --exclude='.claude/' \
+            --exclude='.superpowers/' \
+            --exclude='_to_delete/' \
+            --exclude='docs/' \
+            --exclude='forecasting/' \
+            --exclude='.DS_Store' \
+            --exclude='README.md' \
+            --exclude='uploads/protocolchecker/' \
+            --exclude='uploads/vandijk-clinic-context-protocolchecker.md' \
+            --exclude='uploads/VanDijkClinic_Boekingsassistent.docx' \
+            --exclude='uploads/boekingsassistent-demo.html' \
+            ./ deploy@157.90.244.24:/
+
+      - name: Cleanup
+        if: always()
+        run: rm -f ~/.ssh/tessar_deploy_key
