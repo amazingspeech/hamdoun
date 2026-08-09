@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI voor kapsalons — Tessar</title>
+<meta name="description" content="AI-implementatie voor kapsalons: online boeken, herinneringen en klantvoorkeuren onthouden zonder dat het bij de balie blijft hangen.">
+<link rel="canonical" href="https://tessar.nl/voor-kapsalons.html">
+<meta name="theme-color" content="#0a0a0f">
+<link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="./assets/favicon-16.png">
+<link rel="apple-touch-icon" href="./assets/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  html, body { margin:0; padding:0; background:oklch(98% 0.004 90); }
+  html { scroll-behavior:smooth; }
+  body { font-family:'IBM Plex Sans', -apple-system, 'Segoe UI', sans-serif; color:oklch(18% 0.02 255); line-height:1.55; -webkit-font-smoothing:antialiased; }
+  a { color:oklch(18% 0.02 255); text-decoration:none; }
+  a:hover { color:oklch(48% 0.12 230); }
+  [data-reveal] { opacity:0; transform:translateY(18px); transition:opacity 600ms ease, transform 600ms ease; }
+  [data-reveal].is-visible { opacity:1; transform:translateY(0); }
+  [data-reveal-grid] > [data-reveal]:nth-child(1) { transition-delay:0ms; }
+  [data-reveal-grid] > [data-reveal]:nth-child(2) { transition-delay:90ms; }
+  [data-reveal-grid] > [data-reveal]:nth-child(3) { transition-delay:180ms; }
+  [data-reveal-grid] > [data-reveal]:nth-child(4) { transition-delay:270ms; }
+  .nav-toggle { display:none; background:none; border:none; cursor:pointer; padding:8px; flex-direction:column; gap:5px; margin-left:4px; }
+  .nav-toggle span { display:block; width:22px; height:2px; background:oklch(18% 0.02 255); border-radius:2px; transition:transform 200ms ease, opacity 200ms ease; }
+  .nav-mobile-panel { display:none; }
+  @media (max-width: 680px) {
+    .nav-link { display:none; }
+    .nav-toggle { display:flex; }
+    .nav-mobile-panel { display:none; flex-direction:column; padding:8px 20px 20px; background:oklch(98% 0.004 90); border-top:1px solid oklch(90% 0.006 90); }
+    .nav-mobile-panel.nav-open { display:flex; }
+    .nav-mobile-panel a { display:block; padding:14px 0; font:500 1rem/1.3 'IBM Plex Sans'; color:oklch(24% 0.02 255); border-bottom:1px solid oklch(91% 0.006 90); }
+    .nav-mobile-panel a:last-child { border-bottom:none; margin-top:8px; }
+    .nav-toggle.nav-toggle-active span:nth-child(1) { transform:translateY(7px) rotate(45deg); }
+    .nav-toggle.nav-toggle-active span:nth-child(2) { opacity:0; }
+    .nav-toggle.nav-toggle-active span:nth-child(3) { transform:translateY(-7px) rotate(-45deg); }
+  }
+  @media (prefers-reduced-motion: reduce) { [data-reveal] { opacity:1; transform:none; transition:none; } html { scroll-behavior:auto; } }
+  .faq-item[open] .faq-chevron { transform:rotate(180deg); }
+  .faq-item summary::-webkit-details-marker { display:none; }
+  .faq-item summary { list-style:none; cursor:pointer; }
+  .icon { display:inline-block; width:1em; height:1em; background-color:currentColor; -webkit-mask-repeat:no-repeat; mask-repeat:no-repeat; -webkit-mask-position:center; mask-position:center; -webkit-mask-size:contain; mask-size:contain; flex-shrink:0; }
+  .icon-check { -webkit-mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-check' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Cpath d='M20 6 9 17l-5-5' /%3E%3C/svg%3E"); mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-check' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Cpath d='M20 6 9 17l-5-5' /%3E%3C/svg%3E"); }
+  .icon-shield-check { -webkit-mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-shield-check' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Cpath d='M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z' /%3E%3Cpath d='m9 12 2 2 4-4' /%3E%3C/svg%3E"); mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-shield-check' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Cpath d='M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z' /%3E%3Cpath d='m9 12 2 2 4-4' /%3E%3C/svg%3E"); }
+  .icon-zap { -webkit-mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-zap' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Cpath d='M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z' /%3E%3C/svg%3E"); mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-zap' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Cpath d='M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z' /%3E%3C/svg%3E"); }
+  .icon-chevron-down { -webkit-mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-chevron-down' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Cpath d='m6 9 6 6 6-6' /%3E%3C/svg%3E"); mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-chevron-down' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Cpath d='m6 9 6 6 6-6' /%3E%3C/svg%3E"); }
+</style>
+</head>
+<body>
+<header style="position:sticky;top:0;z-index:30;background:color-mix(in oklch, oklch(98% 0.004 90) 92%, transparent);backdrop-filter:blur(12px);border-bottom:1px solid oklch(90% 0.006 90);padding:16px clamp(20px,5vw,40px);">
+  <div style="display:flex;align-items:center;justify-content:space-between;max-width:1400px;margin:0 auto;">
+    <a href="./index.html" style="display:flex;align-items:center;gap:10px;flex-shrink:0;">
+      <img src="./assets/tessar-icon-optimized.png" width="32" height="35" alt="Tessar logo" style="height:32px;width:auto;">
+      <span style="font:700 1rem/1 'IBM Plex Sans';letter-spacing:-0.015em;color:oklch(18% 0.02 255);">Tessar</span>
+    </a>
+    <nav style="display:flex;align-items:center;gap:clamp(14px,2vw,28px);font-size:0.9375rem;">
+      <a href="./services.html" class="nav-link" style="color:oklch(46% 0.012 140);transition:color 200ms ease;">Diensten</a>
+      <a href="./index.html#industries" class="nav-link" style="color:oklch(18% 0.02 255);font-weight:600;">Sectoren</a>
+      <a href="./index.html#cases" class="nav-link" style="color:oklch(46% 0.012 140);transition:color 200ms ease;">Cases</a>
+      <a href="./prijzen.html" class="nav-link" style="color:oklch(46% 0.012 140);transition:color 200ms ease;">Prijzen</a>
+      <a href="./chatbots.html" class="nav-link" style="color:oklch(46% 0.012 140);transition:color 200ms ease;">Chatbots</a>
+      <a href="./index.html#contact" style="background:oklch(70% 0.14 220);color:#001a2e;padding:10px 20px;border-radius:6px;font-weight:600;transition:all 200ms ease;">Plan gesprek</a>
+    </nav>
+    <button type="button" class="nav-toggle" id="nav-toggle-btn" aria-label="Menu" aria-expanded="false" aria-controls="nav-mobile-panel">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <div class="nav-mobile-panel" id="nav-mobile-panel">
+      <a href="./services.html">Diensten</a>
+      <a href="./index.html#industries">Sectoren</a>
+      <a href="./index.html#cases">Cases</a>
+      <a href="./prijzen.html">Prijzen</a>
+      <a href="./chatbots.html">Chatbots</a>
+      <a href="./index.html#contact" style="background:oklch(70% 0.14 220);color:#001a2e !important;text-align:center;border-radius:6px;font-weight:600;">Plan gesprek</a>
+  </div>
+</header>
+<main>
+<section style="position:relative;overflow:hidden;background:linear-gradient(135deg, oklch(6% 0 0) 0%, oklch(12% 0.03 260) 100%);color:#FFF;padding:clamp(64px,9vw,100px) clamp(20px,5vw,40px) clamp(56px,7vw,80px);text-align:center;">
+  <div style="max-width:800px;margin:0 auto;position:relative;z-index:1;">
+    <div style="display:inline-block;background:oklch(70% 0.14 220 / 0.15);border:1px solid oklch(70% 0.14 220 / 0.3);padding:10px 16px;border-radius:20px;margin-bottom:24px;font-size:0.8125rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:oklch(70% 0.14 220);">Voor kapsalons</div>
+    <h1 style="font:800 clamp(2rem,4.5vw,3rem)/1.2 'IBM Plex Sans';margin:0 0 18px;letter-spacing:-0.02em;">Boeken terwijl je knipt, niet ertussendoor</h1>
+    <p style="font:400 clamp(1rem,1.6vw,1.125rem)/1.7 'IBM Plex Sans';color:oklch(75% 0.10 250);margin:0;">AI die afspraken aanneemt, herinnert en klantvoorkeuren onthoudt — zodat je team zich kan richten op de klant die er al zit, niet op de telefoon.</p>
+  </div>
+</section>
+<section style="padding:clamp(56px,7vw,88px) clamp(20px,5vw,40px);background:#FFF;">
+  <div style="max-width:1000px;margin:0 auto;">
+    <div style="text-align:center;margin-bottom:clamp(40px,5vw,56px);">
+      <div style="font:500 0.8125rem/1.3 'IBM Plex Mono';letter-spacing:0.06em;text-transform:uppercase;color:oklch(48% 0.12 230);margin-bottom:12px;">Herkenbaar</div>
+      <h2 style="font:600 clamp(1.75rem,4vw,2.25rem)/1.2 'IBM Plex Sans';margin:0;letter-spacing:-0.02em;color:oklch(18% 0.02 255);">Waar de meeste bedrijven in deze branche nu tegenaan lopen</h2>
+    </div>
+    <div data-reveal-grid style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:clamp(20px,3vw,32px);">
+      <div data-reveal style="border:1px solid oklch(91% 0.006 90);border-radius:12px;padding:clamp(24px,3vw,32px);transition:opacity 600ms ease, transform 600ms ease;">
+        <div style="font:600 0.8125rem/1.3 'IBM Plex Mono';letter-spacing:0.05em;text-transform:uppercase;color:oklch(46% 0.012 140);margin-bottom:16px;">Nu</div>
+        <ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:14px;">
+          <li style="font:400 0.9375rem/1.5 'IBM Plex Sans';color:oklch(46% 0.012 140);">Telefoon die overgaat terwijl je met een klant bezig bent</li>
+          <li style="font:400 0.9375rem/1.5 'IBM Plex Sans';color:oklch(46% 0.012 140);">No-shows die een lege stoel opleveren, zonder tijdige waarschuwing</li>
+          <li style="font:400 0.9375rem/1.5 'IBM Plex Sans';color:oklch(46% 0.012 140);">Klantvoorkeuren (kleur, kapper, laatste behandeling) die alleen in iemands hoofd zitten</li>
+          <li style="font:400 0.9375rem/1.5 'IBM Plex Sans';color:oklch(46% 0.012 140);">Klanten die na een tijdje wegblijven, zonder dat iemand het opmerkt</li>
+        </ul>
+      </div>
+      <div data-reveal style="border:2px solid oklch(48% 0.12 230);border-radius:12px;padding:clamp(24px,3vw,32px);background:oklch(48% 0.12 230 / 0.04);transition:opacity 600ms ease, transform 600ms ease;">
+        <div style="font:600 0.8125rem/1.3 'IBM Plex Mono';letter-spacing:0.05em;text-transform:uppercase;color:oklch(48% 0.12 230);margin-bottom:16px;">Met Tessar</div>
+        <ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:14px;">
+          <li style="display:flex;gap:10px;align-items:flex-start;font:400 0.9375rem/1.5 'IBM Plex Sans';color:oklch(18% 0.02 255);"><div class="icon icon-check" style="width:15px;height:15px;color:oklch(48% 0.12 230);margin-top:3px;flex-shrink:0;"></div><span>Afspraken worden ook aangenomen terwijl je team aan het werk is</span></li>
+          <li style="display:flex;gap:10px;align-items:flex-start;font:400 0.9375rem/1.5 'IBM Plex Sans';color:oklch(18% 0.02 255);"><div class="icon icon-check" style="width:15px;height:15px;color:oklch(48% 0.12 230);margin-top:3px;flex-shrink:0;"></div><span>Automatische herinneringen verminderen no-shows, met genoeg tijd om de plek te vullen</span></li>
+          <li style="display:flex;gap:10px;align-items:flex-start;font:400 0.9375rem/1.5 'IBM Plex Sans';color:oklch(18% 0.02 255);"><div class="icon icon-check" style="width:15px;height:15px;color:oklch(48% 0.12 230);margin-top:3px;flex-shrink:0;"></div><span>Klantvoorkeuren staan vast in het systeem, niet alleen in iemands geheugen</span></li>
+          <li style="display:flex;gap:10px;align-items:flex-start;font:400 0.9375rem/1.5 'IBM Plex Sans';color:oklch(18% 0.02 255);"><div class="icon icon-check" style="width:15px;height:15px;color:oklch(48% 0.12 230);margin-top:3px;flex-shrink:0;"></div><span>Klanten die lang niet zijn geweest worden automatisch en persoonlijk benaderd</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+<section style="padding:clamp(56px,7vw,88px) clamp(20px,5vw,40px);background:oklch(98% 0.004 90);border-top:1px solid oklch(90% 0.006 90);">
+  <div style="max-width:1100px;margin:0 auto;">
+    <div style="text-align:center;margin-bottom:clamp(40px,5vw,56px);">
+      <h2 style="font:600 clamp(1.75rem,4vw,2.25rem)/1.2 'IBM Plex Sans';margin:0 0 16px;letter-spacing:-0.02em;color:oklch(18% 0.02 255);">Wat we voor kapsalons bouwen</h2>
+      <p style="font:400 clamp(0.95rem,1.5vw,1rem)/1.6 'IBM Plex Sans';color:oklch(46% 0.012 140);max-width:600px;margin:0 auto;">Losse onderdelen, elk apart in te zetten of samen als geheel.</p>
+    </div>
+    <div data-reveal-grid style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:24px;">
+    <div data-reveal style="border:1px solid oklch(91% 0.006 90);border-radius:12px;padding:clamp(28px,4vw,36px);background:#FFF;transition:opacity 600ms ease, transform 600ms ease;">
+      <h3 style="font:600 1.0625rem/1.3 'IBM Plex Sans';margin:0 0 10px;color:oklch(18% 0.02 255);">AI-chatbot voor boekingen</h3>
+      <p style="font:400 0.9375rem/1.6 'IBM Plex Sans';color:oklch(46% 0.012 140);margin:0;">Neemt afspraken aan via de website, ook wanneer je team volledig bezet is.</p>
+    </div>
+    <div data-reveal style="border:1px solid oklch(91% 0.006 90);border-radius:12px;padding:clamp(28px,4vw,36px);background:#FFF;transition:opacity 600ms ease, transform 600ms ease;">
+      <h3 style="font:600 1.0625rem/1.3 'IBM Plex Sans';margin:0 0 10px;color:oklch(18% 0.02 255);">Afspraakherinneringen</h3>
+      <p style="font:400 0.9375rem/1.6 'IBM Plex Sans';color:oklch(46% 0.012 140);margin:0;">Automatische herinneringen per sms of WhatsApp, getimed zodat een eventuele lege plek nog te vullen is.</p>
+    </div>
+    <div data-reveal style="border:1px solid oklch(91% 0.006 90);border-radius:12px;padding:clamp(28px,4vw,36px);background:#FFF;transition:opacity 600ms ease, transform 600ms ease;">
+      <h3 style="font:600 1.0625rem/1.3 'IBM Plex Sans';margin:0 0 10px;color:oklch(18% 0.02 255);">Klantprofielen & voorkeuren</h3>
+      <p style="font:400 0.9375rem/1.6 'IBM Plex Sans';color:oklch(46% 0.012 140);margin:0;">Onthoudt kleur, kapper en eerdere behandelingen, zodat die informatie niet verloren gaat bij personeelswissels.</p>
+    </div>
+    <div data-reveal style="border:1px solid oklch(91% 0.006 90);border-radius:12px;padding:clamp(28px,4vw,36px);background:#FFF;transition:opacity 600ms ease, transform 600ms ease;">
+      <h3 style="font:600 1.0625rem/1.3 'IBM Plex Sans';margin:0 0 10px;color:oklch(18% 0.02 255);">Heractivatie van klanten</h3>
+      <p style="font:400 0.9375rem/1.6 'IBM Plex Sans';color:oklch(46% 0.012 140);margin:0;">Herkent wanneer een vaste klant langer wegblijft dan gebruikelijk, en stuurt automatisch een persoonlijk bericht.</p>
+    </div>
+    </div>
+  </div>
+</section>
+<section style="padding:clamp(40px,5vw,56px) clamp(20px,5vw,40px);background:#FFF;text-align:center;">
+  <div style="max-width:700px;margin:0 auto;">
+    <p style="font:400 0.875rem/1.5 'IBM Plex Sans';color:oklch(46% 0.012 140);margin:0 0 16px;">Andere branches waar we al mee werken:</p>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;">
+      <a href="./voor-tandartsen.html" style="border:1px solid oklch(88% 0.006 90);color:oklch(18% 0.02 255);padding:9px 16px;border-radius:6px;font-weight:600;font-size:0.8125rem;">Tandartspraktijken</a>
+      <a href="./voor-kozijnenbedrijven.html" style="border:1px solid oklch(88% 0.006 90);color:oklch(18% 0.02 255);padding:9px 16px;border-radius:6px;font-weight:600;font-size:0.8125rem;">Kozijnenbedrijven</a>
+      <a href="./index.html#industries" style="color:oklch(48% 0.12 230);padding:9px 16px;font-weight:600;font-size:0.8125rem;">Alle branches &rarr;</a>
+    </div>
+  </div>
+</section>
+<section style="padding:clamp(56px,7vw,88px) clamp(20px,5vw,40px);background:oklch(98% 0.004 90);border-top:1px solid oklch(90% 0.006 90);">
+  <div data-reveal style="max-width:800px;margin:0 auto;text-align:center;transition:opacity 600ms ease, transform 600ms ease;">
+    <h2 style="font:600 clamp(1.5rem,3vw,1.875rem)/1.3 'IBM Plex Sans';margin:0 0 16px;color:oklch(18% 0.02 255);">Benieuwd wat dit voor jouw salon betekent?</h2>
+    <p style="font:400 1rem/1.7 'IBM Plex Sans';color:oklch(46% 0.012 140);margin:0 0 32px;">Plan een gratis kennismaking van 30 minuten. Geen verkooppraatje — een concreet gesprek over jouw situatie.</p>
+    <a href="./chatbots.html" style="display:inline-block;border:2px solid oklch(48% 0.12 230);color:oklch(18% 0.02 255);padding:14px 32px;border-radius:6px;font-weight:700;font-size:0.95rem;margin-right:16px;transition:all 200ms ease;">Bekijk de chatbot-pakketten</a>
+    <a href="./index.html#contact" style="display:inline-block;background:linear-gradient(135deg, oklch(70% 0.14 220), oklch(60% 0.12 230));color:#001a2e;padding:14px 32px;border-radius:6px;font-weight:700;font-size:0.95rem;box-shadow:0 12px 32px rgba(0, 212, 255, 0.25);transition:all 280ms ease;">Plan gesprek</a>
+  </div>
+</section>
+</main>
+<footer style="padding:32px clamp(20px,5vw,40px);background:oklch(6% 0 0);color:oklch(60% 0.02 250);text-align:center;font:400 0.85rem/1.6 'IBM Plex Sans';">
+  <a href="./index.html" style="color:oklch(70% 0.10 250);">Tessar</a>. AI-implementatie en AI-geintegreerde applicaties voor Nederlandse en Europese mkb-bedrijven.
+</footer>
+
+<script>
+(function () {
+  "use strict";
+  var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var els = document.querySelectorAll("[data-reveal]");
+  if (reduceMotion || !("IntersectionObserver" in window)) {
+    els.forEach(function (el) { el.classList.add("is-visible"); });
+    return;
+  }
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("is-visible");
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: "0px 0px -40px 0px" });
+  els.forEach(function (el) { io.observe(el); });
+})();
+</script>
+<script>
+(function () {
+  "use strict";
+  document.addEventListener("click", function (e) {
+    var toggle = e.target.closest && e.target.closest("#nav-toggle-btn");
+    if (toggle) {
+      var panel = document.getElementById("nav-mobile-panel");
+      var open = panel.classList.toggle("nav-open");
+      toggle.classList.toggle("nav-toggle-active", open);
+      toggle.setAttribute("aria-expanded", open ? "true" : "false");
+      return;
+    }
+    var link = e.target.closest && e.target.closest("#nav-mobile-panel a");
+    if (link) {
+      var panel2 = document.getElementById("nav-mobile-panel");
+      var btn2 = document.getElementById("nav-toggle-btn");
+      panel2.classList.remove("nav-open");
+      if (btn2) {
+        btn2.classList.remove("nav-toggle-active");
+        btn2.setAttribute("aria-expanded", "false");
+      }
+    }
+  });
+})();
+</script>
+<script src="./tessar-concierge-widget.js" defer></script>
+</body>
+</html>
