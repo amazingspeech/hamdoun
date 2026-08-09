@@ -134,6 +134,17 @@
       "type": "@n8n/n8n-nodes-langchain.chainLlm",
       "position": [1920, 600],
       "typeVersion": 1.9
+    },
+    {
+      "parameters": {
+        "mode": "append",
+        "numberInputs": 2
+      },
+      "id": "a1b2c3d4-0001-4000-8000-000000000009",
+      "name": "Combineer branches",
+      "type": "n8n-nodes-base.merge",
+      "position": [2144, 700],
+      "typeVersion": 3
     }
   ],
   "pinData": {},
@@ -152,8 +163,12 @@
     },
     "Heeft data?": {
       "main": [
-        [{ "node": "Genereer brief", "type": "main", "index": 0 }]
+        [{ "node": "Genereer brief", "type": "main", "index": 0 }],
+        [{ "node": "Combineer branches", "type": "main", "index": 1 }]
       ]
+    },
+    "Genereer brief": {
+      "main": [[{ "node": "Combineer branches", "type": "main", "index": 0 }]]
     },
     "Anthropic Chat Model": {
       "ai_languageModel": [[{ "node": "Genereer brief", "type": "ai_languageModel", "index": 0 }]]
