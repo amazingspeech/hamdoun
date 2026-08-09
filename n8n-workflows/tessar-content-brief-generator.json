@@ -145,6 +145,16 @@
       "type": "n8n-nodes-base.merge",
       "position": [2144, 700],
       "typeVersion": 3
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all().map((item) => item.json);\n\nconst PRIORITY_ORDER = { makkelijk: 0, gemiddeld: 1, lastig: 2 };\n\nfunction escapeHtml(str) {\n  return String(str)\n    .replace(/&/g, '&amp;')\n    .replace(/</g, '&lt;')\n    .replace(/>/g, '&gt;');\n}\n\nfunction buildEmailHtml(items) {\n  const briefs = items.filter((item) => item.output).map((item) => item.output);\n  const missing = items.filter((item) => item.has_data === false).map((item) => item.keyword);\n\n  briefs.sort((a, b) => (PRIORITY_ORDER[a.priority] ?? 99) - (PRIORITY_ORDER[b.priority] ?? 99));\n\n  let html = '<h2>Waar begin je?</h2><ul>';\n  for (const brief of briefs) {\n    html += `<li><strong>${escapeHtml(brief.keyword)}</strong> (${escapeHtml(brief.priority)}) - ${escapeHtml(brief.priority_reason)}</li>`;\n  }\n  html += '</ul>';\n\n  if (missing.length > 0) {\n    html += `<h3>Nog geen data voor: ${escapeHtml(missing.join(', '))}</h3><p>Draai eerst de rankingtracker-workflow voor deze keywords.</p>`;\n  }\n\n  for (const brief of briefs) {\n    html += `<h2>${escapeHtml(brief.title)}</h2>`;\n    html += `<p><strong>Keyword:</strong> ${escapeHtml(brief.keyword)}</p>`;\n    html += `<p><strong>Meta-beschrijving:</strong> ${escapeHtml(brief.meta_description)}</p>`;\n    html += `<p><strong>Contenttype:</strong> ${escapeHtml(brief.content_type)}</p>`;\n    html += '<ul>';\n    for (const section of brief.outline) {\n      html += `<li><strong>${escapeHtml(section.heading)}</strong>: ${escapeHtml(section.guidance)}</li>`;\n    }\n    html += '</ul>';\n    html += `<p><strong>Invalshoek:</strong> ${escapeHtml(brief.differentiation)}</p>`;\n    html += `<p><strong>Geschatte lengte:</strong> ${brief.estimated_word_count} woorden</p>`;\n  }\n\n  return html;\n}\n\nreturn [{ json: { html: buildEmailHtml(items) } }];"
+      },
+      "id": "a1b2c3d4-0001-4000-8000-000000000010",
+      "name": "Sorteer en bouw e-mail",
+      "type": "n8n-nodes-base.code",
+      "position": [2368, 700],
+      "typeVersion": 2
     }
   ],
   "pinData": {},
@@ -175,6 +185,9 @@
     },
     "Brief JSON-schema": {
       "ai_outputParser": [[{ "node": "Genereer brief", "type": "ai_outputParser", "index": 0 }]]
+    },
+    "Combineer branches": {
+      "main": [[{ "node": "Sorteer en bouw e-mail", "type": "main", "index": 0 }]]
     }
   },
   "active": false,
