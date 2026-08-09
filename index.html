@@ -688,7 +688,7 @@ if (location.hostname === "amazingspeech.github.io") {
     </div>
     <div style="padding-top:24px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font:400 0.8125rem/1.5 'IBM Plex Sans';color:oklch(45% 0.02 250);">
       <span>{{ footerCopyright }}</span>
-      <span>{{ footerBuiltWith }}</span>
+      <span style="display:flex;gap:16px;align-items:center;">{{ footerBuiltWith }}<a href="/login" style="color:oklch(45% 0.02 250);">{{ footerLogin }}</a></span>
     </div>
   </div>
 </footer>
@@ -720,7 +720,7 @@ const copyNL = {
   ctaPrimary: 'Plan gratis kennismaking',
   ctaSecondary: 'Bekijk cases',
   trustA: 'EU AI Act-proof',
-  trustB: 'AVG-proof',
+  trustB: 'AVG-bewust',
   trustC: '2-4 weken doorlooptijd',
   trustD: 'Vaste prijs',
 
@@ -922,7 +922,8 @@ const copyNL = {
   footerAbout: 'Over ons',
   footerContactLink: 'Stuur een bericht',
   footerCopyright: '(c) 2026 Tessar. Alle rechten voorbehouden.',
-  footerBuiltWith: 'Gevestigd in Nederland.'
+  footerBuiltWith: 'Gevestigd in Nederland.',
+  footerLogin: 'Login'
 };
 
 const copyEN = {
@@ -1147,7 +1148,8 @@ const copyEN = {
   footerAbout: 'About',
   footerContactLink: 'Send a message',
   footerCopyright: '(c) 2026 Tessar. All rights reserved.',
-  footerBuiltWith: 'Based in the Netherlands.'
+  footerBuiltWith: 'Based in the Netherlands.',
+  footerLogin: 'Login'
 };
 
 function formatEuro(n) {
