@@ -1,0 +1,67 @@
+{
+  "name": "Generate content briefs for Tessar SEO keywords",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "a1b2c3d4-0001-4000-8000-000000000001",
+      "name": "When clicking 'Execute workflow'",
+      "type": "n8n-nodes-base.manualTrigger",
+      "position": [800, 600],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "keywords-field",
+              "name": "keywords",
+              "type": "string",
+              "value": "AI automatisering voor het mkb, AI oplossingen voor bedrijven, AI receptioniste voor bedrijven, AI chatbot voor bedrijven, workflow automatisering met AI, AI implementatie laten uitvoeren, AI telefonist voor bedrijf, bedrijfsprocessen automatiseren met AI"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "a1b2c3d4-0001-4000-8000-000000000002",
+      "name": "Tracked keywords",
+      "type": "n8n-nodes-base.set",
+      "position": [1024, 600],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "operation": "read",
+        "resource": "sheet",
+        "documentId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "",
+          "cachedResultName": "Keyword rankings"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        },
+        "options": {}
+      },
+      "id": "a1b2c3d4-0001-4000-8000-000000000003",
+      "name": "Read keyword rankings",
+      "type": "n8n-nodes-base.googleSheets",
+      "position": [1248, 600],
+      "typeVersion": 4.7
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking 'Execute workflow'": {
+      "main": [[{ "node": "Tracked keywords", "type": "main", "index": 0 }]]
+    },
+    "Tracked keywords": {
+      "main": [[{ "node": "Read keyword rankings", "type": "main", "index": 0 }]]
+    }
+  },
+  "active": false,
+  "settings": { "executionOrder": "v1" }
+}
