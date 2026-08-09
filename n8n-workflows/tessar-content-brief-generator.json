@@ -51,6 +51,16 @@
       "type": "n8n-nodes-base.googleSheets",
       "position": [1248, 600],
       "typeVersion": 4.7
+    },
+    {
+      "parameters": {
+        "jsCode": "const trackedKeywords = $('Tracked keywords').first().json.keywords\n  .split(',')\n  .map((k) => k.trim())\n  .filter((k) => k.length > 0);\nconst rows = $input.all().map((item) => item.json);\n\nfunction buildKeywordContext(rows, trackedKeywords) {\n  const byKeyword = {};\n  for (const row of rows) {\n    if (!byKeyword[row.keyword]) byKeyword[row.keyword] = [];\n    byKeyword[row.keyword].push(row);\n  }\n\n  return trackedKeywords.map((keyword) => {\n    const rowsForKeyword = byKeyword[keyword] || [];\n    if (rowsForKeyword.length === 0) {\n      return { keyword, has_data: false, top_competitors: [] };\n    }\n    const latestDate = rowsForKeyword\n      .map((r) => r.checked_at)\n      .sort()\n      .slice(-1)[0];\n    const latestRows = rowsForKeyword.filter((r) => r.checked_at === latestDate);\n    const topCompetitors = latestRows\n      .filter((r) => !r.is_target_domain)\n      .sort((a, b) => Number(a.rank) - Number(b.rank))\n      .slice(0, 3)\n      .map((r) => ({\n        domain: r.domain,\n        title: r.title,\n        description: r.description,\n        rank: Number(r.rank),\n      }));\n    return { keyword, has_data: true, top_competitors: topCompetitors };\n  });\n}\n\nconst result = buildKeywordContext(rows, trackedKeywords);\nreturn result.map((r) => ({ json: r }));"
+      },
+      "id": "a1b2c3d4-0001-4000-8000-000000000004",
+      "name": "Bouw keyword-context",
+      "type": "n8n-nodes-base.code",
+      "position": [1472, 600],
+      "typeVersion": 2
     }
   ],
   "pinData": {},
@@ -60,6 +70,9 @@
     },
     "Tracked keywords": {
       "main": [[{ "node": "Read keyword rankings", "type": "main", "index": 0 }]]
+    },
+    "Read keyword rankings": {
+      "main": [[{ "node": "Bouw keyword-context", "type": "main", "index": 0 }]]
     }
   },
   "active": false,
