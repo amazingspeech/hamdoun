@@ -64,7 +64,12 @@
   @media (prefers-reduced-motion: reduce) {
     [data-reveal] { opacity:1; transform:none; transition:none; }
     html { scroll-behavior:auto; }
+    #back-to-top { transition:opacity 200ms ease; transform:none; }
   }
+  #back-to-top { position:fixed; right:clamp(16px,4vw,28px); bottom:clamp(16px,4vw,28px); z-index:40; width:48px; height:48px; border-radius:50%; border:none; background:oklch(70% 0.14 220); color:#001a2e; display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:0 8px 24px oklch(20% 0.02 255 / 0.25); opacity:0; transform:translateY(12px); pointer-events:none; transition:opacity 260ms ease, transform 260ms ease, box-shadow 200ms ease; }
+  #back-to-top.is-visible { opacity:1; transform:translateY(0); pointer-events:auto; }
+  #back-to-top:hover { transform:translateY(-3px); box-shadow:0 12px 32px rgba(0,212,255,0.35); }
+  #back-to-top:focus-visible { outline:2px solid oklch(48% 0.12 230); outline-offset:3px; }
   .icon { display:inline-block; width:1em; height:1em; background-color:currentColor; -webkit-mask-repeat:no-repeat; mask-repeat:no-repeat; -webkit-mask-position:center; mask-position:center; -webkit-mask-size:contain; mask-size:contain; flex-shrink:0; }
   .icon-workflow { -webkit-mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-workflow' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Crect width='8' height='8' x='3' y='3' rx='2' /%3E%3Cpath d='M7 11v4a2 2 0 0 0 2 2h4' /%3E%3Crect width='8' height='8' x='13' y='13' rx='2' /%3E%3C/svg%3E"); mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-workflow' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Crect width='8' height='8' x='3' y='3' rx='2' /%3E%3Cpath d='M7 11v4a2 2 0 0 0 2 2h4' /%3E%3Crect width='8' height='8' x='13' y='13' rx='2' /%3E%3C/svg%3E"); }
   .icon-trending-up { -webkit-mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-trending-up' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Cpolyline points='22 7 13.5 15.5 8.5 10.5 2 17' /%3E%3Cpolyline points='16 7 22 7 22 13' /%3E%3C/svg%3E"); mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-trending-up' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Cpolyline points='22 7 13.5 15.5 8.5 10.5 2 17' /%3E%3Cpolyline points='16 7 22 7 22 13' /%3E%3C/svg%3E"); }
@@ -194,6 +199,10 @@
   <a href="./index.html" style="color:oklch(70% 0.10 250);">Tessar</a>. AI-implementatie en AI-geintegreerde applicaties voor Nederlandse en Europese mkb-bedrijven.
 </footer>
 
+<button type="button" id="back-to-top" aria-label="Naar boven" title="Naar boven">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5"/><path d="m5 12 7-7 7 7"/></svg>
+</button>
+
 <script>
 (function () {
   "use strict";
@@ -212,6 +221,33 @@
     });
   }, { threshold: 0.12, rootMargin: "0px 0px -40px 0px" });
   els.forEach(function (el) { io.observe(el); });
+})();
+</script>
+<script>
+(function () {
+  "use strict";
+  var btn = document.getElementById("back-to-top");
+  if (!btn) return;
+  var threshold = 480;
+
+  function onScroll() {
+    var y = window.scrollY || window.pageYOffset || 0;
+    btn.classList.toggle("is-visible", y > threshold);
+  }
+
+  var ticking = false;
+  window.addEventListener("scroll", function () {
+    if (!ticking) {
+      requestAnimationFrame(function () { onScroll(); ticking = false; });
+      ticking = true;
+    }
+  }, { passive: true });
+  onScroll();
+
+  btn.addEventListener("click", function () {
+    var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    window.scrollTo({ top: 0, behavior: reduceMotion ? "auto" : "smooth" });
+  });
 })();
 </script>
 </body>
