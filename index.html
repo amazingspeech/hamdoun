@@ -22,11 +22,11 @@ if (location.hostname === "amazingspeech.github.io") {
 <meta property="og:url" content="https://tessar.nl/">
 <meta property="og:title" content="Tessar — AI-implementatie & AI-geintegreerde applicaties">
 <meta property="og:description" content="Praktische AI-implementatie voor Nederlandse en Europese mkb-bedrijven, gericht op meetbaar resultaat. Geen rapporten, wel werkende systemen.">
-<meta property="og:image" content="https://tessar.nl/assets/logo-full-dark.png">
+<meta property="og:image" content="https://tessar.nl/Tessar-logo-symbol.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Tessar — AI-implementatie & AI-geintegreerde applicaties">
 <meta name="twitter:description" content="Praktische AI-implementatie voor Nederlandse en Europese mkb-bedrijven, gericht op meetbaar resultaat.">
-<meta name="twitter:image" content="https://tessar.nl/assets/logo-full-dark.png">
+<meta name="twitter:image" content="https://tessar.nl/Tessar-logo-symbol.png">
 
 <script type="application/ld+json">
 {
@@ -38,6 +38,45 @@ if (location.hostname === "amazingspeech.github.io") {
   "areaServed": ["NL", "Europe"],
   "availableLanguage": ["nl", "en"],
   "serviceType": ["AI Automation", "AI-Integrated Application Development"]
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Wat kost een traject?",
+      "acceptedAnswer": { "@type": "Answer", "text": "De prijs ligt per traject vooraf vast, maar hangt af van de scope. Een vrijblijvende kennismaking is gratis — daar bespreken we een concrete prijsindicatie voor jouw situatie, dus geen verrassingen achteraf." }
+    },
+    {
+      "@type": "Question",
+      "name": "Hoe lang duurt een traject?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Een quick win duurt ongeveer 1 week, een proof of concept 2 tot 3 weken en een volledige implementatie 2 tot 4 weken. Bij een volledige implementatie volgt daarna nog 90 dagen support om te zorgen dat het systeem ook echt blijft werken." }
+    },
+    {
+      "@type": "Question",
+      "name": "Werken jullie met onze bestaande systemen?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Ja. Automatiseringen en applicaties worden gebouwd rond wat je al gebruikt: je CRM, ERP, database of interne tools. Geen noodzaak om over te stappen naar nieuwe software." }
+    },
+    {
+      "@type": "Question",
+      "name": "Is onze data veilig?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Data wordt verwerkt volgens de AVG en, waar relevant, de EU AI Act. Waar jouw sector dat vereist, gaat de voorkeur uit naar Europese of on-premise dataopslag." }
+    },
+    {
+      "@type": "Question",
+      "name": "Voor wie is dit geschikt?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Voor mkb- en middelgrote bedrijven die AI concreet willen inzetten, niet alleen willen verkennen. Op zoek naar een adviestraject met een rapport als eindresultaat? Dan is dit niet de juiste plek: hier eindigt elk traject in een werkend systeem." }
+    },
+    {
+      "@type": "Question",
+      "name": "Wat als het niet werkt zoals verwacht?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Een proof of concept is er juist op gericht om vooraf te bewijzen dat de aanpak werkt, voordat je committeert aan de volledige implementatie. Zo blijft het risico op een investering die niets oplevert beperkt." }
+    }
+  ]
 }
 </script>
 
@@ -116,16 +155,32 @@ if (location.hostname === "amazingspeech.github.io") {
     #back-to-top { transition:opacity 200ms ease; transform:none; }
     .hero-badge-dot, .hero-cta-primary::after, .hero-scroll-cue, .grad-text { animation:none; }
   }
+  .nav-toggle { display:none; background:none; border:none; cursor:pointer; padding:8px; flex-direction:column; gap:5px; margin-left:4px; }
+  .nav-toggle span { display:block; width:22px; height:2px; background:oklch(18% 0.02 255); border-radius:2px; transition:transform 200ms ease, opacity 200ms ease; }
+  .nav-mobile-panel { display:none; }
   @media (max-width: 680px) {
     .nav-link { display:none; }
+    .nav-toggle { display:flex; }
+    .nav-mobile-panel { display:none; flex-direction:column; padding:8px 20px 20px; background:oklch(98% 0.004 90); border-top:1px solid oklch(90% 0.006 90); }
+    .nav-mobile-panel.nav-open { display:flex; }
+    .nav-mobile-panel a { display:block; padding:14px 0; font:500 1rem/1.3 'IBM Plex Sans'; color:oklch(24% 0.02 255); border-bottom:1px solid oklch(91% 0.006 90); }
+    .nav-mobile-panel a:last-child { border-bottom:none; margin-top:8px; }
+    .nav-mobile-panel .nav-mobile-lang { display:flex; gap:8px; padding:14px 0; border-bottom:1px solid oklch(91% 0.006 90); }
+    .nav-mobile-panel .nav-mobile-lang button { border:1px solid oklch(85% 0.02 250); background:#FFF; padding:8px 16px; border-radius:6px; font:600 0.8125rem/1 'IBM Plex Mono'; cursor:pointer; }
+    .nav-toggle.nav-toggle-active span:nth-child(1) { transform:translateY(7px) rotate(45deg); }
+    .nav-toggle.nav-toggle-active span:nth-child(2) { opacity:0; }
+    .nav-toggle.nav-toggle-active span:nth-child(3) { transform:translateY(-7px) rotate(-45deg); }
   }
   .svc-card { display:grid; grid-template-columns:minmax(160px,220px) 1fr; }
   @media (max-width: 720px) { .svc-card { grid-template-columns:1fr; } }
   .stack-row { grid-template-columns:repeat(2,1fr) !important; max-width:700px; margin-left:auto; margin-right:auto; }
+  .process-grid { grid-template-columns:repeat(4,1fr) !important; }
+  @media (max-width: 900px) { .process-grid { grid-template-columns:repeat(2,1fr) !important; } }
   @media (max-width: 700px) {
     .about-grid { grid-template-columns:1fr !important; }
     .stack-row { grid-template-columns:1fr !important; gap:10px !important; max-width:none; }
   }
+  @media (max-width: 480px) { .process-grid { grid-template-columns:1fr !important; } }
   .faq-item[open] .faq-chevron { transform:rotate(180deg); }
   .faq-item summary::-webkit-details-marker { display:none; }
   .faq-item summary { list-style:none; cursor:pointer; }
@@ -204,14 +259,30 @@ if (location.hostname === "amazingspeech.github.io") {
       <a href="#capabilities" class="nav-link" style="color:oklch(46% 0.012 140);transition:color 200ms ease;" style-hover="color:oklch(18% 0.02 255);">{{ navBuild }}</a>
       <a href="#industries" class="nav-link" style="color:oklch(46% 0.012 140);transition:color 200ms ease;" style-hover="color:oklch(18% 0.02 255);">{{ navIndustries }}</a>
       <a href="#cases" class="nav-link" style="color:oklch(46% 0.012 140);transition:color 200ms ease;" style-hover="color:oklch(18% 0.02 255);">{{ navCases }}</a>
-      <a href="#faq" class="nav-link" style="color:oklch(46% 0.012 140);transition:color 200ms ease;" style-hover="color:oklch(18% 0.02 255);">{{ navFaq }}</a>
-      <a href="#pricing" class="nav-link" style="color:oklch(46% 0.012 140);transition:color 200ms ease;" style-hover="color:oklch(18% 0.02 255);">{{ navPricing }}</a>
+      <a href="./prijzen.html" class="nav-link" style="color:oklch(46% 0.012 140);transition:color 200ms ease;" style-hover="color:oklch(18% 0.02 255);">{{ navPricing }}</a>
+      <a href="./chatbots.html" class="nav-link" style="color:oklch(46% 0.012 140);transition:color 200ms ease;" style-hover="color:oklch(18% 0.02 255);">{{ navChatbots }}</a>
       <div style="display:flex;align-items:center;gap:2px;border:1px solid oklch(88% 0.006 90);border-radius:6px;padding:3px;">
         <button onclick="{{ setLangNl }}" style="border:none;background:{{ langNlBg }};color:{{ langNlColor }};font:700 0.75rem/1 'IBM Plex Mono';padding:5px 9px;border-radius:4px;cursor:pointer;transition:all 150ms ease;">NL</button>
         <button onclick="{{ setLangEn }}" style="border:none;background:{{ langEnBg }};color:{{ langEnColor }};font:700 0.75rem/1 'IBM Plex Mono';padding:5px 9px;border-radius:4px;cursor:pointer;transition:all 150ms ease;">EN</button>
       </div>
       <a href="#contact" style="background:oklch(70% 0.14 220);color:#001a2e;padding:10px 20px;border-radius:6px;font-weight:600;transition:all 200ms ease;white-space:nowrap;" style-hover="transform:translateY(-2px);box-shadow:0 8px 24px rgba(0, 212, 255, 0.25);">{{ navBookCall }}</a>
     </nav>
+    <button type="button" class="nav-toggle" id="nav-toggle-btn" aria-label="Menu" aria-expanded="false" aria-controls="nav-mobile-panel">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <div class="nav-mobile-panel" id="nav-mobile-panel">
+    <a href="./services.html">{{ navServices }}</a>
+    <a href="#capabilities">{{ navBuild }}</a>
+    <a href="#industries">{{ navIndustries }}</a>
+    <a href="#cases">{{ navCases }}</a>
+    <a href="./prijzen.html">{{ navPricing }}</a>
+    <a href="./chatbots.html">{{ navChatbots }}</a>
+    <div class="nav-mobile-lang">
+      <button onclick="{{ setLangNl }}" style="background:{{ langNlBg }};color:{{ langNlColor }};">NL</button>
+      <button onclick="{{ setLangEn }}" style="background:{{ langEnBg }};color:{{ langEnColor }};">EN</button>
+    </div>
+    <a href="#contact" style="background:oklch(70% 0.14 220);color:#001a2e !important;text-align:center;border-radius:6px;font-weight:600;">{{ navBookCall }}</a>
   </div>
 </header>
 
@@ -224,6 +295,7 @@ if (location.hostname === "amazingspeech.github.io") {
     <div class="hero-orb hero-orb-c"></div>
     <img class="hero-mark" src="./Tessar-logo-symbol.webp" width="500" height="500" alt="" style="position:absolute;top:-100px;right:-120px;width:500px;height:auto;object-fit:contain;opacity:0.08;">
   </div>
+  <div style="position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 65% 55% at 50% 42%, oklch(6% 0 0 / 0.55) 0%, oklch(6% 0 0 / 0) 72%);"></div>
 
   <div class="hero-content" style="max-width:920px;margin:0 auto;position:relative;z-index:1;">
     <div class="hero-badge">
@@ -306,99 +378,32 @@ if (location.hostname === "amazingspeech.github.io") {
       <p style="font:400 clamp(0.95rem,1.5vw,1rem)/1.6 'IBM Plex Sans';color:oklch(46% 0.012 140);max-width:560px;margin:0 auto;">{{ capabilitiesSubtext }}</p>
     </div>
 
-    <div data-reveal-grid style="display:grid;grid-template-columns:repeat(auto-fit,minmax(clamp(280px,100%,420px),1fr));gap:clamp(24px,3vw,32px);">
+    <div data-reveal-grid style="display:flex;flex-direction:column;gap:14px;max-width:820px;margin:0 auto;">
       <sc-for list="{{ capabilities }}" as="cap" hint-placeholder-count="5">
-        <div data-reveal style="background:#FFF;border:1px solid oklch(91% 0.006 90);border-radius:12px;padding:clamp(32px,4vw,44px);transition:all 220ms ease, opacity 600ms ease, transform 600ms ease;" style-hover="border-color:{{ cap.color }};transform:translateY(-4px);box-shadow:0 12px 32px {{ cap.color }} / 0.15;">
-          <div class="icon {{ cap.iconClass }}" style="width:34px;height:34px;color:{{ cap.color }};margin-bottom:18px;"></div>
-          <h3 style="font:600 clamp(1.125rem,2vw,1.375rem)/1.35 'IBM Plex Sans';margin:0 0 10px;color:oklch(18% 0.02 255);">{{ cap.title }}</h3>
-          <p style="font:400 clamp(0.9rem,1.5vw,1rem)/1.65 'IBM Plex Sans';color:oklch(46% 0.012 140);margin:0;">{{ cap.desc }}</p>
-        </div>
+        <details data-reveal class="faq-item" style="border:1px solid oklch(91% 0.006 90);border-radius:12px;padding:clamp(22px,3vw,28px) clamp(24px,3.5vw,32px);background:#FFF;transition:opacity 600ms ease, transform 600ms ease;">
+          <summary style="display:flex;align-items:center;justify-content:space-between;gap:16px;">
+            <div style="display:flex;align-items:center;gap:16px;">
+              <div class="icon {{ cap.iconClass }}" style="width:28px;height:28px;color:{{ cap.color }};flex-shrink:0;"></div>
+              <h3 style="font:600 clamp(1.0625rem,1.8vw,1.25rem)/1.35 'IBM Plex Sans';margin:0;color:oklch(18% 0.02 255);">{{ cap.title }}</h3>
+            </div>
+            <div class="icon icon-chevron-down faq-chevron" style="width:18px;height:18px;color:{{ cap.color }};transition:transform 200ms ease;flex-shrink:0;"></div>
+          </summary>
+          <p style="font:400 clamp(0.9rem,1.5vw,1rem)/1.65 'IBM Plex Sans';color:oklch(46% 0.012 140);margin:16px 0 0;">{{ cap.desc }}</p>
+          <ul style="margin:14px 0 0;padding:0 0 0 20px;font:400 0.9rem/1.7 'IBM Plex Sans';color:oklch(46% 0.012 140);">
+            <sc-for list="{{ cap.bullets }}" as="b" hint-placeholder-count="4">
+              <li>{{ b }}</li>
+            </sc-for>
+          </ul>
+        </details>
       </sc-for>
     </div>
 
     <div style="text-align:center;margin-top:clamp(32px,4vw,40px);">
       <a href="./services.html" style="font:600 0.9375rem/1 'IBM Plex Sans';color:oklch(48% 0.12 230);">{{ capabilitiesCta }} &rarr;</a>
     </div>
-  </div>
-</section>
-
-<section id="tools" style="padding:clamp(64px,8vw,96px) clamp(20px,5vw,40px);background:#FFF;border-top:1px solid oklch(90% 0.006 90);">
-  <div style="max-width:820px;margin:0 auto;">
-    <div style="text-align:center;margin-bottom:clamp(40px,5vw,48px);">
-      <div style="font:500 clamp(0.7rem,1.2vw,0.8125rem)/1.3 'IBM Plex Mono';letter-spacing:0.06em;text-transform:uppercase;color:oklch(48% 0.12 230);margin-bottom:12px;">{{ toolsLabel }}</div>
-      <h2 style="font:600 clamp(1.75rem,4vw,2.25rem)/1.2 'IBM Plex Sans';margin:0 0 16px;letter-spacing:-0.02em;color:oklch(18% 0.02 255);">{{ toolsHeading }}</h2>
-      <p style="font:400 clamp(0.95rem,1.5vw,1rem)/1.6 'IBM Plex Sans';color:oklch(46% 0.012 140);max-width:520px;margin:0 auto;">{{ toolsSubtext }}</p>
+    <div style="text-align:center;margin-top:12px;">
+      <a href="./chatbots.html" style="font:600 0.9375rem/1 'IBM Plex Sans';color:oklch(48% 0.12 230);">{{ capabilitiesChatbotsCta }} &rarr;</a>
     </div>
-
-    <div class="flow-row" data-reveal style="margin-bottom:clamp(44px,6vw,56px);transition:opacity 600ms ease, transform 600ms ease;">
-      <sc-for list="{{ flowNodes }}" as="node" hint-placeholder-count="5">
-        <div class="flow-node">
-          <div class="flow-node-icon"><div class="icon {{ node.iconClass }}"></div></div>
-          <div class="flow-node-label">{{ node.label }}</div>
-        </div>
-      </sc-for>
-    </div>
-
-    <div style="display:flex;justify-content:center;gap:8px;margin-bottom:28px;flex-wrap:wrap;">
-      <button onclick="{{ setToolTabScan }}" style="border:1px solid oklch(85% 0.02 250);background:{{ tabScanBg }};color:{{ tabScanColor }};font:600 0.875rem/1 'IBM Plex Sans';padding:11px 20px;border-radius:8px;cursor:pointer;transition:all 180ms ease;">{{ tabScanLabel }}</button>
-      <button onclick="{{ setToolTabCalc }}" style="border:1px solid oklch(85% 0.02 250);background:{{ tabCalcBg }};color:{{ tabCalcColor }};font:600 0.875rem/1 'IBM Plex Sans';padding:11px 20px;border-radius:8px;cursor:pointer;transition:all 180ms ease;">{{ tabCalcLabel }}</button>
-    </div>
-
-    <sc-if value="{{ isTabScan }}">
-      <div style="background:oklch(98% 0.004 90);border:1px solid oklch(91% 0.006 90);border-radius:14px;padding:clamp(28px,4vw,40px);min-height:280px;">
-        <sc-if value="{{ quizDone }}">
-          <div>
-            <div style="font:600 0.75rem/1.2 'IBM Plex Mono';letter-spacing:0.05em;text-transform:uppercase;color:oklch(48% 0.12 230);margin-bottom:14px;">{{ quizResultLabel }}</div>
-            <p style="font:500 clamp(1rem,1.6vw,1.125rem)/1.55 'IBM Plex Sans';color:oklch(18% 0.02 255);margin:0 0 14px;">{{ quizResultReadiness }}</p>
-            <p style="font:400 0.9375rem/1.6 'IBM Plex Sans';color:oklch(46% 0.012 140);margin:0 0 28px;">{{ quizResultService }}</p>
-            <div style="display:flex;gap:12px;flex-wrap:wrap;">
-              <a href="#contact" style="background:oklch(70% 0.14 220);color:#001a2e;padding:12px 22px;border-radius:6px;font-weight:700;font-size:0.9375rem;transition:all 200ms ease;white-space:nowrap;" style-hover="transform:translateY(-2px);box-shadow:0 8px 24px rgba(0, 212, 255, 0.25);">{{ quizCtaLabel }}</a>
-              <button onclick="{{ resetQuiz }}" style="border:1px solid oklch(85% 0.02 250);background:transparent;color:oklch(30% 0.02 250);padding:12px 22px;border-radius:6px;font-weight:600;font-size:0.9375rem;cursor:pointer;">{{ quizRestartLabel }}</button>
-            </div>
-          </div>
-        </sc-if>
-        <sc-if value="{{ quizNotDone }}">
-          <div>
-            <div style="font:600 0.8125rem/1.2 'IBM Plex Mono';color:oklch(46% 0.012 140);margin-bottom:16px;">{{ quizProgressText }}</div>
-            <h3 style="font:600 clamp(1.0625rem,2vw,1.25rem)/1.4 'IBM Plex Sans';margin:0 0 20px;color:oklch(18% 0.02 255);">{{ quizQuestion.q }}</h3>
-            <div style="display:flex;flex-direction:column;gap:10px;">
-              <sc-for list="{{ quizQuestion.options }}" as="opt" hint-placeholder-count="4">
-                <button onclick="{{ opt.onSelect }}" style="text-align:left;border:1px solid oklch(88% 0.006 90);background:#FFF;color:oklch(30% 0.02 250);font:400 0.9375rem/1.4 'IBM Plex Sans';padding:14px 18px;border-radius:8px;cursor:pointer;transition:all 160ms ease;" style-hover="border-color:oklch(48% 0.12 230);background:oklch(98% 0.02 230);">{{ opt.label }}</button>
-              </sc-for>
-            </div>
-          </div>
-        </sc-if>
-      </div>
-    </sc-if>
-
-    <sc-if value="{{ isTabCalc }}">
-      <div style="background:oklch(98% 0.004 90);border:1px solid oklch(91% 0.006 90);border-radius:14px;padding:clamp(28px,4vw,40px);min-height:280px;">
-        <div style="margin-bottom:24px;">
-          <label style="display:block;font:600 0.9375rem/1.4 'IBM Plex Sans';color:oklch(18% 0.02 255);margin-bottom:10px;">{{ calcHoursLabel }} <span style="color:oklch(48% 0.12 230);">{{ roiHours }} u</span></label>
-          <input type="range" min="1" max="40" step="1" value="{{ roiHours }}" onchange="{{ setRoiHours }}" oninput="{{ setRoiHours }}" style="width:100%;accent-color:oklch(48% 0.12 230);">
-        </div>
-        <div style="margin-bottom:28px;">
-          <label style="display:block;font:600 0.9375rem/1.4 'IBM Plex Sans';color:oklch(18% 0.02 255);margin-bottom:10px;">{{ calcRateLabel }} <span style="color:oklch(48% 0.12 230);">€{{ roiRate }}/u</span></label>
-          <input type="range" min="20" max="150" step="5" value="{{ roiRate }}" onchange="{{ setRoiRate }}" oninput="{{ setRoiRate }}" style="width:100%;accent-color:oklch(48% 0.12 230);">
-        </div>
-        <div style="font:600 0.8125rem/1.2 'IBM Plex Mono';letter-spacing:0.03em;color:oklch(46% 0.012 140);margin-bottom:14px;">{{ calcResultIntro }}</div>
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:14px;margin-bottom:20px;">
-          <div style="background:#FFF;border:1px solid oklch(91% 0.006 90);border-radius:8px;padding:16px;text-align:center;">
-            <div style="font:700 clamp(1.25rem,2.4vw,1.5rem)/1 'IBM Plex Mono';color:oklch(48% 0.12 230);">{{ roiWeeklyEuro }}</div>
-            <div style="font:400 0.8125rem/1.4 'IBM Plex Sans';color:oklch(46% 0.012 140);margin-top:6px;">{{ calcPerWeek }}</div>
-          </div>
-          <div style="background:#FFF;border:1px solid oklch(91% 0.006 90);border-radius:8px;padding:16px;text-align:center;">
-            <div style="font:700 clamp(1.25rem,2.4vw,1.5rem)/1 'IBM Plex Mono';color:oklch(48% 0.12 230);">{{ roiMonthlyEuro }}</div>
-            <div style="font:400 0.8125rem/1.4 'IBM Plex Sans';color:oklch(46% 0.012 140);margin-top:6px;">{{ calcPerMonth }}</div>
-          </div>
-          <div style="background:#FFF;border:1px solid oklch(91% 0.006 90);border-radius:8px;padding:16px;text-align:center;">
-            <div style="font:700 clamp(1.25rem,2.4vw,1.5rem)/1 'IBM Plex Mono';color:oklch(48% 0.12 230);">{{ roiYearlyEuro }}</div>
-            <div style="font:400 0.8125rem/1.4 'IBM Plex Sans';color:oklch(46% 0.012 140);margin-top:6px;">{{ calcPerYear }}</div>
-          </div>
-        </div>
-        <p style="font:400 0.8125rem/1.5 'IBM Plex Sans';color:oklch(55% 0.012 140);margin:0;">{{ calcDisclaimer }}</p>
-      </div>
-    </sc-if>
   </div>
 </section>
 
@@ -426,12 +431,13 @@ if (location.hostname === "amazingspeech.github.io") {
   <div style="max-width:1200px;margin:0 auto;">
     <div style="text-align:center;margin-bottom:clamp(48px,6vw,64px);">
       <div style="font:500 clamp(0.7rem,1.2vw,0.8125rem)/1.3 'IBM Plex Mono';letter-spacing:0.06em;text-transform:uppercase;color:oklch(48% 0.12 230);margin-bottom:12px;">{{ industryLabel }}</div>
-      <h2 style="font:600 clamp(1.75rem,4vw,2.25rem)/1.2 'IBM Plex Sans';margin:0;letter-spacing:-0.02em;color:oklch(18% 0.02 255);">{{ industryHeading }}</h2>
+      <h2 style="font:600 clamp(1.75rem,4vw,2.25rem)/1.2 'IBM Plex Sans';margin:0 0 16px;letter-spacing:-0.02em;color:oklch(18% 0.02 255);">{{ industryHeading }}</h2>
+      <p style="font:400 clamp(0.95rem,1.5vw,1.0625rem)/1.6 'IBM Plex Sans';color:oklch(46% 0.012 140);max-width:560px;margin:0 auto;">{{ industrySubtext }}</p>
     </div>
 
     <div data-reveal-grid style="display:grid;grid-template-columns:repeat(auto-fit,minmax(clamp(280px,100%,380px),1fr));gap:clamp(24px,3vw,36px);">
       <sc-for list="{{ industries }}" as="ind" hint-placeholder-count="3">
-        <div data-reveal style="background:#FFF;border:1px solid oklch(91% 0.006 90);border-radius:12px;padding:clamp(32px,4vw,40px);transition:all 220ms ease, opacity 600ms ease, transform 600ms ease;text-align:center;" style-hover="border-color:{{ ind.color }};transform:translateY(-4px);box-shadow:0 12px 32px {{ ind.color }} / 0.15;">
+        <a href="{{ ind.href }}" data-reveal style="display:block;background:#FFF;border:1px solid oklch(91% 0.006 90);border-radius:12px;padding:clamp(32px,4vw,40px);transition:all 220ms ease, opacity 600ms ease, transform 600ms ease;text-align:center;" style-hover="border-color:{{ ind.color }};transform:translateY(-4px);box-shadow:0 12px 32px {{ ind.color }} / 0.15;">
           <div class="icon {{ ind.iconClass }}" style="width:36px;height:36px;color:{{ ind.color }};margin:0 auto 20px;"></div>
           <h3 style="font:600 clamp(1.125rem,2vw,1.375rem)/1.35 'IBM Plex Sans';margin:0 0 12px;color:oklch(18% 0.02 255);">{{ ind.title }}</h3>
           <p style="font:400 clamp(0.9rem,1.5vw,1rem)/1.6 'IBM Plex Sans';color:oklch(46% 0.012 140);margin:0 0 20px;">{{ ind.desc }}</p>
@@ -439,7 +445,7 @@ if (location.hostname === "amazingspeech.github.io") {
             <div style="background:{{ ind.color }}/0.1;border:1px solid {{ ind.color }}/0.2;padding:6px 12px;border-radius:6px;font:600 0.75rem/1.2 'IBM Plex Mono';color:{{ ind.color }};">{{ ind.tag1 }}</div>
             <div style="background:{{ ind.color }}/0.1;border:1px solid {{ ind.color }}/0.2;padding:6px 12px;border-radius:6px;font:600 0.75rem/1.2 'IBM Plex Mono';color:{{ ind.color }};">{{ ind.tag2 }}</div>
           </div>
-        </div>
+        </a>
       </sc-for>
     </div>
   </div>
@@ -489,7 +495,7 @@ if (location.hostname === "amazingspeech.github.io") {
       <p style="font:400 clamp(0.95rem,1.5vw,1rem)/1.6 'IBM Plex Sans';color:oklch(46% 0.012 140);max-width:600px;margin:0 auto;">{{ processSubtext }}</p>
     </div>
 
-    <div data-reveal-grid style="display:grid;grid-template-columns:repeat(auto-fit,minmax(clamp(200px,100%,280px),1fr));gap:clamp(24px,3vw,32px);">
+    <div data-reveal-grid class="process-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(clamp(200px,100%,280px),1fr));gap:clamp(24px,3vw,32px);">
       <sc-for list="{{ process }}" as="step" hint-placeholder-count="4">
         <div data-reveal style="display:flex;flex-direction:column;gap:16px;transition:opacity 600ms ease, transform 600ms ease;">
           <div style="width:64px;height:64px;background:linear-gradient(135deg, oklch(48% 0.12 230 / 0.1), oklch(46% 0.15 200 / 0.06));border:2px solid oklch(48% 0.12 230);border-radius:50%;display:flex;align-items:center;justify-content:center;font:700 1.5rem/1 'IBM Plex Mono';color:oklch(48% 0.12 230);">{{ step.n }}</div>
@@ -546,6 +552,9 @@ if (location.hostname === "amazingspeech.github.io") {
         </div>
       </sc-for>
     </div>
+    <div style="text-align:center;margin-top:clamp(32px,4vw,40px);">
+      <a href="./prijzen.html" style="font:600 0.9375rem/1 'IBM Plex Sans';color:oklch(48% 0.12 230);">{{ pricingFullLink }}</a>
+    </div>
   </div>
 </section>
 
@@ -580,6 +589,7 @@ if (location.hostname === "amazingspeech.github.io") {
     <form id="contact-form" style="display:flex;flex-direction:column;gap:18px;">
       <input type="text" name="name" id="cf-name" required placeholder="{{ formNamePlaceholder }}" style="background:oklch(100% 0 0 / 0.95);border:1px solid oklch(70% 0.14 220 / 0.3);border-radius:6px;padding:14px 18px;font:400 0.95rem/1.5 'IBM Plex Sans';color:oklch(18% 0.02 255);transition:all 200ms ease;" style-focus="border-color:oklch(70% 0.14 220);box-shadow:0 0 0 2px oklch(70% 0.14 220 / 0.1);outline:none;"/>
       <input type="email" name="email" id="cf-email" required placeholder="{{ formEmailPlaceholder }}" style="background:oklch(100% 0 0 / 0.95);border:1px solid oklch(70% 0.14 220 / 0.3);border-radius:6px;padding:14px 18px;font:400 0.95rem/1.5 'IBM Plex Sans';color:oklch(18% 0.02 255);transition:all 200ms ease;" style-focus="border-color:oklch(70% 0.14 220);box-shadow:0 0 0 2px oklch(70% 0.14 220 / 0.1);outline:none;"/>
+      <input type="tel" name="phone" id="cf-phone" placeholder="{{ formPhonePlaceholder }}" style="background:oklch(100% 0 0 / 0.95);border:1px solid oklch(70% 0.14 220 / 0.3);border-radius:6px;padding:14px 18px;font:400 0.95rem/1.5 'IBM Plex Sans';color:oklch(18% 0.02 255);transition:all 200ms ease;" style-focus="border-color:oklch(70% 0.14 220);box-shadow:0 0 0 2px oklch(70% 0.14 220 / 0.1);outline:none;"/>
       <select name="industry" id="cf-industry" style="background:oklch(100% 0 0 / 0.95);border:1px solid oklch(70% 0.14 220 / 0.3);border-radius:6px;padding:14px 18px;font:400 0.95rem/1.5 'IBM Plex Sans';color:oklch(18% 0.02 255);transition:all 200ms ease;cursor:pointer;" style-focus="border-color:oklch(70% 0.14 220);outline:none;">
         <option value="">{{ formIndustryPlaceholder }}</option>
         <sc-for list="{{ industries }}" as="opt" hint-placeholder-count="0">
@@ -617,6 +627,7 @@ if (location.hostname === "amazingspeech.github.io") {
           body: JSON.stringify({
             name: form.querySelector("#cf-name").value,
             email: form.querySelector("#cf-email").value,
+            phone: form.querySelector("#cf-phone").value,
             industry: form.querySelector("#cf-industry").value,
             message: form.querySelector("#cf-message").value,
             website: form.querySelector("#cf-website").value,
@@ -666,7 +677,8 @@ if (location.hostname === "amazingspeech.github.io") {
           <a href="./services.html" style="font:400 0.875rem/1.4 'IBM Plex Sans';color:oklch(65% 0.02 250);">{{ navServices }}</a>
           <a href="#capabilities" style="font:400 0.875rem/1.4 'IBM Plex Sans';color:oklch(65% 0.02 250);">{{ navBuild }}</a>
           <a href="#industries" style="font:400 0.875rem/1.4 'IBM Plex Sans';color:oklch(65% 0.02 250);">{{ navIndustries }}</a>
-          <a href="#pricing" style="font:400 0.875rem/1.4 'IBM Plex Sans';color:oklch(65% 0.02 250);">{{ navPricing }}</a>
+          <a href="./prijzen.html" style="font:400 0.875rem/1.4 'IBM Plex Sans';color:oklch(65% 0.02 250);">{{ navPricing }}</a>
+          <a href="./chatbots.html" style="font:400 0.875rem/1.4 'IBM Plex Sans';color:oklch(65% 0.02 250);">{{ navChatbots }}</a>
         </div>
       </div>
       <div>
@@ -707,6 +719,7 @@ const copyNL = {
   navCases: 'Cases',
   navFaq: 'FAQ',
   navPricing: 'Prijzen',
+  navChatbots: 'Chatbots',
   navBookCall: 'Plan gesprek',
 
   badge: 'AI-automatisering & AI-applicaties',
@@ -719,10 +732,10 @@ const copyNL = {
   heroSubtext: 'Praktische AI-automatisering, rechtstreeks van de bouwer.',
   ctaPrimary: 'Plan gratis kennismaking',
   ctaSecondary: 'Bekijk cases',
-  trustA: 'EU AI Act-proof',
+  trustA: 'EU AI Act-bewust',
   trustB: 'AVG-bewust',
-  trustC: '2-4 weken doorlooptijd',
-  trustD: 'Vaste prijs',
+  trustC: '2-4 weken naar livegang',
+  trustD: 'Vaste prijs, vooraf afgesproken',
 
   whyUs: [
     { iconClass: 'icon-message-square', text: 'Rechtstreeks contact met wie het ook daadwerkelijk bouwt, geen account manager ertussen.' },
@@ -751,12 +764,13 @@ const copyNL = {
   capabilitiesHeading: 'Vijf manieren waarop we AI inzetten',
   capabilitiesSubtext: 'Van kleine procesautomatisering tot een volwaardig AI-product. Elk van deze vijf diensten is ook los in te huren, met een eigen vaste prijs.',
   capabilitiesCta: 'Bekijk alle diensten',
+  capabilitiesChatbotsCta: 'Bekijk onze AI-chatbots',
   capabilities: [
-    { iconClass: 'icon-workflow', title: 'AI-procesautomatisering', desc: 'Automatiseer het handmatige, repetitieve deel van je organisatie: data-invoer, rapportages, documentverwerking, besluitondersteuning. Systemen die aansluiten op wat je al gebruikt.', color: 'oklch(70% 0.14 220)' },
-    { iconClass: 'icon-trending-up', title: 'Voorspellende modellen & besluitondersteuning', desc: 'Modellen op jouw eigen data om vraag te voorspellen, risico\'s te scoren of afwijkingen te detecteren, met nauwkeurigheidscijfers die je kan controleren.', color: 'oklch(60% 0.15 170)' },
-    { iconClass: 'icon-puzzle', title: 'AI-geintegreerde applicaties', desc: 'Volwaardige producten met AI in de kern, niet als toevoeging achteraf. Interne tools, klantgerichte applicaties en platforms die vanaf de grond zijn opgebouwd rond wat moderne modellen kunnen.', color: 'oklch(70% 0.14 220)' },
-    { iconClass: 'icon-network', title: 'Systeemintegratie & datapipelines', desc: 'Koppelt je CRM, ERP, databases en interne tools zodat informatie automatisch stroomt, in plaats van via handmatige exports en copy-paste.', color: 'oklch(60% 0.15 170)' },
-    { iconClass: 'icon-scan-search', title: 'AI-readiness & advies', desc: 'Een kort, gericht traject om te bepalen waar AI echt waarde toevoegt in jouw organisatie, met een geprioriteerd plan op basis van ROI en haalbaarheid.', color: 'oklch(70% 0.14 220)' }
+    { iconClass: 'icon-workflow', title: 'AI-procesautomatisering', desc: 'Automatiseer het handmatige, repetitieve deel van je organisatie: data-invoer, rapportages, documentverwerking, besluitondersteuning. Systemen die aansluiten op wat je al gebruikt.', color: 'oklch(70% 0.14 220)', bullets: ['In kaart brengen van workflows en automatiseringsontwerp', 'Document- en dataverwerkingspipelines', 'Integratie met bestaand CRM, ERP en interne tools', 'Monitoring en foutafhandeling in productie'] },
+    { iconClass: 'icon-trending-up', title: 'Voorspellende modellen & besluitondersteuning', desc: 'Modellen op jouw eigen data om vraag te voorspellen, risico\'s te scoren of afwijkingen te detecteren, met nauwkeurigheidscijfers die je kan controleren.', color: 'oklch(60% 0.15 170)', bullets: ['Datapipeline en feature-voorbereiding', 'Modeltraining, validatie en nauwkeurigheidsrapportage', 'Vraagvoorspelling, risicoscoring en afwijkingsdetectie', 'Oplevering als API of intern dashboard'] },
+    { iconClass: 'icon-puzzle', title: 'AI-geintegreerde applicaties', desc: 'Volwaardige producten met AI in de kern, niet als toevoeging achteraf. Interne tools, klantgerichte applicaties en platforms die vanaf de grond zijn opgebouwd rond wat moderne modellen kunnen.', color: 'oklch(70% 0.14 220)', bullets: ['Productarchitectuur en technische scoping', 'Full-stack ontwikkeling met geintegreerde AI-laag', 'AI-agents en copilots ingebouwd in bestaande producten', 'MVP-bouw voor AI-first producten, klaar om over te dragen of te onderhouden'] },
+    { iconClass: 'icon-network', title: 'Systeemintegratie & datapipelines', desc: 'Koppelt je CRM, ERP, databases en interne tools zodat informatie automatisch stroomt, in plaats van via handmatige exports en copy-paste.', color: 'oklch(60% 0.15 170)', bullets: ['API-integraties tussen bestaande platformen', 'Inrichten en plannen van datapipelines', 'Connectoren voor legacy-systemen zonder API', 'Doorlopende datakwaliteit en monitoring'] },
+    { iconClass: 'icon-scan-search', title: 'AI-readiness & advies', desc: 'Een kort, gericht traject om te bepalen waar AI echt waarde toevoegt in jouw organisatie, met een geprioriteerd plan op basis van ROI en haalbaarheid.', color: 'oklch(70% 0.14 220)', bullets: ['In kaart brengen van AI-kansen in je organisatie', 'Assessment van data- en infrastructuur-gereedheid', 'Prioritering van use cases op ROI en haalbaarheid', 'Advies over leveranciers en zelf bouwen versus inkopen'] }
   ],
 
   flowNodes: [
@@ -851,11 +865,12 @@ const copyNL = {
   ],
 
   industryLabel: 'Sectoren',
-  industryHeading: 'Waar we ons op richten',
+  industryHeading: 'Voorbeelden uit de praktijk',
+  industrySubtext: 'Deze drie sectoren laten zien hoe de aanpak eruitziet. Werk je ergens anders? Dezelfde automatiseringen en chatbots werken net zo goed daarbuiten.',
   industries: [
-    { iconClass: 'icon-landmark', title: 'Financiele dienstverlening', desc: 'Fraudedetectie, risicomodellen, compliance-automatisering.', color: 'oklch(70% 0.14 220)', tag1: 'Risico & Compliance', tag2: 'Voorspellend' },
-    { iconClass: 'icon-settings-2', title: 'Operations', desc: 'Supply chain-optimalisatie, logistieke automatisering, vraagvoorspelling.', color: 'oklch(60% 0.15 170)', tag1: 'Efficientie', tag2: 'Kostenreductie' },
-    { iconClass: 'icon-store', title: 'Retail', desc: 'Voorraadoptimalisatie, klantsegmentatie, dynamische prijzen.', color: 'oklch(75% 0.12 160)', tag1: 'Omzet', tag2: 'Klantdata' }
+    { iconClass: 'icon-calendar-clock', title: 'Tandartspraktijken', desc: 'Chatbots, afspraakherinneringen en wachtlijst-automatisering rond je bestaande patiëntsysteem.', color: 'oklch(70% 0.14 220)', tag1: 'Patiëntcommunicatie', tag2: 'Minder no-shows', href: './voor-tandartsen.html' },
+    { iconClass: 'icon-workflow', title: 'Kozijnenbedrijven', desc: 'Offerte-opvolging, planning-ondersteuning en klantcommunicatie tijdens en na een project.', color: 'oklch(60% 0.15 170)', tag1: 'Offerte-opvolging', tag2: 'Planning', href: './voor-kozijnenbedrijven.html' },
+    { iconClass: 'icon-users-round', title: 'Kapsalons', desc: 'Online boeken, herinneringen en klantvoorkeuren die niet verloren gaan bij personeelswissels.', color: 'oklch(75% 0.12 160)', tag1: 'Boekingen', tag2: 'Klantbehoud', href: './voor-kapsalons.html' }
   ],
 
   casesLabel: 'Cases',
@@ -878,20 +893,21 @@ const copyNL = {
 
   aboutLabel: 'Over Tessar',
   aboutHeading: 'Direct met de bouwer, niet met een verkoopteam',
-  aboutBody: 'Tessar werkt zonder tussenlagen. Geen accountmanagers, geen wisselende consultants, geen adviesrapport als eindproduct: je hebt rechtstreeks contact met degene die het systeem ook daadwerkelijk bouwt, van eerste gesprek tot livegang. Die combinatie van scherpe focus en moderne AI-tooling maakt het mogelijk om sneller te leveren dan een traditioneel bureau, met een oplossing die aansluit op hoe jouw organisatie werkt, niet op een generiek sjabloon.',
+  aboutBody: 'Elk traject loopt via dezelfde persoon: van de eerste kennismaking, door de bouw, tot de oplevering en de support erna. Geen wisseling van team halverwege, geen overdracht aan iemand die de context nog moet inhalen. Dat houdt de communicatie kort en de beslissingen snel — wat wordt afgesproken, wordt ook gebouwd door wie het heeft afgesproken.',
   aboutPoints: [
     { iconClass: 'icon-target', text: 'Focus op meetbare ROI, niet op technologie om de technologie' },
-    { iconClass: 'icon-message-square', text: 'Een aanspreekpunt van kennismaking tot livegang' },
+    { iconClass: 'icon-message-square', text: 'Dezelfde persoon van intake tot livegang, geen overdracht halverwege' },
     { iconClass: 'icon-git-branch', text: 'Bouwt rond je bestaande systemen, geen verplichte migratie' }
   ],
 
   pricingHeading: 'Prijzen op aanvraag',
   pricingSubtext: 'Vaste scope, vaste prijs, altijd vooraf besproken. Geen verrassingen achteraf. Klein beginnen kan, groot bouwen ook.',
+  pricingFullLink: 'Bekijk volledige prijzen →',
   pricing: [
     { name: 'Kennismaking', desc: 'Je kans in kaart brengen', price: 'Gratis', timeframe: '30 minuten', cta: 'Plan gesprek', includes: ['AI-readiness assessment', 'Kansen met hoogste ROI identificeren', 'Realistische planning en budget'] },
-    { name: 'Quick win', desc: 'Eén proces automatiseren', price: 'Op aanvraag', timeframe: '1 week', cta: 'Meer info', includes: ['Eén concreet proces geautomatiseerd', 'Koppeling met 1-2 bestaande systemen', 'Overdracht en documentatie'] },
-    { name: 'Proof of Concept', desc: 'De aanpak valideren', price: 'Op aanvraag', timeframe: '2-3 weken', cta: 'Meer info', includes: ['Prototype op jouw data', 'Eerste nauwkeurigheidscijfers', 'Integratieplan', 'Training van je team'] },
-    { name: 'Volledige implementatie', desc: 'Live en opschalen', price: 'Op aanvraag', timeframe: '2-4 weken', cta: 'Meer info', includes: ['Productie-implementatie', 'Systeemintegratie', 'Doorlopende monitoring', '90 dagen support'] }
+    { name: 'Quick win', desc: 'Eén proces automatiseren', price: 'Op aanvraag', timeframe: '1 week', cta: 'Bespreek dit pakket', includes: ['Eén concreet proces geautomatiseerd', 'Koppeling met 1-2 bestaande systemen', 'Overdracht en documentatie'] },
+    { name: 'Proof of Concept', desc: 'De aanpak valideren', price: 'Op aanvraag', timeframe: '2-3 weken', cta: 'Bespreek dit pakket', includes: ['Prototype op jouw data', 'Eerste nauwkeurigheidscijfers', 'Integratieplan', 'Training van je team'] },
+    { name: 'Volledige implementatie', desc: 'Live en opschalen', price: 'Op aanvraag', timeframe: '2-4 weken', cta: 'Bespreek dit pakket', includes: ['Productie-implementatie', 'Systeemintegratie', 'Doorlopende monitoring', '90 dagen support'] }
   ],
 
   faqLabel: 'Vragen',
@@ -909,6 +925,7 @@ const copyNL = {
   contactSubtext: 'Plan een gratis kennismaking van 30 minuten. We brengen je AI-kans in kaart en laten zien wat mogelijk is.',
   formNamePlaceholder: 'Je naam',
   formEmailPlaceholder: 'jij@bedrijf.nl',
+  formPhonePlaceholder: 'Telefoonnummer (optioneel)',
   formIndustryPlaceholder: 'Jouw sector',
   formMessagePlaceholder: 'Beschrijf kort je uitdaging...',
   contactCTA: 'Plan gesprek',
@@ -933,6 +950,7 @@ const copyEN = {
   navCases: 'Case Studies',
   navFaq: 'FAQ',
   navPricing: 'Pricing',
+  navChatbots: 'Chatbots',
   navBookCall: 'Book call',
 
   badge: 'AI Automation & AI Applications',
@@ -947,8 +965,8 @@ const copyEN = {
   ctaSecondary: 'View case studies',
   trustA: 'EU AI Act ready',
   trustB: 'GDPR ready',
-  trustC: '2-4 week delivery',
-  trustD: 'Fixed price',
+  trustC: '2-4 weeks to launch',
+  trustD: 'Fixed price, agreed upfront',
 
   whyUs: [
     { iconClass: 'icon-message-square', text: 'Direct contact with whoever actually builds it, no account manager in between.' },
@@ -977,12 +995,13 @@ const copyEN = {
   capabilitiesHeading: 'Five ways we put AI to work',
   capabilitiesSubtext: 'From small process automations to a full AI product. Each of these five services can also be hired on its own, with its own fixed price.',
   capabilitiesCta: 'See all services',
+  capabilitiesChatbotsCta: 'See our AI chatbots',
   capabilities: [
-    { iconClass: 'icon-workflow', title: 'AI Process Automation', desc: 'Automate the manual, repetitive parts of your operation: data entry, reporting, document processing, decision support. Systems that plug into what you already use.', color: 'oklch(70% 0.14 220)' },
-    { iconClass: 'icon-trending-up', title: 'Predictive Models & Decision Support', desc: 'Models trained on your own data to forecast demand, score risk, or detect anomalies, with accuracy figures you can check against reality.', color: 'oklch(60% 0.15 170)' },
-    { iconClass: 'icon-puzzle', title: 'AI-Integrated Applications', desc: 'Full products with AI at the core, not bolted on afterward. Internal tools, customer-facing applications and platforms built from the ground up around what modern models can do.', color: 'oklch(70% 0.14 220)' },
-    { iconClass: 'icon-network', title: 'Systems Integration & Data Pipelines', desc: 'Connects your CRM, ERP, databases and internal tools so information flows automatically instead of through manual exports and copy-pasting.', color: 'oklch(60% 0.15 170)' },
-    { iconClass: 'icon-scan-search', title: 'AI Readiness & Advisory', desc: 'A short, focused engagement to pinpoint where AI actually adds value in your organization, resulting in a prioritized plan based on ROI and feasibility.', color: 'oklch(70% 0.14 220)' }
+    { iconClass: 'icon-workflow', title: 'AI Process Automation', desc: 'Automate the manual, repetitive parts of your operation: data entry, reporting, document processing, decision support. Systems that plug into what you already use.', color: 'oklch(70% 0.14 220)', bullets: ['Mapping workflows and automation design', 'Document and data-processing pipelines', 'Integration with existing CRM, ERP and internal tools', 'Monitoring and error handling in production'] },
+    { iconClass: 'icon-trending-up', title: 'Predictive Models & Decision Support', desc: 'Models trained on your own data to forecast demand, score risk, or detect anomalies, with accuracy figures you can check against reality.', color: 'oklch(60% 0.15 170)', bullets: ['Data pipeline and feature preparation', 'Model training, validation and accuracy reporting', 'Demand forecasting, risk scoring and anomaly detection', 'Delivered as an API or internal dashboard'] },
+    { iconClass: 'icon-puzzle', title: 'AI-Integrated Applications', desc: 'Full products with AI at the core, not bolted on afterward. Internal tools, customer-facing applications and platforms built from the ground up around what modern models can do.', color: 'oklch(70% 0.14 220)', bullets: ['Product architecture and technical scoping', 'Full-stack development with an integrated AI layer', 'AI agents and copilots embedded in existing products', 'MVP builds for AI-first products, ready to hand over or maintain'] },
+    { iconClass: 'icon-network', title: 'Systems Integration & Data Pipelines', desc: 'Connects your CRM, ERP, databases and internal tools so information flows automatically instead of through manual exports and copy-pasting.', color: 'oklch(60% 0.15 170)', bullets: ['API integrations between existing platforms', 'Setting up and planning data pipelines', 'Connectors for legacy systems without an API', 'Ongoing data quality and monitoring'] },
+    { iconClass: 'icon-scan-search', title: 'AI Readiness & Advisory', desc: 'A short, focused engagement to pinpoint where AI actually adds value in your organization, resulting in a prioritized plan based on ROI and feasibility.', color: 'oklch(70% 0.14 220)', bullets: ['Mapping AI opportunities across your organization', 'Assessing data and infrastructure readiness', 'Prioritizing use cases on ROI and feasibility', 'Advice on vendors versus building in-house'] }
   ],
 
   flowNodes: [
@@ -1079,9 +1098,9 @@ const copyEN = {
   industryLabel: 'Industries',
   industryHeading: 'Where we focus',
   industries: [
-    { iconClass: 'icon-landmark', title: 'Financial Services', desc: 'Fraud detection, risk modeling, compliance automation.', color: 'oklch(70% 0.14 220)', tag1: 'Risk & Compliance', tag2: 'Predictive' },
-    { iconClass: 'icon-settings-2', title: 'Operations', desc: 'Supply chain optimization, logistics automation, demand forecasting.', color: 'oklch(60% 0.15 170)', tag1: 'Efficiency', tag2: 'Cost Reduction' },
-    { iconClass: 'icon-store', title: 'Retail', desc: 'Inventory optimization, customer segmentation, dynamic pricing.', color: 'oklch(75% 0.12 160)', tag1: 'Revenue', tag2: 'Customer Data' }
+    { iconClass: 'icon-calendar-clock', title: 'Dental practices', desc: 'Chatbots, appointment reminders and waitlist automation built around your existing patient system.', color: 'oklch(70% 0.14 220)', tag1: 'Patient communication', tag2: 'Fewer no-shows', href: './voor-tandartsen.html' },
+    { iconClass: 'icon-workflow', title: 'Window & door installers', desc: 'Quote follow-up, planning support and client communication during and after a project.', color: 'oklch(60% 0.15 170)', tag1: 'Quote follow-up', tag2: 'Planning', href: './voor-kozijnenbedrijven.html' },
+    { iconClass: 'icon-users-round', title: 'Hair salons', desc: 'Online booking, reminders and client preferences that survive staff changes.', color: 'oklch(75% 0.12 160)', tag1: 'Bookings', tag2: 'Retention', href: './voor-kapsalons.html' }
   ],
 
   casesLabel: 'Case studies',
@@ -1104,20 +1123,21 @@ const copyEN = {
 
   aboutLabel: 'About Tessar',
   aboutHeading: 'Direct with the builder, not a sales team',
-  aboutBody: 'Tessar works without layers. No account managers, no rotating consultants, no advisory report as the end product: you work directly with the person who actually builds the system, from first conversation to launch. That combination of sharp focus and modern AI tooling makes it possible to deliver faster than a traditional agency, with a solution that fits how your organization works, not a generic template.',
+  aboutBody: 'Every project runs through the same person: from the first conversation, through the build, to delivery and the support that follows. No team handoffs mid-project, no new person who has to catch up on context first. That keeps communication short and decisions fast — what gets agreed gets built by the person who agreed to it.',
   aboutPoints: [
     { iconClass: 'icon-target', text: 'Focused on measurable ROI, not technology for its own sake' },
-    { iconClass: 'icon-message-square', text: 'One point of contact from discovery to go-live' },
+    { iconClass: 'icon-message-square', text: 'Same person from intake to launch, no handoff halfway through' },
     { iconClass: 'icon-git-branch', text: 'Built around your existing systems, no forced migration' }
   ],
 
   pricingHeading: 'Pricing on request',
   pricingSubtext: 'Fixed scope, fixed price, always discussed upfront. No surprises. Start small or build big.',
+  pricingFullLink: 'View full pricing →',
   pricing: [
     { name: 'Discovery Call', desc: 'Understand your opportunity', price: 'Free', timeframe: '30 minutes', cta: 'Book call', includes: ['AI readiness assessment', 'Identify high-ROI use cases', 'Realistic timeline & budget'] },
-    { name: 'Quick Win', desc: 'Automate one process', price: 'On request', timeframe: '1 week', cta: 'Learn more', includes: ['One concrete process automated', 'Connects to 1-2 existing systems', 'Handover and documentation'] },
-    { name: 'Proof of Concept', desc: 'Validate the approach', price: 'On request', timeframe: '2-3 weeks', cta: 'Learn more', includes: ['Prototype on your data', 'Initial accuracy metrics', 'Integration plan', 'Team training'] },
-    { name: 'Full Implementation', desc: 'Go live and scale', price: 'On request', timeframe: '2-4 weeks', cta: 'Learn more', includes: ['Production deployment', 'System integration', 'Ongoing monitoring', '90-day support'] }
+    { name: 'Quick Win', desc: 'Automate one process', price: 'On request', timeframe: '1 week', cta: 'Discuss this package', includes: ['One concrete process automated', 'Connects to 1-2 existing systems', 'Handover and documentation'] },
+    { name: 'Proof of Concept', desc: 'Validate the approach', price: 'On request', timeframe: '2-3 weeks', cta: 'Discuss this package', includes: ['Prototype on your data', 'Initial accuracy metrics', 'Integration plan', 'Team training'] },
+    { name: 'Full Implementation', desc: 'Go live and scale', price: 'On request', timeframe: '2-4 weeks', cta: 'Discuss this package', includes: ['Production deployment', 'System integration', 'Ongoing monitoring', '90-day support'] }
   ],
 
   faqLabel: 'FAQ',
@@ -1135,6 +1155,7 @@ const copyEN = {
   contactSubtext: 'Book a 30-minute discovery call. We will map your AI opportunity and show you what is possible.',
   formNamePlaceholder: 'Your name',
   formEmailPlaceholder: 'your@email.com',
+  formPhonePlaceholder: 'Phone number (optional)',
   formIndustryPlaceholder: 'Your industry',
   formMessagePlaceholder: 'Briefly describe your challenge...',
   contactCTA: 'Schedule call',
@@ -1842,7 +1863,6 @@ class Component extends DCLogic {
   whenCanvasReady();
 })();
 </script>
-<script src="./tessar-concierge-widget.js" defer></script>
 <script>
 (function () {
   var header = document.querySelector("header");
@@ -1891,6 +1911,31 @@ class Component extends DCLogic {
 <script>
 (function () {
   "use strict";
+  document.addEventListener("click", function (e) {
+    var toggle = e.target.closest && e.target.closest("#nav-toggle-btn");
+    if (toggle) {
+      var panel = document.getElementById("nav-mobile-panel");
+      var open = panel.classList.toggle("nav-open");
+      toggle.classList.toggle("nav-toggle-active", open);
+      toggle.setAttribute("aria-expanded", open ? "true" : "false");
+      return;
+    }
+    var link = e.target.closest && e.target.closest("#nav-mobile-panel a");
+    if (link) {
+      var panel2 = document.getElementById("nav-mobile-panel");
+      var btn2 = document.getElementById("nav-toggle-btn");
+      panel2.classList.remove("nav-open");
+      if (btn2) {
+        btn2.classList.remove("nav-toggle-active");
+        btn2.setAttribute("aria-expanded", "false");
+      }
+    }
+  });
+})();
+</script>
+<script>
+(function () {
+  "use strict";
   var btn = document.getElementById("back-to-top");
   if (!btn) return;
   var threshold = 480;
@@ -1915,5 +1960,6 @@ class Component extends DCLogic {
   });
 })();
 </script>
+<script src="./tessar-concierge-widget.js" defer></script>
 </body>
 </html>

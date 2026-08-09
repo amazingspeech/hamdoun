@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Diensten — Tessar | AI-automatisering, applicaties & advies</title>
-<meta name="description" content="Wat je bij Tessar kunt inhuren: AI-procesautomatisering, voorspellende modellen, AI-geintegreerde applicaties en AI-readiness advies voor het Nederlandse en Europese mkb.">
-<link rel="canonical" href="https://amazingspeech.github.io/hamdoun/services.html">
+<meta name="description" content="Vijf AI-diensten van Tessar: procesautomatisering, voorspellende modellen, AI-geintegreerde applicaties, systeemintegratie en AI-readiness advies voor het Nederlandse en Europese mkb.">
+<link rel="canonical" href="https://tessar.nl/services.html">
 <meta name="theme-color" content="#0a0a0f">
 <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon-32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="./assets/favicon-16.png">
@@ -13,14 +13,14 @@
 
 <meta property="og:type" content="website">
 <meta property="og:locale" content="nl_NL">
-<meta property="og:url" content="https://amazingspeech.github.io/hamdoun/services.html">
+<meta property="og:url" content="https://tessar.nl/services.html">
 <meta property="og:title" content="Diensten — Tessar">
 <meta property="og:description" content="AI-procesautomatisering, voorspellende modellen, AI-geintegreerde applicaties en AI-readiness advies voor het Nederlandse en Europese mkb.">
-<meta property="og:image" content="https://amazingspeech.github.io/hamdoun/assets/logo-full-dark.png">
+<meta property="og:image" content="https://tessar.nl/Tessar-logo-symbol.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Diensten — Tessar">
 <meta name="twitter:description" content="AI-procesautomatisering, voorspellende modellen, AI-geintegreerde applicaties en AI-readiness advies voor het Nederlandse en Europese mkb.">
-<meta name="twitter:image" content="https://amazingspeech.github.io/hamdoun/assets/logo-full-dark.png">
+<meta name="twitter:image" content="https://tessar.nl/Tessar-logo-symbol.png">
 
 <script type="application/ld+json">
 {
@@ -34,6 +34,19 @@
     "AI-Integrated Application Development",
     "Systems Integration",
     "AI Readiness Advisory"
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "Kan ik één dienst apart inhuren, of moet het een compleet traject zijn?", "acceptedAnswer": { "@type": "Answer", "text": "Elke dienst is los af te nemen, met een eigen scope en prijs. Veel klanten beginnen met één concreet proces en breiden later uit." } },
+    { "@type": "Question", "name": "Wat kost een traject?", "acceptedAnswer": { "@type": "Answer", "text": "De prijs ligt per traject vooraf vast, maar hangt af van de scope. Een vrijblijvende kennismaking is gratis." } },
+    { "@type": "Question", "name": "Werken jullie met onze bestaande systemen?", "acceptedAnswer": { "@type": "Answer", "text": "Ja. Automatiseringen en applicaties worden gebouwd rond wat je al gebruikt: je CRM, ERP, database of interne tools." } },
+    { "@type": "Question", "name": "Is onze data veilig?", "acceptedAnswer": { "@type": "Answer", "text": "Data wordt verwerkt volgens de AVG en, waar relevant, de EU AI Act." } },
+    { "@type": "Question", "name": "We weten niet welke dienst we nodig hebben — wat nu?", "acceptedAnswer": { "@type": "Answer", "text": "AI-readiness & advies is daarvoor bedoeld — een kort traject dat in kaart brengt waar AI het meeste oplevert." } }
   ]
 }
 </script>
@@ -58,18 +71,37 @@
     .svc-card { grid-template-columns:40px 1fr; }
     .svc-card .svc-num { display:none; }
   }
+  .nav-toggle { display:none; background:none; border:none; cursor:pointer; padding:8px; flex-direction:column; gap:5px; margin-left:4px; }
+  .nav-toggle span { display:block; width:22px; height:2px; background:oklch(18% 0.02 255); border-radius:2px; transition:transform 200ms ease, opacity 200ms ease; }
+  .nav-mobile-panel { display:none; }
   @media (max-width: 680px) {
     .nav-link { display:none; }
+    .nav-toggle { display:flex; }
+    .nav-mobile-panel { display:none; flex-direction:column; padding:8px 20px 20px; background:oklch(98% 0.004 90); border-top:1px solid oklch(90% 0.006 90); }
+    .nav-mobile-panel.nav-open { display:flex; }
+    .nav-mobile-panel a { display:block; padding:14px 0; font:500 1rem/1.3 'IBM Plex Sans'; color:oklch(24% 0.02 255); border-bottom:1px solid oklch(91% 0.006 90); }
+    .nav-mobile-panel a:last-child { border-bottom:none; margin-top:8px; }
+    .nav-toggle.nav-toggle-active span:nth-child(1) { transform:translateY(7px) rotate(45deg); }
+    .nav-toggle.nav-toggle-active span:nth-child(2) { opacity:0; }
+    .nav-toggle.nav-toggle-active span:nth-child(3) { transform:translateY(-7px) rotate(-45deg); }
   }
+  /* Sits left of the fixed Tess concierge launcher (60px circle at bottom:24px/right:24px, see
+     tessar-concierge-widget.js), same row, so it never collides with the launcher or its hint bubble
+     (which pops up above the launcher, not beside it). */
+  #back-to-top { position:fixed; right:100px; bottom:24px; z-index:40; width:48px; height:48px; border-radius:50%; border:none; background:oklch(70% 0.14 220); color:#001a2e; display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:0 8px 24px oklch(20% 0.02 255 / 0.25); opacity:0; transform:translateY(12px); pointer-events:none; transition:opacity 260ms ease, transform 260ms ease, box-shadow 200ms ease; }
+  #back-to-top.is-visible { opacity:1; transform:translateY(0); pointer-events:auto; }
+  #back-to-top:hover { transform:translateY(-3px); box-shadow:0 12px 32px rgba(0,212,255,0.35); }
+  #back-to-top:focus-visible { outline:2px solid oklch(48% 0.12 230); outline-offset:3px; }
+  @media (max-width: 480px) { #back-to-top { right:92px; bottom:16px; } }
+
   @media (prefers-reduced-motion: reduce) {
     [data-reveal] { opacity:1; transform:none; transition:none; }
     html { scroll-behavior:auto; }
     #back-to-top { transition:opacity 200ms ease; transform:none; }
   }
-  #back-to-top { position:fixed; right:clamp(16px,4vw,28px); bottom:clamp(16px,4vw,28px); z-index:40; width:48px; height:48px; border-radius:50%; border:none; background:oklch(70% 0.14 220); color:#001a2e; display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:0 8px 24px oklch(20% 0.02 255 / 0.25); opacity:0; transform:translateY(12px); pointer-events:none; transition:opacity 260ms ease, transform 260ms ease, box-shadow 200ms ease; }
-  #back-to-top.is-visible { opacity:1; transform:translateY(0); pointer-events:auto; }
-  #back-to-top:hover { transform:translateY(-3px); box-shadow:0 12px 32px rgba(0,212,255,0.35); }
-  #back-to-top:focus-visible { outline:2px solid oklch(48% 0.12 230); outline-offset:3px; }
+  .faq-item[open] .faq-chevron { transform:rotate(180deg); }
+  .faq-item summary::-webkit-details-marker { display:none; }
+  .faq-item summary { list-style:none; cursor:pointer; }
   .icon { display:inline-block; width:1em; height:1em; background-color:currentColor; -webkit-mask-repeat:no-repeat; mask-repeat:no-repeat; -webkit-mask-position:center; mask-position:center; -webkit-mask-size:contain; mask-size:contain; flex-shrink:0; }
   .icon-workflow { -webkit-mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-workflow' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Crect width='8' height='8' x='3' y='3' rx='2' /%3E%3Cpath d='M7 11v4a2 2 0 0 0 2 2h4' /%3E%3Crect width='8' height='8' x='13' y='13' rx='2' /%3E%3C/svg%3E"); mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-workflow' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Crect width='8' height='8' x='3' y='3' rx='2' /%3E%3Cpath d='M7 11v4a2 2 0 0 0 2 2h4' /%3E%3Crect width='8' height='8' x='13' y='13' rx='2' /%3E%3C/svg%3E"); }
   .icon-trending-up { -webkit-mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-trending-up' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Cpolyline points='22 7 13.5 15.5 8.5 10.5 2 17' /%3E%3Cpolyline points='16 7 22 7 22 13' /%3E%3C/svg%3E"); mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-trending-up' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Cpolyline points='22 7 13.5 15.5 8.5 10.5 2 17' /%3E%3Cpolyline points='16 7 22 7 22 13' /%3E%3C/svg%3E"); }
@@ -77,6 +109,7 @@
   .icon-network { -webkit-mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-network' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Crect x='16' y='16' width='6' height='6' rx='1' /%3E%3Crect x='2' y='16' width='6' height='6' rx='1' /%3E%3Crect x='9' y='2' width='6' height='6' rx='1' /%3E%3Cpath d='M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3' /%3E%3Cpath d='M12 12V8' /%3E%3C/svg%3E"); mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-network' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Crect x='16' y='16' width='6' height='6' rx='1' /%3E%3Crect x='2' y='16' width='6' height='6' rx='1' /%3E%3Crect x='9' y='2' width='6' height='6' rx='1' /%3E%3Cpath d='M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3' /%3E%3Cpath d='M12 12V8' /%3E%3C/svg%3E"); }
   .icon-scan-search { -webkit-mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-scan-search' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Cpath d='M3 7V5a2 2 0 0 1 2-2h2' /%3E%3Cpath d='M17 3h2a2 2 0 0 1 2 2v2' /%3E%3Cpath d='M21 17v2a2 2 0 0 1-2 2h-2' /%3E%3Cpath d='M7 21H5a2 2 0 0 1-2-2v-2' /%3E%3Ccircle cx='12' cy='12' r='3' /%3E%3Cpath d='m16 16-1.9-1.9' /%3E%3C/svg%3E"); mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-scan-search' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Cpath d='M3 7V5a2 2 0 0 1 2-2h2' /%3E%3Cpath d='M17 3h2a2 2 0 0 1 2 2v2' /%3E%3Cpath d='M21 17v2a2 2 0 0 1-2 2h-2' /%3E%3Cpath d='M7 21H5a2 2 0 0 1-2-2v-2' /%3E%3Ccircle cx='12' cy='12' r='3' /%3E%3Cpath d='m16 16-1.9-1.9' /%3E%3C/svg%3E"); }
   .icon-check { -webkit-mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-check' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Cpath d='M20 6 9 17l-5-5' /%3E%3C/svg%3E"); mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-check' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Cpath d='M20 6 9 17l-5-5' /%3E%3C/svg%3E"); }
+  .icon-chevron-down { -webkit-mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-chevron-down' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Cpath d='m6 9 6 6 6-6' /%3E%3C/svg%3E"); mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-chevron-down' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Cpath d='m6 9 6 6 6-6' /%3E%3C/svg%3E"); }
 </style>
 </head>
 <body>
@@ -91,17 +124,29 @@
       <a href="./services.html" class="nav-link" style="color:oklch(18% 0.02 255);font-weight:600;">Diensten</a>
       <a href="./index.html#industries" class="nav-link" style="color:oklch(46% 0.012 140);transition:color 200ms ease;">Sectoren</a>
       <a href="./index.html#cases" class="nav-link" style="color:oklch(46% 0.012 140);transition:color 200ms ease;">Cases</a>
-      <a href="./index.html#pricing" class="nav-link" style="color:oklch(46% 0.012 140);transition:color 200ms ease;">Prijzen</a>
+      <a href="./prijzen.html" class="nav-link" style="color:oklch(46% 0.012 140);transition:color 200ms ease;">Prijzen</a>
+      <a href="./chatbots.html" class="nav-link" style="color:oklch(46% 0.012 140);transition:color 200ms ease;">Chatbots</a>
       <a href="./index.html#contact" style="background:oklch(70% 0.14 220);color:#001a2e;padding:10px 20px;border-radius:6px;font-weight:600;transition:all 200ms ease;">Plan gesprek</a>
     </nav>
+    <button type="button" class="nav-toggle" id="nav-toggle-btn" aria-label="Menu" aria-expanded="false" aria-controls="nav-mobile-panel">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <div class="nav-mobile-panel" id="nav-mobile-panel">
+      <a href="./services.html" style="color:oklch(18% 0.02 255);font-weight:600;">Diensten</a>
+      <a href="./index.html#industries" style="color:oklch(46% 0.012 140);transition:color 200ms ease;">Sectoren</a>
+      <a href="./index.html#cases" style="color:oklch(46% 0.012 140);transition:color 200ms ease;">Cases</a>
+      <a href="./prijzen.html" style="color:oklch(46% 0.012 140);transition:color 200ms ease;">Prijzen</a>
+      <a href="./chatbots.html" style="color:oklch(46% 0.012 140);transition:color 200ms ease;">Chatbots</a>
+      <a href="./index.html#contact" style="background:oklch(70% 0.14 220);color:#001a2e;padding:10px 20px;border-radius:6px;font-weight:600;transition:all 200ms ease;">Plan gesprek</a>
   </div>
 </header>
 
 <section style="position:relative;overflow:hidden;background:linear-gradient(135deg, oklch(6% 0 0) 0%, oklch(12% 0.03 260) 100%);color:#FFF;padding:clamp(64px,9vw,100px) clamp(20px,5vw,40px) clamp(56px,7vw,80px);text-align:center;">
   <div style="max-width:800px;margin:0 auto;position:relative;z-index:1;">
     <div style="display:inline-block;background:oklch(70% 0.14 220 / 0.15);border:1px solid oklch(70% 0.14 220 / 0.3);padding:10px 16px;border-radius:20px;margin-bottom:24px;font-size:0.8125rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:oklch(70% 0.14 220);">Diensten</div>
-    <h1 style="font:800 clamp(2rem,4.5vw,3rem)/1.2 'IBM Plex Sans';margin:0 0 18px;letter-spacing:-0.02em;">Wat je bij Tessar kunt inhuren</h1>
-    <p style="font:400 clamp(1rem,1.6vw,1.125rem)/1.7 'IBM Plex Sans';color:oklch(75% 0.10 250);margin:0;">Vijf diensten, elk apart afgebakend en geprijsd. Elk traject eindigt in een werkend systeem in productie, niet in een slidedeck.</p>
+    <h1 style="font:800 clamp(2rem,4.5vw,3rem)/1.2 'IBM Plex Sans';margin:0 0 18px;letter-spacing:-0.02em;">Vijf diensten, één aanpak</h1>
+    <p style="font:400 clamp(1rem,1.6vw,1.125rem)/1.7 'IBM Plex Sans';color:oklch(75% 0.10 250);margin:0;">Elk apart afgebakend, met een vaste scope en prijsindicatie vooraf. Los in te zetten of te combineren, afhankelijk van wat jouw situatie vraagt.</p>
   </div>
 </section>
 
@@ -144,12 +189,13 @@
       <div>
         <h2 style="font:600 1.375rem/1.3 'IBM Plex Sans';margin:0 0 12px;color:oklch(18% 0.02 255);">AI-geintegreerde applicaties</h2>
         <p style="font:400 1rem/1.7 'IBM Plex Sans';color:oklch(40% 0.012 140);margin:0 0 16px;">Volwaardige applicaties met AI als kernfunctie in plaats van een toegevoegde feature: interne tools, klantgerichte producten en agents die rechtstreeks in een bestaand platform worden ingebouwd. Omvat architectuur, backend, frontend en de modellaag als een geheel.</p>
-        <ul style="margin:0;padding:0 0 0 20px;font:400 0.9375rem/1.7 'IBM Plex Sans';color:oklch(46% 0.012 140);">
+        <ul style="margin:0 0 16px;padding:0 0 0 20px;font:400 0.9375rem/1.7 'IBM Plex Sans';color:oklch(46% 0.012 140);">
           <li>Productarchitectuur en technische scoping</li>
           <li>Full-stack ontwikkeling met geintegreerde AI-laag</li>
           <li>AI-agents en copilots ingebouwd in bestaande producten</li>
           <li>MVP-bouw voor AI-first producten, klaar om over te dragen of te onderhouden</li>
         </ul>
+        <a href="./chatbots.html" style="font:600 0.875rem/1 'IBM Plex Sans';color:oklch(48% 0.12 230);">Concreet voorbeeld: onze AI-chatbots voor de praktijk &rarr;</a>
       </div>
     </div>
 
@@ -186,11 +232,71 @@
   </div>
 </section>
 
+<section style="padding:clamp(48px,6vw,64px) clamp(20px,5vw,40px);background:#FFF;border-top:1px solid oklch(90% 0.006 90);">
+  <div data-reveal style="max-width:800px;margin:0 auto;text-align:center;transition:opacity 600ms ease, transform 600ms ease;">
+    <div style="font:500 0.8125rem/1.3 'IBM Plex Mono';letter-spacing:0.06em;text-transform:uppercase;color:oklch(48% 0.12 230);margin-bottom:12px;">Per branche</div>
+    <h2 style="font:600 clamp(1.375rem,2.6vw,1.625rem)/1.3 'IBM Plex Sans';margin:0 0 16px;color:oklch(18% 0.02 255);">Liever een aanpak specifiek voor jouw branche?</h2>
+    <p style="font:400 0.9375rem/1.6 'IBM Plex Sans';color:oklch(46% 0.012 140);margin:0 0 24px;">Dezelfde vijf diensten, maar met voorbeelden die kloppen voor jouw sector.</p>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;">
+      <a href="./voor-tandartsen.html" style="border:1px solid oklch(88% 0.006 90);color:oklch(18% 0.02 255);padding:10px 18px;border-radius:6px;font-weight:600;font-size:0.875rem;">Tandartspraktijken</a>
+      <a href="./voor-kozijnenbedrijven.html" style="border:1px solid oklch(88% 0.006 90);color:oklch(18% 0.02 255);padding:10px 18px;border-radius:6px;font-weight:600;font-size:0.875rem;">Kozijnenbedrijven</a>
+      <a href="./voor-kapsalons.html" style="border:1px solid oklch(88% 0.006 90);color:oklch(18% 0.02 255);padding:10px 18px;border-radius:6px;font-weight:600;font-size:0.875rem;">Kapsalons</a>
+      <a href="./index.html#industries" style="color:oklch(48% 0.12 230);padding:10px 18px;font-weight:600;font-size:0.875rem;">Alle branches &rarr;</a>
+    </div>
+  </div>
+</section>
+
 <section style="padding:clamp(56px,7vw,88px) clamp(20px,5vw,40px);background:oklch(98% 0.004 90);border-top:1px solid oklch(90% 0.006 90);">
+  <div style="max-width:800px;margin:0 auto;">
+    <div style="text-align:center;margin-bottom:clamp(32px,4vw,40px);">
+      <div style="font:500 0.8125rem/1.3 'IBM Plex Mono';letter-spacing:0.06em;text-transform:uppercase;color:oklch(48% 0.12 230);margin-bottom:12px;">Vragen</div>
+      <h2 style="font:600 clamp(1.5rem,3vw,1.875rem)/1.3 'IBM Plex Sans';margin:0;letter-spacing:-0.02em;color:oklch(18% 0.02 255);">Veelgestelde vragen</h2>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px;">
+      <details class="faq-item" style="border:1px solid oklch(90% 0.006 90);border-radius:10px;padding:18px 22px;background:#FFF;">
+        <summary style="display:flex;align-items:center;justify-content:space-between;gap:16px;font:600 1rem/1.4 'IBM Plex Sans';color:oklch(18% 0.02 255);cursor:pointer;">
+          <span>Kan ik één dienst apart inhuren, of moet het een compleet traject zijn?</span>
+          <div class="icon icon-chevron-down faq-chevron" style="width:18px;height:18px;color:oklch(48% 0.12 230);transition:transform 200ms ease;flex-shrink:0;"></div>
+        </summary>
+        <p style="font:400 0.9375rem/1.65 'IBM Plex Sans';color:oklch(46% 0.012 140);margin:14px 0 0;">Elke dienst hierboven is los af te nemen, met een eigen scope en prijs. Veel klanten beginnen met één concreet proces en breiden later uit — dat hoeft niet vooraf vastgelegd te worden.</p>
+      </details>
+      <details class="faq-item" style="border:1px solid oklch(90% 0.006 90);border-radius:10px;padding:18px 22px;background:#FFF;">
+        <summary style="display:flex;align-items:center;justify-content:space-between;gap:16px;font:600 1rem/1.4 'IBM Plex Sans';color:oklch(18% 0.02 255);cursor:pointer;">
+          <span>Wat kost een traject?</span>
+          <div class="icon icon-chevron-down faq-chevron" style="width:18px;height:18px;color:oklch(48% 0.12 230);transition:transform 200ms ease;flex-shrink:0;"></div>
+        </summary>
+        <p style="font:400 0.9375rem/1.65 'IBM Plex Sans';color:oklch(46% 0.012 140);margin:14px 0 0;">De prijs ligt per traject vooraf vast, maar hangt af van de scope. Een vrijblijvende kennismaking is gratis — daar bespreken we een concrete prijsindicatie voor jouw situatie, dus geen verrassingen achteraf.</p>
+      </details>
+      <details class="faq-item" style="border:1px solid oklch(90% 0.006 90);border-radius:10px;padding:18px 22px;background:#FFF;">
+        <summary style="display:flex;align-items:center;justify-content:space-between;gap:16px;font:600 1rem/1.4 'IBM Plex Sans';color:oklch(18% 0.02 255);cursor:pointer;">
+          <span>Werken jullie met onze bestaande systemen?</span>
+          <div class="icon icon-chevron-down faq-chevron" style="width:18px;height:18px;color:oklch(48% 0.12 230);transition:transform 200ms ease;flex-shrink:0;"></div>
+        </summary>
+        <p style="font:400 0.9375rem/1.65 'IBM Plex Sans';color:oklch(46% 0.012 140);margin:14px 0 0;">Ja. Automatiseringen en applicaties worden gebouwd rond wat je al gebruikt: je CRM, ERP, database of interne tools. Geen noodzaak om over te stappen naar nieuwe software.</p>
+      </details>
+      <details class="faq-item" style="border:1px solid oklch(90% 0.006 90);border-radius:10px;padding:18px 22px;background:#FFF;">
+        <summary style="display:flex;align-items:center;justify-content:space-between;gap:16px;font:600 1rem/1.4 'IBM Plex Sans';color:oklch(18% 0.02 255);cursor:pointer;">
+          <span>Is onze data veilig?</span>
+          <div class="icon icon-chevron-down faq-chevron" style="width:18px;height:18px;color:oklch(48% 0.12 230);transition:transform 200ms ease;flex-shrink:0;"></div>
+        </summary>
+        <p style="font:400 0.9375rem/1.65 'IBM Plex Sans';color:oklch(46% 0.012 140);margin:14px 0 0;">Data wordt verwerkt volgens de AVG en, waar relevant, de EU AI Act. Waar jouw sector dat vereist, gaat de voorkeur uit naar Europese of on-premise dataopslag.</p>
+      </details>
+      <details class="faq-item" style="border:1px solid oklch(90% 0.006 90);border-radius:10px;padding:18px 22px;background:#FFF;">
+        <summary style="display:flex;align-items:center;justify-content:space-between;gap:16px;font:600 1rem/1.4 'IBM Plex Sans';color:oklch(18% 0.02 255);cursor:pointer;">
+          <span>We weten niet welke dienst we nodig hebben — wat nu?</span>
+          <div class="icon icon-chevron-down faq-chevron" style="width:18px;height:18px;color:oklch(48% 0.12 230);transition:transform 200ms ease;flex-shrink:0;"></div>
+        </summary>
+        <p style="font:400 0.9375rem/1.65 'IBM Plex Sans';color:oklch(46% 0.012 140);margin:14px 0 0;">Daar is "AI-readiness & advies" (dienst 5) precies voor bedoeld — een kort traject dat in kaart brengt waar AI in jouw organisatie het meeste oplevert, voordat er iets gebouwd wordt.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<section style="padding:clamp(56px,7vw,88px) clamp(20px,5vw,40px);background:#FFF;border-top:1px solid oklch(90% 0.006 90);">
   <div data-reveal style="max-width:800px;margin:0 auto;text-align:center;transition:opacity 600ms ease, transform 600ms ease;">
     <h2 style="font:600 clamp(1.5rem,3vw,1.875rem)/1.3 'IBM Plex Sans';margin:0 0 16px;color:oklch(18% 0.02 255);">Hoe trajecten worden afgebakend</h2>
     <p style="font:400 1rem/1.7 'IBM Plex Sans';color:oklch(46% 0.012 140);margin:0 0 32px;">Elke dienst hierboven kan starten als een gratis kennismaking van 30 minuten, doorgroeien naar een proof of concept met vaste prijs, en eindigen in een volledige productie-implementatie met 90 dagen support. Vaste scope, vaste prijs, afgesproken voordat er wordt gestart.</p>
-    <a href="./index.html#pricing" style="display:inline-block;border:2px solid oklch(48% 0.12 230);color:oklch(18% 0.02 255);padding:14px 32px;border-radius:6px;font-weight:700;font-size:0.95rem;margin-right:16px;transition:all 200ms ease;">Bekijk prijzen</a>
+    <a href="./prijzen.html" style="display:inline-block;border:2px solid oklch(48% 0.12 230);color:oklch(18% 0.02 255);padding:14px 32px;border-radius:6px;font-weight:700;font-size:0.95rem;margin-right:16px;transition:all 200ms ease;">Bekijk prijzen</a>
     <a href="./index.html#contact" style="display:inline-block;background:linear-gradient(135deg, oklch(70% 0.14 220), oklch(60% 0.12 230));color:#001a2e;padding:14px 32px;border-radius:6px;font-weight:700;font-size:0.95rem;box-shadow:0 12px 32px rgba(0, 212, 255, 0.25);transition:all 280ms ease;">Plan een kennismaking</a>
   </div>
 </section>
@@ -226,6 +332,31 @@
 <script>
 (function () {
   "use strict";
+  document.addEventListener("click", function (e) {
+    var toggle = e.target.closest && e.target.closest("#nav-toggle-btn");
+    if (toggle) {
+      var panel = document.getElementById("nav-mobile-panel");
+      var open = panel.classList.toggle("nav-open");
+      toggle.classList.toggle("nav-toggle-active", open);
+      toggle.setAttribute("aria-expanded", open ? "true" : "false");
+      return;
+    }
+    var link = e.target.closest && e.target.closest("#nav-mobile-panel a");
+    if (link) {
+      var panel2 = document.getElementById("nav-mobile-panel");
+      var btn2 = document.getElementById("nav-toggle-btn");
+      panel2.classList.remove("nav-open");
+      if (btn2) {
+        btn2.classList.remove("nav-toggle-active");
+        btn2.setAttribute("aria-expanded", "false");
+      }
+    }
+  });
+})();
+</script>
+<script>
+(function () {
+  "use strict";
   var btn = document.getElementById("back-to-top");
   if (!btn) return;
   var threshold = 480;
@@ -250,5 +381,6 @@
   });
 })();
 </script>
+<script src="./tessar-concierge-widget.js" defer></script>
 </body>
 </html>
