@@ -74,7 +74,7 @@
   .nav-toggle { display:none; background:none; border:none; cursor:pointer; padding:8px; flex-direction:column; gap:5px; margin-left:4px; }
   .nav-toggle span { display:block; width:22px; height:2px; background:oklch(18% 0.02 255); border-radius:2px; transition:transform 200ms ease, opacity 200ms ease; }
   .nav-mobile-panel { display:none; }
-  @media (max-width: 680px) {
+  @media (max-width: 960px) {
     .nav-link { display:none; }
     .nav-toggle { display:flex; }
     .nav-mobile-panel { display:none; flex-direction:column; padding:8px 20px 20px; background:oklch(98% 0.004 90); border-top:1px solid oklch(90% 0.006 90); }
@@ -120,7 +120,7 @@
       <img src="./assets/tessar-icon-optimized.png" width="32" height="35" alt="Tessar logo" style="height:32px;width:auto;">
       <span style="font:700 1rem/1 'IBM Plex Sans';letter-spacing:-0.015em;color:oklch(18% 0.02 255);">Tessar</span>
     </a>
-    <nav style="display:flex;align-items:center;gap:clamp(16px,2vw,32px);font-size:0.9375rem;">
+    <nav style="display:flex;flex-wrap:wrap;align-items:center;row-gap:10px;gap:clamp(12px,1.5vw,24px);font-size:0.9375rem;">
       <a href="./services.html" class="nav-link" style="color:oklch(18% 0.02 255);font-weight:600;">Diensten</a>
       <a href="./index.html#industries" class="nav-link" style="color:oklch(46% 0.012 140);transition:color 200ms ease;">Sectoren</a>
       <a href="./index.html#cases" class="nav-link" style="color:oklch(46% 0.012 140);transition:color 200ms ease;">Cases</a>
