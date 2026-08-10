@@ -49,18 +49,6 @@
     .nav-toggle.nav-toggle-active span:nth-child(3) { transform:translateY(-7px) rotate(-45deg); }
   }
   @media (prefers-reduced-motion: reduce) { [data-reveal] { opacity:1; transform:none; transition:none; } html { scroll-behavior:auto; } }
-  @keyframes floatCube {
-    0% { transform: translateY(0px) rotateX(0deg) rotateY(0deg); }
-    25% { transform: translateY(-8px) rotateX(15deg) rotateY(10deg); }
-    50% { transform: translateY(0px) rotateX(30deg) rotateY(25deg); }
-    75% { transform: translateY(-8px) rotateX(15deg) rotateY(10deg); }
-    100% { transform: translateY(0px) rotateX(0deg) rotateY(0deg); }
-  }
-  @keyframes orbitCube {
-    0% { transform: rotate(0deg) translateX(60px) rotateZ(0deg); }
-    50% { transform: rotate(180deg) translateX(60px) rotateZ(180deg); }
-    100% { transform: rotate(360deg) translateX(60px) rotateZ(360deg); }
-  }
 </style>
 </head>
 <body>
@@ -94,25 +82,11 @@
   </div>
 </header>
 <main>
-<section style="position:relative;overflow:hidden;background:oklch(14% 0.03 255);color:#FFF;padding:clamp(64px,9vw,120px) clamp(20px,5vw,40px);">
-  <div style="position:absolute;top:-100px;right:-150px;width:600px;height:600px;opacity:0.12;pointer-events:none;">
-    <svg viewBox="0 0 400 400" style="width:100%;height:100%;animation:floatCube 12s ease-in-out infinite;">
-      <g style="transform-origin:200px 200px;">
-        <rect x="150" y="150" width="100" height="100" fill="none" stroke="oklch(72% 0.14 220)" stroke-width="2" opacity="0.6"></rect>
-        <rect x="170" y="130" width="100" height="100" fill="none" stroke="oklch(72% 0.14 220)" stroke-width="2" opacity="0.6"></rect>
-        <line x1="150" y1="150" x2="170" y2="130" stroke="oklch(72% 0.14 220)" stroke-width="2" opacity="0.6"></line>
-        <line x1="250" y1="150" x2="270" y2="130" stroke="oklch(72% 0.14 220)" stroke-width="2" opacity="0.6"></line>
-        <line x1="150" y1="250" x2="170" y2="230" stroke="oklch(72% 0.14 220)" stroke-width="2" opacity="0.6"></line>
-        <line x1="250" y1="250" x2="270" y2="230" stroke="oklch(72% 0.14 220)" stroke-width="2" opacity="0.6"></line>
-        <g style="animation:orbitCube 15s linear infinite;">
-          <rect x="240" y="240" width="30" height="30" fill="none" stroke="oklch(72% 0.14 220)" stroke-width="1.5" opacity="0.4"></rect>
-        </g>
-      </g>
-    </svg>
-  </div>
-  <div style="max-width:1200px;margin:0 auto;position:relative;z-index:1;">
-    <h1 style="font:800 clamp(2rem,4.5vw,3rem)/1.15 'IBM Plex Sans';max-width:800px;letter-spacing:-0.02em;color:#FFF;margin:0 0 18px;">Wat we leren onderweg</h1>
-    <p style="font:400 clamp(1rem,1.6vw,1.125rem)/1.7 'IBM Plex Sans';color:oklch(78% 0.012 140);max-width:640px;margin:0;">Inzichten uit live deployments, echte gebruikers, en het navigeren van AI-ethiek in de praktijk — geen contentkalender-vulling, alleen wat we zelf onderweg tegenkomen.</p>
+<section style="position:relative;overflow:hidden;background:linear-gradient(135deg, oklch(6% 0 0) 0%, oklch(12% 0.03 260) 100%);color:#FFF;padding:clamp(64px,9vw,100px) clamp(20px,5vw,40px) clamp(56px,7vw,80px);text-align:center;">
+  <div style="max-width:800px;margin:0 auto;position:relative;z-index:1;">
+    <div style="display:inline-block;background:oklch(70% 0.14 220 / 0.15);border:1px solid oklch(70% 0.14 220 / 0.3);padding:10px 16px;border-radius:20px;margin-bottom:24px;font-size:0.8125rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:oklch(70% 0.14 220);">Blog</div>
+    <h1 style="font:800 clamp(2rem,4.5vw,3rem)/1.2 'IBM Plex Sans';margin:0 0 18px;letter-spacing:-0.02em;">Wat we leren onderweg</h1>
+    <p style="font:400 clamp(1rem,1.6vw,1.125rem)/1.7 'IBM Plex Sans';color:oklch(75% 0.10 250);margin:0;">Inzichten uit live deployments, echte gebruikers, en het navigeren van AI-ethiek in de praktijk — geen contentkalender-vulling, alleen wat we zelf onderweg tegenkomen.</p>
   </div>
 </section>
 
