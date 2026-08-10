@@ -1,1 +1,4 @@
 .worktrees/
+
+# lokale secrets
+.env
