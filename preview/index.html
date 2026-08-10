@@ -49,7 +49,7 @@ if (location.hostname === "amazingspeech.github.io") {
     {
       "@type": "Question",
       "name": "Wat kost een traject?",
-      "acceptedAnswer": { "@type": "Answer", "text": "De prijs ligt per traject vooraf vast, maar hangt af van de scope. Een vrijblijvende kennismaking is gratis — daar bespreken we een concrete prijsindicatie voor jouw situatie, dus geen verrassingen achteraf." }
+      "acceptedAnswer": { "@type": "Answer", "text": "Voor Quick win en de AI-readiness scan geldt een vaste prijs, meteen te zien op deze pagina. Voor Proof of Concept en een volledige implementatie hangt de prijs af van de scope — die bepalen we samen in de gratis kennismaking, en pas daarna volgt een vaste prijs die niet meer verandert." }
     },
     {
       "@type": "Question",
@@ -69,7 +69,7 @@ if (location.hostname === "amazingspeech.github.io") {
     {
       "@type": "Question",
       "name": "Voor wie is dit geschikt?",
-      "acceptedAnswer": { "@type": "Answer", "text": "Voor mkb- en middelgrote bedrijven die AI concreet willen inzetten, niet alleen willen verkennen. Op zoek naar een adviestraject met een rapport als eindresultaat? Dan is dit niet de juiste plek: hier eindigt elk traject in een werkend systeem." }
+      "acceptedAnswer": { "@type": "Answer", "text": "Voor mkb- en middelgrote bedrijven die AI concreet willen inzetten, niet alleen willen verkennen. De AI-readiness scan levert bewust een schriftelijk rapport op als eerste stap; de pakketten daarna — Quick win, proof of concept, volledige implementatie — eindigen altijd in een werkend systeem." }
     },
     {
       "@type": "Question",
@@ -910,12 +910,13 @@ const copyNL = {
     { iconClass: 'icon-git-branch', text: 'Bouwt rond je bestaande systemen, geen verplichte migratie' }
   ],
 
-  pricingHeading: 'Prijzen op aanvraag',
-  pricingSubtext: 'Vaste scope, vaste prijs, altijd vooraf besproken. Geen verrassingen achteraf. Klein beginnen kan, groot bouwen ook.',
+  pricingHeading: 'Vaste prijs waar het kan, maatwerk waar het moet',
+  pricingSubtext: 'Vaste scope, vaste prijs zodra we de scope kennen. Klein beginnen kan, groot bouwen ook.',
   pricingFullLink: 'Bekijk volledige prijzen →',
   pricing: [
-    { name: 'Kennismaking', desc: 'Je kans in kaart brengen', price: 'Gratis', timeframe: '30 minuten', cta: 'Plan gesprek', includes: ['AI-readiness assessment', 'Kansen met hoogste ROI identificeren', 'Realistische planning en budget'] },
-    { name: 'Quick win', desc: 'Eén proces automatiseren', price: 'Op aanvraag', timeframe: '1 week', cta: 'Bespreek dit pakket', includes: ['Eén concreet proces geautomatiseerd', 'Koppeling met 1-2 bestaande systemen', 'Overdracht en documentatie'] },
+    { name: 'Kennismaking', desc: 'Je kans in kaart brengen', price: 'Gratis', timeframe: '30 minuten', cta: 'Plan gesprek', includes: ['Eerste inschatting van je AI-kansen', 'Kansen met hoogste ROI identificeren', 'Realistische planning en budget'] },
+    { name: 'AI-readiness scan', desc: 'Diepteanalyse met schriftelijk rapport', price: 'vanaf €295', timeframe: '2-3 dagen', cta: 'Vraag een scan aan', includes: ['Analyse van je huidige processen en systemen', 'Concreet rapport met kansen, geschat rendement en risico\'s', 'Eén aanbevolen vervolgstap (Quick win, PoC of volledige implementatie)'] },
+    { name: 'Quick win', desc: 'Eén proces automatiseren', price: '€1.250', timeframe: '1 week', cta: 'Bespreek dit pakket', includes: ['Eén concreet proces geautomatiseerd', 'Koppeling met 1-2 bestaande systemen (standaard API — maatwerk-koppelingen apart besproken)', '30 dagen nazorg', '2 revisierondes inbegrepen', 'Overdracht en documentatie'] },
     { name: 'Proof of Concept', desc: 'De aanpak valideren', price: 'Op aanvraag', timeframe: '2-3 weken', cta: 'Bespreek dit pakket', includes: ['Prototype op jouw data', 'Eerste nauwkeurigheidscijfers', 'Integratieplan', 'Training van je team'] },
     { name: 'Volledige implementatie', desc: 'Live en opschalen', price: 'Op aanvraag', timeframe: '2-4 weken', cta: 'Bespreek dit pakket', includes: ['Productie-implementatie', 'Systeemintegratie', 'Doorlopende monitoring', '90 dagen support'] }
   ],
@@ -923,11 +924,11 @@ const copyNL = {
   faqLabel: 'Vragen',
   faqHeading: 'Veelgestelde vragen',
   faqs: [
-    { q: 'Wat kost een traject?', a: 'De prijs ligt per traject vooraf vast, maar hangt af van de scope. Een vrijblijvende kennismaking is gratis — daar bespreken we een concrete prijsindicatie voor jouw situatie, dus geen verrassingen achteraf.' },
+    { q: 'Wat kost een traject?', a: 'Voor Quick win en de AI-readiness scan geldt een vaste prijs, meteen te zien op deze pagina. Voor Proof of Concept en een volledige implementatie hangt de prijs af van de scope — die bepalen we samen in de gratis kennismaking, en pas daarna volgt een vaste prijs die niet meer verandert.' },
     { q: 'Hoe lang duurt een traject?', a: 'Een quick win duurt ongeveer 1 week, een proof of concept 2 tot 3 weken en een volledige implementatie 2 tot 4 weken. Bij een volledige implementatie volgt daarna nog 90 dagen support om te zorgen dat het systeem ook echt blijft werken.' },
     { q: 'Werken jullie met onze bestaande systemen?', a: 'Ja. Automatiseringen en applicaties worden gebouwd rond wat je al gebruikt: je CRM, ERP, database of interne tools. Geen noodzaak om over te stappen naar nieuwe software.' },
     { q: 'Is onze data veilig?', a: 'Data wordt verwerkt volgens de AVG en, waar relevant, de EU AI Act. Waar jouw sector dat vereist, gaat de voorkeur uit naar Europese of on-premise dataopslag.' },
-    { q: 'Voor wie is dit geschikt?', a: 'Voor mkb- en middelgrote bedrijven die AI concreet willen inzetten, niet alleen willen verkennen. Op zoek naar een adviestraject met een rapport als eindresultaat? Dan is dit niet de juiste plek: hier eindigt elk traject in een werkend systeem.' },
+    { q: 'Voor wie is dit geschikt?', a: 'Voor mkb- en middelgrote bedrijven die AI concreet willen inzetten, niet alleen willen verkennen. De AI-readiness scan levert bewust een schriftelijk rapport op als eerste stap; de pakketten daarna — Quick win, proof of concept, volledige implementatie — eindigen altijd in een werkend systeem.' },
     { q: 'Wat als het niet werkt zoals verwacht?', a: 'Een proof of concept is er juist op gericht om vooraf te bewijzen dat de aanpak werkt, voordat je committeert aan de volledige implementatie. Zo blijft het risico op een investering die niets oplevert beperkt.' }
   ],
 
@@ -1160,12 +1161,13 @@ const copyEN = {
     { iconClass: 'icon-git-branch', text: 'Built around your existing systems, no forced migration' }
   ],
 
-  pricingHeading: 'Pricing on request',
-  pricingSubtext: 'Fixed scope, fixed price, always discussed upfront. No surprises. Start small or build big.',
+  pricingHeading: 'Fixed price where we can, custom where we must',
+  pricingSubtext: 'Fixed scope, fixed price once we know the scope. Start small or build big.',
   pricingFullLink: 'View full pricing →',
   pricing: [
-    { name: 'Discovery Call', desc: 'Understand your opportunity', price: 'Free', timeframe: '30 minutes', cta: 'Book call', includes: ['AI readiness assessment', 'Identify high-ROI use cases', 'Realistic timeline & budget'] },
-    { name: 'Quick Win', desc: 'Automate one process', price: 'On request', timeframe: '1 week', cta: 'Discuss this package', includes: ['One concrete process automated', 'Connects to 1-2 existing systems', 'Handover and documentation'] },
+    { name: 'Discovery Call', desc: 'Understand your opportunity', price: 'Free', timeframe: '30 minutes', cta: 'Book call', includes: ['A first read on your AI opportunities', 'Identify high-ROI use cases', 'Realistic timeline & budget'] },
+    { name: 'AI Readiness Scan', desc: 'In-depth analysis with a written report', price: 'from €295', timeframe: '2-3 days', cta: 'Request a scan', includes: ['Analysis of your current processes and systems', 'Concrete report on opportunities, estimated ROI and risks', 'One recommended next step (Quick win, PoC or full implementation)'] },
+    { name: 'Quick Win', desc: 'Automate one process', price: '€1,250', timeframe: '1 week', cta: 'Discuss this package', includes: ['One concrete process automated', 'Connects to 1-2 existing systems (standard API — custom connectors discussed separately)', '30 days of aftercare', '2 revision rounds included', 'Handover and documentation'] },
     { name: 'Proof of Concept', desc: 'Validate the approach', price: 'On request', timeframe: '2-3 weeks', cta: 'Discuss this package', includes: ['Prototype on your data', 'Initial accuracy metrics', 'Integration plan', 'Team training'] },
     { name: 'Full Implementation', desc: 'Go live and scale', price: 'On request', timeframe: '2-4 weeks', cta: 'Discuss this package', includes: ['Production deployment', 'System integration', 'Ongoing monitoring', '90-day support'] }
   ],
@@ -1173,11 +1175,11 @@ const copyEN = {
   faqLabel: 'FAQ',
   faqHeading: 'Frequently asked questions',
   faqs: [
-    { q: 'What does an engagement cost?', a: 'Price is fixed per engagement upfront, but depends on scope. A no-obligation discovery call is free — that is where we discuss a concrete price indication for your situation, so no surprises later.' },
+    { q: 'What does an engagement cost?', a: 'Quick win and the AI readiness scan have a fixed price, shown right on this page. For a proof of concept or full implementation, price depends on scope — we determine that together in the free discovery call, and only then does a fixed price follow that will not change afterwards.' },
     { q: 'How long does an engagement take?', a: 'A quick win takes about 1 week, a proof of concept 2 to 3 weeks, a full implementation 2 to 4 weeks. A full implementation is followed by 90 days of support to make sure the system keeps working.' },
     { q: 'Do you work with our existing systems?', a: 'Yes. Automations and applications are built around what you already use: your CRM, ERP, database or internal tools. No need to switch to new software.' },
     { q: 'Is our data safe?', a: 'Data is processed in line with GDPR and, where relevant, the EU AI Act. Where your sector requires it, European or on-premise data storage is preferred.' },
-    { q: 'Who is this a good fit for?', a: 'Mid-market and scale-up companies that want to actually deploy AI, not just explore it. Looking for a consulting engagement that ends in a report? This is not the right fit: every engagement here ends in a working system.' },
+    { q: 'Who is this a good fit for?', a: 'Mid-market and scale-up companies that want to actually deploy AI, not just explore it. The AI readiness scan deliberately produces a written report as a first step; every package after that — Quick win, proof of concept, full implementation — always ends in a working system.' },
     { q: 'What if it does not work as expected?', a: 'A proof of concept exists specifically to prove the approach works before you commit to full implementation. That keeps the risk of an investment that delivers nothing to a minimum.' }
   ],
 
