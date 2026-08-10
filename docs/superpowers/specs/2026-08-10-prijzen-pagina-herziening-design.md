@@ -89,11 +89,25 @@ betaald de scope-informatie op die nu gratis wordt weggegeven.
   n8nWorkflows — hebben de garantie zelf ook niet in hun voorwaarden staan; dat is geen precedent
   om te volgen, maar wel reden om dit niet nu als "opgelost" te beschouwen. Los oppakken zodra er
   een echte voorwaarden-pagina komt.)
-- **Lanceeractie-badge:** kleine, duidelijk gelabelde badge op de kaart, bv.
-  *"🎉 Eerste 3 klanten: €795 i.p.v. €1.250, in ruil voor een naam-en-toestemming referentie"* —
-  lost het "onbewezen starter"-probleem eerlijk op (een tijdelijke, beargumenteerde
-  introductiekorting in ruil voor een concrete tegenprestatie) in plaats van permanent laag te
-  prijzen en daarmee structureel onder de kostprijs te werken.
+- **Pilotproject-badge (herzien concept):** géén aftellend "eerste 3 klanten"-aanbod (vereist
+  onderhoud, en oogt als zwaktebod — "wij hebben nog geen klanten"). In plaats daarvan gekoppeld
+  aan een claim die altijd waar is en niets over de markt of concurrentie beweert: niet "eerste in
+  de branche" (onwaar/niet checkbaar — AI wordt al breed gebruikt in vrijwel elke sector), maar
+  **eerste met Tessar** — een feit dat Tessar zelf controleert, zolang die specifieke sector nog
+  niet eerder is gedaan.
+
+  > **🧭 Pilotproject — €795** *(i.p.v. €1.250)*
+  >
+  > Nog niet eerder met Tessar in jouw sector gewerkt? Als pilotklant bouwen we samen de aanpak
+  > voor [sector] uit, tegen pilotprijs. In ruil delen we (met jouw akkoord) wat we hebben
+  > gebouwd als voorbeeld voor de volgende in jouw sector.
+
+  Werkt zonder onderhoud (geen teller om bij te werken/verwijderen — geldt gewoon zolang een
+  sector nog "nieuw" is voor Tessar), claimt niets over de markt, en sluit aan bij de bestaande
+  "Sectoren"-indeling in de site-navigatie. De klant krijgt een concrete pilotprijs in ruil voor
+  een referentie; geen van beide partijen "doet de ander een gunst" — het is een symmetrische
+  ruil (lagere instap voor de klant, casemateriaal voor Tessar), niet een korting omdat Tessar nog
+  geen klanten heeft.
 
 ### 5. Proof of Concept & Volledige implementatie: ongewijzigd
 
