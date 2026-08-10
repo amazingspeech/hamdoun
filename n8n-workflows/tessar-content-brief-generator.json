@@ -155,6 +155,22 @@
       "type": "n8n-nodes-base.code",
       "position": [2368, 700],
       "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "sendTo": "info@tessar.nl",
+        "subject": "=Content briefs - Tessar - {{ $now.toFormat(\"yyyy-MM-dd\") }}",
+        "message": "={{ $json.html }}",
+        "options": {
+          "appendAttribution": false,
+          "senderName": "Tessar Content Briefs"
+        }
+      },
+      "id": "a1b2c3d4-0001-4000-8000-000000000011",
+      "name": "Verstuur content briefs",
+      "type": "n8n-nodes-base.gmail",
+      "position": [2592, 700],
+      "typeVersion": 2.2
     }
   ],
   "pinData": {},
@@ -188,6 +204,9 @@
     },
     "Combineer branches": {
       "main": [[{ "node": "Sorteer en bouw e-mail", "type": "main", "index": 0 }]]
+    },
+    "Sorteer en bouw e-mail": {
+      "main": [[{ "node": "Verstuur content briefs", "type": "main", "index": 0 }]]
     }
   },
   "active": false,

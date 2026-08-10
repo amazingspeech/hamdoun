@@ -28,3 +28,14 @@ def assert_connection(wf, source, target, conn_type="main", target_index=0):
         f"connection '{source}' -> '{target}' has index {matches[0]['index']}, "
         f"expected {target_index}"
     )
+
+
+def assert_full_chain(wf, node_names_in_order):
+    """Every node in the list must be reachable from the trigger via `main` edges,
+    and every node in the workflow must appear in node_names_in_order (no orphans)."""
+    actual_names = {n["name"] for n in wf["nodes"]}
+    expected_names = set(node_names_in_order)
+    missing = expected_names - actual_names
+    extra = actual_names - expected_names
+    assert not missing, f"expected nodes missing from workflow: {missing}"
+    assert not extra, f"workflow has nodes not accounted for: {extra}"
