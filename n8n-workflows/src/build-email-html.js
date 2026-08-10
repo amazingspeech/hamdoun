@@ -27,7 +27,7 @@ function buildEmailHtml(items) {
     html += `<h2>${escapeHtml(brief.title)}</h2>`;
     html += `<p><strong>Keyword:</strong> ${escapeHtml(brief.keyword)}</p>`;
     html += `<p><strong>Meta-beschrijving:</strong> ${escapeHtml(brief.meta_description)}</p>`;
-    html += `<p><strong>Contenttype:</strong> ${escapeHtml(brief.content_type)}</p>`;
+    html += `<p><strong>Contenttype:</strong> ${escapeHtml(brief.content_type)} - ${escapeHtml(brief.content_type_reason)}</p>`;
     html += '<ul>';
     for (const section of brief.outline) {
       html += `<li><strong>${escapeHtml(section.heading)}</strong>: ${escapeHtml(section.guidance)}</li>`;

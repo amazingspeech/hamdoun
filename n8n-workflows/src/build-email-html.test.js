@@ -8,6 +8,7 @@ const items = [
       title: 'AI-telefonist voor het mkb: complete gids',
       meta_description: 'Alles over AI-telefonisten voor kleine bedrijven.',
       content_type: 'blogartikel',
+      content_type_reason: 'Informatief onderwerp waar mensen eerst over lezen voor ze kopen.',
       outline: [{ heading: 'Wat is een AI-telefonist?', guidance: 'Leg het begrip uit.' }],
       differentiation: 'Voicelabs focust op telefonie; Tessar kan breder mkb-verhaal benadrukken.',
       estimated_word_count: 1200,
@@ -21,6 +22,7 @@ const items = [
       title: 'AI-receptioniste: de complete oplossing voor mkb',
       meta_description: 'Ontdek hoe een AI-receptioniste jouw bedrijf helpt.',
       content_type: 'dienstenpagina',
+      content_type_reason: 'Keyword heeft koopintentie, dus een dienstenpagina converteert beter.',
       outline: [{ heading: 'Wat doet Tess?', guidance: 'Introduceer het product.' }],
       differentiation: 'Aanloop AI is generiek; Tessar kan dieper op mkb-integraties ingaan.',
       estimated_word_count: 900,
@@ -42,5 +44,9 @@ assert.ok(html.includes('bedrijfsprocessen automatiseren met AI'), 'mentions the
 assert.ok(html.includes('Nog geen data'), 'flags the no-data keyword clearly');
 assert.ok(html.includes('<h2>'), 'produces HTML, not markdown');
 assert.ok(!html.includes('<script'), 'no script tags');
+assert.ok(
+  html.includes('Informatief onderwerp waar mensen eerst over lezen voor ze kopen.'),
+  'renders the content_type_reason justification next to the content type'
+);
 
 console.log('OK: build-email-html tests passed');
