@@ -206,8 +206,6 @@ if (location.hostname === "amazingspeech.github.io") {
 
   .hero-cta-primary { position:relative; overflow:hidden; display:inline-block; background:linear-gradient(135deg, oklch(72% 0.15 210), oklch(62% 0.14 235)); color:#001a2e; padding:17px 38px; border-radius:8px; font-weight:700; font-size:0.9625rem; box-shadow:0 14px 36px rgba(0, 190, 255, 0.28), 0 1px 0 rgba(255,255,255,0.4) inset; transition:all 280ms ease; white-space:nowrap; }
   .hero-cta-primary:hover { transform:translateY(-3px); box-shadow:0 20px 52px rgba(0, 190, 255, 0.4), 0 1px 0 rgba(255,255,255,0.4) inset; }
-  .hero-cta-primary::after { content:''; position:absolute; top:0; left:-60%; width:40%; height:100%; background:linear-gradient(115deg, transparent, rgba(255,255,255,0.55), transparent); transform:skewX(-20deg); animation:ctaShine 3.4s ease-in-out infinite; }
-  @keyframes ctaShine { 0% { left:-60%; } 35%, 100% { left:130%; } }
 
   .hero-content { animation:heroContentIn 900ms cubic-bezier(0.16,1,0.3,1) both; }
   @keyframes heroContentIn { 0% { opacity:0; transform:translateY(18px); } 100% { opacity:1; transform:translateY(0); } }
@@ -235,7 +233,7 @@ if (location.hostname === "amazingspeech.github.io") {
     .hero-orb, .hero-mark { animation:none; }
     .hero-content { animation:none; }
     #back-to-top { transition:opacity 200ms ease; transform:none; }
-    .hero-badge-dot, .hero-cta-primary::after, .hero-scroll-cue, .grad-text { animation:none; }
+    .hero-badge-dot, .hero-scroll-cue, .grad-text { animation:none; }
   }
   .nav-toggle { display:none; background:none; border:none; cursor:pointer; padding:8px; flex-direction:column; gap:5px; margin-left:4px; }
   .nav-toggle span { display:block; width:22px; height:2px; background:var(--text); border-radius:2px; transition:transform 200ms ease, opacity 200ms ease; }
