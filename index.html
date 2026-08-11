@@ -1,10 +1,16 @@
 <!DOCTYPE html>
 <html lang="nl">
 <head>
+<script>(function(){try{var t=localStorage.getItem("tessar-theme");if(t==="dark"||t==="light"){document.documentElement.setAttribute("data-theme",t);}}catch(e){}})();</script>
 <meta charset="utf-8">
+<script>
+if (location.hostname === "amazingspeech.github.io") {
+  location.replace("https://tessar.nl" + location.pathname.replace(/^\/hamdoun/, "") + location.search + location.hash);
+}
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Tessar — Binnenkort online</title>
-<meta name="description" content="Tessar bouwt praktische AI-automatiseringen en AI-geïntegreerde applicaties voor het Nederlandse mkb. Onze nieuwe site is bijna klaar.">
+<title>Tessar — AI-implementatie & AI-geintegreerde applicaties voor het Nederlandse mkb</title>
+<meta name="description" content="Praktische AI-implementatie voor Nederlandse en Europese mkb-bedrijven. Wij bouwen AI-automatiseringen en AI-geintegreerde applicaties, gericht op meetbaar resultaat. Geen rapporten, wel werkende systemen.">
 <link rel="canonical" href="https://tessar.nl/">
 <meta name="theme-color" content="#0a0a0f">
 <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon-32.png">
@@ -13,197 +19,2077 @@
 
 <meta property="og:type" content="website">
 <meta property="og:locale" content="nl_NL">
+<meta property="og:locale:alternate" content="en_US">
 <meta property="og:url" content="https://tessar.nl/">
-<meta property="og:title" content="Tessar — Binnenkort online">
-<meta property="og:description" content="Praktische AI-implementatie voor Nederlandse en Europese mkb-bedrijven. Onze nieuwe site is bijna klaar.">
+<meta property="og:title" content="Tessar — AI-implementatie & AI-geintegreerde applicaties">
+<meta property="og:description" content="Praktische AI-implementatie voor Nederlandse en Europese mkb-bedrijven, gericht op meetbaar resultaat. Geen rapporten, wel werkende systemen.">
 <meta property="og:image" content="https://tessar.nl/Tessar-logo-symbol.png">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Tessar — Binnenkort online">
+<meta name="twitter:title" content="Tessar — AI-implementatie & AI-geintegreerde applicaties">
+<meta name="twitter:description" content="Praktische AI-implementatie voor Nederlandse en Europese mkb-bedrijven, gericht op meetbaar resultaat.">
 <meta name="twitter:image" content="https://tessar.nl/Tessar-logo-symbol.png">
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ProfessionalService",
+  "name": "Tessar",
+  "url": "https://tessar.nl/",
+  "description": "Hands-on AI implementation and AI-integrated application development for Dutch and European mid-market companies.",
+  "areaServed": ["NL", "Europe"],
+  "availableLanguage": ["nl", "en"],
+  "serviceType": ["AI Automation", "AI-Integrated Application Development"]
+}
+</script>
 
-<style>
-  :root {
-    --bg: oklch(14% 0.025 260);
-    --text: oklch(95% 0.01 250);
-    --text-dim: oklch(65% 0.02 250);
-    --accent: oklch(70% 0.14 220);
-    --border: oklch(30% 0.02 250 / 0.6);
-  }
-  * { box-sizing: border-box; }
-  html, body {
-    margin: 0; padding: 0; height: 100%;
-    background: var(--bg);
-  }
-  body {
-    font-family: 'IBM Plex Sans', -apple-system, 'Segoe UI', sans-serif;
-    color: var(--text);
-    line-height: 1.55;
-    -webkit-font-smoothing: antialiased;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    overflow-x: hidden;
-  }
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Wat kost een traject?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Voor Quick win en de AI-readiness scan geldt een vaste prijs, meteen te zien op deze pagina. Voor Proof of Concept en een volledige implementatie hangt de prijs af van de scope — die bepalen we samen in de gratis kennismaking, en pas daarna volgt een vaste prijs die niet meer verandert." }
+    },
+    {
+      "@type": "Question",
+      "name": "Hoe lang duurt een traject?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Een quick win duurt ongeveer 1 week, een proof of concept 2 tot 3 weken en een volledige implementatie 2 tot 4 weken. Bij een volledige implementatie volgt daarna nog 90 dagen support om te zorgen dat het systeem ook echt blijft werken." }
+    },
+    {
+      "@type": "Question",
+      "name": "Werken jullie met onze bestaande systemen?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Ja. Automatiseringen en applicaties worden gebouwd rond wat je al gebruikt: je CRM, ERP, database of interne tools. Geen noodzaak om over te stappen naar nieuwe software." }
+    },
+    {
+      "@type": "Question",
+      "name": "Is onze data veilig?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Data wordt verwerkt volgens de AVG en, waar relevant, de EU AI Act. Waar jouw sector dat vereist, gaat de voorkeur uit naar Europese of on-premise dataopslag." }
+    },
+    {
+      "@type": "Question",
+      "name": "Voor wie is dit geschikt?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Voor mkb- en middelgrote bedrijven die AI concreet willen inzetten, niet alleen willen verkennen. De AI-readiness scan levert bewust een schriftelijk rapport op als eerste stap; de pakketten daarna — Quick win, proof of concept, volledige implementatie — eindigen altijd in een werkend systeem." }
+    },
+    {
+      "@type": "Question",
+      "name": "Wat als het niet werkt zoals verwacht?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Een proof of concept is er juist op gericht om vooraf te bewijzen dat de aanpak werkt, voordat je committeert aan de volledige implementatie. Zo blijft het risico op een investering die niets oplevert beperkt." }
+    }
+  ]
+}
+</script>
 
-  .orb { position: absolute; border-radius: 50%; filter: blur(80px); pointer-events: none; z-index: 0; }
-  .orb-a { top: -140px; left: -100px; width: 460px; height: 460px; background: oklch(70% 0.14 220 / 0.22); animation: orbA 18s ease-in-out infinite; }
-  .orb-b { bottom: -180px; right: -80px; width: 520px; height: 520px; background: oklch(55% 0.15 200 / 0.16); animation: orbB 22s ease-in-out infinite; }
-  .orb-c { top: 35%; left: 55%; width: 340px; height: 340px; background: oklch(60% 0.12 230 / 0.12); animation: orbC 26s ease-in-out infinite; }
-  @keyframes orbA { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(40px,30px) scale(1.12); } }
-  @keyframes orbB { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(-30px,-40px) scale(1.08); } }
-  @keyframes orbC { 0%,100% { transform: translate(-50%,0) scale(1); } 50% { transform: translate(-50%,-25px) scale(1.15); } }
-
-  .grain {
-    position: absolute; inset: 0; opacity: 0.05; mix-blend-mode: overlay; pointer-events: none; z-index: 0;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  }
-
-  main {
-    position: relative; z-index: 1;
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 40px clamp(20px, 6vw, 56px) 60px;
-  }
-  .content { max-width: 640px; text-align: center; }
-
-  .logo-hero {
-    height: clamp(84px, 13vw, 128px);
-    width: auto;
-    display: block;
-    margin: 0 auto 18px;
-    filter: drop-shadow(0 0 42px oklch(70% 0.14 220 / 0.4));
-    animation: heroMarkFloat 12s ease-in-out infinite;
-  }
-  @keyframes heroMarkFloat { 0%,100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-10px) rotate(3deg); } }
-  .logo-word-lg {
-    display: block;
-    font: 700 1.4375rem/1 'IBM Plex Sans', sans-serif;
-    letter-spacing: -0.015em;
-    color: var(--text);
-    margin-bottom: 40px;
-  }
-
-  .badge {
-    display: inline-flex; align-items: center; gap: 9px;
-    background: oklch(70% 0.14 220 / 0.12);
-    border: 1px solid oklch(70% 0.14 220 / 0.35);
-    backdrop-filter: blur(8px);
-    padding: 9px 18px 9px 14px;
-    border-radius: 24px;
-    margin-bottom: 32px;
-    font: 600 0.8125rem/1 'IBM Plex Mono', monospace;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: oklch(78% 0.12 220);
-  }
-  .badge-dot {
-    width: 6px; height: 6px; border-radius: 50%;
-    background: oklch(75% 0.16 200);
-    box-shadow: 0 0 0 0 oklch(75% 0.16 200 / 0.6);
-    flex-shrink: 0;
-    animation: pulse 2.2s ease-out infinite;
-  }
-  @keyframes pulse {
-    0% { box-shadow: 0 0 0 0 oklch(75% 0.16 200 / 0.55); }
-    70% { box-shadow: 0 0 0 10px oklch(75% 0.16 200 / 0); }
-    100% { box-shadow: 0 0 0 0 oklch(75% 0.16 200 / 0); }
-  }
-
-  h1 {
-    font-size: clamp(2.1rem, 5.5vw, 3.4rem);
-    font-weight: 700;
-    letter-spacing: -0.02em;
-    line-height: 1.12;
-    margin: 0 0 22px;
-  }
-  .grad-text {
-    background: linear-gradient(135deg, oklch(80% 0.14 200), oklch(74% 0.17 230) 55%, oklch(78% 0.15 190));
-    background-size: 200% auto;
-    -webkit-background-clip: text; background-clip: text;
-    color: transparent;
-    animation: gradShift 6s ease-in-out infinite;
-  }
-  @keyframes gradShift { 0%,100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
-
-  p.lead {
-    font-size: clamp(1rem, 1.6vw, 1.1875rem);
-    color: var(--text-dim);
-    margin: 0 auto 40px;
-    max-width: 520px;
-  }
-
-  .cta-row {
-    display: flex; align-items: center; justify-content: center; gap: 16px;
-    flex-wrap: wrap;
-  }
-  .btn-primary {
-    display: inline-flex; align-items: center; gap: 10px;
-    background: linear-gradient(135deg, oklch(72% 0.15 210), oklch(62% 0.14 235));
-    color: #001a2e;
-    font-weight: 600;
-    font-size: 0.9375rem;
-    padding: 13px 26px;
-    border-radius: 12px;
-    text-decoration: none;
-    box-shadow: 0 12px 32px -10px oklch(70% 0.14 220 / 0.55);
-    transition: transform 180ms ease, box-shadow 180ms ease;
-  }
-  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 16px 36px -8px oklch(70% 0.14 220 / 0.65); }
-  .btn-secondary {
-    display: inline-flex; align-items: center;
-    color: var(--text-dim);
-    font-size: 0.9375rem;
-    font-weight: 500;
-    padding: 13px 8px;
-    text-decoration: none;
-    border-bottom: 1px solid transparent;
-    transition: color 180ms ease, border-color 180ms ease;
-  }
-  .btn-secondary:hover { color: var(--text); border-color: var(--border); }
-
-  footer {
-    position: relative; z-index: 1;
-    text-align: center;
-    padding: 24px 20px 32px;
-    font-size: 0.8125rem;
-    color: oklch(55% 0.015 250);
-  }
-
-  @media (max-width: 480px) {
-    .cta-row { flex-direction: column; }
-    .btn-primary, .btn-secondary { width: 100%; justify-content: center; }
-  }
-</style>
+<script src="./support.js"></script>
 </head>
 <body>
-<div class="orb orb-a"></div>
-<div class="orb orb-b"></div>
-<div class="orb orb-c"></div>
-<div class="grain"></div>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    color-scheme: light dark;
+    --bg: oklch(98% 0.004 90);
+    --surface: #fff;
+    --text: oklch(18% 0.02 255);
+    --text-muted: oklch(46% 0.012 140);
+    --text-muted-2: oklch(55% 0.012 140);
+    --border: oklch(90% 0.006 90);
+    --accent-text: oklch(48% 0.12 230);
+    --surface-inset: oklch(99% 0.003 90);
+    /* page-local: "before/after" comparison cards (herkenbaar section) */
+    --danger-bg: oklch(98% 0.01 25);
+    --danger-border: oklch(88% 0.03 30);
+    --danger-text: oklch(30% 0.02 30);
+    --danger-accent: oklch(52% 0.15 30);
+    --success-bg: oklch(98% 0.02 165);
+    --success-border: oklch(85% 0.05 165);
+    --success-text: oklch(22% 0.02 165);
+    --success-accent: oklch(45% 0.14 165);
+  }
+  :root[data-theme="light"] { color-scheme: light; }
+  :root[data-theme="dark"] { color-scheme: dark; }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: oklch(14% 0.016 260);
+      --surface: oklch(19% 0.016 260);
+      --text: oklch(95% 0.006 90);
+      --text-muted: oklch(72% 0.014 140);
+      --text-muted-2: oklch(60% 0.014 140);
+      --danger-bg: oklch(22% 0.05 25);
+      --danger-border: oklch(32% 0.08 30);
+      --danger-text: oklch(85% 0.03 30);
+      --danger-accent: oklch(72% 0.16 30);
+      --success-bg: oklch(20% 0.04 165);
+      --success-border: oklch(30% 0.07 165);
+      --success-text: oklch(85% 0.03 165);
+      --success-accent: oklch(68% 0.15 165);
+      --border: oklch(28% 0.014 260);
+      --accent-text: oklch(66% 0.13 226);
+      --surface-inset: oklch(25% 0.018 260);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: oklch(14% 0.016 260);
+    --surface: oklch(19% 0.016 260);
+    --text: oklch(95% 0.006 90);
+    --text-muted: oklch(72% 0.014 140);
+    --text-muted-2: oklch(60% 0.014 140);
+    --border: oklch(28% 0.014 260);
+    --accent-text: oklch(66% 0.13 226);
+    --surface-inset: oklch(25% 0.018 260);
+    --danger-bg: oklch(22% 0.05 25);
+    --danger-border: oklch(32% 0.08 30);
+    --danger-text: oklch(85% 0.03 30);
+    --danger-accent: oklch(72% 0.16 30);
+    --success-bg: oklch(20% 0.04 165);
+    --success-border: oklch(30% 0.07 165);
+    --success-text: oklch(85% 0.03 165);
+    --success-accent: oklch(68% 0.15 165);
+  }
+  body { transition:background-color 200ms ease, color 200ms ease; }
+  .theme-toggle { display:inline-flex; align-items:center; justify-content:center; width:38px; height:38px; border-radius:50%; border:1px solid var(--border); background:var(--surface); color:var(--text); cursor:pointer; transition:background-color 200ms ease, border-color 200ms ease, transform 200ms ease; flex-shrink:0; }
+  .theme-toggle:hover { border-color:var(--accent-text); transform:translateY(-1px); }
+  .theme-toggle svg { display:block; }
+  .theme-toggle .icon-moon { display:none; }
+  :root[data-theme="dark"] .theme-toggle .icon-sun { display:none; }
+  :root[data-theme="dark"] .theme-toggle .icon-moon { display:block; }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .theme-toggle .icon-sun { display:none; }
+    :root:not([data-theme="light"]) .theme-toggle .icon-moon { display:block; }
+  }
+  html, body { margin:0; padding:0; background:var(--bg); }
+  html { scroll-behavior:smooth; }
+  body { font-family:'IBM Plex Sans', -apple-system, 'Segoe UI', sans-serif; color:var(--text); line-height:1.55; -webkit-font-smoothing:antialiased; }
+  a { color:var(--text); text-decoration:none; }
+  a:hover { color:var(--accent-text); }
+  [data-reveal] { opacity:0; transform:translateY(18px); transition:opacity 600ms ease, transform 600ms ease; }
+  [data-reveal].is-visible { opacity:1; transform:translateY(0); }
+  [data-reveal-grid] > [data-reveal]:nth-child(1) { transition-delay:0ms; }
+  [data-reveal-grid] > [data-reveal]:nth-child(2) { transition-delay:90ms; }
+  [data-reveal-grid] > [data-reveal]:nth-child(3) { transition-delay:180ms; }
+  [data-reveal-grid] > [data-reveal]:nth-child(4) { transition-delay:270ms; }
+  .hero-orb { position:absolute; border-radius:50%; filter:blur(70px); pointer-events:none; }
+  .hero-orb-a { top:-120px; left:-80px; width:420px; height:420px; background:oklch(70% 0.14 220 / 0.22); animation:heroOrbA 16s ease-in-out infinite; }
+  .hero-orb-b { bottom:-160px; right:-60px; width:480px; height:480px; background:oklch(55% 0.15 200 / 0.16); animation:heroOrbB 20s ease-in-out infinite; }
+  .hero-orb-c { top:30%; left:50%; width:320px; height:320px; background:oklch(60% 0.12 230 / 0.12); animation:heroOrbC 24s ease-in-out infinite; }
+  @keyframes heroOrbA { 0%,100% { transform:translate(0,0) scale(1); } 50% { transform:translate(40px,30px) scale(1.12); } }
+  @keyframes heroOrbB { 0%,100% { transform:translate(0,0) scale(1); } 50% { transform:translate(-30px,-40px) scale(1.08); } }
+  @keyframes heroOrbC { 0%,100% { transform:translate(-50%,0) scale(1); } 50% { transform:translate(-50%,-25px) scale(1.15); } }
+  .hero-mark { animation:heroMarkFloat 12s ease-in-out infinite; }
+  @keyframes heroMarkFloat { 0%,100% { transform:translateY(0) rotate(0deg); } 50% { transform:translateY(-14px) rotate(4deg); } }
+  #hero-canvas { position:absolute; inset:0; width:100%; height:100%; opacity:1; }
 
-<main>
-  <div class="content">
-    <img class="logo-hero" src="./assets/tessar-icon.png" alt="Tessar" width="380" height="380">
-    <span class="logo-word-lg">Tessar</span>
-    <span class="badge"><span class="badge-dot"></span>Binnenkort online</span>
-    <h1>We bouwen aan <span class="grad-text">iets nieuws</span>.</h1>
-    <p class="lead">Tessar bouwt praktische AI-automatiseringen en AI-geïntegreerde applicaties voor het Nederlandse mkb. Onze vernieuwde site is bijna klaar — kom snel terug.</p>
-    <div class="cta-row">
-      <a class="btn-primary" href="mailto:info@tessar.nl">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="m4 6 8 7 8-7"/></svg>
-        Neem contact op
-      </a>
+  .hero-grain { position:absolute; inset:0; opacity:0.05; mix-blend-mode:overlay; pointer-events:none; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+
+  .grad-text { background:linear-gradient(135deg, oklch(80% 0.14 200), oklch(74% 0.17 230) 55%, oklch(78% 0.15 190)); background-size:200% auto; -webkit-background-clip:text; background-clip:text; color:transparent; animation:gradShift 6s ease-in-out infinite; }
+  @keyframes gradShift { 0%,100% { background-position:0% 50%; } 50% { background-position:100% 50%; } }
+
+  .hero-badge { display:inline-flex; align-items:center; gap:9px; background:oklch(70% 0.14 220 / 0.12); border:1px solid oklch(70% 0.14 220 / 0.35); backdrop-filter:blur(8px); padding:9px 18px 9px 14px; border-radius:24px; margin-bottom:30px; font:600 0.8125rem/1 'IBM Plex Mono'; letter-spacing:0.06em; text-transform:uppercase; color:oklch(78% 0.12 220); box-shadow:0 1px 0 oklch(100% 0 0 / 0.06) inset; }
+  .hero-badge-dot { width:6px; height:6px; border-radius:50%; background:oklch(75% 0.16 200); box-shadow:0 0 0 0 oklch(75% 0.16 200 / 0.6); flex-shrink:0; animation:badgePulse 2.2s ease-out infinite; }
+  @keyframes badgePulse { 0% { box-shadow:0 0 0 0 oklch(75% 0.16 200 / 0.55); } 70% { box-shadow:0 0 0 7px oklch(75% 0.16 200 / 0); } 100% { box-shadow:0 0 0 0 oklch(75% 0.16 200 / 0); } }
+
+  .hero-trust-pill { display:flex; align-items:center; gap:8px; background:oklch(100% 0 0 / 0.05); border:1px solid oklch(100% 0 0 / 0.1); backdrop-filter:blur(6px); padding:8px 16px; border-radius:20px; font:500 0.8125rem/1 'IBM Plex Sans'; color:oklch(82% 0.06 250); }
+  .hero-trust-pill .hero-badge-dot { background:oklch(70% 0.14 220); animation:none; box-shadow:none; }
+
+  .hero-cta-primary { position:relative; overflow:hidden; display:inline-block; background:linear-gradient(135deg, oklch(72% 0.15 210), oklch(62% 0.14 235)); color:#001a2e; padding:17px 38px; border-radius:8px; font-weight:700; font-size:0.9625rem; box-shadow:0 14px 36px rgba(0, 190, 255, 0.28), 0 1px 0 rgba(255,255,255,0.4) inset; transition:all 280ms ease; white-space:nowrap; }
+  .hero-cta-primary:hover { transform:translateY(-3px); box-shadow:0 20px 52px rgba(0, 190, 255, 0.4), 0 1px 0 rgba(255,255,255,0.4) inset; }
+  .hero-cta-primary::after { content:''; position:absolute; top:0; left:-60%; width:40%; height:100%; background:linear-gradient(115deg, transparent, rgba(255,255,255,0.55), transparent); transform:skewX(-20deg); animation:ctaShine 3.4s ease-in-out infinite; }
+  @keyframes ctaShine { 0% { left:-60%; } 35%, 100% { left:130%; } }
+
+  .hero-content { animation:heroContentIn 900ms cubic-bezier(0.16,1,0.3,1) both; }
+  @keyframes heroContentIn { 0% { opacity:0; transform:translateY(18px); } 100% { opacity:1; transform:translateY(0); } }
+
+  .hero-scroll-cue { position:absolute; left:50%; bottom:22px; transform:translateX(-50%); z-index:1; opacity:0.55; animation:scrollCue 2.2s ease-in-out infinite; }
+  .hero-scroll-cue .icon { width:20px; height:20px; color:oklch(75% 0.10 250); }
+  @keyframes scrollCue { 0%,100% { transform:translate(-50%,0); opacity:0.35; } 50% { transform:translate(-50%,7px); opacity:0.7; } }
+
+  .hero-node-bubble { position:absolute; left:0; top:0; transform:translate(-50%,-100%) scale(0.92); display:flex; align-items:center; gap:7px; background:oklch(20% 0.03 260 / 0.82); border:1px solid rgba(30,140,255,0.4); backdrop-filter:blur(8px); padding:7px 13px; border-radius:8px; font:600 0.75rem/1 'IBM Plex Mono'; letter-spacing:0.02em; color:#fff; white-space:nowrap; opacity:0; pointer-events:none; z-index:2; transition:opacity 450ms ease, transform 450ms cubic-bezier(0.16,1,0.3,1); box-shadow:0 8px 24px rgba(0,0,0,0.35); }
+  .hero-node-bubble.is-visible { opacity:1; transform:translate(-50%,-118%) scale(1); }
+  .hero-node-bubble-dot { width:6px; height:6px; border-radius:50%; background:rgb(30,140,255); box-shadow:0 0 8px rgba(30,140,255,0.85); flex-shrink:0; }
+
+  /* Sits left of the fixed Tess concierge launcher (60px circle at bottom:24px/right:24px, see
+     tessar-concierge-widget.js), same row, so it never collides with the launcher or its hint bubble
+     (which pops up above the launcher, not beside it). */
+  #back-to-top { position:fixed; right:100px; bottom:24px; z-index:40; width:48px; height:48px; border-radius:50%; border:none; background:oklch(70% 0.14 220); color:#001a2e; display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:0 8px 24px oklch(20% 0.02 255 / 0.25); opacity:0; transform:translateY(12px); pointer-events:none; transition:opacity 260ms ease, transform 260ms ease, box-shadow 200ms ease; }
+  #back-to-top.is-visible { opacity:1; transform:translateY(0); pointer-events:auto; }
+  #back-to-top:hover { transform:translateY(-3px); box-shadow:0 12px 32px rgba(0,212,255,0.35); }
+  #back-to-top:focus-visible { outline:2px solid var(--accent-text); outline-offset:3px; }
+  @media (max-width: 480px) { #back-to-top { right:92px; bottom:16px; } }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-reveal] { opacity:1; transform:none; transition:none; }
+    html { scroll-behavior:auto; }
+    .hero-orb, .hero-mark { animation:none; }
+    .hero-content { animation:none; }
+    #back-to-top { transition:opacity 200ms ease; transform:none; }
+    .hero-badge-dot, .hero-cta-primary::after, .hero-scroll-cue, .grad-text { animation:none; }
+  }
+  .nav-toggle { display:none; background:none; border:none; cursor:pointer; padding:8px; flex-direction:column; gap:5px; margin-left:4px; }
+  .nav-toggle span { display:block; width:22px; height:2px; background:var(--text); border-radius:2px; transition:transform 200ms ease, opacity 200ms ease; }
+  .nav-mobile-panel { display:none; }
+  @media (max-width: 960px) {
+    .nav-link { display:none; }
+    .nav-toggle { display:flex; }
+    .nav-mobile-panel { display:none; flex-direction:column; padding:8px 20px 20px; background:var(--bg); border-top:1px solid var(--border); }
+    .nav-mobile-panel.nav-open { display:flex; }
+    .nav-mobile-panel a { display:block; padding:14px 0; font:500 1rem/1.3 'IBM Plex Sans'; color:var(--text); border-bottom:1px solid var(--border); }
+    .nav-mobile-panel a:last-child { border-bottom:none; margin-top:8px; }
+    .nav-mobile-panel .nav-mobile-lang { display:flex; gap:8px; padding:14px 0; border-bottom:1px solid var(--border); }
+    .nav-mobile-panel .nav-mobile-lang button { border:1px solid oklch(85% 0.02 250); background:var(--surface); padding:8px 16px; border-radius:6px; font:600 0.8125rem/1 'IBM Plex Mono'; cursor:pointer; }
+    .nav-toggle.nav-toggle-active span:nth-child(1) { transform:translateY(7px) rotate(45deg); }
+    .nav-toggle.nav-toggle-active span:nth-child(2) { opacity:0; }
+    .nav-toggle.nav-toggle-active span:nth-child(3) { transform:translateY(-7px) rotate(-45deg); }
+  }
+  .svc-card { display:grid; grid-template-columns:minmax(160px,220px) 1fr; }
+  @media (max-width: 720px) { .svc-card { grid-template-columns:1fr; } }
+  .stack-row { grid-template-columns:repeat(2,1fr) !important; max-width:700px; margin-left:auto; margin-right:auto; }
+  .process-grid { grid-template-columns:repeat(4,1fr) !important; }
+  @media (max-width: 900px) { .process-grid { grid-template-columns:repeat(2,1fr) !important; } }
+  @media (max-width: 700px) {
+    .about-grid { grid-template-columns:1fr !important; }
+    .stack-row { grid-template-columns:1fr !important; gap:10px !important; max-width:none; }
+  }
+  @media (max-width: 480px) { .process-grid { grid-template-columns:1fr !important; } }
+  .faq-item[open] .faq-chevron { transform:rotate(180deg); }
+  .faq-item summary::-webkit-details-marker { display:none; }
+  .faq-item summary { list-style:none; cursor:pointer; }
+
+  .flow-row { display:flex; align-items:flex-start; justify-content:center; flex-wrap:wrap; }
+  .flow-node { position:relative; display:flex; flex-direction:column; align-items:center; gap:8px; width:88px; }
+  .flow-node:not(:last-child) { margin-right:40px; }
+  .flow-node:not(:last-child)::after { content:''; position:absolute; top:25px; left:100%; width:40px; height:2px; background:linear-gradient(90deg, oklch(75% 0.05 230), oklch(90% 0.02 230)); }
+  .flow-node:not(:last-child)::before { content:''; position:absolute; top:22px; left:100%; width:6px; height:6px; border-radius:50%; background:oklch(60% 0.16 220); box-shadow:0 0 8px oklch(60% 0.16 220 / 0.7); animation:flowDot 2.2s linear infinite; opacity:0; }
+  .flow-node:nth-child(1)::before { animation-delay:0s; }
+  .flow-node:nth-child(2)::before { animation-delay:0.44s; }
+  .flow-node:nth-child(3)::before { animation-delay:0.88s; }
+  .flow-node:nth-child(4)::before { animation-delay:1.32s; }
+  .flow-node-icon { width:52px; height:52px; border-radius:50%; background:oklch(96% 0.01 230); border:1px solid oklch(85% 0.03 230); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .flow-node-icon .icon { width:22px; height:22px; color:var(--accent-text); }
+  .flow-node-label { font:600 0.75rem/1.2 'IBM Plex Mono'; color:oklch(40% 0.02 250); text-align:center; }
+  @media (max-width: 700px) {
+    .flow-node { width:58px; }
+    .flow-node:not(:last-child) { margin-right:14px; }
+    .flow-node:not(:last-child)::after { width:14px; }
+    .flow-node-icon { width:40px; height:40px; }
+    .flow-node-icon .icon { width:17px; height:17px; }
+    .flow-node-label { font-size:0.6875rem; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .flow-node::before { animation:none !important; opacity:0.6 !important; }
+  }
+  @keyframes flowDot { 0%, 8% { opacity:0; transform:translateX(0); } 20% { opacity:1; } 80% { opacity:1; } 92%, 100% { opacity:0; transform:translateX(40px); } }
+  @media (max-width: 700px) {
+    @keyframes flowDot { 0%, 8% { opacity:0; transform:translateX(0); } 20% { opacity:1; } 80% { opacity:1; } 92%, 100% { opacity:0; transform:translateX(14px); } }
+  }
+
+  .icon { display:inline-block; width:1em; height:1em; background-color:currentColor; -webkit-mask-repeat:no-repeat; mask-repeat:no-repeat; -webkit-mask-position:center; mask-position:center; -webkit-mask-size:contain; mask-size:contain; flex-shrink:0; }
+.icon-zap { -webkit-mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-zap' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Cpath d='M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z' /%3E%3C/svg%3E"); mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-zap' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Cpath d='M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z' /%3E%3C/svg%3E"); }
+.icon-puzzle { -webkit-mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-puzzle' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Cpath d='M15.39 4.39a1 1 0 0 0 1.68-.474 2.5 2.5 0 1 1 3.014 3.015 1 1 0 0 0-.474 1.68l1.683 1.682a2.414 2.414 0 0 1 0 3.414L19.61 15.39a1 1 0 0 1-1.68-.474 2.5 2.5 0 1 0-3.014 3.015 1 1 0 0 1 .474 1.68l-1.683 1.682a2.414 2.414 0 0 1-3.414 0L8.61 19.61a1 1 0 0 0-1.68.474 2.5 2.5 0 1 1-3.014-3.015 1 1 0 0 0 .474-1.68l-1.683-1.682a2.414 2.414 0 0 1 0-3.414L4.39 8.61a1 1 0 0 1 1.68.474 2.5 2.5 0 1 0 3.014-3.015 1 1 0 0 1-.474-1.68l1.683-1.682a2.414 2.414 0 0 1 3.414 0z' /%3E%3C/svg%3E"); mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-puzzle' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Cpath d='M15.39 4.39a1 1 0 0 0 1.68-.474 2.5 2.5 0 1 1 3.014 3.015 1 1 0 0 0-.474 1.68l1.683 1.682a2.414 2.414 0 0 1 0 3.414L19.61 15.39a1 1 0 0 1-1.68-.474 2.5 2.5 0 1 0-3.014 3.015 1 1 0 0 1 .474 1.68l-1.683 1.682a2.414 2.414 0 0 1-3.414 0L8.61 19.61a1 1 0 0 0-1.68.474 2.5 2.5 0 1 1-3.014-3.015 1 1 0 0 0 .474-1.68l-1.683-1.682a2.414 2.414 0 0 1 0-3.414L4.39 8.61a1 1 0 0 1 1.68.474 2.5 2.5 0 1 0 3.014-3.015 1 1 0 0 1-.474-1.68l1.683-1.682a2.414 2.414 0 0 1 3.414 0z' /%3E%3C/svg%3E"); }
+.icon-landmark { -webkit-mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-landmark' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Cpath d='M10 18v-7' /%3E%3Cpath d='M11.119 2.205a2 2 0 0 1 1.762 0l7.84 3.846A.5.5 0 0 1 20.5 7h-17a.5.5 0 0 1-.22-.949z' /%3E%3Cpath d='M14 18v-7' /%3E%3Cpath d='M18 18v-7' /%3E%3Cpath d='M3 22h18' /%3E%3Cpath d='M6 18v-7' /%3E%3C/svg%3E"); mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-landmark' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Cpath d='M10 18v-7' /%3E%3Cpath d='M11.119 2.205a2 2 0 0 1 1.762 0l7.84 3.846A.5.5 0 0 1 20.5 7h-17a.5.5 0 0 1-.22-.949z' /%3E%3Cpath d='M14 18v-7' /%3E%3Cpath d='M18 18v-7' /%3E%3Cpath d='M3 22h18' /%3E%3Cpath d='M6 18v-7' /%3E%3C/svg%3E"); }
+.icon-settings-2 { -webkit-mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-settings-2' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Cpath d='M14 17H5' /%3E%3Cpath d='M19 7h-9' /%3E%3Ccircle cx='17' cy='17' r='3' /%3E%3Ccircle cx='7' cy='7' r='3' /%3E%3C/svg%3E"); mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-settings-2' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Cpath d='M14 17H5' /%3E%3Cpath d='M19 7h-9' /%3E%3Ccircle cx='17' cy='17' r='3' /%3E%3Ccircle cx='7' cy='7' r='3' /%3E%3C/svg%3E"); }
+.icon-store { -webkit-mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-store' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Cpath d='M15 21v-5a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v5' /%3E%3Cpath d='M17.774 10.31a1.12 1.12 0 0 0-1.549 0 2.5 2.5 0 0 1-3.451 0 1.12 1.12 0 0 0-1.548 0 2.5 2.5 0 0 1-3.452 0 1.12 1.12 0 0 0-1.549 0 2.5 2.5 0 0 1-3.77-3.248l2.889-4.184A2 2 0 0 1 7 2h10a2 2 0 0 1 1.653.873l2.895 4.192a2.5 2.5 0 0 1-3.774 3.244' /%3E%3Cpath d='M4 10.95V19a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8.05' /%3E%3C/svg%3E"); mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-store' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Cpath d='M15 21v-5a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v5' /%3E%3Cpath d='M17.774 10.31a1.12 1.12 0 0 0-1.549 0 2.5 2.5 0 0 1-3.451 0 1.12 1.12 0 0 0-1.548 0 2.5 2.5 0 0 1-3.452 0 1.12 1.12 0 0 0-1.549 0 2.5 2.5 0 0 1-3.77-3.248l2.889-4.184A2 2 0 0 1 7 2h10a2 2 0 0 1 1.653.873l2.895 4.192a2.5 2.5 0 0 1-3.774 3.244' /%3E%3Cpath d='M4 10.95V19a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8.05' /%3E%3C/svg%3E"); }
+.icon-users-round { -webkit-mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-users-round' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Cpath d='M18 21a8 8 0 0 0-16 0' /%3E%3Ccircle cx='10' cy='8' r='5' /%3E%3Cpath d='M22 20c0-3.37-2-6.5-4-8a5 5 0 0 0-.45-8.3' /%3E%3C/svg%3E"); mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-users-round' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Cpath d='M18 21a8 8 0 0 0-16 0' /%3E%3Ccircle cx='10' cy='8' r='5' /%3E%3Cpath d='M22 20c0-3.37-2-6.5-4-8a5 5 0 0 0-.45-8.3' /%3E%3C/svg%3E"); }
+.icon-shield-check { -webkit-mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-shield-check' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Cpath d='M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z' /%3E%3Cpath d='m9 12 2 2 4-4' /%3E%3C/svg%3E"); mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-shield-check' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Cpath d='M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z' /%3E%3Cpath d='m9 12 2 2 4-4' /%3E%3C/svg%3E"); }
+.icon-help-circle { -webkit-mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-help-circle' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Ccircle cx='12' cy='12' r='10' /%3E%3Cpath d='M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3' /%3E%3Cpath d='M12 17h.01' /%3E%3C/svg%3E"); mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-help-circle' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Ccircle cx='12' cy='12' r='10' /%3E%3Cpath d='M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3' /%3E%3Cpath d='M12 17h.01' /%3E%3C/svg%3E"); }
+.icon-layers { -webkit-mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-layers' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Cpath d='M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83z' /%3E%3Cpath d='M2 12a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 12' /%3E%3Cpath d='M2 17a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 17' /%3E%3C/svg%3E"); mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-layers' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Cpath d='M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83z' /%3E%3Cpath d='M2 12a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 12' /%3E%3Cpath d='M2 17a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 17' /%3E%3C/svg%3E"); }
+.icon-network { -webkit-mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-network' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Crect x='16' y='16' width='6' height='6' rx='1' /%3E%3Crect x='2' y='16' width='6' height='6' rx='1' /%3E%3Crect x='9' y='2' width='6' height='6' rx='1' /%3E%3Cpath d='M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3' /%3E%3Cpath d='M12 12V8' /%3E%3C/svg%3E"); mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-network' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Crect x='16' y='16' width='6' height='6' rx='1' /%3E%3Crect x='2' y='16' width='6' height='6' rx='1' /%3E%3Crect x='9' y='2' width='6' height='6' rx='1' /%3E%3Cpath d='M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3' /%3E%3Cpath d='M12 12V8' /%3E%3C/svg%3E"); }
+.icon-database { -webkit-mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-database' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Cellipse cx='12' cy='5' rx='9' ry='3' /%3E%3Cpath d='M3 5V19A9 3 0 0 0 21 19V5' /%3E%3Cpath d='M3 12A9 3 0 0 0 21 12' /%3E%3C/svg%3E"); mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-database' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Cellipse cx='12' cy='5' rx='9' ry='3' /%3E%3Cpath d='M3 5V19A9 3 0 0 0 21 19V5' /%3E%3Cpath d='M3 12A9 3 0 0 0 21 12' /%3E%3C/svg%3E"); }
+.icon-code-2 { -webkit-mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-code-2' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Cpath d='m18 16 4-4-4-4' /%3E%3Cpath d='m6 8-4 4 4 4' /%3E%3Cpath d='m14.5 4-5 16' /%3E%3C/svg%3E"); mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-code-2' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Cpath d='m18 16 4-4-4-4' /%3E%3Cpath d='m6 8-4 4 4 4' /%3E%3Cpath d='m14.5 4-5 16' /%3E%3C/svg%3E"); }
+.icon-message-square { -webkit-mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-message-square' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Cpath d='M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z' /%3E%3C/svg%3E"); mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-message-square' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Cpath d='M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z' /%3E%3C/svg%3E"); }
+.icon-trending-up { -webkit-mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-trending-up' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Cpath d='M16 7h6v6' /%3E%3Cpath d='m22 7-8.5 8.5-5-5L2 17' /%3E%3C/svg%3E"); mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-trending-up' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Cpath d='M16 7h6v6' /%3E%3Cpath d='m22 7-8.5 8.5-5-5L2 17' /%3E%3C/svg%3E"); }
+.icon-check { -webkit-mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-check' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Cpath d='M20 6 9 17l-5-5' /%3E%3C/svg%3E"); mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-check' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Cpath d='M20 6 9 17l-5-5' /%3E%3C/svg%3E"); }
+.icon-x { -webkit-mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-x' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Cpath d='M18 6 6 18' /%3E%3Cpath d='m6 6 12 12' /%3E%3C/svg%3E"); mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-x' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Cpath d='M18 6 6 18' /%3E%3Cpath d='m6 6 12 12' /%3E%3C/svg%3E"); }
+.icon-mail { -webkit-mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-mail' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Cpath d='m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7' /%3E%3Crect x='2' y='4' width='20' height='16' rx='2' /%3E%3C/svg%3E"); mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-mail' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Cpath d='m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7' /%3E%3Crect x='2' y='4' width='20' height='16' rx='2' /%3E%3C/svg%3E"); }
+.icon-map-pin { -webkit-mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-map-pin' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Cpath d='M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0' /%3E%3Ccircle cx='12' cy='10' r='3' /%3E%3C/svg%3E"); mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-map-pin' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Cpath d='M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0' /%3E%3Ccircle cx='12' cy='10' r='3' /%3E%3C/svg%3E"); }
+.icon-phone { -webkit-mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-phone' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Cpath d='M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 6.392 6.384' /%3E%3C/svg%3E"); mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-phone' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Cpath d='M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 6.392 6.384' /%3E%3C/svg%3E"); }
+.icon-workflow { -webkit-mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-workflow' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Crect width='8' height='8' x='3' y='3' rx='2' /%3E%3Cpath d='M7 11v4a2 2 0 0 0 2 2h4' /%3E%3Crect width='8' height='8' x='13' y='13' rx='2' /%3E%3C/svg%3E"); mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-workflow' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Crect width='8' height='8' x='3' y='3' rx='2' /%3E%3Cpath d='M7 11v4a2 2 0 0 0 2 2h4' /%3E%3Crect width='8' height='8' x='13' y='13' rx='2' /%3E%3C/svg%3E"); }
+.icon-cpu { -webkit-mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-cpu' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Cpath d='M12 20v2' /%3E%3Cpath d='M12 2v2' /%3E%3Cpath d='M17 20v2' /%3E%3Cpath d='M17 2v2' /%3E%3Cpath d='M2 12h2' /%3E%3Cpath d='M2 17h2' /%3E%3Cpath d='M2 7h2' /%3E%3Cpath d='M20 12h2' /%3E%3Cpath d='M20 17h2' /%3E%3Cpath d='M20 7h2' /%3E%3Cpath d='M7 20v2' /%3E%3Cpath d='M7 2v2' /%3E%3Crect x='4' y='4' width='16' height='16' rx='2' /%3E%3Crect x='8' y='8' width='8' height='8' rx='1' /%3E%3C/svg%3E"); mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-cpu' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Cpath d='M12 20v2' /%3E%3Cpath d='M12 2v2' /%3E%3Cpath d='M17 20v2' /%3E%3Cpath d='M17 2v2' /%3E%3Cpath d='M2 12h2' /%3E%3Cpath d='M2 17h2' /%3E%3Cpath d='M2 7h2' /%3E%3Cpath d='M20 12h2' /%3E%3Cpath d='M20 17h2' /%3E%3Cpath d='M20 7h2' /%3E%3Cpath d='M7 20v2' /%3E%3Cpath d='M7 2v2' /%3E%3Crect x='4' y='4' width='16' height='16' rx='2' /%3E%3Crect x='8' y='8' width='8' height='8' rx='1' /%3E%3C/svg%3E"); }
+.icon-sparkles { -webkit-mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-sparkles' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Cpath d='M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z' /%3E%3Cpath d='M20 2v4' /%3E%3Cpath d='M22 4h-4' /%3E%3Ccircle cx='4' cy='20' r='2' /%3E%3C/svg%3E"); mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-sparkles' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Cpath d='M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z' /%3E%3Cpath d='M20 2v4' /%3E%3Cpath d='M22 4h-4' /%3E%3Ccircle cx='4' cy='20' r='2' /%3E%3C/svg%3E"); }
+.icon-chevron-down { -webkit-mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-chevron-down' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Cpath d='m6 9 6 6 6-6' /%3E%3C/svg%3E"); mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-chevron-down' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Cpath d='m6 9 6 6 6-6' /%3E%3C/svg%3E"); }
+.icon-globe { -webkit-mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-globe' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Ccircle cx='12' cy='12' r='10' /%3E%3Cpath d='M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20' /%3E%3Cpath d='M2 12h20' /%3E%3C/svg%3E"); mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-globe' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Ccircle cx='12' cy='12' r='10' /%3E%3Cpath d='M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20' /%3E%3Cpath d='M2 12h20' /%3E%3C/svg%3E"); }
+.icon-target { -webkit-mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-target' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Ccircle cx='12' cy='12' r='10' /%3E%3Ccircle cx='12' cy='12' r='6' /%3E%3Ccircle cx='12' cy='12' r='2' /%3E%3C/svg%3E"); mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-target' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Ccircle cx='12' cy='12' r='10' /%3E%3Ccircle cx='12' cy='12' r='6' /%3E%3Ccircle cx='12' cy='12' r='2' /%3E%3C/svg%3E"); }
+.icon-git-branch { -webkit-mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-git-branch' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Cpath d='M15 6a9 9 0 0 0-9 9V3' /%3E%3Ccircle cx='18' cy='6' r='3' /%3E%3Ccircle cx='6' cy='18' r='3' /%3E%3C/svg%3E"); mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-git-branch' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Cpath d='M15 6a9 9 0 0 0-9 9V3' /%3E%3Ccircle cx='18' cy='6' r='3' /%3E%3Ccircle cx='6' cy='18' r='3' /%3E%3C/svg%3E"); }
+.icon-server { -webkit-mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-server' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Crect width='20' height='8' x='2' y='2' rx='2' ry='2' /%3E%3Crect width='20' height='8' x='2' y='14' rx='2' ry='2' /%3E%3Cline x1='6' x2='6.01' y1='6' y2='6' /%3E%3Cline x1='6' x2='6.01' y1='18' y2='18' /%3E%3C/svg%3E"); mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-server' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Crect width='20' height='8' x='2' y='2' rx='2' ry='2' /%3E%3Crect width='20' height='8' x='2' y='14' rx='2' ry='2' /%3E%3Cline x1='6' x2='6.01' y1='6' y2='6' /%3E%3Cline x1='6' x2='6.01' y1='18' y2='18' /%3E%3C/svg%3E"); }
+.icon-file-text { -webkit-mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-file-text' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Cpath d='M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z' /%3E%3Cpath d='M14 2v5a1 1 0 0 0 1 1h5' /%3E%3Cpath d='M10 9H8' /%3E%3Cpath d='M16 13H8' /%3E%3Cpath d='M16 17H8' /%3E%3C/svg%3E"); mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-file-text' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Cpath d='M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z' /%3E%3Cpath d='M14 2v5a1 1 0 0 0 1 1h5' /%3E%3Cpath d='M10 9H8' /%3E%3Cpath d='M16 13H8' /%3E%3Cpath d='M16 17H8' /%3E%3C/svg%3E"); }
+.icon-calendar-clock { -webkit-mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-calendar-clock' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Cpath d='M16 14v2.2l1.6 1' /%3E%3Cpath d='M16 2v4' /%3E%3Cpath d='M21 7.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h3.5' /%3E%3Cpath d='M3 10h5' /%3E%3Cpath d='M8 2v4' /%3E%3Ccircle cx='16' cy='16' r='6' /%3E%3C/svg%3E"); mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-calendar-clock' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Cpath d='M16 14v2.2l1.6 1' /%3E%3Cpath d='M16 2v4' /%3E%3Cpath d='M21 7.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h3.5' /%3E%3Cpath d='M3 10h5' /%3E%3Cpath d='M8 2v4' /%3E%3Ccircle cx='16' cy='16' r='6' /%3E%3C/svg%3E"); }
+.icon-scan-search { -webkit-mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-scan-search' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Cpath d='M3 7V5a2 2 0 0 1 2-2h2' /%3E%3Cpath d='M17 3h2a2 2 0 0 1 2 2v2' /%3E%3Cpath d='M21 17v2a2 2 0 0 1-2 2h-2' /%3E%3Cpath d='M7 21H5a2 2 0 0 1-2-2v-2' /%3E%3Ccircle cx='12' cy='12' r='3' /%3E%3Cpath d='m16 16-1.9-1.9' /%3E%3C/svg%3E"); mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-scan-search' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Cpath d='M3 7V5a2 2 0 0 1 2-2h2' /%3E%3Cpath d='M17 3h2a2 2 0 0 1 2 2v2' /%3E%3Cpath d='M21 17v2a2 2 0 0 1-2 2h-2' /%3E%3Cpath d='M7 21H5a2 2 0 0 1-2-2v-2' /%3E%3Ccircle cx='12' cy='12' r='3' /%3E%3Cpath d='m16 16-1.9-1.9' /%3E%3C/svg%3E"); }
+.icon-bot { -webkit-mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-bot' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Cpath d='M12 8V4H8' /%3E%3Crect width='16' height='12' x='4' y='8' rx='2' /%3E%3Cpath d='M2 14h2' /%3E%3Cpath d='M20 14h2' /%3E%3Cpath d='M15 13v2' /%3E%3Cpath d='M9 13v2' /%3E%3C/svg%3E"); mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-bot' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Cpath d='M12 8V4H8' /%3E%3Crect width='16' height='12' x='4' y='8' rx='2' /%3E%3Cpath d='M2 14h2' /%3E%3Cpath d='M20 14h2' /%3E%3Cpath d='M15 13v2' /%3E%3Cpath d='M9 13v2' /%3E%3C/svg%3E"); }
+</style>
+</helmet>
+
+<header style="position:sticky;top:0;z-index:30;background:color-mix(in oklch, var(--bg) 92%, transparent);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:16px clamp(20px,5vw,40px);">
+  <div style="display:flex;align-items:center;justify-content:space-between;max-width:1400px;margin:0 auto;">
+    <a href="#top" style="display:flex;align-items:center;gap:10px;flex-shrink:0;">
+      <img src="./assets/tessar-icon-optimized.png" width="32" height="35" alt="Tessar logo" style="height:32px;width:auto;">
+      <span style="font:700 1rem/1 'IBM Plex Sans';letter-spacing:-0.015em;color:var(--text);">Tessar</span>
+    </a>
+    <nav style="display:flex;flex-wrap:wrap;align-items:center;row-gap:10px;gap:clamp(12px,1.5vw,24px);font-size:0.9375rem;">
+      <a href="./services.html" class="nav-link" style="color:var(--text-muted);transition:color 200ms ease;" style-hover="color:var(--text);">{{ navServices }}</a>
+      <a href="#industries" class="nav-link" style="color:var(--text-muted);transition:color 200ms ease;" style-hover="color:var(--text);">{{ navIndustries }}</a>
+      <a href="./prijzen.html" class="nav-link" style="color:var(--text-muted);transition:color 200ms ease;" style-hover="color:var(--text);">{{ navPricing }}</a>
+      <a href="./chatbots.html" class="nav-link" style="color:var(--text-muted);transition:color 200ms ease;" style-hover="color:var(--text);">{{ navChatbots }}</a>
+      <a href="./blog.html" class="nav-link" style="color:var(--text-muted);transition:color 200ms ease;" style-hover="color:var(--text);">{{ navBlog }}</a>
+      <a href="./contact.html" class="nav-link" style="color:var(--text-muted);transition:color 200ms ease;" style-hover="color:var(--text);">Contact</a>
+      <div style="display:flex;align-items:center;gap:2px;border:1px solid var(--border);border-radius:6px;padding:3px;">
+        <button onclick="{{ setLangNl }}" style="border:none;background:{{ langNlBg }};color:{{ langNlColor }};font:700 0.75rem/1 'IBM Plex Mono';padding:5px 9px;border-radius:4px;cursor:pointer;transition:all 150ms ease;">NL</button>
+        <button onclick="{{ setLangEn }}" style="border:none;background:{{ langEnBg }};color:{{ langEnColor }};font:700 0.75rem/1 'IBM Plex Mono';padding:5px 9px;border-radius:4px;cursor:pointer;transition:all 150ms ease;">EN</button>
+      </div>
+      <a href="#contact" style="background:oklch(70% 0.14 220);color:#001a2e;padding:10px 20px;border-radius:6px;font-weight:600;transition:all 200ms ease;white-space:nowrap;" style-hover="transform:translateY(-2px);box-shadow:0 8px 24px rgba(0, 212, 255, 0.25);">{{ navBookCall }}</a>
+    </nav>
+    <button type="button" class="theme-toggle" id="theme-toggle-btn" aria-label="Wissel tussen licht en donker thema">
+      <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+      <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+    </button>
+    <button type="button" class="nav-toggle" id="nav-toggle-btn" aria-label="Menu" aria-expanded="false" aria-controls="nav-mobile-panel">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <div class="nav-mobile-panel" id="nav-mobile-panel">
+    <a href="./services.html">{{ navServices }}</a>
+    <a href="#industries">{{ navIndustries }}</a>
+    <a href="./prijzen.html">{{ navPricing }}</a>
+    <a href="./chatbots.html">{{ navChatbots }}</a>
+    <a href="./blog.html">{{ navBlog }}</a>
+    <a href="./contact.html">Contact</a>
+    <div class="nav-mobile-lang">
+      <button onclick="{{ setLangNl }}" style="background:{{ langNlBg }};color:{{ langNlColor }};">NL</button>
+      <button onclick="{{ setLangEn }}" style="background:{{ langEnBg }};color:{{ langEnColor }};">EN</button>
+    </div>
+    <a href="#contact" style="background:oklch(70% 0.14 220);color:#001a2e !important;text-align:center;border-radius:6px;font-weight:600;">{{ navBookCall }}</a>
+  </div>
+</header>
+
+<section id="top" style="position:relative;overflow:hidden;background:linear-gradient(135deg, oklch(6% 0 0) 0%, oklch(12% 0.03 260) 100%);color:#FFF;padding:clamp(96px,13vw,156px) clamp(20px,5vw,40px);text-align:center;">
+  <div class="hero-grain"></div>
+  <div style="position:absolute;inset:0;pointer-events:none;overflow:hidden;">
+    <canvas id="hero-canvas"></canvas>
+    <div class="hero-orb hero-orb-a"></div>
+    <div class="hero-orb hero-orb-b"></div>
+    <div class="hero-orb hero-orb-c"></div>
+    <img class="hero-mark" src="./Tessar-logo-symbol.webp" width="500" height="500" alt="" style="position:absolute;top:-100px;right:-120px;width:500px;height:auto;object-fit:contain;opacity:0.08;">
+  </div>
+  <div style="position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 65% 55% at 50% 42%, oklch(6% 0 0 / 0.55) 0%, oklch(6% 0 0 / 0) 72%);"></div>
+
+  <div class="hero-content" style="max-width:920px;margin:0 auto;position:relative;z-index:1;">
+    <div class="hero-badge">
+      <span class="hero-badge-dot"></span>{{ badge }}
+    </div>
+
+    <h1 style="font:800 clamp(2.25rem,5.6vw,4rem)/1.15 'IBM Plex Sans';margin:0 0 22px;letter-spacing:-0.025em;text-wrap:pretty;">{{ heroHeadingPre }}<span class="grad-text">{{ heroHeadingHi1 }}</span>{{ heroHeadingMid }}<span class="grad-text">{{ heroHeadingHi2 }}</span>{{ heroHeadingPost }}</h1>
+
+    <p style="font:400 clamp(1.0625rem,1.9vw,1.375rem)/1.7 'IBM Plex Sans';color:oklch(78% 0.09 250);margin:0 0 36px;max-width:720px;margin-left:auto;margin-right:auto;text-wrap:pretty;">{{ heroSubtext }}</p>
+
+    <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
+      <a href="#contact" class="hero-cta-primary">{{ ctaPrimary }}</a>
+    </div>
+
+    <div style="display:flex;justify-content:center;gap:clamp(12px,2vw,16px);margin-top:60px;flex-wrap:wrap;">
+      <div class="hero-trust-pill"><span class="hero-badge-dot"></span>{{ trustA }}</div>
+      <div class="hero-trust-pill"><span class="hero-badge-dot"></span>{{ trustB }}</div>
+      <div class="hero-trust-pill"><span class="hero-badge-dot"></span>{{ trustC }}</div>
+      <div class="hero-trust-pill"><span class="hero-badge-dot"></span>{{ trustD }}</div>
     </div>
   </div>
-</main>
 
-<footer>&copy; 2026 Tessar</footer>
+  <div class="hero-scroll-cue" aria-hidden="true">
+    <div class="icon icon-chevron-down"></div>
+  </div>
+</section>
+
+<section style="padding:clamp(40px,5vw,56px) clamp(20px,5vw,40px);background:oklch(12% 0.02 255);border-top:1px solid oklch(22% 0.02 255);">
+  <div data-reveal-grid style="max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:clamp(20px,3vw,32px);">
+    <sc-for list="{{ whyUs }}" as="w" hint-placeholder-count="3">
+      <div data-reveal style="display:flex;align-items:flex-start;gap:14px;transition:opacity 600ms ease, transform 600ms ease;">
+        <div class="icon {{ w.iconClass }}" style="width:22px;height:22px;color:oklch(70% 0.14 220);margin-top:3px;"></div>
+        <p style="font:400 0.9375rem/1.6 'IBM Plex Sans';color:oklch(80% 0.02 250);margin:0;">{{ w.text }}</p>
+      </div>
+    </sc-for>
+  </div>
+</section>
+
+<section id="herkenbaar" style="padding:clamp(72px,9vw,104px) clamp(20px,5vw,40px);background:var(--surface);">
+  <div style="max-width:1100px;margin:0 auto;">
+    <div style="text-align:center;margin-bottom:clamp(48px,6vw,64px);">
+      <div style="font:500 clamp(0.7rem,1.2vw,0.8125rem)/1.3 'IBM Plex Mono';letter-spacing:0.06em;text-transform:uppercase;color:var(--accent-text);margin-bottom:12px;">{{ problemLabel }}</div>
+      <h2 style="font:600 clamp(1.75rem,4vw,2.25rem)/1.2 'IBM Plex Sans';margin:0;letter-spacing:-0.02em;color:var(--text);">{{ problemHeading }}</h2>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:clamp(24px,3vw,32px);">
+      <div data-reveal style="background:var(--danger-bg);border:1px solid var(--danger-border);border-radius:12px;padding:clamp(28px,3.5vw,36px);transition:opacity 600ms ease, transform 600ms ease, background-color 200ms ease, border-color 200ms ease;">
+        <div style="font:600 0.8125rem/1.2 'IBM Plex Mono';letter-spacing:0.05em;text-transform:uppercase;color:var(--danger-accent);margin-bottom:20px;">{{ beforeLabel }}</div>
+        <div style="display:flex;flex-direction:column;gap:16px;">
+          <sc-for list="{{ beforeItems }}" as="b" hint-placeholder-count="4">
+            <div style="display:flex;align-items:flex-start;gap:12px;">
+              <div class="icon icon-x" style="width:16px;height:16px;color:var(--danger-accent);margin-top:3px;"></div>
+              <span style="font:400 0.9375rem/1.55 'IBM Plex Sans';color:var(--danger-text);">{{ b }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <div data-reveal style="background:var(--success-bg);border:1px solid var(--success-border);border-radius:12px;padding:clamp(28px,3.5vw,36px);transition:opacity 600ms ease, transform 600ms ease, background-color 200ms ease, border-color 200ms ease;">
+        <div style="font:600 0.8125rem/1.2 'IBM Plex Mono';letter-spacing:0.05em;text-transform:uppercase;color:var(--success-accent);margin-bottom:20px;">{{ afterLabel }}</div>
+        <div style="display:flex;flex-direction:column;gap:16px;">
+          <sc-for list="{{ afterItems }}" as="a" hint-placeholder-count="4">
+            <div style="display:flex;align-items:flex-start;gap:12px;">
+              <div class="icon icon-check" style="width:16px;height:16px;color:var(--success-accent);margin-top:3px;"></div>
+              <span style="font:400 0.9375rem/1.55 'IBM Plex Sans';color:var(--success-text);">{{ a }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="capabilities" style="padding:clamp(64px,8vw,96px) clamp(20px,5vw,40px);background:var(--bg);border-top:1px solid var(--border);">
+  <div style="max-width:1200px;margin:0 auto;">
+    <div style="text-align:center;margin-bottom:clamp(40px,5vw,56px);">
+      <div style="font:500 clamp(0.7rem,1.2vw,0.8125rem)/1.3 'IBM Plex Mono';letter-spacing:0.06em;text-transform:uppercase;color:var(--accent-text);margin-bottom:12px;">{{ capabilitiesLabel }}</div>
+      <h2 style="font:600 clamp(1.75rem,4vw,2.25rem)/1.2 'IBM Plex Sans';margin:0 0 16px;letter-spacing:-0.02em;color:var(--text);">{{ capabilitiesHeading }}</h2>
+      <p style="font:400 clamp(0.95rem,1.5vw,1rem)/1.6 'IBM Plex Sans';color:var(--text-muted);max-width:560px;margin:0 auto;">{{ capabilitiesSubtext }}</p>
+    </div>
+
+    <div data-reveal-grid style="display:flex;flex-direction:column;gap:14px;max-width:820px;margin:0 auto;">
+      <sc-for list="{{ capabilities }}" as="cap" hint-placeholder-count="5">
+        <details data-reveal class="faq-item" style="border:1px solid var(--border);border-radius:12px;padding:clamp(22px,3vw,28px) clamp(24px,3.5vw,32px);background:var(--surface);transition:opacity 600ms ease, transform 600ms ease;">
+          <summary style="display:flex;align-items:center;justify-content:space-between;gap:16px;">
+            <div style="display:flex;align-items:center;gap:16px;">
+              <div class="icon {{ cap.iconClass }}" style="width:28px;height:28px;color:{{ cap.color }};flex-shrink:0;"></div>
+              <h3 style="font:600 clamp(1.0625rem,1.8vw,1.25rem)/1.35 'IBM Plex Sans';margin:0;color:var(--text);">{{ cap.title }}</h3>
+            </div>
+            <div class="icon icon-chevron-down faq-chevron" style="width:18px;height:18px;color:{{ cap.color }};transition:transform 200ms ease;flex-shrink:0;"></div>
+          </summary>
+          <p style="font:400 clamp(0.9rem,1.5vw,1rem)/1.65 'IBM Plex Sans';color:var(--text-muted);margin:16px 0 0;">{{ cap.desc }}</p>
+          <ul style="margin:14px 0 0;padding:0 0 0 20px;font:400 0.9rem/1.7 'IBM Plex Sans';color:var(--text-muted);">
+            <sc-for list="{{ cap.bullets }}" as="b" hint-placeholder-count="4">
+              <li>{{ b }}</li>
+            </sc-for>
+          </ul>
+        </details>
+      </sc-for>
+    </div>
+
+    <div style="text-align:center;margin-top:clamp(32px,4vw,40px);">
+      <a href="./services.html" style="font:600 0.9375rem/1 'IBM Plex Sans';color:var(--accent-text);">{{ capabilitiesCta }} &rarr;</a>
+    </div>
+    <div style="text-align:center;margin-top:12px;">
+      <a href="./chatbots.html" style="font:600 0.9375rem/1 'IBM Plex Sans';color:var(--accent-text);">{{ capabilitiesChatbotsCta }} &rarr;</a>
+    </div>
+  </div>
+</section>
+
+<section id="stack" style="padding:clamp(64px,8vw,88px) clamp(20px,5vw,40px);background:var(--surface);border-top:1px solid var(--border);">
+  <div style="max-width:1100px;margin:0 auto;">
+    <div style="text-align:center;margin-bottom:clamp(40px,5vw,56px);">
+      <div style="font:500 clamp(0.7rem,1.2vw,0.8125rem)/1.3 'IBM Plex Mono';letter-spacing:0.06em;text-transform:uppercase;color:var(--accent-text);margin-bottom:12px;">{{ stackLabel }}</div>
+      <h2 style="font:600 clamp(1.75rem,4vw,2.25rem)/1.2 'IBM Plex Sans';margin:0 0 16px;letter-spacing:-0.02em;color:var(--text);">{{ stackHeading }}</h2>
+      <p style="font:400 clamp(0.95rem,1.5vw,1rem)/1.6 'IBM Plex Sans';color:var(--text-muted);max-width:600px;margin:0 auto;">{{ stackSubtext }}</p>
+    </div>
+
+    <div data-reveal-grid class="stack-row" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(clamp(220px,100%,300px),1fr));gap:clamp(20px,3vw,28px);">
+      <sc-for list="{{ stackTools }}" as="tool" hint-placeholder-count="4">
+        <div data-reveal style="background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:clamp(24px,3vw,32px);transition:all 220ms ease, opacity 600ms ease, transform 600ms ease;" style-hover="border-color:var(--accent-text);transform:translateY(-4px);">
+          <div class="icon {{ tool.iconClass }}" style="width:28px;height:28px;color:var(--accent-text);margin-bottom:14px;"></div>
+          <div style="font:700 1rem/1.3 'IBM Plex Mono';color:var(--text);margin-bottom:8px;">{{ tool.name }}</div>
+          <p style="font:400 0.9rem/1.6 'IBM Plex Sans';color:var(--text-muted);margin:0;">{{ tool.desc }}</p>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+</section>
+
+<section id="industries" style="padding:clamp(80px,10vw,120px) clamp(20px,5vw,40px);background:var(--bg);">
+  <div style="max-width:920px;margin:0 auto;">
+    <div style="text-align:center;margin-bottom:clamp(40px,5vw,56px);">
+      <div style="font:500 clamp(0.7rem,1.2vw,0.8125rem)/1.3 'IBM Plex Mono';letter-spacing:0.06em;text-transform:uppercase;color:var(--accent-text);margin-bottom:12px;">{{ industryLabel }}</div>
+      <h2 style="font:600 clamp(1.75rem,4vw,2.25rem)/1.2 'IBM Plex Sans';margin:0 0 16px;letter-spacing:-0.02em;color:var(--text);">{{ industryHeading }}</h2>
+      <p style="font:400 clamp(0.95rem,1.5vw,1.0625rem)/1.6 'IBM Plex Sans';color:var(--text-muted);max-width:560px;margin:0 auto;">{{ industrySubtext }}</p>
+    </div>
+
+    <div data-reveal style="display:flex;flex-wrap:wrap;justify-content:center;gap:10px;transition:opacity 600ms ease, transform 600ms ease;">
+      <sc-for list="{{ industries }}" as="ind" hint-placeholder-count="21">
+        <span style="display:inline-flex;align-items:center;background:oklch(48% 0.12 230 / 0.08);border:1px solid oklch(48% 0.12 230 / 0.25);padding:9px 16px;border-radius:20px;font:600 0.8125rem/1.3 'IBM Plex Mono';letter-spacing:0.01em;color:var(--accent-text);">{{ ind.title }}</span>
+      </sc-for>
+    </div>
+  </div>
+</section>
+
+<section id="cases" style="padding:clamp(80px,10vw,120px) clamp(20px,5vw,40px);background:var(--surface);border-top:1px solid var(--border);">
+  <div style="max-width:1200px;margin:0 auto;">
+    <div style="text-align:center;margin-bottom:clamp(48px,6vw,64px);">
+      <div style="font:500 clamp(0.7rem,1.2vw,0.8125rem)/1.3 'IBM Plex Mono';letter-spacing:0.06em;text-transform:uppercase;color:var(--accent-text);margin-bottom:12px;">{{ casesLabel }}</div>
+      <h2 style="font:600 clamp(1.75rem,4vw,2.25rem)/1.2 'IBM Plex Sans';margin:0;letter-spacing:-0.02em;color:var(--text);">{{ casesHeading }}</h2>
+      <p style="font:400 clamp(0.95rem,1.5vw,1.0625rem)/1.6 'IBM Plex Sans';color:var(--text-muted);margin:20px auto 0;max-width:600px;">{{ casesSubtext }}</p>
+    </div>
+
+    <div data-reveal-grid style="display:grid;grid-template-columns:repeat(auto-fit,minmax(clamp(300px,100%,500px),1fr));gap:clamp(28px,3vw,40px);">
+      <sc-for list="{{ cases }}" as="cs" hint-placeholder-count="3">
+        <div data-reveal style="background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:clamp(32px,4vw,40px);box-shadow:0 2px 4px oklch(20% 0.02 255 / 0.04);display:flex;flex-direction:column;transition:opacity 600ms ease, transform 600ms ease;">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:24px;">
+            <div style="width:48px;height:48px;background:{{ cs.color }}/0.15;border:2px solid {{ cs.color }};border-radius:8px;display:flex;align-items:center;justify-content:center;font:700 1.25rem/1 'IBM Plex Mono';color:{{ cs.color }};">{{ cs.num }}</div>
+            <div>
+              <div style="font:600 0.8125rem/1.2 'IBM Plex Mono';letter-spacing:0.05em;text-transform:uppercase;color:var(--text-muted);">{{ cs.industry }}</div>
+              <div style="font:600 clamp(1rem,1.8vw,1.125rem)/1.2 'IBM Plex Sans';color:var(--text);">{{ cs.title }}</div>
+            </div>
+          </div>
+
+          <p style="font:400 clamp(0.9rem,1.5vw,0.95rem)/1.6 'IBM Plex Sans';color:var(--text-muted);margin:0 0 28px;flex:1;">{{ cs.desc }}</p>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:24px;background:var(--surface);border-radius:8px;border:1px solid var(--border);">
+            <div>
+              <div style="font:600 0.75rem/1.2 'IBM Plex Mono';letter-spacing:0.05em;text-transform:uppercase;color:var(--text-muted);margin-bottom:6px;">{{ cs.metric1Label }}</div>
+              <div data-count-target="{{ cs.metric1 }}" style="font:700 clamp(1.5rem,3vw,2rem)/1 'IBM Plex Mono';color:{{ cs.color }};">{{ cs.metric1 }}</div>
+            </div>
+            <div>
+              <div style="font:600 0.75rem/1.2 'IBM Plex Mono';letter-spacing:0.05em;text-transform:uppercase;color:var(--text-muted);margin-bottom:6px;">{{ cs.metric2Label }}</div>
+              <div data-count-target="{{ cs.metric2 }}" style="font:700 clamp(1.5rem,3vw,2rem)/1 'IBM Plex Mono';color:{{ cs.color }};">{{ cs.metric2 }}</div>
+            </div>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+</section>
+
+<section id="how" style="padding:clamp(80px,10vw,120px) clamp(20px,5vw,40px);background:var(--bg);border-top:1px solid var(--border);">
+  <div style="max-width:1000px;margin:0 auto;">
+    <div style="text-align:center;margin-bottom:clamp(48px,6vw,64px);">
+      <h2 style="font:600 clamp(1.75rem,4vw,2.25rem)/1.2 'IBM Plex Sans';margin:0 0 16px;letter-spacing:-0.02em;color:var(--text);">{{ processHeading }}</h2>
+      <p style="font:400 clamp(0.95rem,1.5vw,1rem)/1.6 'IBM Plex Sans';color:var(--text-muted);max-width:600px;margin:0 auto;">{{ processSubtext }}</p>
+    </div>
+
+    <div data-reveal-grid class="process-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(clamp(200px,100%,280px),1fr));gap:clamp(24px,3vw,32px);">
+      <sc-for list="{{ process }}" as="step" hint-placeholder-count="4">
+        <div data-reveal style="display:flex;flex-direction:column;gap:16px;transition:opacity 600ms ease, transform 600ms ease;">
+          <div style="width:64px;height:64px;background:linear-gradient(135deg, oklch(48% 0.12 230 / 0.1), oklch(46% 0.15 200 / 0.06));border:2px solid var(--accent-text);border-radius:50%;display:flex;align-items:center;justify-content:center;font:700 1.5rem/1 'IBM Plex Mono';color:var(--accent-text);">{{ step.n }}</div>
+          <div>
+            <h3 style="font:600 clamp(1rem,1.8vw,1.125rem)/1.3 'IBM Plex Sans';margin:0 0 8px;color:var(--text);">{{ step.title }}</h3>
+            <p style="font:400 clamp(0.85rem,1.4vw,0.9375rem)/1.6 'IBM Plex Sans';color:var(--text-muted);margin:0;">{{ step.desc }}</p>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+</section>
+
+<section id="about" style="padding:clamp(72px,9vw,104px) clamp(20px,5vw,40px);background:var(--surface);border-top:1px solid var(--border);">
+  <div class="about-grid" style="max-width:1000px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,0.9fr);gap:clamp(32px,5vw,56px);align-items:center;">
+    <div data-reveal style="transition:opacity 600ms ease, transform 600ms ease;">
+      <div style="font:500 clamp(0.7rem,1.2vw,0.8125rem)/1.3 'IBM Plex Mono';letter-spacing:0.06em;text-transform:uppercase;color:var(--accent-text);margin-bottom:12px;">{{ aboutLabel }}</div>
+      <h2 style="font:600 clamp(1.5rem,3.4vw,2rem)/1.25 'IBM Plex Sans';margin:0 0 18px;letter-spacing:-0.02em;color:var(--text);">{{ aboutHeading }}</h2>
+      <p style="font:400 1rem/1.75 'IBM Plex Sans';color:var(--text-muted);margin:0;">{{ aboutBody }}</p>
+    </div>
+    <div data-reveal style="display:flex;flex-direction:column;gap:20px;transition:opacity 600ms ease, transform 600ms ease;">
+      <sc-for list="{{ aboutPoints }}" as="p" hint-placeholder-count="3">
+        <div style="display:flex;align-items:flex-start;gap:14px;padding:18px;background:var(--bg);border:1px solid var(--border);border-radius:10px;">
+          <div class="icon {{ p.iconClass }}" style="width:20px;height:20px;color:var(--accent-text);margin-top:2px;"></div>
+          <span style="font:500 0.9375rem/1.5 'IBM Plex Sans';color:var(--text);">{{ p.text }}</span>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+</section>
+
+<section id="pricing" style="padding:clamp(80px,10vw,120px) clamp(20px,5vw,40px);background:linear-gradient(135deg, oklch(6% 0 0 / 0.02), oklch(12% 0.03 260 / 0.02));border-top:1px solid var(--border);">
+  <div style="max-width:1240px;margin:0 auto;">
+    <div style="text-align:center;margin-bottom:clamp(48px,6vw,64px);">
+      <h2 style="font:600 clamp(1.75rem,4vw,2.25rem)/1.2 'IBM Plex Sans';margin:0 0 16px;letter-spacing:-0.02em;color:var(--text);">{{ pricingHeading }}</h2>
+      <p style="font:400 clamp(0.95rem,1.5vw,1rem)/1.6 'IBM Plex Sans';color:var(--text-muted);max-width:600px;margin:0 auto;">{{ pricingSubtext }}</p>
+    </div>
+
+    <div data-reveal-grid style="display:grid;grid-template-columns:repeat(auto-fit,minmax(clamp(240px,100%,280px),1fr));gap:clamp(16px,2vw,24px);">
+      <sc-for list="{{ pricing }}" as="tier" hint-placeholder-count="4">
+        <div data-reveal style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:clamp(28px,4vw,36px);display:flex;flex-direction:column;transition:all 220ms ease, opacity 600ms ease, transform 600ms ease;" style-hover="border-color:var(--accent-text);box-shadow:0 8px 24px oklch(48% 0.12 230 / 0.15);">
+          <h3 style="font:600 clamp(1.0625rem,1.8vw,1.25rem)/1.3 'IBM Plex Sans';margin:0 0 8px;color:var(--text);">{{ tier.name }}</h3>
+          <p style="font:400 0.9375rem/1.6 'IBM Plex Sans';color:var(--text-muted);margin:0 0 20px;">{{ tier.desc }}</p>
+          <div style="margin:20px 0;padding:20px;background:var(--surface-inset);border-radius:8px;border:1px solid var(--border);">
+            <div style="font:700 clamp(1.875rem,3vw,2.25rem)/1 'IBM Plex Mono';color:var(--accent-text);">{{ tier.price }}</div>
+            <div style="font:400 0.875rem/1.5 'IBM Plex Sans';color:var(--text-muted);margin-top:6px;">{{ tier.timeframe }}</div>
+          </div>
+          <ul style="list-style:none;margin:0 0 24px;padding:0;display:flex;flex-direction:column;gap:12px;flex:1;">
+            <sc-for list="{{ tier.includes }}" as="inc" hint-placeholder-count="0">
+              <li style="display:flex;gap:10px;align-items:flex-start;font:400 0.9375rem/1.5 'IBM Plex Sans';color:var(--text-muted);"><div class="icon icon-check" style="width:15px;height:15px;color:var(--accent-text);margin-top:3px;flex-shrink:0;"></div><span>{{ inc }}</span></li>
+            </sc-for>
+          </ul>
+          <a href="#contact" style="background:oklch(70% 0.14 220);color:#001a2e;padding:12px 20px;border-radius:6px;text-align:center;font-weight:600;font-size:0.9375rem;transition:all 200ms ease;white-space:nowrap;" style-hover="transform:translateY(-2px);box-shadow:0 8px 24px rgba(0, 212, 255, 0.25);">{{ tier.cta }}</a>
+        </div>
+      </sc-for>
+    </div>
+    <div style="text-align:center;margin-top:clamp(32px,4vw,40px);">
+      <a href="./prijzen.html" style="font:600 0.9375rem/1 'IBM Plex Sans';color:var(--accent-text);">{{ pricingFullLink }}</a>
+    </div>
+  </div>
+</section>
+
+<section id="faq" style="padding:clamp(72px,9vw,104px) clamp(20px,5vw,40px);background:var(--surface);border-top:1px solid var(--border);">
+  <div style="max-width:800px;margin:0 auto;">
+    <div style="text-align:center;margin-bottom:clamp(40px,5vw,56px);">
+      <div style="font:500 clamp(0.7rem,1.2vw,0.8125rem)/1.3 'IBM Plex Mono';letter-spacing:0.06em;text-transform:uppercase;color:var(--accent-text);margin-bottom:12px;">{{ faqLabel }}</div>
+      <h2 style="font:600 clamp(1.75rem,4vw,2.25rem)/1.2 'IBM Plex Sans';margin:0;letter-spacing:-0.02em;color:var(--text);">{{ faqHeading }}</h2>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:12px;">
+      <sc-for list="{{ faqs }}" as="f" hint-placeholder-count="5">
+        <details class="faq-item" style="border:1px solid var(--border);border-radius:10px;padding:18px 22px;background:var(--bg);">
+          <summary style="display:flex;align-items:center;justify-content:space-between;gap:16px;font:600 1rem/1.4 'IBM Plex Sans';color:var(--text);">
+            <span>{{ f.q }}</span>
+            <div class="icon icon-chevron-down faq-chevron" style="width:18px;height:18px;color:var(--accent-text);transition:transform 200ms ease;flex-shrink:0;"></div>
+          </summary>
+          <p style="font:400 0.9375rem/1.65 'IBM Plex Sans';color:var(--text-muted);margin:14px 0 0;">{{ f.a }}</p>
+        </details>
+      </sc-for>
+    </div>
+  </div>
+</section>
+
+<section id="contact" style="padding:clamp(80px,10vw,120px) clamp(20px,5vw,40px);background:linear-gradient(135deg, oklch(6% 0 0) 0%, oklch(12% 0.03 260) 100%);color:#FFF;">
+  <div style="max-width:700px;margin:0 auto;">
+    <div style="text-align:center;margin-bottom:clamp(40px,6vw,56px);">
+      <h2 style="font:600 clamp(1.75rem,4vw,2.25rem)/1.2 'IBM Plex Sans';margin:0 0 16px;letter-spacing:-0.02em;">{{ contactHeading }}</h2>
+      <p style="font:400 clamp(0.95rem,1.5vw,1rem)/1.6 'IBM Plex Sans';color:oklch(75% 0.10 250);margin:0;">{{ contactSubtext }}</p>
+    </div>
+
+    <form id="contact-form" style="display:flex;flex-direction:column;gap:18px;">
+      <input type="text" name="name" id="cf-name" required placeholder="{{ formNamePlaceholder }}" style="background:oklch(100% 0 0 / 0.95);border:1px solid oklch(70% 0.14 220 / 0.3);border-radius:6px;padding:14px 18px;font:400 0.95rem/1.5 'IBM Plex Sans';color:var(--text);transition:all 200ms ease;" style-focus="border-color:oklch(70% 0.14 220);box-shadow:0 0 0 2px oklch(70% 0.14 220 / 0.1);outline:none;"/>
+      <input type="email" name="email" id="cf-email" required placeholder="{{ formEmailPlaceholder }}" style="background:oklch(100% 0 0 / 0.95);border:1px solid oklch(70% 0.14 220 / 0.3);border-radius:6px;padding:14px 18px;font:400 0.95rem/1.5 'IBM Plex Sans';color:var(--text);transition:all 200ms ease;" style-focus="border-color:oklch(70% 0.14 220);box-shadow:0 0 0 2px oklch(70% 0.14 220 / 0.1);outline:none;"/>
+      <input type="tel" name="phone" id="cf-phone" placeholder="{{ formPhonePlaceholder }}" style="background:oklch(100% 0 0 / 0.95);border:1px solid oklch(70% 0.14 220 / 0.3);border-radius:6px;padding:14px 18px;font:400 0.95rem/1.5 'IBM Plex Sans';color:var(--text);transition:all 200ms ease;" style-focus="border-color:oklch(70% 0.14 220);box-shadow:0 0 0 2px oklch(70% 0.14 220 / 0.1);outline:none;"/>
+      <select name="industry" id="cf-industry" style="background:oklch(100% 0 0 / 0.95);border:1px solid oklch(70% 0.14 220 / 0.3);border-radius:6px;padding:14px 18px;font:400 0.95rem/1.5 'IBM Plex Sans';color:var(--text);transition:all 200ms ease;cursor:pointer;" style-focus="border-color:oklch(70% 0.14 220);outline:none;">
+        <option value="">{{ formIndustryPlaceholder }}</option>
+        <sc-for list="{{ industries }}" as="opt" hint-placeholder-count="0">
+          <option value="{{ opt.title }}">{{ opt.title }}</option>
+        </sc-for>
+      </select>
+      <textarea name="message" id="cf-message" required placeholder="{{ formMessagePlaceholder }}" rows="4" style="background:oklch(100% 0 0 / 0.95);border:1px solid oklch(70% 0.14 220 / 0.3);border-radius:6px;padding:14px 18px;font:400 0.95rem/1.5 'IBM Plex Sans';color:var(--text);resize:none;transition:all 200ms ease;" style-focus="border-color:oklch(70% 0.14 220);box-shadow:0 0 0 2px oklch(70% 0.14 220 / 0.1);outline:none;"></textarea>
+      <input type="text" name="website" id="cf-website" autocomplete="off" tabindex="-1" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;">
+      <button type="submit" id="cf-submit" style="background:linear-gradient(135deg, oklch(70% 0.14 220), oklch(60% 0.12 230));color:#001a2e;padding:14px 28px;border:none;border-radius:6px;font-weight:700;font-size:0.95rem;cursor:pointer;transition:all 280ms ease;" style-hover="transform:translateY(-3px);box-shadow:0 16px 48px rgba(0, 212, 255, 0.35);">{{ contactCTA }}</button>
+      <p id="cf-status" role="status" style="font:400 0.9rem/1.5 'IBM Plex Sans';margin:0;min-height:1.4em;"></p>
+    </form>
+    <script>
+    (function () {
+      // Page's own client-side templating can rebuild the form's DOM nodes after
+      // load, so listeners are attached via delegation on document (survives node
+      // replacement) instead of directly on the form/button elements.
+      var pageLoadTime = Date.now();
+
+      document.addEventListener("submit", function (e) {
+        var form = e.target;
+        if (!form || form.id !== "contact-form") return;
+        e.preventDefault();
+
+        var submitBtn = form.querySelector("#cf-submit");
+        var status = form.querySelector("#cf-status");
+        var originalBtnText = submitBtn.textContent;
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Versturen...";
+        status.textContent = "";
+        status.style.color = "";
+
+        fetch("/api/contact", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: form.querySelector("#cf-name").value,
+            email: form.querySelector("#cf-email").value,
+            phone: form.querySelector("#cf-phone").value,
+            industry: form.querySelector("#cf-industry").value,
+            message: form.querySelector("#cf-message").value,
+            website: form.querySelector("#cf-website").value,
+            started_at: pageLoadTime
+          })
+        })
+          .then(function (res) { return res.json().then(function (data) { return { ok: res.ok, data: data }; }); })
+          .then(function (result) {
+            if (result.ok && result.data.ok) {
+              form.reset();
+              status.style.color = "oklch(70% 0.14 220)";
+              status.textContent = "Bedankt! We nemen zo snel mogelijk contact op.";
+            } else {
+              status.style.color = "oklch(65% 0.20 30)";
+              status.textContent = (result.data && result.data.error) || "Er ging iets mis, probeer het later opnieuw.";
+            }
+          })
+          .catch(function () {
+            status.style.color = "oklch(65% 0.20 30)";
+            status.textContent = "Er ging iets mis, probeer het later opnieuw.";
+          })
+          .finally(function () {
+            submitBtn.disabled = false;
+            submitBtn.textContent = originalBtnText;
+          });
+      });
+    })();
+    </script>
+
+    <p style="font:400 clamp(0.8rem,1.2vw,0.85rem)/1.6 'IBM Plex Sans';color:oklch(70% 0.10 250);text-align:center;margin:28px 0 0;padding-top:28px;border-top:1px solid oklch(70% 0.14 220 / 0.2);">{{ contactFooter }}</p>
+  </div>
+</section>
+
+<footer style="padding:clamp(48px,6vw,64px) clamp(20px,5vw,40px) 32px;background:oklch(4% 0 0);color:oklch(62% 0.02 250);">
+  <div style="max-width:1200px;margin:0 auto;">
+    <div style="display:grid;grid-template-columns:minmax(220px,1.4fr) repeat(3,minmax(140px,1fr));gap:clamp(28px,4vw,48px);padding-bottom:clamp(32px,4vw,44px);border-bottom:1px solid oklch(20% 0.01 255);">
+      <div>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+          <img src="./assets/tessar-icon-optimized.png" width="26" height="28" alt="Tessar logo" style="height:26px;width:auto;opacity:0.9;">
+          <span style="font:700 1rem/1 'IBM Plex Sans';color:#FFF;">Tessar</span>
+        </div>
+        <p style="font:400 0.875rem/1.6 'IBM Plex Sans';color:oklch(58% 0.02 250);margin:0;max-width:320px;">{{ footerTagline }}</p>
+      </div>
+      <div>
+        <div style="font:600 0.75rem/1.2 'IBM Plex Mono';letter-spacing:0.05em;text-transform:uppercase;color:oklch(45% 0.02 250);margin-bottom:16px;">{{ footerColNav }}</div>
+        <div style="display:flex;flex-direction:column;gap:11px;">
+          <a href="./services.html" style="font:400 0.875rem/1.4 'IBM Plex Sans';color:oklch(65% 0.02 250);">{{ navServices }}</a>
+          <a href="#capabilities" style="font:400 0.875rem/1.4 'IBM Plex Sans';color:oklch(65% 0.02 250);">{{ navBuild }}</a>
+          <a href="#industries" style="font:400 0.875rem/1.4 'IBM Plex Sans';color:oklch(65% 0.02 250);">{{ navIndustries }}</a>
+          <a href="./prijzen.html" style="font:400 0.875rem/1.4 'IBM Plex Sans';color:oklch(65% 0.02 250);">{{ navPricing }}</a>
+          <a href="./chatbots.html" style="font:400 0.875rem/1.4 'IBM Plex Sans';color:oklch(65% 0.02 250);">{{ navChatbots }}</a>
+        </div>
+      </div>
+      <div>
+        <div style="font:600 0.75rem/1.2 'IBM Plex Mono';letter-spacing:0.05em;text-transform:uppercase;color:oklch(45% 0.02 250);margin-bottom:16px;">{{ footerColMore }}</div>
+        <div style="display:flex;flex-direction:column;gap:11px;">
+          <a href="#cases" style="font:400 0.875rem/1.4 'IBM Plex Sans';color:oklch(65% 0.02 250);">{{ navCases }}</a>
+          <a href="#how" style="font:400 0.875rem/1.4 'IBM Plex Sans';color:oklch(65% 0.02 250);">{{ footerHow }}</a>
+          <a href="#faq" style="font:400 0.875rem/1.4 'IBM Plex Sans';color:oklch(65% 0.02 250);">{{ navFaq }}</a>
+          <a href="#about" style="font:400 0.875rem/1.4 'IBM Plex Sans';color:oklch(65% 0.02 250);">{{ footerAbout }}</a>
+        </div>
+      </div>
+      <div>
+        <div style="font:600 0.75rem/1.2 'IBM Plex Mono';letter-spacing:0.05em;text-transform:uppercase;color:oklch(45% 0.02 250);margin-bottom:16px;">{{ footerColContact }}</div>
+        <div style="display:flex;flex-direction:column;gap:11px;">
+          <a href="#contact" style="font:400 0.875rem/1.4 'IBM Plex Sans';color:oklch(65% 0.02 250);display:flex;align-items:center;gap:8px;"><div class="icon icon-mail" style="width:14px;height:14px;"></div>{{ footerContactLink }}</a>
+          <a href="#contact" style="font:400 0.875rem/1.4 'IBM Plex Sans';color:oklch(65% 0.02 250);display:flex;align-items:center;gap:8px;"><div class="icon icon-calendar-clock" style="width:14px;height:14px;"></div>{{ navBookCall }}</a>
+        </div>
+      </div>
+    </div>
+    <div style="padding-top:24px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font:400 0.8125rem/1.5 'IBM Plex Sans';color:oklch(45% 0.02 250);">
+      <span>{{ footerCopyright }}</span>
+      <span style="display:flex;gap:16px;align-items:center;">{{ footerBuiltWith }}<a href="/login" style="color:oklch(45% 0.02 250);">{{ footerLogin }}</a></span>
+    </div>
+  </div>
+</footer>
+
+</x-dc>
+
+<button type="button" id="back-to-top" aria-label="Naar boven" title="Naar boven">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5"/><path d="m5 12 7-7 7 7"/></svg>
+</button>
+
+<script type="text/x-dc" data-dc-script>
+const copyNL = {
+  navServices: 'Diensten',
+  navBuild: 'Wat we bouwen',
+  navIndustries: 'Sectoren',
+  navCases: 'Cases',
+  navFaq: 'FAQ',
+  navPricing: 'Prijzen',
+  navChatbots: 'Chatbots',
+  navBlog: 'Blog',
+  navBookCall: 'Plan gesprek',
+
+  badge: 'AI-automatisering & AI-applicaties',
+  heroHeading: 'Van terugkerend werk naar automatisering. Van idee naar werkende AI-applicatie.',
+  heroHeadingPre: 'Van complex naar ',
+  heroHeadingHi1: 'concreet',
+  heroHeadingMid: '. Van idee naar werkende ',
+  heroHeadingHi2: 'AI-applicatie',
+  heroHeadingPost: '.',
+  heroSubtext: 'Praktische AI-automatisering, rechtstreeks van de bouwer.',
+  ctaPrimary: 'Plan gratis kennismaking',
+  ctaSecondary: 'Bekijk cases',
+  trustA: 'EU AI Act-bewust',
+  trustB: 'AVG-bewust',
+  trustC: '2-4 weken naar livegang',
+  trustD: 'Vaste prijs, vooraf afgesproken',
+
+  whyUs: [
+    { iconClass: 'icon-message-square', text: 'Rechtstreeks contact met wie het ook daadwerkelijk bouwt, geen account manager ertussen.' },
+    { iconClass: 'icon-file-text', text: 'Vaste prijs en vaste scope, afgesproken voordat er gebouwd wordt.' },
+    { iconClass: 'icon-target', text: 'Elk traject eindigt in een werkend systeem in productie, niet in een adviesrapport.' }
+  ],
+
+  problemLabel: 'Herkenbaar',
+  problemHeading: 'Waar de meeste mkb-bedrijven nu staan',
+  beforeLabel: 'Nu',
+  afterLabel: 'Met Tessar',
+  beforeItems: [
+    'Data met de hand overtypen tussen systemen die niet met elkaar praten',
+    'Rapportages die dagen kosten in plaats van seconden',
+    'AI-experimenten die nooit verder komen dan een demo',
+    'Losse tools naast elkaar, zonder samenhang'
+  ],
+  afterItems: [
+    'Automatische verwerking tussen je bestaande systemen',
+    'Realtime inzicht, direct beschikbaar wanneer je het nodig hebt',
+    'Een werkend systeem in productie binnen 2 tot 4 weken',
+    'Een geintegreerd geheel rond de tools die je al gebruikt'
+  ],
+
+  capabilitiesLabel: 'Wat we bouwen',
+  capabilitiesHeading: 'Vijf manieren waarop we AI inzetten',
+  capabilitiesSubtext: 'Van kleine procesautomatisering tot een volwaardig AI-product. Elk van deze vijf diensten is ook los in te huren, met een eigen vaste prijs.',
+  capabilitiesCta: 'Bekijk alle diensten',
+  capabilitiesChatbotsCta: 'Bekijk onze AI-chatbots',
+  capabilities: [
+    { iconClass: 'icon-workflow', title: 'AI-procesautomatisering', desc: 'Automatiseer het handmatige, repetitieve deel van je organisatie: data-invoer, rapportages, documentverwerking, besluitondersteuning. Systemen die aansluiten op wat je al gebruikt.', color: 'oklch(70% 0.14 220)', bullets: ['In kaart brengen van workflows en automatiseringsontwerp', 'Document- en dataverwerkingspipelines', 'Integratie met bestaand CRM, ERP en interne tools', 'Monitoring en foutafhandeling in productie'] },
+    { iconClass: 'icon-trending-up', title: 'Voorspellende modellen & besluitondersteuning', desc: 'Modellen op jouw eigen data om vraag te voorspellen, risico\'s te scoren of afwijkingen te detecteren, met nauwkeurigheidscijfers die je kan controleren.', color: 'oklch(60% 0.15 170)', bullets: ['Datapipeline en feature-voorbereiding', 'Modeltraining, validatie en nauwkeurigheidsrapportage', 'Vraagvoorspelling, risicoscoring en afwijkingsdetectie', 'Oplevering als API of intern dashboard'] },
+    { iconClass: 'icon-puzzle', title: 'AI-geintegreerde applicaties', desc: 'Volwaardige producten met AI in de kern, niet als toevoeging achteraf. Interne tools, klantgerichte applicaties en platforms die vanaf de grond zijn opgebouwd rond wat moderne modellen kunnen.', color: 'oklch(70% 0.14 220)', bullets: ['Productarchitectuur en technische scoping', 'Full-stack ontwikkeling met geintegreerde AI-laag', 'AI-agents en copilots ingebouwd in bestaande producten', 'MVP-bouw voor AI-first producten, klaar om over te dragen of te onderhouden'] },
+    { iconClass: 'icon-network', title: 'Systeemintegratie & datapipelines', desc: 'Koppelt je CRM, ERP, databases en interne tools zodat informatie automatisch stroomt, in plaats van via handmatige exports en copy-paste.', color: 'oklch(60% 0.15 170)', bullets: ['API-integraties tussen bestaande platformen', 'Inrichten en plannen van datapipelines', 'Connectoren voor legacy-systemen zonder API', 'Doorlopende datakwaliteit en monitoring'] },
+    { iconClass: 'icon-scan-search', title: 'AI-readiness & advies', desc: 'Een kort, gericht traject om te bepalen waar AI echt waarde toevoegt in jouw organisatie, met een geprioriteerd plan op basis van ROI en haalbaarheid.', color: 'oklch(70% 0.14 220)', bullets: ['In kaart brengen van AI-kansen in je organisatie', 'Assessment van data- en infrastructuur-gereedheid', 'Prioritering van use cases op ROI en haalbaarheid', 'Advies over leveranciers en zelf bouwen versus inkopen'] }
+  ],
+
+  flowNodes: [
+    { iconClass: 'icon-zap', label: 'Trigger' },
+    { iconClass: 'icon-workflow', label: 'n8n' },
+    { iconClass: 'icon-bot', label: 'AI-model' },
+    { iconClass: 'icon-check', label: 'Actie' },
+    { iconClass: 'icon-database', label: 'Jouw systeem' }
+  ],
+
+  toolsLabel: 'Probeer het zelf',
+  toolsHeading: 'Ontdek wat het voor jouw bedrijf betekent',
+  toolsSubtext: 'Twee kleine tools om je situatie scherp te krijgen voordat je een gesprek plant.',
+  tabScanLabel: 'AI-fit scan',
+  tabCalcLabel: 'Tijdsbesparing berekenen',
+
+  quizProgressLabel: 'Vraag',
+  quizOfLabel: 'van',
+  quizRestartLabel: 'Scan opnieuw doen',
+  quizCtaLabel: 'Plan gratis kennismaking',
+  quizResultLabel: 'Jouw resultaat',
+  quizQuestions: [
+    {
+      q: 'Wat kost je nu de meeste tijd?',
+      options: [
+        { label: 'Handmatig data overtypen tussen systemen', readiness: 3, lean: 2 },
+        { label: 'Rapportages en analyses samenstellen', readiness: 2, lean: 1 },
+        { label: 'Een tool of functionaliteit die simpelweg nog niet bestaat', readiness: 2, lean: -2 },
+        { label: 'Weet ik nog niet precies', readiness: 0, lean: 0 }
+      ]
+    },
+    {
+      q: 'Hoeveel systemen moeten met elkaar kunnen praten?',
+      options: [
+        { label: 'Geen, het gaat om één nieuw stuk software', readiness: 2, lean: -2 },
+        { label: '1-2 bestaande systemen', readiness: 2, lean: 1 },
+        { label: '3 of meer bestaande systemen', readiness: 3, lean: 2 },
+        { label: 'Nog niet in kaart gebracht', readiness: 0, lean: 0 }
+      ]
+    },
+    {
+      q: 'Heb je al met AI geexperimenteerd binnen je bedrijf?',
+      options: [
+        { label: 'Nee, nog niet', readiness: 1, lean: 0 },
+        { label: 'Ja, met losse tools zoals ChatGPT', readiness: 2, lean: 1 },
+        { label: 'Ja, en dat willen we nu structureel inbouwen in een product', readiness: 3, lean: -2 },
+        { label: 'Ja, maar het bleef bij een demo', readiness: 2, lean: 0 }
+      ]
+    },
+    {
+      q: 'Wat is het gewenste eindresultaat?',
+      options: [
+        { label: 'Een proces dat automatisch draait, zonder handwerk', readiness: 3, lean: 2 },
+        { label: 'Een nieuwe applicatie die klanten of collega\'s gebruiken', readiness: 3, lean: -2 },
+        { label: 'Eerst bewijzen dat het werkt, dan verder kijken', readiness: 2, lean: 0 },
+        { label: 'Nog niet concreet', readiness: 0, lean: 0 }
+      ]
+    },
+    {
+      q: 'Wanneer wil je hiermee live zijn?',
+      options: [
+        { label: 'Binnen 4 weken', readiness: 3, lean: 0 },
+        { label: 'Binnen 1 tot 3 maanden', readiness: 2, lean: 0 },
+        { label: 'Dit jaar, geen harde deadline', readiness: 1, lean: 0 },
+        { label: 'Nog aan het orienteren', readiness: 0, lean: 0 }
+      ]
+    }
+  ],
+  quizReadinessLow: 'Je staat aan het begin. Een Quick win (één proces automatiseren) of een vrijblijvende kennismaking helpt om de kans scherp te krijgen.',
+  quizReadinessMid: 'Je bent klaar voor een proof of concept: een werkend prototype op jouw data, binnen 2 tot 3 weken.',
+  quizReadinessHigh: 'Je bent klaar voor een volledige implementatie. Tijd om dit in productie te zetten.',
+  quizServiceAutomation: 'Dit klinkt vooral naar AI-automatisering: een proces dat zelfstandig draait.',
+  quizServiceApp: 'Dit klinkt vooral naar een AI-geintegreerde applicatie: nieuwe software met AI in de kern.',
+  quizServiceBoth: 'Dit klinkt naar een combinatie van automatisering en een applicatie.',
+
+  calcHoursLabel: 'Hoeveel uur per week kost deze taak nu?',
+  calcRateLabel: 'Wat is dat uur ongeveer waard?',
+  calcResultIntro: 'Geschatte besparing bij automatisering:',
+  calcPerWeek: 'per week',
+  calcPerMonth: 'per maand',
+  calcPerYear: 'per jaar',
+  calcDisclaimer: 'Indicatieve schatting op basis van 70% tijdsbesparing bij een geslaagde automatisering. De werkelijke besparing hangt af van het proces.',
+
+  stackLabel: 'Techniek',
+  stackHeading: 'Techniek onder de motorkap',
+  stackSubtext: 'Geen black box, geen dertien-in-een-dozijn tool-lijstje. Een klein, bewust gekozen instrumentarium, diep beheerst in plaats van oppervlakkig overal een beetje van.',
+  stackTools: [
+    { iconClass: 'icon-workflow', name: 'n8n', desc: 'Het fundament van elke automatisering: workflows die je systemen, data en AI-modellen aan elkaar knopen, zonder vendor lock-in.' },
+    { iconClass: 'icon-code-2', name: 'Claude Code', desc: 'Voor het bouwen van maatwerk-applicaties en -logica die verder gaan dan een workflow-tool aankan. Van prototype tot productieklare code.' },
+    { iconClass: 'icon-bot', name: 'ChatGPT / OpenAI', desc: 'Voor taalverwerking, classificatie en besluitondersteuning binnen de systemen die we opleveren.' },
+    { iconClass: 'icon-network', name: 'Maatwerk integraties', desc: 'Elke organisatie werkt anders. Deze drie worden verbonden met wat jij al gebruikt: CRM, ERP, databases, interne API\'s.' }
+  ],
+
+  industryLabel: 'Sectoren',
+  industryHeading: 'Voor elke sector',
+  industrySubtext: 'Een greep uit de branches waar we al voor bouwen. Werk je ergens anders? Dezelfde automatiseringen en chatbots werken net zo goed daar.',
+  industries: [
+    { title: 'Kapsalons/schoonheidssalons' },
+    { title: 'Tandartsenpraktijken' },
+    { title: 'Kozijnen-/raambedrijven' },
+    { title: 'Fysiotherapie/paramedisch' },
+    { title: 'Schoonmaakbedrijven' },
+    { title: 'Horeca' },
+    { title: 'Fitness/sportscholen/PT' },
+    { title: 'Makelaardij' },
+    { title: 'Bouwbedrijven/aannemers' },
+    { title: 'Installatiebedrijven' },
+    { title: 'Autobedrijven' },
+    { title: 'Juridische dienstverlening' },
+    { title: 'Accountants-/administratiekantoren' },
+    { title: 'E-commerce/webshops' },
+    { title: 'Evenementenbureaus' },
+    { title: 'Onderwijs/coaching' },
+    { title: 'Reisbureaus' },
+    { title: 'Verhuurbedrijven' },
+    { title: 'Uitzend-/recruitmentbureaus' },
+    { title: 'Dierenartsenpraktijken' },
+    { title: 'Kinderopvang' }
+  ],
+
+  casesLabel: 'Cases',
+  casesHeading: 'Echte resultaten uit echte projecten',
+  casesSubtext: 'Geanonimiseerd vanwege NDA. Alle cijfers zijn afkomstig van systemen die in productie draaien.',
+  cases: [
+    { num: '01', title: 'Factuurautomatisering', industry: 'Financiele dienstverlening', desc: 'Geautomatiseerde verwerking van inkoopfacturen voor een financieel team in het mkb. Handmatige invoer geelimineerd en doorlooptijd flink verkort.', color: 'oklch(70% 0.14 220)', metric1Label: 'Kostenreductie', metric1: '68%', metric2Label: 'Tijd tot waarde', metric2: '8 weken' },
+    { num: '02', title: 'Vraagvoorspelling', industry: 'Operations', desc: 'Voorspellend model voor supply chain-inzicht. Betere voorraadplanning en minder kans op nee-verkoop.', color: 'oklch(60% 0.15 170)', metric1Label: 'Nauwkeurigheid', metric1: '92%', metric2Label: 'Voorraadkosten', metric2: '-24%' },
+    { num: '03', title: 'Klantsegmentatie', industry: 'Retail', desc: 'ML-gedreven segmentatie voor persoonlijke campagnes. Hogere campagne-ROI door betere targeting.', color: 'oklch(75% 0.12 160)', metric1Label: 'ROI-stijging', metric1: '+31%', metric2Label: 'Betrokkenheid', metric2: '+42%' }
+  ],
+
+  processHeading: 'Hoe het werkt',
+  processSubtext: 'Van kennismaking tot livegang in 2 tot 4 weken.',
+  process: [
+    { n: '1', title: 'Discovery', desc: 'Je proces in kaart brengen. Data begrijpen. De ROI-kans identificeren.' },
+    { n: '2', title: 'Proof of Concept', desc: 'Bouwen en valideren op echte data. Bewijzen dat het werkt voordat je volledig committeert.' },
+    { n: '3', title: 'Implementatie', desc: 'Live zetten in productie. Integreren met je systemen. Je team trainen.' },
+    { n: '4', title: 'Support', desc: 'Prestaties monitoren. Itereren. Meetbare ROI borgen.' }
+  ],
+
+  aboutLabel: 'Over Tessar',
+  aboutHeading: 'Direct met de bouwer, niet met een verkoopteam',
+  aboutBody: 'Elk traject loopt via dezelfde persoon: van de eerste kennismaking, door de bouw, tot de oplevering en de support erna. Geen wisseling van team halverwege, geen overdracht aan iemand die de context nog moet inhalen. Dat houdt de communicatie kort en de beslissingen snel — wat wordt afgesproken, wordt ook gebouwd door wie het heeft afgesproken.',
+  aboutPoints: [
+    { iconClass: 'icon-target', text: 'Focus op meetbare ROI, niet op technologie om de technologie' },
+    { iconClass: 'icon-message-square', text: 'Dezelfde persoon van intake tot livegang, geen overdracht halverwege' },
+    { iconClass: 'icon-git-branch', text: 'Bouwt rond je bestaande systemen, geen verplichte migratie' }
+  ],
+
+  pricingHeading: 'Vaste prijs waar het kan, maatwerk waar het moet',
+  pricingSubtext: 'Vaste scope, vaste prijs zodra we de scope kennen. Klein beginnen kan, groot bouwen ook.',
+  pricingFullLink: 'Bekijk volledige prijzen →',
+  pricing: [
+    { name: 'Kennismaking', desc: 'Je kans in kaart brengen', price: 'Gratis', timeframe: '30 minuten', cta: 'Plan gesprek', includes: ['Eerste inschatting van je AI-kansen', 'Kansen met hoogste ROI identificeren', 'Realistische planning en budget'] },
+    { name: 'AI-readiness scan', desc: 'Diepteanalyse met schriftelijk rapport', price: 'vanaf €295', timeframe: '2-3 dagen', cta: 'Vraag een scan aan', includes: ['Analyse van je huidige processen en systemen', 'Concreet rapport met kansen, geschat rendement en risico\'s', 'Eén aanbevolen vervolgstap (Quick win, PoC of volledige implementatie)'] },
+    { name: 'Quick win', desc: 'Eén proces automatiseren', price: '€1.250', timeframe: '1 week', cta: 'Bespreek dit pakket', includes: ['Eén concreet proces geautomatiseerd', 'Koppeling met 1-2 bestaande systemen (standaard API — maatwerk-koppelingen apart besproken)', '30 dagen nazorg', '2 revisierondes inbegrepen', 'Overdracht en documentatie'] },
+    { name: 'Proof of Concept', desc: 'De aanpak valideren', price: 'Op aanvraag', timeframe: '2-3 weken', cta: 'Bespreek dit pakket', includes: ['Prototype op jouw data', 'Eerste nauwkeurigheidscijfers', 'Integratieplan', 'Training van je team'] },
+    { name: 'Volledige implementatie', desc: 'Live en opschalen', price: 'Op aanvraag', timeframe: '2-4 weken', cta: 'Bespreek dit pakket', includes: ['Productie-implementatie', 'Systeemintegratie', 'Doorlopende monitoring', '90 dagen support'] }
+  ],
+
+  faqLabel: 'Vragen',
+  faqHeading: 'Veelgestelde vragen',
+  faqs: [
+    { q: 'Wat kost een traject?', a: 'Voor Quick win en de AI-readiness scan geldt een vaste prijs, meteen te zien op deze pagina. Voor Proof of Concept en een volledige implementatie hangt de prijs af van de scope — die bepalen we samen in de gratis kennismaking, en pas daarna volgt een vaste prijs die niet meer verandert.' },
+    { q: 'Hoe lang duurt een traject?', a: 'Een quick win duurt ongeveer 1 week, een proof of concept 2 tot 3 weken en een volledige implementatie 2 tot 4 weken. Bij een volledige implementatie volgt daarna nog 90 dagen support om te zorgen dat het systeem ook echt blijft werken.' },
+    { q: 'Werken jullie met onze bestaande systemen?', a: 'Ja. Automatiseringen en applicaties worden gebouwd rond wat je al gebruikt: je CRM, ERP, database of interne tools. Geen noodzaak om over te stappen naar nieuwe software.' },
+    { q: 'Is onze data veilig?', a: 'Data wordt verwerkt volgens de AVG en, waar relevant, de EU AI Act. Waar jouw sector dat vereist, gaat de voorkeur uit naar Europese of on-premise dataopslag.' },
+    { q: 'Voor wie is dit geschikt?', a: 'Voor mkb- en middelgrote bedrijven die AI concreet willen inzetten, niet alleen willen verkennen. De AI-readiness scan levert bewust een schriftelijk rapport op als eerste stap; de pakketten daarna — Quick win, proof of concept, volledige implementatie — eindigen altijd in een werkend systeem.' },
+    { q: 'Wat als het niet werkt zoals verwacht?', a: 'Een proof of concept is er juist op gericht om vooraf te bewijzen dat de aanpak werkt, voordat je committeert aan de volledige implementatie. Zo blijft het risico op een investering die niets oplevert beperkt.' }
+  ],
+
+  contactHeading: 'Klaar om te starten?',
+  contactSubtext: 'Plan een gratis kennismaking van 30 minuten. We brengen je AI-kans in kaart en laten zien wat mogelijk is.',
+  formNamePlaceholder: 'Je naam',
+  formEmailPlaceholder: 'jij@bedrijf.nl',
+  formPhonePlaceholder: 'Telefoonnummer (optioneel)',
+  formIndustryPlaceholder: 'Jouw sector',
+  formMessagePlaceholder: 'Beschrijf kort je uitdaging...',
+  contactCTA: 'Plan gesprek',
+  contactFooter: 'Meestal binnen 24 uur reactie.',
+
+  footerTagline: 'AI-implementatie en AI-geintegreerde applicaties voor Nederlandse en Europese mkb-bedrijven.',
+  footerColNav: 'Navigatie',
+  footerColMore: 'Meer',
+  footerColContact: 'Contact',
+  footerHow: 'Werkwijze',
+  footerAbout: 'Over ons',
+  footerContactLink: 'Stuur een bericht',
+  footerCopyright: '(c) 2026 Tessar. Alle rechten voorbehouden.',
+  footerBuiltWith: 'Gevestigd in Nederland.',
+  footerLogin: 'Login'
+};
+
+const copyEN = {
+  navServices: 'Services',
+  navBuild: 'What we build',
+  navIndustries: 'Industries',
+  navCases: 'Case Studies',
+  navFaq: 'FAQ',
+  navPricing: 'Pricing',
+  navChatbots: 'Chatbots',
+  navBlog: 'Blog',
+  navBookCall: 'Book call',
+
+  badge: 'AI Automation & AI Applications',
+  heroHeading: 'From repetitive work to automation. From idea to working AI application.',
+  heroHeadingPre: 'From complex to ',
+  heroHeadingHi1: 'concrete',
+  heroHeadingMid: '. From idea to working ',
+  heroHeadingHi2: 'AI application',
+  heroHeadingPost: '.',
+  heroSubtext: 'Practical AI automation, straight from the builder.',
+  ctaPrimary: 'Schedule free discovery call',
+  ctaSecondary: 'View case studies',
+  trustA: 'EU AI Act ready',
+  trustB: 'GDPR ready',
+  trustC: '2-4 weeks to launch',
+  trustD: 'Fixed price, agreed upfront',
+
+  whyUs: [
+    { iconClass: 'icon-message-square', text: 'Direct contact with whoever actually builds it, no account manager in between.' },
+    { iconClass: 'icon-file-text', text: 'Fixed price and fixed scope, agreed before any work starts.' },
+    { iconClass: 'icon-target', text: 'Every engagement ends in a working system in production, not an advisory report.' }
+  ],
+
+  problemLabel: 'Sound familiar',
+  problemHeading: 'Where most mid-market companies stand today',
+  beforeLabel: 'Now',
+  afterLabel: 'With Tessar',
+  beforeItems: [
+    'Manually retyping data between systems that do not talk to each other',
+    'Reports that take days instead of seconds',
+    'AI experiments that never get past a demo',
+    'Disconnected tools sitting side by side'
+  ],
+  afterItems: [
+    'Automatic processing across your existing systems',
+    'Real-time insight, available the moment you need it',
+    'A working system in production within 2 to 4 weeks',
+    'One integrated whole built around the tools you already use'
+  ],
+
+  capabilitiesLabel: 'What we build',
+  capabilitiesHeading: 'Five ways we put AI to work',
+  capabilitiesSubtext: 'From small process automations to a full AI product. Each of these five services can also be hired on its own, with its own fixed price.',
+  capabilitiesCta: 'See all services',
+  capabilitiesChatbotsCta: 'See our AI chatbots',
+  capabilities: [
+    { iconClass: 'icon-workflow', title: 'AI Process Automation', desc: 'Automate the manual, repetitive parts of your operation: data entry, reporting, document processing, decision support. Systems that plug into what you already use.', color: 'oklch(70% 0.14 220)', bullets: ['Mapping workflows and automation design', 'Document and data-processing pipelines', 'Integration with existing CRM, ERP and internal tools', 'Monitoring and error handling in production'] },
+    { iconClass: 'icon-trending-up', title: 'Predictive Models & Decision Support', desc: 'Models trained on your own data to forecast demand, score risk, or detect anomalies, with accuracy figures you can check against reality.', color: 'oklch(60% 0.15 170)', bullets: ['Data pipeline and feature preparation', 'Model training, validation and accuracy reporting', 'Demand forecasting, risk scoring and anomaly detection', 'Delivered as an API or internal dashboard'] },
+    { iconClass: 'icon-puzzle', title: 'AI-Integrated Applications', desc: 'Full products with AI at the core, not bolted on afterward. Internal tools, customer-facing applications and platforms built from the ground up around what modern models can do.', color: 'oklch(70% 0.14 220)', bullets: ['Product architecture and technical scoping', 'Full-stack development with an integrated AI layer', 'AI agents and copilots embedded in existing products', 'MVP builds for AI-first products, ready to hand over or maintain'] },
+    { iconClass: 'icon-network', title: 'Systems Integration & Data Pipelines', desc: 'Connects your CRM, ERP, databases and internal tools so information flows automatically instead of through manual exports and copy-pasting.', color: 'oklch(60% 0.15 170)', bullets: ['API integrations between existing platforms', 'Setting up and planning data pipelines', 'Connectors for legacy systems without an API', 'Ongoing data quality and monitoring'] },
+    { iconClass: 'icon-scan-search', title: 'AI Readiness & Advisory', desc: 'A short, focused engagement to pinpoint where AI actually adds value in your organization, resulting in a prioritized plan based on ROI and feasibility.', color: 'oklch(70% 0.14 220)', bullets: ['Mapping AI opportunities across your organization', 'Assessing data and infrastructure readiness', 'Prioritizing use cases on ROI and feasibility', 'Advice on vendors versus building in-house'] }
+  ],
+
+  flowNodes: [
+    { iconClass: 'icon-zap', label: 'Trigger' },
+    { iconClass: 'icon-workflow', label: 'n8n' },
+    { iconClass: 'icon-bot', label: 'AI model' },
+    { iconClass: 'icon-check', label: 'Action' },
+    { iconClass: 'icon-database', label: 'Your system' }
+  ],
+
+  toolsLabel: 'Try it yourself',
+  toolsHeading: 'See what it means for your business',
+  toolsSubtext: 'Two small tools to sharpen your situation before you book a call.',
+  tabScanLabel: 'AI fit scan',
+  tabCalcLabel: 'Calculate time savings',
+
+  quizProgressLabel: 'Question',
+  quizOfLabel: 'of',
+  quizRestartLabel: 'Retake the scan',
+  quizCtaLabel: 'Schedule free discovery call',
+  quizResultLabel: 'Your result',
+  quizQuestions: [
+    {
+      q: 'What costs you the most time right now?',
+      options: [
+        { label: 'Manually re-typing data between systems', readiness: 3, lean: 2 },
+        { label: 'Putting together reports and analyses', readiness: 2, lean: 1 },
+        { label: 'A tool or feature that simply does not exist yet', readiness: 2, lean: -2 },
+        { label: 'Not sure yet', readiness: 0, lean: 0 }
+      ]
+    },
+    {
+      q: 'How many systems need to talk to each other?',
+      options: [
+        { label: 'None, this is one new piece of software', readiness: 2, lean: -2 },
+        { label: '1-2 existing systems', readiness: 2, lean: 1 },
+        { label: '3 or more existing systems', readiness: 3, lean: 2 },
+        { label: 'Not mapped out yet', readiness: 0, lean: 0 }
+      ]
+    },
+    {
+      q: 'Have you experimented with AI in your business already?',
+      options: [
+        { label: 'No, not yet', readiness: 1, lean: 0 },
+        { label: 'Yes, with standalone tools like ChatGPT', readiness: 2, lean: 1 },
+        { label: 'Yes, and we now want to build that into a product', readiness: 3, lean: -2 },
+        { label: 'Yes, but it stayed a demo', readiness: 2, lean: 0 }
+      ]
+    },
+    {
+      q: 'What is the outcome you want?',
+      options: [
+        { label: 'A process that runs automatically, no manual work', readiness: 3, lean: 2 },
+        { label: 'A new application customers or colleagues use', readiness: 3, lean: -2 },
+        { label: 'First prove it works, then decide next steps', readiness: 2, lean: 0 },
+        { label: 'Not concrete yet', readiness: 0, lean: 0 }
+      ]
+    },
+    {
+      q: 'When do you want this live?',
+      options: [
+        { label: 'Within 4 weeks', readiness: 3, lean: 0 },
+        { label: 'Within 1 to 3 months', readiness: 2, lean: 0 },
+        { label: 'This year, no hard deadline', readiness: 1, lean: 0 },
+        { label: 'Still exploring', readiness: 0, lean: 0 }
+      ]
+    }
+  ],
+  quizReadinessLow: 'You are at the starting point. A Quick Win (automating one process) or a no-obligation discovery call helps sharpen the opportunity.',
+  quizReadinessMid: 'You are ready for a proof of concept: a working prototype on your data, within 2 to 3 weeks.',
+  quizReadinessHigh: 'You are ready for a full implementation. Time to put this into production.',
+  quizServiceAutomation: 'This sounds like AI automation: a process that runs on its own.',
+  quizServiceApp: 'This sounds like an AI-integrated application: new software with AI at its core.',
+  quizServiceBoth: 'This sounds like a combination of automation and an application.',
+
+  calcHoursLabel: 'How many hours a week does this task cost now?',
+  calcRateLabel: 'What is that hour roughly worth?',
+  calcResultIntro: 'Estimated savings with automation:',
+  calcPerWeek: 'per week',
+  calcPerMonth: 'per month',
+  calcPerYear: 'per year',
+  calcDisclaimer: 'Indicative estimate based on 70% time savings for a successful automation. Actual savings depend on the process.',
+
+  stackLabel: 'Technology',
+  stackHeading: 'The technology behind it',
+  stackSubtext: 'No black box, and no laundry list of tools for the sake of looking thorough. A small, deliberately chosen toolset, mastered deeply rather than dabbled with broadly.',
+  stackTools: [
+    { iconClass: 'icon-workflow', name: 'n8n', desc: 'The backbone of every automation: workflows that connect your systems, data and AI models, without vendor lock-in.' },
+    { iconClass: 'icon-code-2', name: 'Claude Code', desc: 'For building custom applications and logic that go beyond what a workflow tool can handle. From prototype to production-ready code.' },
+    { iconClass: 'icon-bot', name: 'ChatGPT / OpenAI', desc: 'For language processing, classification and decision support inside the systems we deliver.' },
+    { iconClass: 'icon-network', name: 'Custom integrations', desc: 'Every organization works differently. These three connect to what you already use: CRM, ERP, databases, internal APIs.' }
+  ],
+
+  industryLabel: 'Industries',
+  industryHeading: 'For every sector',
+  industrySubtext: 'A selection of the industries we already build for. Working in a different sector? The same automations and chatbots work just as well there.',
+  industries: [
+    { title: 'Hairdressers/beauty salons' },
+    { title: 'Dental practices' },
+    { title: 'Window/frame installers' },
+    { title: 'Physiotherapy/paramedical' },
+    { title: 'Cleaning companies' },
+    { title: 'Hospitality' },
+    { title: 'Gyms/fitness/PT' },
+    { title: 'Real estate agencies' },
+    { title: 'Construction companies/contractors' },
+    { title: 'Installation companies' },
+    { title: 'Car dealerships/garages' },
+    { title: 'Legal services' },
+    { title: 'Accounting/bookkeeping firms' },
+    { title: 'E-commerce/webshops' },
+    { title: 'Event agencies' },
+    { title: 'Education/coaching' },
+    { title: 'Travel agencies' },
+    { title: 'Rental companies' },
+    { title: 'Staffing/recruitment agencies' },
+    { title: 'Veterinary practices' },
+    { title: 'Childcare' }
+  ],
+
+  casesLabel: 'Case studies',
+  casesHeading: 'Real results from real projects',
+  casesSubtext: 'Anonymized by NDA. All metrics from live systems in production.',
+  cases: [
+    { num: '01', title: 'Invoice Automation', industry: 'Financial Services', desc: 'Automated AP invoice processing for a mid-market finance team. Eliminated manual data entry and reduced cycle time.', color: 'oklch(70% 0.14 220)', metric1Label: 'Cost Reduction', metric1: '68%', metric2Label: 'Time to Value', metric2: '8 weeks' },
+    { num: '02', title: 'Demand Forecasting', industry: 'Operations', desc: 'Predictive model for supply chain visibility. Improved inventory planning and reduced stockout risk.', color: 'oklch(60% 0.15 170)', metric1Label: 'Accuracy', metric1: '92%', metric2Label: 'Inventory Cost', metric2: '-24%' },
+    { num: '03', title: 'Customer Segmentation', industry: 'Retail', desc: 'ML-driven segmentation for personalized campaigns. Improved campaign ROI through better targeting.', color: 'oklch(75% 0.12 160)', metric1Label: 'ROI Uplift', metric1: '+31%', metric2Label: 'Engagement', metric2: '+42%' }
+  ],
+
+  processHeading: 'How it works',
+  processSubtext: 'From discovery to deployment in 2 to 4 weeks.',
+  process: [
+    { n: '1', title: 'Discovery', desc: 'Map your process. Understand your data. Identify the ROI opportunity.' },
+    { n: '2', title: 'Proof of Concept', desc: 'Build and validate on real data. Prove it works before you fully commit.' },
+    { n: '3', title: 'Implementation', desc: 'Deploy to production. Integrate with your systems. Train your team.' },
+    { n: '4', title: 'Support', desc: 'Monitor performance. Iterate. Secure measurable ROI.' }
+  ],
+
+  aboutLabel: 'About Tessar',
+  aboutHeading: 'Direct with the builder, not a sales team',
+  aboutBody: 'Every project runs through the same person: from the first conversation, through the build, to delivery and the support that follows. No team handoffs mid-project, no new person who has to catch up on context first. That keeps communication short and decisions fast — what gets agreed gets built by the person who agreed to it.',
+  aboutPoints: [
+    { iconClass: 'icon-target', text: 'Focused on measurable ROI, not technology for its own sake' },
+    { iconClass: 'icon-message-square', text: 'Same person from intake to launch, no handoff halfway through' },
+    { iconClass: 'icon-git-branch', text: 'Built around your existing systems, no forced migration' }
+  ],
+
+  pricingHeading: 'Fixed price where we can, custom where we must',
+  pricingSubtext: 'Fixed scope, fixed price once we know the scope. Start small or build big.',
+  pricingFullLink: 'View full pricing →',
+  pricing: [
+    { name: 'Discovery Call', desc: 'Understand your opportunity', price: 'Free', timeframe: '30 minutes', cta: 'Book call', includes: ['A first read on your AI opportunities', 'Identify high-ROI use cases', 'Realistic timeline & budget'] },
+    { name: 'AI Readiness Scan', desc: 'In-depth analysis with a written report', price: 'from €295', timeframe: '2-3 days', cta: 'Request a scan', includes: ['Analysis of your current processes and systems', 'Concrete report on opportunities, estimated ROI and risks', 'One recommended next step (Quick win, PoC or full implementation)'] },
+    { name: 'Quick Win', desc: 'Automate one process', price: '€1,250', timeframe: '1 week', cta: 'Discuss this package', includes: ['One concrete process automated', 'Connects to 1-2 existing systems (standard API — custom connectors discussed separately)', '30 days of aftercare', '2 revision rounds included', 'Handover and documentation'] },
+    { name: 'Proof of Concept', desc: 'Validate the approach', price: 'On request', timeframe: '2-3 weeks', cta: 'Discuss this package', includes: ['Prototype on your data', 'Initial accuracy metrics', 'Integration plan', 'Team training'] },
+    { name: 'Full Implementation', desc: 'Go live and scale', price: 'On request', timeframe: '2-4 weeks', cta: 'Discuss this package', includes: ['Production deployment', 'System integration', 'Ongoing monitoring', '90-day support'] }
+  ],
+
+  faqLabel: 'FAQ',
+  faqHeading: 'Frequently asked questions',
+  faqs: [
+    { q: 'What does an engagement cost?', a: 'Quick win and the AI readiness scan have a fixed price, shown right on this page. For a proof of concept or full implementation, price depends on scope — we determine that together in the free discovery call, and only then does a fixed price follow that will not change afterwards.' },
+    { q: 'How long does an engagement take?', a: 'A quick win takes about 1 week, a proof of concept 2 to 3 weeks, a full implementation 2 to 4 weeks. A full implementation is followed by 90 days of support to make sure the system keeps working.' },
+    { q: 'Do you work with our existing systems?', a: 'Yes. Automations and applications are built around what you already use: your CRM, ERP, database or internal tools. No need to switch to new software.' },
+    { q: 'Is our data safe?', a: 'Data is processed in line with GDPR and, where relevant, the EU AI Act. Where your sector requires it, European or on-premise data storage is preferred.' },
+    { q: 'Who is this a good fit for?', a: 'Mid-market and scale-up companies that want to actually deploy AI, not just explore it. The AI readiness scan deliberately produces a written report as a first step; every package after that — Quick win, proof of concept, full implementation — always ends in a working system.' },
+    { q: 'What if it does not work as expected?', a: 'A proof of concept exists specifically to prove the approach works before you commit to full implementation. That keeps the risk of an investment that delivers nothing to a minimum.' }
+  ],
+
+  contactHeading: 'Ready to start',
+  contactSubtext: 'Book a 30-minute discovery call. We will map your AI opportunity and show you what is possible.',
+  formNamePlaceholder: 'Your name',
+  formEmailPlaceholder: 'your@email.com',
+  formPhonePlaceholder: 'Phone number (optional)',
+  formIndustryPlaceholder: 'Your industry',
+  formMessagePlaceholder: 'Briefly describe your challenge...',
+  contactCTA: 'Schedule call',
+  contactFooter: 'Usually respond within 24 hours.',
+
+  footerTagline: 'AI implementation and AI-integrated applications for Dutch and European mid-market companies.',
+  footerColNav: 'Navigation',
+  footerColMore: 'More',
+  footerColContact: 'Contact',
+  footerHow: 'How it works',
+  footerAbout: 'About',
+  footerContactLink: 'Send a message',
+  footerCopyright: '(c) 2026 Tessar. All rights reserved.',
+  footerBuiltWith: 'Based in the Netherlands.',
+  footerLogin: 'Login'
+};
+
+function formatEuro(n) {
+  return '€' + Math.round(n).toLocaleString('nl-NL');
+}
+
+// Exposed for the vanilla-JS hero canvas (outside React state) so its
+// workflow-step labels can follow the current language without a re-init.
+window.__dcLang = 'nl';
+
+class Component extends DCLogic {
+  state = {
+    lang: 'nl',
+    toolTab: 'scan',
+    quizStep: 0,
+    quizReadiness: 0,
+    quizLean: 0,
+    roiHours: 10,
+    roiRate: 40
+  };
+
+  renderVals() {
+    const lang = this.state.lang === 'en' ? 'en' : 'nl';
+    const t = lang === 'nl' ? copyNL : copyEN;
+    const active = { background: 'oklch(70% 0.14 220)', color: '#001a2e' };
+    const inactive = { background: 'transparent', color: 'oklch(46% 0.012 140)' };
+    const s = this.state;
+
+    const isTabScan = s.toolTab !== 'calc';
+    const isTabCalc = s.toolTab === 'calc';
+    const totalQuestions = t.quizQuestions.length;
+    const quizDone = s.quizStep >= totalQuestions;
+    const quizNotDone = !quizDone;
+
+    let quizQuestion = null;
+    if (quizNotDone) {
+      const raw = t.quizQuestions[s.quizStep];
+      quizQuestion = {
+        q: raw.q,
+        options: raw.options.map((opt) => ({
+          label: opt.label,
+          onSelect: () => this.setState({
+            quizStep: s.quizStep + 1,
+            quizReadiness: s.quizReadiness + opt.readiness,
+            quizLean: s.quizLean + opt.lean
+          })
+        }))
+      };
+    }
+
+    let quizResultReadiness = '';
+    let quizResultService = '';
+    if (quizDone) {
+      quizResultReadiness = s.quizReadiness >= 12 ? t.quizReadinessHigh : s.quizReadiness >= 7 ? t.quizReadinessMid : t.quizReadinessLow;
+      quizResultService = s.quizLean > 2 ? t.quizServiceAutomation : s.quizLean < -2 ? t.quizServiceApp : t.quizServiceBoth;
+    }
+
+    const roiHours = s.roiHours;
+    const roiRate = s.roiRate;
+    const roiWeeklyHours = roiHours * 0.7;
+    const roiWeeklyEuroVal = roiWeeklyHours * roiRate;
+    const roiMonthlyEuroVal = roiWeeklyEuroVal * 4.33;
+    const roiYearlyEuroVal = roiWeeklyEuroVal * 52;
+
+    return {
+      ...t,
+      lang,
+      setLangNl: () => { window.__dcLang = 'nl'; this.setState({ lang: 'nl' }); },
+      setLangEn: () => { window.__dcLang = 'en'; this.setState({ lang: 'en' }); },
+      langNlBg: lang === 'nl' ? active.background : inactive.background,
+      langNlColor: lang === 'nl' ? active.color : inactive.color,
+      langEnBg: lang === 'en' ? active.background : inactive.background,
+      langEnColor: lang === 'en' ? active.color : inactive.color,
+
+      setToolTabScan: () => this.setState({ toolTab: 'scan' }),
+      setToolTabCalc: () => this.setState({ toolTab: 'calc' }),
+      isTabScan,
+      isTabCalc,
+      tabScanBg: isTabScan ? active.background : inactive.background,
+      tabScanColor: isTabScan ? active.color : inactive.color,
+      tabCalcBg: isTabCalc ? active.background : inactive.background,
+      tabCalcColor: isTabCalc ? active.color : inactive.color,
+
+      quizStep: s.quizStep,
+      quizDone,
+      quizNotDone,
+      quizQuestion,
+      quizProgressText: quizNotDone ? (t.quizProgressLabel + ' ' + (s.quizStep + 1) + ' ' + t.quizOfLabel + ' ' + totalQuestions) : '',
+      quizResultReadiness,
+      quizResultService,
+      resetQuiz: () => this.setState({ quizStep: 0, quizReadiness: 0, quizLean: 0 }),
+
+      roiHours,
+      roiRate,
+      setRoiHours: (e) => this.setState({ roiHours: Number(e.target.value) }),
+      setRoiRate: (e) => this.setState({ roiRate: Number(e.target.value) }),
+      roiWeeklyEuro: formatEuro(roiWeeklyEuroVal),
+      roiMonthlyEuro: formatEuro(roiMonthlyEuroVal),
+      roiYearlyEuro: formatEuro(roiYearlyEuroVal)
+    };
+  }
+}
+</script>
+
+<script>
+(function () {
+  "use strict";
+
+  function animateCount(el) {
+    if (el.__counted) return;
+    el.__counted = true;
+    var raw = (el.getAttribute("data-count-target") || el.textContent || "").trim();
+    var m = raw.match(/^([+-]?)(\d+(?:\.\d+)?)(.*)$/);
+    if (!m) return;
+    var sign = m[1], num = parseFloat(m[2]), suffix = m[3];
+    var isInt = num === Math.round(num);
+    var duration = 1100, start = null;
+    function tick(ts) {
+      if (start === null) start = ts;
+      var p = Math.min((ts - start) / duration, 1);
+      var eased = 1 - Math.pow(1 - p, 3);
+      var val = num * eased;
+      el.textContent = sign + (isInt ? Math.round(val) : val.toFixed(1)) + suffix;
+      if (p < 1) requestAnimationFrame(tick);
+      else el.textContent = sign + (isInt ? num : num.toFixed(1)) + suffix;
+    }
+    requestAnimationFrame(tick);
+  }
+
+  var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  var io = ("IntersectionObserver" in window) ? new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (!entry.isIntersecting) return;
+      var el = entry.target;
+      if (el.hasAttribute("data-reveal")) el.classList.add("is-visible");
+      if (el.hasAttribute("data-count-target")) animateCount(el);
+      io.unobserve(el);
+    });
+  }, { threshold: 0.15, rootMargin: "0px 0px -40px 0px" }) : null;
+
+  function observeNew(root) {
+    if (!root || !root.querySelectorAll) return;
+    var targets = root.querySelectorAll("[data-reveal]:not(.is-visible), [data-count-target]");
+    targets.forEach(function (el) {
+      if (el.__revealBound) return;
+      el.__revealBound = true;
+      if (reduceMotion || !io) {
+        el.classList.add("is-visible");
+        animateCount(el);
+      } else {
+        io.observe(el);
+      }
+    });
+  }
+
+  observeNew(document);
+  if ("MutationObserver" in window) {
+    new MutationObserver(function (mutations) {
+      mutations.forEach(function (mut) {
+        mut.addedNodes.forEach(function (node) {
+          if (node.nodeType === 1) observeNew(node);
+        });
+      });
+    }).observe(document.body, { childList: true, subtree: true });
+  }
+
+  // Self-contained 3D wireframe engine for the hero background: a slowly
+  // rotating icosahedron core with orbiting data-satellites and an ambient
+  // particle field, hand-rolled (no Three.js/WebGL dependency) so the page
+  // stays fast and has zero external runtime risk.
+  function initHeroCanvas(canvas) {
+    if (!canvas || reduceMotion) return null;
+    var ctx = canvas.getContext("2d");
+    var section = canvas.closest("section");
+    var raf = null;
+    var destroyed = false;
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var W = 0, H = 0;
+
+    // --- Build an icosahedron: 12 vertices, edges derived from nearest-neighbor distance ---
+    var phi = (1 + Math.sqrt(5)) / 2;
+    var rawVerts = [
+      [-1, phi, 0], [1, phi, 0], [-1, -phi, 0], [1, -phi, 0],
+      [0, -1, phi], [0, 1, phi], [0, -1, -phi], [0, 1, -phi],
+      [phi, 0, -1], [phi, 0, 1], [-phi, 0, -1], [-phi, 0, 1]
+    ];
+    var vlen = Math.sqrt(1 + phi * phi);
+    var verts = rawVerts.map(function (v) { return [v[0] / vlen, v[1] / vlen, v[2] / vlen]; });
+    var edges = [];
+    (function buildEdges() {
+      var minD = Infinity;
+      for (var i = 0; i < verts.length; i++) {
+        for (var j = i + 1; j < verts.length; j++) {
+          var d = dist3(verts[i], verts[j]);
+          if (d < minD) minD = d;
+        }
+      }
+      for (var i = 0; i < verts.length; i++) {
+        for (var j = i + 1; j < verts.length; j++) {
+          if (dist3(verts[i], verts[j]) < minD * 1.05) edges.push([i, j]);
+        }
+      }
+    })();
+    function dist3(a, b) {
+      var dx = a[0] - b[0], dy = a[1] - b[1], dz = a[2] - b[2];
+      return Math.sqrt(dx * dx + dy * dy + dz * dz);
+    }
+
+    // Orbiting satellite points: small nodes tracing independent 3D circles around the core.
+    var satellites = [];
+    for (var s = 0; s < 14; s++) {
+      satellites.push({
+        r: 1.5 + Math.random() * 1.0,
+        speed: 0.12 + Math.random() * 0.24,
+        offset: Math.random() * Math.PI * 2,
+        tiltX: Math.random() * Math.PI,
+        tiltZ: Math.random() * Math.PI,
+        violet: s % 2 === 1
+      });
+    }
+
+    // A handful of edges get a traveling "data pulse" streak for extra motion.
+    var pulseEdges = [];
+    for (var pe = 0; pe < Math.min(5, edges.length); pe++) {
+      pulseEdges.push({ edge: edges[(pe * 7) % edges.length], speed: 0.35 + Math.random() * 0.3, offset: Math.random() });
+    }
+
+    // Faint ambient particle field behind the object, for depth.
+    var particles = [];
+
+    var rotY = 0.4, rotX = 0.5;
+    var targetTiltX = 0, targetTiltY = 0, tiltX = 0, tiltY = 0;
+    var pointerActive = false;
+    var t = 0;
+
+    // Hover interactivity (outer shape only): raw pointer position + per-element
+    // eased "hover intensity" that rises on hover and eases back down on leave.
+    var mouseX = null, mouseY = null;
+    var vertexHoverT = verts.map(function () { return 0; });
+    var edgeHoverT = edges.map(function () { return 0; });
+    var hoverVertex = -1, hoverEdge = -1;
+    var coreEnergyT = 0;
+
+    function lerpRgb(a, b, mixT) {
+      return Math.round(a[0] + (b[0] - a[0]) * mixT) + ", " +
+        Math.round(a[1] + (b[1] - a[1]) * mixT) + ", " +
+        Math.round(a[2] + (b[2] - a[2]) * mixT);
+    }
+
+    function distToSegment(px, py, ax, ay, bx, by) {
+      var vx = bx - ax, vy = by - ay;
+      var wx = px - ax, wy = py - ay;
+      var len2 = vx * vx + vy * vy;
+      var t2 = len2 > 0 ? Math.max(0, Math.min(1, (wx * vx + wy * vy) / len2)) : 0;
+      var cx2 = ax + vx * t2, cy2 = ay + vy * t2;
+      var dx = px - cx2, dy = py - cy2;
+      return Math.sqrt(dx * dx + dy * dy);
+    }
+
+    // Figurative workflow: an ever-looping automatic animation (independent of
+    // hover) that lights up a connected chain of real edges/vertices one step
+    // at a time -- Trigger -> n8n -> AI-model -> Actie -> Jouw systeem, mirroring
+    // the actual product flow -- plus a radial line from the core (the "AI
+    // source") out to whichever node is currently active. Everything else on
+    // the shape is left untouched, exactly as requested.
+    var WORKFLOW_PATH = [0, 5, 9, 3, 6];
+    // Benefit-first labels: what each step means for the person watching,
+    // not the tool names behind it (those live in the "Wat we bouwen"
+    // section further down, where the explanation is welcome).
+    var WORKFLOW_LABELS = {
+      nl: ['Geen handmatig werk meer', 'Automatisch herkend', 'AI beslist razendsnel', 'Meteen uitgevoerd', 'Uren per week bespaard'],
+      en: ['No more manual work', 'Recognized automatically', 'AI decides instantly', 'Executed right away', 'Hours saved every week']
+    };
+    var workflowEdgeIdx = [];
+    for (var wp = 0; wp < WORKFLOW_PATH.length - 1; wp++) {
+      var wa = WORKFLOW_PATH[wp], wb = WORKFLOW_PATH[wp + 1];
+      for (var we = 0; we < edges.length; we++) {
+        if ((edges[we][0] === wa && edges[we][1] === wb) || (edges[we][0] === wb && edges[we][1] === wa)) {
+          workflowEdgeIdx.push(we);
+          break;
+        }
+      }
+    }
+    var WORKFLOW_STEP_FRAMES = 150;
+    var WORKFLOW_PAUSE_FRAMES = 130;
+    var WORKFLOW_CYCLE = WORKFLOW_PATH.length * WORKFLOW_STEP_FRAMES + WORKFLOW_PAUSE_FRAMES;
+    var lastWorkflowStep = -1;
+
+    var bubble = document.createElement("div");
+    bubble.className = "hero-node-bubble";
+    bubble.innerHTML = '<span class="hero-node-bubble-dot"></span><span class="hero-node-bubble-text"></span>';
+    bubble.setAttribute("aria-hidden", "true");
+    section.appendChild(bubble);
+    var bubbleTextEl = bubble.querySelector(".hero-node-bubble-text");
+
+    function size() {
+      var rect = section.getBoundingClientRect();
+      W = rect.width; H = rect.height;
+      canvas.width = W * dpr;
+      canvas.height = H * dpr;
+      canvas.style.width = W + "px";
+      canvas.style.height = H + "px";
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      var count = Math.min(60, Math.round((W * H) / 24000));
+      particles = [];
+      for (var i = 0; i < count; i++) {
+        particles.push({
+          x: Math.random() * W,
+          y: Math.random() * H,
+          z: Math.random(),
+          vx: (Math.random() - 0.5) * 0.12,
+          vy: (Math.random() - 0.5) * 0.12
+        });
+      }
+    }
+
+    function rotatePoint(p, ax, ay) {
+      // rotate around X axis
+      var y1 = p[1] * Math.cos(ax) - p[2] * Math.sin(ax);
+      var z1 = p[1] * Math.sin(ax) + p[2] * Math.cos(ax);
+      // rotate around Y axis
+      var x2 = p[0] * Math.cos(ay) + z1 * Math.sin(ay);
+      var z2 = -p[0] * Math.sin(ay) + z1 * Math.cos(ay);
+      return [x2, y1, z2];
+    }
+
+    function project(p, cx, cy, scaleBase, camDist) {
+      var s = camDist / (camDist + p[2]);
+      return { x: cx + p[0] * s * scaleBase, y: cy + p[1] * s * scaleBase, z: p[2], s: s };
+    }
+
+    function step() {
+      t += 1;
+      // Self-heal: the DC/React runtime occasionally resets this canvas node's
+      // width/height back to browser defaults (300x150) mid-lifecycle without
+      // replacing the element itself, which would otherwise silently break the
+      // whole scene. Cheap check, corrects instantly if it ever happens.
+      var expectedW = Math.round(W * dpr), expectedH = Math.round(H * dpr);
+      if (canvas.width !== expectedW || canvas.height !== expectedH) {
+        size();
+      }
+      ctx.clearRect(0, 0, W, H);
+
+      // ambient particles (subtle, behind the core)
+      for (var i = 0; i < particles.length; i++) {
+        var pt = particles[i];
+        pt.x += pt.vx; pt.y += pt.vy;
+        if (pt.x < 0 || pt.x > W) pt.vx *= -1;
+        if (pt.y < 0 || pt.y > H) pt.vy *= -1;
+        ctx.fillStyle = "rgba(140, 200, 255," + (0.10 + pt.z * 0.16) + ")";
+        ctx.beginPath();
+        ctx.arc(pt.x, pt.y, 0.8 + pt.z * 1.1, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      var cx = W * 0.5, cy = H * 0.46;
+      var minSide = Math.min(W, H * 1.35);
+      var radius = Math.max(180, Math.min(420, minSide * 0.37));
+      var innerRadius = radius * 0.42;
+      var camDist = 3.6;
+
+      // slow continuous auto-rotation, gently eased toward pointer tilt
+      rotY += 0.0011;
+      rotX += 0.0004;
+      tiltX += (targetTiltX - tiltX) * 0.05;
+      tiltY += (targetTiltY - tiltY) * 0.05;
+
+      var ay = rotY + tiltY;
+      var ax = rotX + tiltX + Math.sin(t * 0.004) * 0.05;
+
+      // counter-rotating inner core, offset hue for depth
+      var ay2 = -ay * 1.8;
+      var ax2 = ax * 1.4 + Math.sin(t * 0.006) * 0.1;
+
+      // faint outer HUD ring beneath the object
+      ctx.save();
+      ctx.strokeStyle = "rgba(120, 200, 255, 0.14)";
+      ctx.setLineDash([3, 9]);
+      ctx.lineDashOffset = -t * 0.12;
+      ctx.beginPath();
+      ctx.ellipse(cx, cy, radius * 1.28, radius * 1.28 * 0.4, 0.18, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.strokeStyle = "rgba(190, 150, 255, 0.10)";
+      ctx.lineDashOffset = t * 0.09;
+      ctx.beginPath();
+      ctx.ellipse(cx, cy, radius * 1.4, radius * 1.4 * 0.36, -0.22, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.restore();
+
+      // project core + inner-shape vertices
+      var proj = verts.map(function (v) { return project(rotatePoint(v, ax, ay), cx, cy, radius, camDist); });
+      var proj2 = verts.map(function (v) { return project(rotatePoint(v, ax2, ay2), cx, cy, innerRadius, camDist); });
+
+      // Hit-test the pointer against the outer shape only: nearest vertex wins
+      // within a generous radius, otherwise the nearest edge within a tighter
+      // radius. Vertices take priority since they're the more "grabbable" target.
+      hoverVertex = -1; hoverEdge = -1;
+      if (mouseX !== null) {
+        var bestVD = 20, bestV = -1;
+        for (var hv = 0; hv < proj.length; hv++) {
+          var dvx = mouseX - proj[hv].x, dvy = mouseY - proj[hv].y;
+          var dv = Math.sqrt(dvx * dvx + dvy * dvy);
+          if (dv < bestVD) { bestVD = dv; bestV = hv; }
+        }
+        if (bestV !== -1) {
+          hoverVertex = bestV;
+        } else {
+          var bestED = 9, bestE = -1;
+          for (var he = 0; he < edges.length; he++) {
+            var ea = proj[edges[he][0]], eb = proj[edges[he][1]];
+            var de = distToSegment(mouseX, mouseY, ea.x, ea.y, eb.x, eb.y);
+            if (de < bestED) { bestED = de; bestE = he; }
+          }
+          if (bestE !== -1) hoverEdge = bestE;
+        }
+      }
+      // Automatic looping workflow: cumulatively lights up WORKFLOW_PATH one
+      // node/edge at a time, holds the full chain briefly, then clears and
+      // repeats. workflowStep is the index of the node currently being drawn
+      // in (0-based); stepEase is its eased 0->1 draw-in progress.
+      var wCyclePos = t % WORKFLOW_CYCLE;
+      var workflowActiveCount = 0;
+      var workflowStep = -1;
+      var stepEase = 1;
+      if (wCyclePos < WORKFLOW_PATH.length * WORKFLOW_STEP_FRAMES) {
+        workflowActiveCount = Math.floor(wCyclePos / WORKFLOW_STEP_FRAMES) + 1;
+        workflowStep = workflowActiveCount - 1;
+        var stepFrac = Math.min(1, (wCyclePos % WORKFLOW_STEP_FRAMES) / (WORKFLOW_STEP_FRAMES * 0.4));
+        stepEase = 1 - Math.pow(1 - stepFrac, 3);
+      }
+      var workflowVerts = WORKFLOW_PATH.slice(0, workflowActiveCount);
+      var workflowEdgesActive = workflowEdgeIdx.slice(0, Math.max(0, workflowActiveCount - 1));
+
+      if (workflowStep !== lastWorkflowStep) {
+        lastWorkflowStep = workflowStep;
+        if (workflowStep >= 0 && W > 900) {
+          var lang = window.__dcLang === "en" ? "en" : "nl";
+          var anchorV = proj[WORKFLOW_PATH[workflowStep]];
+          var bx = anchorV.x, by = anchorV.y - 26;
+          var safeMinX = W * 0.16, safeMaxX = W * 0.84;
+          var safeMinY = H * 0.12, safeMaxY = H * 0.8;
+          if (bx > safeMinX && bx < safeMaxX && by > safeMinY && by < safeMaxY) {
+            bx = anchorV.x < cx ? W * 0.08 : W * 0.92;
+          }
+          bx = Math.max(60, Math.min(W - 60, bx));
+          by = Math.max(36, Math.min(H - 24, by));
+          bubbleTextEl.textContent = (workflowStep + 1) + ". " + WORKFLOW_LABELS[lang][workflowStep];
+          bubble.style.left = bx + "px";
+          bubble.style.top = by + "px";
+          bubble.classList.add("is-visible");
+        } else {
+          bubble.classList.remove("is-visible");
+        }
+      }
+
+      for (var uv = 0; uv < vertexHoverT.length; uv++) {
+        var targetV = (uv === hoverVertex || workflowVerts.indexOf(uv) !== -1) ? 1 : 0;
+        vertexHoverT[uv] += (targetV - vertexHoverT[uv]) * 0.18;
+      }
+      for (var ue = 0; ue < edgeHoverT.length; ue++) {
+        var targetE = (ue === hoverEdge || workflowEdgesActive.indexOf(ue) !== -1) ? 1 : 0;
+        edgeHoverT[ue] += (targetE - edgeHoverT[ue]) * 0.18;
+      }
+
+      var hoverRgb = "30, 140, 255";
+
+      function drawEdges(p, rgb, widthMul, blurMul, hoverArr) {
+        for (var e = 0; e < edges.length; e++) {
+          var a = p[edges[e][0]], b = p[edges[e][1]];
+          var avgZ = (a.z + b.z) / 2;
+          var depthT = (avgZ + 1) / 2;
+          var hoverAmt = hoverArr ? hoverArr[e] : 0;
+          var alpha = 0.10 + depthT * 0.42 + hoverAmt * 0.5;
+          var col = hoverAmt > 0.01 ? hoverRgb : rgb;
+          ctx.strokeStyle = "rgba(" + col + "," + Math.min(1, alpha).toFixed(3) + ")";
+          ctx.lineWidth = (0.6 + depthT * 1.3) * widthMul + hoverAmt * 1.8;
+          ctx.shadowColor = "rgba(" + col + ",0.7)";
+          ctx.shadowBlur = (3 + depthT * 5) * blurMul + hoverAmt * 12;
+          ctx.beginPath();
+          ctx.moveTo(a.x, a.y);
+          ctx.lineTo(b.x, b.y);
+          ctx.stroke();
+        }
+        ctx.shadowBlur = 0;
+      }
+      drawEdges(proj2, "190, 150, 255", 0.75, 0.8);
+      drawEdges(proj, "110, 200, 255", 1, 1, edgeHoverT);
+
+      function drawVertices(p, rgbCore, rgbGlow, sizeMul, hoverArr) {
+        for (var v = 0; v < p.length; v++) {
+          var pt = p[v];
+          var depthT2 = (pt.z + 1) / 2;
+          var pulse = 0.75 + Math.sin(t * 0.05 + v * 1.7) * 0.25;
+          var hoverAmt2 = hoverArr ? hoverArr[v] : 0;
+          var rad = (1.6 + depthT2 * 2.2) * sizeMul * pulse + hoverAmt2 * 3.2;
+          var coreCol = hoverAmt2 > 0.01 ? hoverRgb : rgbCore;
+          var glowCol = hoverAmt2 > 0.01 ? hoverRgb : rgbGlow;
+          var grad = ctx.createRadialGradient(pt.x, pt.y, 0, pt.x, pt.y, rad * (4 + hoverAmt2 * 2.5));
+          grad.addColorStop(0, "rgba(" + glowCol + "," + Math.min(1, 0.35 + depthT2 * 0.4 + hoverAmt2 * 0.5) + ")");
+          grad.addColorStop(1, "rgba(" + glowCol + ",0)");
+          ctx.fillStyle = grad;
+          ctx.beginPath();
+          ctx.arc(pt.x, pt.y, rad * (4 + hoverAmt2 * 2.5), 0, Math.PI * 2);
+          ctx.fill();
+          ctx.fillStyle = "rgba(" + coreCol + "," + Math.min(1, 0.55 + depthT2 * 0.4 + hoverAmt2 * 0.45) + ")";
+          ctx.beginPath();
+          ctx.arc(pt.x, pt.y, rad, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+      drawVertices(proj2, "215, 190, 255", "190, 150, 255", 0.8);
+      drawVertices(proj, "200, 235, 255", "170, 225, 255", 1, vertexHoverT);
+
+      // traveling data pulses along a few outer edges
+      for (var pi = 0; pi < pulseEdges.length; pi++) {
+        var pu = pulseEdges[pi];
+        var frac = (t * 0.006 * pu.speed + pu.offset) % 1;
+        var pa = proj[pu.edge[0]], pb = proj[pu.edge[1]];
+        var px = pa.x + (pb.x - pa.x) * frac;
+        var py = pa.y + (pb.y - pa.y) * frac;
+        var pglow = ctx.createRadialGradient(px, py, 0, px, py, 7);
+        pglow.addColorStop(0, "rgba(255, 255, 255, 0.9)");
+        pglow.addColorStop(1, "rgba(140, 220, 255, 0)");
+        ctx.fillStyle = pglow;
+        ctx.beginPath();
+        ctx.arc(px, py, 7, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // orbiting satellites with connector lines back to the core
+      for (var si = 0; si < satellites.length; si++) {
+        var sat = satellites[si];
+        var ang = t * 0.01 * sat.speed + sat.offset;
+        var raw = [Math.cos(ang) * sat.r, Math.sin(ang) * sat.r * 0.4, Math.sin(ang) * sat.r];
+        var tilted = rotatePoint(raw, sat.tiltX, sat.tiltZ);
+        var final = rotatePoint(tilted, ax, ay);
+        var sp = project(final, cx, cy, radius, camDist);
+        var sDepth = (sp.z + 1) / 2;
+        var satRgb = sat.violet ? "200, 160, 255" : "120, 210, 255";
+        ctx.strokeStyle = "rgba(" + satRgb + "," + (0.05 + sDepth * 0.14) + ")";
+        ctx.lineWidth = 0.6;
+        ctx.beginPath();
+        ctx.moveTo(cx, cy);
+        ctx.lineTo(sp.x, sp.y);
+        ctx.stroke();
+        ctx.fillStyle = "rgba(" + (sat.violet ? "215, 185, 255" : "180, 230, 255") + "," + (0.4 + sDepth * 0.5) + ")";
+        ctx.beginPath();
+        ctx.arc(sp.x, sp.y, 1.4 + sDepth * 1.6, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // Radial "source" connectors: the core is the AI the workflow runs on,
+      // so each active step gets a line drawn outward from the core to it.
+      // The newest one grows in (stepEase) as if it's being laid in real time;
+      // earlier ones stay put at full length, faded by their own hover intensity.
+      var coreEnergyTarget = workflowActiveCount > 0 ? 1 : 0;
+      coreEnergyT += (coreEnergyTarget - coreEnergyT) * 0.05;
+      for (var cw = 0; cw < workflowVerts.length; cw++) {
+        var cwv = workflowVerts[cw];
+        var cwLenFrac = cw === workflowVerts.length - 1 ? stepEase : 1;
+        var cwp = proj[cwv];
+        var ctx2x = cx + (cwp.x - cx) * cwLenFrac;
+        var ctx2y = cy + (cwp.y - cy) * cwLenFrac;
+        var connAlpha = 0.4 * vertexHoverT[cwv];
+        ctx.strokeStyle = "rgba(" + hoverRgb + "," + connAlpha.toFixed(3) + ")";
+        ctx.lineWidth = 1.1;
+        ctx.shadowColor = "rgba(" + hoverRgb + ",0.6)";
+        ctx.shadowBlur = 7;
+        ctx.beginPath();
+        ctx.moveTo(cx, cy);
+        ctx.lineTo(ctx2x, ctx2y);
+        ctx.stroke();
+      }
+      // The currently-forming path edge (node -> node) draws itself in over
+      // the same window, on top of the normal edge rendering below.
+      if (workflowStep >= 1) {
+        var fa = proj[WORKFLOW_PATH[workflowStep - 1]];
+        var fb = proj[WORKFLOW_PATH[workflowStep]];
+        var fx = fa.x + (fb.x - fa.x) * stepEase;
+        var fy = fa.y + (fb.y - fa.y) * stepEase;
+        ctx.strokeStyle = "rgba(" + hoverRgb + ",0.85)";
+        ctx.lineWidth = 2.2;
+        ctx.shadowColor = "rgba(" + hoverRgb + ",0.8)";
+        ctx.shadowBlur = 10;
+        ctx.beginPath();
+        ctx.moveTo(fa.x, fa.y);
+        ctx.lineTo(fx, fy);
+        ctx.stroke();
+      }
+      ctx.shadowBlur = 0;
+
+      // bright pulsing core at center, blended cyan + violet energy glow --
+      // this is the "AI source" the workflow connects out to, so it warms
+      // toward the same amber accent (smoothly, via coreEnergyT) whenever a
+      // step is active.
+      var pulse = 0.5 + Math.sin(t * 0.02) * 0.5;
+      var coreR = 7 + pulse * 4;
+      var coreOuterRgb = lerpRgb([190, 150, 255], [30, 140, 255], coreEnergyT * 0.55);
+      var coreGradOuter = ctx.createRadialGradient(cx, cy, 0, cx, cy, coreR * 9);
+      coreGradOuter.addColorStop(0, "rgba(" + coreOuterRgb + "," + (0.22 + pulse * 0.12 + coreEnergyT * 0.1) + ")");
+      coreGradOuter.addColorStop(1, "rgba(" + coreOuterRgb + ", 0)");
+      ctx.fillStyle = coreGradOuter;
+      ctx.beginPath();
+      ctx.arc(cx, cy, coreR * 9, 0, Math.PI * 2);
+      ctx.fill();
+      var coreInnerRgb = lerpRgb([180, 235, 255], [255, 210, 130], coreEnergyT * 0.5);
+      var coreMidRgb = lerpRgb([150, 220, 255], [40, 150, 255], coreEnergyT * 0.5);
+      var coreGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, coreR * 6);
+      coreGrad.addColorStop(0, "rgba(" + coreInnerRgb + "," + (0.65 + pulse * 0.3) + ")");
+      coreGrad.addColorStop(0.5, "rgba(" + coreMidRgb + "," + (0.4 + pulse * 0.2) + ")");
+      coreGrad.addColorStop(1, "rgba(" + coreMidRgb + ", 0)");
+      ctx.fillStyle = coreGrad;
+      ctx.beginPath();
+      ctx.arc(cx, cy, coreR * 6, 0, Math.PI * 2);
+      ctx.fill();
+
+      raf = requestAnimationFrame(step);
+    }
+
+    function onPointerMove(e) {
+      var rect = section.getBoundingClientRect();
+      var px = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+      var py = ((e.clientY - rect.top) / rect.height) * 2 - 1;
+      targetTiltY = Math.max(-1, Math.min(1, px)) * 0.5;
+      targetTiltX = Math.max(-1, Math.min(1, py)) * -0.32;
+      pointerActive = true;
+      // raw local pixel position, for hover hit-testing against projected geometry
+      mouseX = e.clientX - rect.left;
+      mouseY = e.clientY - rect.top;
+    }
+    function onPointerLeave() {
+      targetTiltX = 0; targetTiltY = 0;
+      pointerActive = false;
+      mouseX = null; mouseY = null;
+    }
+
+    size();
+    step();
+    section.addEventListener("pointermove", onPointerMove);
+    section.addEventListener("pointerleave", onPointerLeave);
+    var resizeTimer;
+    function onResize() {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(size, 200);
+    }
+    function onVisibility() {
+      if (document.hidden) { cancelAnimationFrame(raf); }
+      else if (!destroyed) { raf = requestAnimationFrame(step); }
+    }
+    window.addEventListener("resize", onResize);
+    document.addEventListener("visibilitychange", onVisibility);
+
+    return function destroy() {
+      destroyed = true;
+      cancelAnimationFrame(raf);
+      section.removeEventListener("pointermove", onPointerMove);
+      section.removeEventListener("pointerleave", onPointerLeave);
+      window.removeEventListener("resize", onResize);
+      document.removeEventListener("visibilitychange", onVisibility);
+      if (bubble && bubble.parentNode) bubble.parentNode.removeChild(bubble);
+    };
+  }
+
+  // The DC/React runtime can re-render and swap in a fresh <canvas> node after
+  // the first paint (losing whatever we already drew to). Stay watchful: every
+  // time the element identity changes, tear down the old loop and reinit on
+  // the new node so the animation never gets stranded on a detached canvas.
+  function whenCanvasReady() {
+    var current = null;
+    var destroy = null;
+    function tryInit() {
+      var el = document.getElementById("hero-canvas");
+      if (el && el !== current) {
+        if (destroy) destroy();
+        current = el;
+        destroy = initHeroCanvas(el);
+      }
+    }
+    tryInit();
+    var mo = new MutationObserver(tryInit);
+    mo.observe(document.body, { childList: true, subtree: true });
+    // Catch late layout/replacement that doesn't trigger a body-level mutation.
+    var checks = 0;
+    (function pollFrame() {
+      tryInit();
+      if (++checks < 30) requestAnimationFrame(pollFrame);
+    })();
+  }
+  whenCanvasReady();
+})();
+</script>
+<script>
+(function () {
+  var header = document.querySelector("header");
+  if (!header) return;
+  header.style.transition = "transform 280ms cubic-bezier(0.16,1,0.3,1)";
+  header.style.willChange = "transform";
+
+  var lastY = window.scrollY || window.pageYOffset || 0;
+  var hidden = false;
+  var revealThreshold = 12; // negeer kleine scroll-jitter
+  var topOffset = 80; // altijd zichtbaar dicht bij de top
+
+  function onScroll() {
+    var y = window.scrollY || window.pageYOffset || 0;
+
+    if (y <= topOffset) {
+      if (hidden) { header.style.transform = "translateY(0)"; hidden = false; }
+      lastY = y;
+      return;
+    }
+
+    var delta = y - lastY;
+    // Alleen reageren (en de basislijn verzetten) zodra de opgebouwde
+    // scrollafstand de drempel overschrijdt - anders wordt lastY bij elke
+    // frame gelijkgezet en komt een langzame/vloeiende scroll (kleine
+    // stapjes per frame) nooit boven de drempel uit, in geen van beide
+    // richtingen.
+    if (delta > revealThreshold) {
+      if (!hidden) { header.style.transform = "translateY(-100%)"; hidden = true; }
+      lastY = y;
+    } else if (delta < -revealThreshold) {
+      if (hidden) { header.style.transform = "translateY(0)"; hidden = false; }
+      lastY = y;
+    }
+  }
+
+  var ticking = false;
+  window.addEventListener("scroll", function () {
+    if (!ticking) {
+      requestAnimationFrame(function () { onScroll(); ticking = false; });
+      ticking = true;
+    }
+  }, { passive: true });
+})();
+</script>
+<script>
+(function () {
+  "use strict";
+  document.addEventListener("click", function (e) {
+    var toggle = e.target.closest && e.target.closest("#nav-toggle-btn");
+    if (toggle) {
+      var panel = document.getElementById("nav-mobile-panel");
+      var open = panel.classList.toggle("nav-open");
+      toggle.classList.toggle("nav-toggle-active", open);
+      toggle.setAttribute("aria-expanded", open ? "true" : "false");
+      return;
+    }
+    var link = e.target.closest && e.target.closest("#nav-mobile-panel a");
+    if (link) {
+      var panel2 = document.getElementById("nav-mobile-panel");
+      var btn2 = document.getElementById("nav-toggle-btn");
+      panel2.classList.remove("nav-open");
+      if (btn2) {
+        btn2.classList.remove("nav-toggle-active");
+        btn2.setAttribute("aria-expanded", "false");
+      }
+    }
+  });
+})();
+</script>
+<script>
+(function () {
+  "use strict";
+  var btn = document.getElementById("back-to-top");
+  if (!btn) return;
+  var threshold = 480;
+
+  function onScroll() {
+    var y = window.scrollY || window.pageYOffset || 0;
+    btn.classList.toggle("is-visible", y > threshold);
+  }
+
+  var ticking = false;
+  window.addEventListener("scroll", function () {
+    if (!ticking) {
+      requestAnimationFrame(function () { onScroll(); ticking = false; });
+      ticking = true;
+    }
+  }, { passive: true });
+  onScroll();
+
+  btn.addEventListener("click", function () {
+    var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    window.scrollTo({ top: 0, behavior: reduceMotion ? "auto" : "smooth" });
+  });
+})();
+</script>
+<script>
+(function () {
+  "use strict";
+  var KEY = "tessar-theme";
+  var root = document.documentElement;
+
+  function currentTheme() {
+    var stored = null;
+    try { stored = localStorage.getItem(KEY); } catch (e) {}
+    if (stored === "dark" || stored === "light") return stored;
+    return (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) ? "dark" : "light";
+  }
+
+  document.addEventListener("click", function (e) {
+    var btn = e.target.closest && e.target.closest("#theme-toggle-btn");
+    if (!btn) return;
+    var next = currentTheme() === "dark" ? "light" : "dark";
+    root.setAttribute("data-theme", next);
+    try { localStorage.setItem(KEY, next); } catch (e2) {}
+  });
+})();
+</script>
+<script src="./tessar-concierge-widget.js" defer></script>
 </body>
 </html>

@@ -1,43 +1,30 @@
-# BlackLarch website — clean upload naar GitHub
+# tessar.nl
 
-Dit pakket bevat de volledige site: `index.html`, `support.js`, `deck-stage.js`,
-`Workflow Presentatie.dc.html`, `assets/`, `uploads/`.
+Statische marketingsite voor Tessar — AI-implementatie en AI-geïntegreerde
+applicaties voor het Nederlandse mkb. Elke pagina is een losse, met de hand
+gebouwde `.html`-bestand (geen build-stap, geen CMS); nieuwe pagina's volgen
+de bestaande nav/hero/footer-structuur van bijvoorbeeld `chatbots.html`.
 
-## Repo volledig vervangen (oude bestanden ook weg)
+## Structuur
 
-In je lokale kopie van de repo:
+- `index.html`, `services.html`, `chatbots.html`, `prijzen.html`,
+  `contact.html`, `blog.html` — de hoofdpagina's.
+- `ai-*.html`, `workflow-*.html`, `bedrijfsprocessen-*.html` — blogartikelen,
+  gelinkt vanaf `blog.html`.
+- `assets/` — logo's, favicons, `tessar-tokens.css` (canonieke kleur-/font-tokens).
+- `support.js`, `tessar-concierge-widget.js` — gedeelde scripts, geladen door
+  meerdere pagina's.
+- `docs/content/conceptartikelen/` — brondrafts van de blogartikelen
+  (markdown, met redactielog en checklist-status per artikel) uit de n8n
+  content-pijplijn — zie die map's `README.md` voor hoe die pijplijn werkt.
+- `preview/uploads/` — **niet aanraken.** Bevat materiaal van een klantproject
+  (vandijkprotocol.tessar.nl); expliciet uitgesloten van de deploy-workflow.
+- `n8n-workflows/` — brondefinities van de n8n-workflows die de content-
+  pijplijn draaien, plus hun geteste JS-logica.
+- `docs/superpowers/` — design specs en implementatieplannen per feature.
 
-```bash
-git clone <jouw-repo-url> repo
-cd repo
+## Deploy
 
-# alles weghalen behalve .git
-git rm -rf --ignore-unmatch .
-git clean -fdx
-
-# pak dit zip-pakket uit in deze map (index.html, support.js, deck-stage.js,
-# Workflow Presentatie.dc.html, assets/, uploads/ moeten in de root komen)
-
-git add -A
-git commit -m "BlackLarch: nieuwe site"
-git push
-```
-
-Als de repo GitHub Pages gebruikt vanaf `main` / root, staat de site na de
-push automatisch live met alleen de nieuwe bestanden — niets van de oude
-Hamdoun-versie blijft over.
-
-## Alternatief: via de GitHub-website
-
-Verwijder in de repo (op github.com) eerst handmatig alle oude
-bestanden/mappen, commit die verwijdering, upload dan pas de nieuwe
-bestanden. Los uploaden zonder eerst te verwijderen overschrijft alleen
-gelijknamige bestanden.
-
-## Inhoud
-
-- `index.html` — de homepage (BlackLarch, NL/EN, 5 projectdemo's)
-- `Workflow Presentatie.dc.html` — losse slide-deck voor de afspraakopvolging
-- `deck-stage.js`, `support.js` — draaien de pagina's, niet aanpassen
-- `assets/` — logo (icoon + wordmark, licht/donker)
-- `uploads/DSC08075.jpg` — achtergrondfoto in de presentatie
+Elke push naar `main` triggert `.github/workflows/deploy-tessar.yml`: een
+rsync van de repo-root naar de productieserver, direct naar `tessar.nl`
+(geen staging-omgeving, geen preview-URL). Behandel `main` dus als live.
