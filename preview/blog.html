@@ -81,6 +81,9 @@
   [data-reveal-grid] > [data-reveal]:nth-child(1) { transition-delay:0ms; }
   [data-reveal-grid] > [data-reveal]:nth-child(2) { transition-delay:90ms; }
   [data-reveal-grid] > [data-reveal]:nth-child(3) { transition-delay:180ms; }
+  [data-reveal-grid] > [data-reveal]:nth-child(4) { transition-delay:270ms; }
+  [data-reveal-grid] > [data-reveal]:nth-child(5) { transition-delay:360ms; }
+  [data-reveal-grid] > [data-reveal]:nth-child(6) { transition-delay:450ms; }
   .nav-toggle { display:none; background:none; border:none; cursor:pointer; padding:8px; flex-direction:column; gap:5px; margin-left:4px; }
   .nav-toggle span { display:block; width:22px; height:2px; background:var(--text); border-radius:2px; transition:transform 200ms ease, opacity 200ms ease; }
   .nav-mobile-panel { display:none; }
@@ -141,40 +144,65 @@
   </div>
 </section>
 
-<!-- TODO (vóór livegang): de 3 kaarten hieronder zijn voorbeeldcontent uit het ontwerp
-     (Blog.dc.html), geen gepubliceerde artikelen — vandaar het "Binnenkort"-label i.p.v.
-     een verzonnen datum, en href="#" i.p.v. een link naar een bestaande artikelpagina.
-     Vervang zodra er echte, volledig uitgeschreven artikelen staan (zie de zorg over
-     brief-content 1-op-1 overnemen — deze 3 stukken lezen al als een eigen stem, geen
-     brief-outline, maar zijn nooit tot volledige artikelen uitgewerkt). -->
+<!-- 6 echte artikelen, elk taalkundig en inhoudelijk gereviewd (zie docs/content/conceptartikelen/)
+     en gebouwd op een eigen pagina volgens hetzelfde sjabloon als chatbots.html/services.html.
+     De 3 oude "Binnenkort"-placeholders uit het originele ontwerp (Blog.dc.html) zijn verwijderd —
+     ze waren nooit uitgeschreven artikelen en linkten nergens naartoe. -->
 <section style="padding:clamp(56px,7vw,88px) clamp(20px,5vw,40px);background:var(--bg);">
   <div style="max-width:1200px;margin:0 auto;">
     <div data-reveal-grid style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:clamp(20px,3vw,40px);">
       <article data-reveal style="background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;box-shadow:0 1px 2px oklch(20% 0.02 255 / 0.04), 0 16px 32px -20px oklch(20% 0.02 255 / 0.12);transition:all 220ms ease, opacity 600ms ease, transform 600ms ease;">
-        <div style="background:var(--border);height:160px;display:flex;align-items:center;justify-content:center;font:500 0.8125rem/1.5 'IBM Plex Mono';color:var(--text-muted);letter-spacing:0.04em;text-transform:uppercase;">EU AI Act</div>
+        <div style="background:var(--border);height:160px;display:flex;align-items:center;justify-content:center;font:500 0.8125rem/1.5 'IBM Plex Mono';color:var(--text-muted);letter-spacing:0.04em;text-transform:uppercase;">Automatisering</div>
         <div style="padding:clamp(22px,3vw,28px);">
-          <div style="font:500 0.75rem/1 'IBM Plex Mono';color:var(--accent-text);margin-bottom:12px;text-transform:uppercase;letter-spacing:0.05em;">Binnenkort</div>
-          <h3 style="font:600 1.1875rem/1.35 'IBM Plex Sans';margin:0 0 12px;letter-spacing:-0.01em;color:var(--text);">EU AI Act: wat verandert voor mkb-processen</h3>
-          <p style="font:400 0.9375rem/1.6 'IBM Plex Sans';color:var(--text-muted);margin:0 0 20px;">Transparantie, documentatie en menselijk toezicht — eisen die we nu al inbouwen, niet pas als de handhaving begint.</p>
-          <a href="#" style="font:500 0.875rem/1 'IBM Plex Mono';color:var(--accent-text);">Lees meer →</a>
+          <div style="font:500 0.75rem/1 'IBM Plex Mono';color:var(--accent-text);margin-bottom:12px;text-transform:uppercase;letter-spacing:0.05em;">Augustus 2026</div>
+          <h3 style="font:600 1.1875rem/1.35 'IBM Plex Sans';margin:0 0 12px;letter-spacing:-0.01em;color:var(--text);">AI-receptionist voor bedrijven: 24/7 professioneel, automatisch antwoord</h3>
+          <p style="font:400 0.9375rem/1.6 'IBM Plex Sans';color:var(--text-muted);margin:0 0 20px;">Elke gemiste oproep is een klant die naar de concurrent belt. Hoe een AI-receptionist dat oplost, wat het kost, en hoe de eerste twee weken eruitzien.</p>
+          <a href="./ai-receptioniste-voor-bedrijven.html" style="font:500 0.875rem/1 'IBM Plex Mono';color:var(--accent-text);">Lees meer →</a>
         </div>
       </article>
       <article data-reveal style="background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;box-shadow:0 1px 2px oklch(20% 0.02 255 / 0.04), 0 16px 32px -20px oklch(20% 0.02 255 / 0.12);transition:all 220ms ease, opacity 600ms ease, transform 600ms ease;">
-        <div style="background:var(--border);height:160px;display:flex;align-items:center;justify-content:center;font:500 0.8125rem/1.5 'IBM Plex Mono';color:var(--text-muted);letter-spacing:0.04em;text-transform:uppercase;">Case Study</div>
+        <div style="background:var(--border);height:160px;display:flex;align-items:center;justify-content:center;font:500 0.8125rem/1.5 'IBM Plex Mono';color:var(--text-muted);letter-spacing:0.04em;text-transform:uppercase;">Telefonie</div>
         <div style="padding:clamp(22px,3vw,28px);">
-          <div style="font:500 0.75rem/1 'IBM Plex Mono';color:var(--accent-text);margin-bottom:12px;text-transform:uppercase;letter-spacing:0.05em;">Binnenkort</div>
-          <h3 style="font:600 1.1875rem/1.35 'IBM Plex Sans';margin:0 0 12px;letter-spacing:-0.01em;color:var(--text);">Wanneer automatisering fout gaat</h3>
-          <p style="font:400 0.9375rem/1.6 'IBM Plex Sans';color:var(--text-muted);margin:0 0 20px;">Drie echte gevallen waarin we de workflow stopzetten in plaats van 'm een besluit te laten afdwingen.</p>
-          <a href="#" style="font:500 0.875rem/1 'IBM Plex Mono';color:var(--accent-text);">Lees meer →</a>
+          <div style="font:500 0.75rem/1 'IBM Plex Mono';color:var(--accent-text);margin-bottom:12px;text-transform:uppercase;letter-spacing:0.05em;">Augustus 2026</div>
+          <h3 style="font:600 1.1875rem/1.35 'IBM Plex Sans';margin:0 0 12px;letter-spacing:-0.01em;color:var(--text);">AI Telefonist voor Bedrijf – 24/7 Bereikbaarheid zonder Gedoe</h3>
+          <p style="font:400 0.9375rem/1.6 'IBM Plex Sans';color:var(--text-muted);margin:0 0 20px;">Geen gemiste oproepen meer, geen voicemail die niemand terugbelt. Wat een AI-telefonist wel en niet voor uw bedrijf kan doen.</p>
+          <a href="./ai-telefonist-voor-bedrijf.html" style="font:500 0.875rem/1 'IBM Plex Mono';color:var(--accent-text);">Lees meer →</a>
         </div>
       </article>
       <article data-reveal style="background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;box-shadow:0 1px 2px oklch(20% 0.02 255 / 0.04), 0 16px 32px -20px oklch(20% 0.02 255 / 0.12);transition:all 220ms ease, opacity 600ms ease, transform 600ms ease;">
-        <div style="background:var(--border);height:160px;display:flex;align-items:center;justify-content:center;font:500 0.8125rem/1.5 'IBM Plex Mono';color:var(--text-muted);letter-spacing:0.04em;text-transform:uppercase;">Strategie</div>
+        <div style="background:var(--border);height:160px;display:flex;align-items:center;justify-content:center;font:500 0.8125rem/1.5 'IBM Plex Mono';color:var(--text-muted);letter-spacing:0.04em;text-transform:uppercase;">Klantenservice</div>
         <div style="padding:clamp(22px,3vw,28px);">
-          <div style="font:500 0.75rem/1 'IBM Plex Mono';color:var(--accent-text);margin-bottom:12px;text-transform:uppercase;letter-spacing:0.05em;">Binnenkort</div>
-          <h3 style="font:600 1.1875rem/1.35 'IBM Plex Sans';margin:0 0 12px;letter-spacing:-0.01em;color:var(--text);">Het juiste knelpunt kiezen</h3>
-          <p style="font:400 0.9375rem/1.6 'IBM Plex Sans';color:var(--text-muted);margin:0 0 20px;">Niet elk probleem is oplosbaar met AI. We slaan projecten af die niet passen — en leggen hier uit waarom.</p>
-          <a href="#" style="font:500 0.875rem/1 'IBM Plex Mono';color:var(--accent-text);">Lees meer →</a>
+          <div style="font:500 0.75rem/1 'IBM Plex Mono';color:var(--accent-text);margin-bottom:12px;text-transform:uppercase;letter-spacing:0.05em;">Augustus 2026</div>
+          <h3 style="font:600 1.1875rem/1.35 'IBM Plex Sans';margin:0 0 12px;letter-spacing:-0.01em;color:var(--text);">AI Chatbot voor Bedrijven: Automatiseer Klantenservice in 5 Stappen</h3>
+          <p style="font:400 0.9375rem/1.6 'IBM Plex Sans';color:var(--text-muted);margin:0 0 20px;">Van dezelfde vraag tien keer per dag naar direct antwoord, dag en nacht. Zo zet je een AI-chatbot op zonder IT-afdeling.</p>
+          <a href="./ai-chatbot-voor-bedrijven.html" style="font:500 0.875rem/1 'IBM Plex Mono';color:var(--accent-text);">Lees meer →</a>
+        </div>
+      </article>
+      <article data-reveal style="background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;box-shadow:0 1px 2px oklch(20% 0.02 255 / 0.04), 0 16px 32px -20px oklch(20% 0.02 255 / 0.12);transition:all 220ms ease, opacity 600ms ease, transform 600ms ease;">
+        <div style="background:var(--border);height:160px;display:flex;align-items:center;justify-content:center;font:500 0.8125rem/1.5 'IBM Plex Mono';color:var(--text-muted);letter-spacing:0.04em;text-transform:uppercase;">Automatisering</div>
+        <div style="padding:clamp(22px,3vw,28px);">
+          <div style="font:500 0.75rem/1 'IBM Plex Mono';color:var(--accent-text);margin-bottom:12px;text-transform:uppercase;letter-spacing:0.05em;">Augustus 2026</div>
+          <h3 style="font:600 1.1875rem/1.35 'IBM Plex Sans';margin:0 0 12px;letter-spacing:-0.01em;color:var(--text);">Workflow Automatisering met AI: Hoe het Werkt en Waarom MKB's het Nodig Hebben</h3>
+          <p style="font:400 0.9375rem/1.6 'IBM Plex Sans';color:var(--text-muted);margin:0 0 20px;">Repetitief werk hoort niet in uw agenda thuis. Praktische voorbeelden, een stappenplan, en hoe u bepaalt wat u als eerste automatiseert.</p>
+          <a href="./workflow-automatisering-met-ai.html" style="font:500 0.875rem/1 'IBM Plex Mono';color:var(--accent-text);">Lees meer →</a>
+        </div>
+      </article>
+      <article data-reveal style="background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;box-shadow:0 1px 2px oklch(20% 0.02 255 / 0.04), 0 16px 32px -20px oklch(20% 0.02 255 / 0.12);transition:all 220ms ease, opacity 600ms ease, transform 600ms ease;">
+        <div style="background:var(--border);height:160px;display:flex;align-items:center;justify-content:center;font:500 0.8125rem/1.5 'IBM Plex Mono';color:var(--text-muted);letter-spacing:0.04em;text-transform:uppercase;">Implementatie</div>
+        <div style="padding:clamp(22px,3vw,28px);">
+          <div style="font:500 0.75rem/1 'IBM Plex Mono';color:var(--accent-text);margin-bottom:12px;text-transform:uppercase;letter-spacing:0.05em;">Augustus 2026</div>
+          <h3 style="font:600 1.1875rem/1.35 'IBM Plex Sans';margin:0 0 12px;letter-spacing:-0.01em;color:var(--text);">AI implementatie laten uitvoeren: Maatwerk automation voor uw mkb</h3>
+          <p style="font:400 0.9375rem/1.6 'IBM Plex Sans';color:var(--text-muted);margin:0 0 20px;">Snel, laagdrempelig, resultaatgericht — hoe een AI-implementatietraject bij Tessar er in de praktijk uitziet, stap voor stap.</p>
+          <a href="./ai-implementatie-laten-uitvoeren.html" style="font:500 0.875rem/1 'IBM Plex Mono';color:var(--accent-text);">Lees meer →</a>
+        </div>
+      </article>
+      <article data-reveal style="background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;box-shadow:0 1px 2px oklch(20% 0.02 255 / 0.04), 0 16px 32px -20px oklch(20% 0.02 255 / 0.12);transition:all 220ms ease, opacity 600ms ease, transform 600ms ease;">
+        <div style="background:var(--border);height:160px;display:flex;align-items:center;justify-content:center;font:500 0.8125rem/1.5 'IBM Plex Mono';color:var(--text-muted);letter-spacing:0.04em;text-transform:uppercase;">Gids</div>
+        <div style="padding:clamp(22px,3vw,28px);">
+          <div style="font:500 0.75rem/1 'IBM Plex Mono';color:var(--accent-text);margin-bottom:12px;text-transform:uppercase;letter-spacing:0.05em;">Augustus 2026</div>
+          <h3 style="font:600 1.1875rem/1.35 'IBM Plex Sans';margin:0 0 12px;letter-spacing:-0.01em;color:var(--text);">Bedrijfsprocessen automatiseren met AI: praktische gids voor het mkb</h3>
+          <p style="font:400 0.9375rem/1.6 'IBM Plex Sans';color:var(--text-muted);margin:0 0 20px;">Niet elk proces is geschikt voor automatisering. Een selectiematrix, een stappenplan, en concrete voorbeelden uit de dagelijkse mkb-praktijk.</p>
+          <a href="./bedrijfsprocessen-automatiseren-met-ai.html" style="font:500 0.875rem/1 'IBM Plex Mono';color:var(--accent-text);">Lees meer →</a>
         </div>
       </article>
     </div>
