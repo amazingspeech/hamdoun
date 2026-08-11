@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="nl">
 <head>
+<script>(function(){try{var t=localStorage.getItem("tessar-theme");if(t==="dark"||t==="light"){document.documentElement.setAttribute("data-theme",t);}}catch(e){}})();</script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Chatbots — Tessar | AI-chatbots voor jouw praktijk</title>
@@ -24,11 +25,57 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-  html, body { margin:0; padding:0; background:oklch(98% 0.004 90); }
+  :root {
+    color-scheme: light dark;
+    --bg: oklch(98% 0.004 90);
+    --surface: #fff;
+    --text: oklch(18% 0.02 255);
+    --text-muted: oklch(46% 0.012 140);
+    --text-muted-2: oklch(55% 0.012 140);
+    --border: oklch(90% 0.006 90);
+    --accent-text: oklch(48% 0.12 230);
+    --surface-inset: oklch(99% 0.003 90);
+  }
+  :root[data-theme="light"] { color-scheme: light; }
+  :root[data-theme="dark"] { color-scheme: dark; }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: oklch(14% 0.016 260);
+      --surface: oklch(19% 0.016 260);
+      --text: oklch(95% 0.006 90);
+      --text-muted: oklch(72% 0.014 140);
+      --text-muted-2: oklch(60% 0.014 140);
+      --border: oklch(28% 0.014 260);
+      --accent-text: oklch(66% 0.13 226);
+      --surface-inset: oklch(25% 0.018 260);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: oklch(14% 0.016 260);
+    --surface: oklch(19% 0.016 260);
+    --text: oklch(95% 0.006 90);
+    --text-muted: oklch(72% 0.014 140);
+    --text-muted-2: oklch(60% 0.014 140);
+    --border: oklch(28% 0.014 260);
+    --accent-text: oklch(66% 0.13 226);
+    --surface-inset: oklch(25% 0.018 260);
+  }
+  body { transition:background-color 200ms ease, color 200ms ease; }
+  .theme-toggle { display:inline-flex; align-items:center; justify-content:center; width:38px; height:38px; border-radius:50%; border:1px solid var(--border); background:var(--surface); color:var(--text); cursor:pointer; transition:background-color 200ms ease, border-color 200ms ease, transform 200ms ease; flex-shrink:0; }
+  .theme-toggle:hover { border-color:var(--accent-text); transform:translateY(-1px); }
+  .theme-toggle svg { display:block; }
+  .theme-toggle .icon-moon { display:none; }
+  :root[data-theme="dark"] .theme-toggle .icon-sun { display:none; }
+  :root[data-theme="dark"] .theme-toggle .icon-moon { display:block; }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .theme-toggle .icon-sun { display:none; }
+    :root:not([data-theme="light"]) .theme-toggle .icon-moon { display:block; }
+  }
+  html, body { margin:0; padding:0; background:var(--bg); }
   html { scroll-behavior:smooth; }
-  body { font-family:'IBM Plex Sans', -apple-system, 'Segoe UI', sans-serif; color:oklch(18% 0.02 255); line-height:1.55; -webkit-font-smoothing:antialiased; }
-  a { color:oklch(18% 0.02 255); text-decoration:none; }
-  a:hover { color:oklch(48% 0.12 230); }
+  body { font-family:'IBM Plex Sans', -apple-system, 'Segoe UI', sans-serif; color:var(--text); line-height:1.55; -webkit-font-smoothing:antialiased; }
+  a { color:var(--text); text-decoration:none; }
+  a:hover { color:var(--accent-text); }
   [data-reveal] { opacity:0; transform:translateY(18px); transition:opacity 600ms ease, transform 600ms ease; }
   [data-reveal].is-visible { opacity:1; transform:translateY(0); }
   [data-reveal-grid] > [data-reveal]:nth-child(1) { transition-delay:0ms; }
@@ -37,14 +84,14 @@
   [data-reveal-grid] > [data-reveal]:nth-child(4) { transition-delay:270ms; }
   [data-reveal-grid] > [data-reveal]:nth-child(5) { transition-delay:360ms; }
   .nav-toggle { display:none; background:none; border:none; cursor:pointer; padding:8px; flex-direction:column; gap:5px; margin-left:4px; }
-  .nav-toggle span { display:block; width:22px; height:2px; background:oklch(18% 0.02 255); border-radius:2px; transition:transform 200ms ease, opacity 200ms ease; }
+  .nav-toggle span { display:block; width:22px; height:2px; background:var(--text); border-radius:2px; transition:transform 200ms ease, opacity 200ms ease; }
   .nav-mobile-panel { display:none; }
   @media (max-width: 960px) {
     .nav-link { display:none; }
     .nav-toggle { display:flex; }
-    .nav-mobile-panel { display:none; flex-direction:column; padding:8px 20px 20px; background:oklch(98% 0.004 90); border-top:1px solid oklch(90% 0.006 90); }
+    .nav-mobile-panel { display:none; flex-direction:column; padding:8px 20px 20px; background:var(--bg); border-top:1px solid var(--border); }
     .nav-mobile-panel.nav-open { display:flex; }
-    .nav-mobile-panel a { display:block; padding:14px 0; font:500 1rem/1.3 'IBM Plex Sans'; color:oklch(24% 0.02 255); border-bottom:1px solid oklch(91% 0.006 90); }
+    .nav-mobile-panel a { display:block; padding:14px 0; font:500 1rem/1.3 'IBM Plex Sans'; color:var(--text); border-bottom:1px solid var(--border); }
     .nav-mobile-panel a:last-child { border-bottom:none; margin-top:8px; }
     .nav-toggle.nav-toggle-active span:nth-child(1) { transform:translateY(7px) rotate(45deg); }
     .nav-toggle.nav-toggle-active span:nth-child(2) { opacity:0; }
@@ -66,32 +113,36 @@
 </head>
 <body>
 
-<header style="position:sticky;top:0;z-index:30;background:color-mix(in oklch, oklch(98% 0.004 90) 92%, transparent);backdrop-filter:blur(12px);border-bottom:1px solid oklch(90% 0.006 90);padding:16px clamp(20px,5vw,40px);">
+<header style="position:sticky;top:0;z-index:30;background:color-mix(in oklch, var(--bg) 92%, transparent);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:16px clamp(20px,5vw,40px);">
   <div style="display:flex;align-items:center;justify-content:space-between;max-width:1400px;margin:0 auto;">
     <a href="./index.html" style="display:flex;align-items:center;gap:10px;flex-shrink:0;">
       <img src="./assets/tessar-icon-optimized.png" width="32" height="35" alt="Tessar logo" style="height:32px;width:auto;">
-      <span style="font:700 1rem/1 'IBM Plex Sans';letter-spacing:-0.015em;color:oklch(18% 0.02 255);">Tessar</span>
+      <span style="font:700 1rem/1 'IBM Plex Sans';letter-spacing:-0.015em;color:var(--text);">Tessar</span>
     </a>
     <nav style="display:flex;flex-wrap:wrap;align-items:center;row-gap:10px;gap:clamp(12px,1.5vw,24px);font-size:0.9375rem;">
-      <a href="./services.html" class="nav-link" style="color:oklch(46% 0.012 140);transition:color 200ms ease;">Diensten</a>
-      <a href="./index.html#industries" class="nav-link" style="color:oklch(46% 0.012 140);transition:color 200ms ease;">Sectoren</a>
-      <a href="./prijzen.html" class="nav-link" style="color:oklch(46% 0.012 140);transition:color 200ms ease;">Prijzen</a>
-      <a href="./chatbots.html" class="nav-link" style="color:oklch(18% 0.02 255);font-weight:600;">Chatbots</a>
-      <a href="./blog.html" class="nav-link" style="color:oklch(46% 0.012 140);transition:color 200ms ease;">Blog</a>
-      <a href="./contact.html" class="nav-link" style="color:oklch(46% 0.012 140);transition:color 200ms ease;">Contact</a>
+      <a href="./services.html" class="nav-link" style="color:var(--text-muted);transition:color 200ms ease;">Diensten</a>
+      <a href="./index.html#industries" class="nav-link" style="color:var(--text-muted);transition:color 200ms ease;">Sectoren</a>
+      <a href="./prijzen.html" class="nav-link" style="color:var(--text-muted);transition:color 200ms ease;">Prijzen</a>
+      <a href="./chatbots.html" class="nav-link" style="color:var(--text);font-weight:600;">Chatbots</a>
+      <a href="./blog.html" class="nav-link" style="color:var(--text-muted);transition:color 200ms ease;">Blog</a>
+      <a href="./contact.html" class="nav-link" style="color:var(--text-muted);transition:color 200ms ease;">Contact</a>
       <a href="./index.html#contact" style="background:oklch(70% 0.14 220);color:#001a2e;padding:10px 20px;border-radius:6px;font-weight:600;transition:all 200ms ease;">Plan gesprek</a>
     </nav>
+    <button type="button" class="theme-toggle" id="theme-toggle-btn" aria-label="Wissel tussen licht en donker thema">
+      <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+      <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+    </button>
     <button type="button" class="nav-toggle" id="nav-toggle-btn" aria-label="Menu" aria-expanded="false" aria-controls="nav-mobile-panel">
       <span></span><span></span><span></span>
     </button>
   </div>
   <div class="nav-mobile-panel" id="nav-mobile-panel">
-      <a href="./services.html" style="color:oklch(46% 0.012 140);transition:color 200ms ease;">Diensten</a>
-      <a href="./index.html#industries" style="color:oklch(46% 0.012 140);transition:color 200ms ease;">Sectoren</a>
-      <a href="./prijzen.html" style="color:oklch(46% 0.012 140);transition:color 200ms ease;">Prijzen</a>
-      <a href="./chatbots.html" style="color:oklch(18% 0.02 255);font-weight:600;">Chatbots</a>
-      <a href="./blog.html" style="color:oklch(46% 0.012 140);transition:color 200ms ease;">Blog</a>
-      <a href="./contact.html" style="color:oklch(46% 0.012 140);transition:color 200ms ease;">Contact</a>
+      <a href="./services.html" style="color:var(--text-muted);transition:color 200ms ease;">Diensten</a>
+      <a href="./index.html#industries" style="color:var(--text-muted);transition:color 200ms ease;">Sectoren</a>
+      <a href="./prijzen.html" style="color:var(--text-muted);transition:color 200ms ease;">Prijzen</a>
+      <a href="./chatbots.html" style="color:var(--text);font-weight:600;">Chatbots</a>
+      <a href="./blog.html" style="color:var(--text-muted);transition:color 200ms ease;">Blog</a>
+      <a href="./contact.html" style="color:var(--text-muted);transition:color 200ms ease;">Contact</a>
       <a href="./index.html#contact" style="background:oklch(70% 0.14 220);color:#001a2e;padding:10px 20px;border-radius:6px;font-weight:600;transition:all 200ms ease;">Plan gesprek</a>
   </div>
 </header>
@@ -106,143 +157,143 @@
   </div>
 </section>
 
-<section id="demo" style="padding:clamp(48px,6vw,72px) clamp(20px,5vw,40px);background:#FFF;">
+<section id="demo" style="padding:clamp(48px,6vw,72px) clamp(20px,5vw,40px);background:var(--surface);">
   <div style="max-width:760px;margin:0 auto;">
     <div style="text-align:center;margin-bottom:clamp(28px,4vw,40px);">
-      <h2 style="font:600 clamp(1.5rem,3.2vw,1.875rem)/1.2 'IBM Plex Sans';margin:0 0 10px;letter-spacing:-0.02em;color:oklch(18% 0.02 255);">Zie het verschil, niet alleen de belofte</h2>
-      <p style="font:400 0.9375rem/1.6 'IBM Plex Sans';color:oklch(46% 0.012 140);max-width:480px;margin:0 auto;">Hetzelfde gesprek, drie niveaus van vermogen. Klik om te wisselen.</p>
+      <h2 style="font:600 clamp(1.5rem,3.2vw,1.875rem)/1.2 'IBM Plex Sans';margin:0 0 10px;letter-spacing:-0.02em;color:var(--text);">Zie het verschil, niet alleen de belofte</h2>
+      <p style="font:400 0.9375rem/1.6 'IBM Plex Sans';color:var(--text-muted);max-width:480px;margin:0 auto;">Hetzelfde gesprek, drie niveaus van vermogen. Klik om te wisselen.</p>
     </div>
     <div style="display:flex;justify-content:center;gap:8px;margin-bottom:20px;flex-wrap:wrap;">
       <button type="button" class="demo-tab" data-demo-tab="assistant" aria-pressed="true" style="border:1px solid oklch(48% 0.12 230);background:oklch(48% 0.12 230);color:#FFF;padding:9px 18px;border-radius:20px;font:600 0.875rem/1 'IBM Plex Sans';cursor:pointer;transition:all 200ms ease;">Assistant</button>
-      <button type="button" class="demo-tab" data-demo-tab="concierge" aria-pressed="false" style="border:1px solid oklch(88% 0.006 90);background:#FFF;color:oklch(46% 0.012 140);padding:9px 18px;border-radius:20px;font:600 0.875rem/1 'IBM Plex Sans';cursor:pointer;transition:all 200ms ease;">Concierge</button>
-      <button type="button" class="demo-tab" data-demo-tab="partner" aria-pressed="false" style="border:1px solid oklch(88% 0.006 90);background:#FFF;color:oklch(46% 0.012 140);padding:9px 18px;border-radius:20px;font:600 0.875rem/1 'IBM Plex Sans';cursor:pointer;transition:all 200ms ease;">Partner</button>
+      <button type="button" class="demo-tab" data-demo-tab="concierge" aria-pressed="false" style="border:1px solid var(--border);background:var(--surface);color:var(--text-muted);padding:9px 18px;border-radius:20px;font:600 0.875rem/1 'IBM Plex Sans';cursor:pointer;transition:all 200ms ease;">Concierge</button>
+      <button type="button" class="demo-tab" data-demo-tab="partner" aria-pressed="false" style="border:1px solid var(--border);background:var(--surface);color:var(--text-muted);padding:9px 18px;border-radius:20px;font:600 0.875rem/1 'IBM Plex Sans';cursor:pointer;transition:all 200ms ease;">Partner</button>
     </div>
-    <div style="background:oklch(98% 0.004 90);border:1px solid oklch(91% 0.006 90);border-radius:16px;padding:clamp(20px,3vw,28px);min-height:170px;">
+    <div style="background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:clamp(20px,3vw,28px);min-height:170px;">
       <div class="demo-panel" data-demo-panel="assistant" style="display:flex;flex-direction:column;gap:10px;">
         <div style="align-self:flex-end;background:oklch(48% 0.12 230);color:#FFF;padding:10px 14px;border-radius:12px 12px 2px 12px;font-size:0.9375rem;max-width:85%;">Wat zijn jullie openingstijden?</div>
-        <div style="align-self:flex-start;background:#FFF;border:1px solid oklch(91% 0.006 90);color:oklch(18% 0.02 255);padding:10px 14px;border-radius:12px 12px 12px 2px;font-size:0.9375rem;max-width:85%;">We zijn open van maandag t/m vrijdag 9:00–18:00, en zaterdag op afspraak. Wil je een intake inplannen?</div>
+        <div style="align-self:flex-start;background:var(--surface);border:1px solid var(--border);color:var(--text);padding:10px 14px;border-radius:12px 12px 12px 2px;font-size:0.9375rem;max-width:85%;">We zijn open van maandag t/m vrijdag 9:00–18:00, en zaterdag op afspraak. Wil je een intake inplannen?</div>
       </div>
       <div class="demo-panel" data-demo-panel="concierge" style="display:none;flex-direction:column;gap:10px;">
         <div style="align-self:flex-end;background:oklch(48% 0.12 230);color:#FFF;padding:10px 14px;border-radius:12px 12px 2px 12px;font-size:0.9375rem;max-width:85%;">Kan ik volgende week een intake inplannen voor botox?</div>
-        <div style="align-self:flex-start;background:#FFF;border:1px solid oklch(91% 0.006 90);color:oklch(18% 0.02 255);padding:10px 14px;border-radius:12px 12px 12px 2px;font-size:0.9375rem;max-width:85%;">Zeker! Dr. Jansen heeft woensdag 14:00 en vrijdag 10:00 nog vrij. Zal ik woensdag voor je vastleggen?</div>
+        <div style="align-self:flex-start;background:var(--surface);border:1px solid var(--border);color:var(--text);padding:10px 14px;border-radius:12px 12px 12px 2px;font-size:0.9375rem;max-width:85%;">Zeker! Dr. Jansen heeft woensdag 14:00 en vrijdag 10:00 nog vrij. Zal ik woensdag voor je vastleggen?</div>
         <div style="align-self:flex-end;background:oklch(48% 0.12 230);color:#FFF;padding:10px 14px;border-radius:12px 12px 2px 12px;font-size:0.9375rem;max-width:85%;">Ja, woensdag graag.</div>
-        <div style="align-self:flex-start;background:#FFF;border:1px solid oklch(91% 0.006 90);color:oklch(18% 0.02 255);padding:10px 14px;border-radius:12px 12px 12px 2px;font-size:0.9375rem;max-width:85%;">Geboekt! Je ontvangt een bevestiging per e-mail, en 24 uur van tevoren een herinnering.</div>
+        <div style="align-self:flex-start;background:var(--surface);border:1px solid var(--border);color:var(--text);padding:10px 14px;border-radius:12px 12px 12px 2px;font-size:0.9375rem;max-width:85%;">Geboekt! Je ontvangt een bevestiging per e-mail, en 24 uur van tevoren een herinnering.</div>
       </div>
       <div class="demo-panel" data-demo-panel="partner" style="display:none;flex-direction:column;gap:10px;">
         <div style="align-self:flex-end;background:oklch(48% 0.12 230);color:#FFF;padding:10px 14px;border-radius:12px 12px 2px 12px;font-size:0.9375rem;max-width:85%;">Ik heb interesse in een combinatiebehandeling, maar weet niet welke specialist ik nodig heb.</div>
-        <div style="align-self:flex-start;background:#FFF;border:1px solid oklch(91% 0.006 90);color:oklch(18% 0.02 255);padding:10px 14px;border-radius:12px 12px 12px 2px;font-size:0.9375rem;max-width:85%;">Op basis van wat je beschrijft denk ik aan dr. Bakker (huid) in combinatie met dr. de Vries (injectables). Zal ik een gecombineerd intakegesprek plannen en je vooraf een infofolder sturen?</div>
+        <div style="align-self:flex-start;background:var(--surface);border:1px solid var(--border);color:var(--text);padding:10px 14px;border-radius:12px 12px 12px 2px;font-size:0.9375rem;max-width:85%;">Op basis van wat je beschrijft denk ik aan dr. Bakker (huid) in combinatie met dr. de Vries (injectables). Zal ik een gecombineerd intakegesprek plannen en je vooraf een infofolder sturen?</div>
         <div style="align-self:flex-end;background:oklch(48% 0.12 230);color:#FFF;padding:10px 14px;border-radius:12px 12px 2px 12px;font-size:0.9375rem;max-width:85%;">Graag.</div>
-        <div style="align-self:flex-start;background:#FFF;border:1px solid oklch(91% 0.006 90);color:oklch(18% 0.02 255);padding:10px 14px;border-radius:12px 12px 12px 2px;font-size:0.9375rem;max-width:85%;">Gepland voor donderdag 11:00. Ik volg na de afspraak automatisch op om te vragen hoe het is gegaan.</div>
+        <div style="align-self:flex-start;background:var(--surface);border:1px solid var(--border);color:var(--text);padding:10px 14px;border-radius:12px 12px 12px 2px;font-size:0.9375rem;max-width:85%;">Gepland voor donderdag 11:00. Ik volg na de afspraak automatisch op om te vragen hoe het is gegaan.</div>
       </div>
     </div>
   </div>
 </section>
 
-<section style="padding:28px clamp(20px,5vw,40px);background:oklch(98% 0.004 90);border-bottom:1px solid oklch(90% 0.006 90);">
+<section style="padding:28px clamp(20px,5vw,40px);background:var(--bg);border-bottom:1px solid var(--border);">
   <div style="max-width:900px;margin:0 auto;display:flex;flex-wrap:wrap;justify-content:center;gap:clamp(20px,4vw,40px);">
-    <div style="display:flex;align-items:center;gap:8px;font:600 0.875rem/1.4 'IBM Plex Sans';color:oklch(46% 0.012 140);">
-      <div class="icon icon-shield-check" style="width:16px;height:16px;color:oklch(48% 0.12 230);"></div>
+    <div style="display:flex;align-items:center;gap:8px;font:600 0.875rem/1.4 'IBM Plex Sans';color:var(--text-muted);">
+      <div class="icon icon-shield-check" style="width:16px;height:16px;color:var(--accent-text);"></div>
       <span>AVG-bewust & EU AI Act-bewust ontwikkeld</span>
     </div>
-    <div style="display:flex;align-items:center;gap:8px;font:600 0.875rem/1.4 'IBM Plex Sans';color:oklch(46% 0.012 140);">
-      <div class="icon icon-zap" style="width:16px;height:16px;color:oklch(48% 0.12 230);"></div>
+    <div style="display:flex;align-items:center;gap:8px;font:600 0.875rem/1.4 'IBM Plex Sans';color:var(--text-muted);">
+      <div class="icon icon-zap" style="width:16px;height:16px;color:var(--accent-text);"></div>
       <span>Live in 1–4 weken</span>
     </div>
-    <div style="display:flex;align-items:center;gap:8px;font:600 0.875rem/1.4 'IBM Plex Sans';color:oklch(46% 0.012 140);">
-      <div class="icon icon-check" style="width:16px;height:16px;color:oklch(48% 0.12 230);"></div>
+    <div style="display:flex;align-items:center;gap:8px;font:600 0.875rem/1.4 'IBM Plex Sans';color:var(--text-muted);">
+      <div class="icon icon-check" style="width:16px;height:16px;color:var(--accent-text);"></div>
       <span>Volledige controle, geen lock-in</span>
     </div>
   </div>
 </section>
 
-<section style="padding:clamp(56px,7vw,88px) clamp(20px,5vw,40px);background:#FFF;">
+<section style="padding:clamp(56px,7vw,88px) clamp(20px,5vw,40px);background:var(--surface);">
   <div style="max-width:1000px;margin:0 auto;">
     <div style="text-align:center;margin-bottom:clamp(40px,5vw,56px);">
-      <div style="font:500 0.8125rem/1.3 'IBM Plex Mono';letter-spacing:0.06em;text-transform:uppercase;color:oklch(48% 0.12 230);margin-bottom:12px;">Herkenbaar</div>
-      <h2 style="font:600 clamp(1.75rem,4vw,2.25rem)/1.2 'IBM Plex Sans';margin:0;letter-spacing:-0.02em;color:oklch(18% 0.02 255);">Waar de meeste praktijken nu tegenaan lopen</h2>
+      <div style="font:500 0.8125rem/1.3 'IBM Plex Mono';letter-spacing:0.06em;text-transform:uppercase;color:var(--accent-text);margin-bottom:12px;">Herkenbaar</div>
+      <h2 style="font:600 clamp(1.75rem,4vw,2.25rem)/1.2 'IBM Plex Sans';margin:0;letter-spacing:-0.02em;color:var(--text);">Waar de meeste praktijken nu tegenaan lopen</h2>
     </div>
     <div data-reveal-grid style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:clamp(20px,3vw,32px);">
-      <div data-reveal style="border:1px solid oklch(91% 0.006 90);border-radius:12px;padding:clamp(24px,3vw,32px);transition:opacity 600ms ease, transform 600ms ease;">
-        <div style="font:600 0.8125rem/1.3 'IBM Plex Mono';letter-spacing:0.05em;text-transform:uppercase;color:oklch(46% 0.012 140);margin-bottom:16px;">Nu</div>
+      <div data-reveal style="border:1px solid var(--border);border-radius:12px;padding:clamp(24px,3vw,32px);transition:opacity 600ms ease, transform 600ms ease;">
+        <div style="font:600 0.8125rem/1.3 'IBM Plex Mono';letter-spacing:0.05em;text-transform:uppercase;color:var(--text-muted);margin-bottom:16px;">Nu</div>
         <ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:14px;">
-          <li style="font:400 0.9375rem/1.5 'IBM Plex Sans';color:oklch(46% 0.012 140);">Telefoon gaat tijdens een behandeling — de patiënt hangt op</li>
-          <li style="font:400 0.9375rem/1.5 'IBM Plex Sans';color:oklch(46% 0.012 140);">Dezelfde vraag over openingstijden en prijzen, elke dag opnieuw</li>
-          <li style="font:400 0.9375rem/1.5 'IBM Plex Sans';color:oklch(46% 0.012 140);">Afzeggingen die pas 's ochtends opvallen — de stoel blijft leeg</li>
-          <li style="font:400 0.9375rem/1.5 'IBM Plex Sans';color:oklch(46% 0.012 140);">Spoedvragen wachten tussen de reguliere berichten</li>
+          <li style="font:400 0.9375rem/1.5 'IBM Plex Sans';color:var(--text-muted);">Telefoon gaat tijdens een behandeling — de patiënt hangt op</li>
+          <li style="font:400 0.9375rem/1.5 'IBM Plex Sans';color:var(--text-muted);">Dezelfde vraag over openingstijden en prijzen, elke dag opnieuw</li>
+          <li style="font:400 0.9375rem/1.5 'IBM Plex Sans';color:var(--text-muted);">Afzeggingen die pas 's ochtends opvallen — de stoel blijft leeg</li>
+          <li style="font:400 0.9375rem/1.5 'IBM Plex Sans';color:var(--text-muted);">Spoedvragen wachten tussen de reguliere berichten</li>
         </ul>
       </div>
-      <div data-reveal style="border:2px solid oklch(48% 0.12 230);border-radius:12px;padding:clamp(24px,3vw,32px);background:oklch(48% 0.12 230 / 0.04);transition:opacity 600ms ease, transform 600ms ease;">
-        <div style="font:600 0.8125rem/1.3 'IBM Plex Mono';letter-spacing:0.05em;text-transform:uppercase;color:oklch(48% 0.12 230);margin-bottom:16px;">Met Tessar</div>
+      <div data-reveal style="border:2px solid var(--accent-text);border-radius:12px;padding:clamp(24px,3vw,32px);background:oklch(48% 0.12 230 / 0.04);transition:opacity 600ms ease, transform 600ms ease;">
+        <div style="font:600 0.8125rem/1.3 'IBM Plex Mono';letter-spacing:0.05em;text-transform:uppercase;color:var(--accent-text);margin-bottom:16px;">Met Tessar</div>
         <ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:14px;">
-          <li style="display:flex;gap:10px;align-items:flex-start;font:400 0.9375rem/1.5 'IBM Plex Sans';color:oklch(18% 0.02 255);"><div class="icon icon-check" style="width:15px;height:15px;color:oklch(48% 0.12 230);margin-top:3px;flex-shrink:0;"></div><span>De chat beantwoordt direct, ook buiten kantooruren</span></li>
-          <li style="display:flex;gap:10px;align-items:flex-start;font:400 0.9375rem/1.5 'IBM Plex Sans';color:oklch(18% 0.02 255);"><div class="icon icon-check" style="width:15px;height:15px;color:oklch(48% 0.12 230);margin-top:3px;flex-shrink:0;"></div><span>Elke patiënt krijgt hetzelfde, correcte antwoord</span></li>
-          <li style="display:flex;gap:10px;align-items:flex-start;font:400 0.9375rem/1.5 'IBM Plex Sans';color:oklch(18% 0.02 255);"><div class="icon icon-check" style="width:15px;height:15px;color:oklch(48% 0.12 230);margin-top:3px;flex-shrink:0;"></div><span>Wachtlijst wordt automatisch aangesproken zodra er een plek vrijkomt</span></li>
-          <li style="display:flex;gap:10px;align-items:flex-start;font:400 0.9375rem/1.5 'IBM Plex Sans';color:oklch(18% 0.02 255);"><div class="icon icon-check" style="width:15px;height:15px;color:oklch(48% 0.12 230);margin-top:3px;flex-shrink:0;"></div><span>Spoedvragen worden herkend en direct doorgezet naar je team</span></li>
+          <li style="display:flex;gap:10px;align-items:flex-start;font:400 0.9375rem/1.5 'IBM Plex Sans';color:var(--text);"><div class="icon icon-check" style="width:15px;height:15px;color:var(--accent-text);margin-top:3px;flex-shrink:0;"></div><span>De chat beantwoordt direct, ook buiten kantooruren</span></li>
+          <li style="display:flex;gap:10px;align-items:flex-start;font:400 0.9375rem/1.5 'IBM Plex Sans';color:var(--text);"><div class="icon icon-check" style="width:15px;height:15px;color:var(--accent-text);margin-top:3px;flex-shrink:0;"></div><span>Elke patiënt krijgt hetzelfde, correcte antwoord</span></li>
+          <li style="display:flex;gap:10px;align-items:flex-start;font:400 0.9375rem/1.5 'IBM Plex Sans';color:var(--text);"><div class="icon icon-check" style="width:15px;height:15px;color:var(--accent-text);margin-top:3px;flex-shrink:0;"></div><span>Wachtlijst wordt automatisch aangesproken zodra er een plek vrijkomt</span></li>
+          <li style="display:flex;gap:10px;align-items:flex-start;font:400 0.9375rem/1.5 'IBM Plex Sans';color:var(--text);"><div class="icon icon-check" style="width:15px;height:15px;color:var(--accent-text);margin-top:3px;flex-shrink:0;"></div><span>Spoedvragen worden herkend en direct doorgezet naar je team</span></li>
         </ul>
       </div>
     </div>
   </div>
 </section>
 
-<section id="tiers" style="padding:clamp(56px,7vw,88px) clamp(20px,5vw,40px);background:oklch(98% 0.004 90);border-top:1px solid oklch(90% 0.006 90);">
+<section id="tiers" style="padding:clamp(56px,7vw,88px) clamp(20px,5vw,40px);background:var(--bg);border-top:1px solid var(--border);">
   <div style="max-width:1100px;margin:0 auto;">
     <div style="text-align:center;margin-bottom:clamp(40px,5vw,56px);">
-      <h2 style="font:600 clamp(1.75rem,4vw,2.25rem)/1.2 'IBM Plex Sans';margin:0 0 16px;letter-spacing:-0.02em;color:oklch(18% 0.02 255);">Drie pakketten, één heldere keuze</h2>
-      <p style="font:400 clamp(0.95rem,1.5vw,1rem)/1.6 'IBM Plex Sans';color:oklch(46% 0.012 140);max-width:600px;margin:0 auto;">Elk pakket bouwt voort op het vorige. Begin klein, groei door zodra je praktijk eraan toe is.</p>
+      <h2 style="font:600 clamp(1.75rem,4vw,2.25rem)/1.2 'IBM Plex Sans';margin:0 0 16px;letter-spacing:-0.02em;color:var(--text);">Drie pakketten, één heldere keuze</h2>
+      <p style="font:400 clamp(0.95rem,1.5vw,1rem)/1.6 'IBM Plex Sans';color:var(--text-muted);max-width:600px;margin:0 auto;">Elk pakket bouwt voort op het vorige. Begin klein, groei door zodra je praktijk eraan toe is.</p>
     </div>
     <div data-reveal-grid style="display:grid;grid-template-columns:repeat(auto-fit,minmax(clamp(240px,100%,300px),1fr));gap:clamp(16px,2vw,24px);">
 
-      <div data-reveal style="background:#FFF;border:1px solid oklch(91% 0.006 90);border-radius:12px;padding:clamp(28px,4vw,36px);display:flex;flex-direction:column;transition:opacity 600ms ease, transform 600ms ease;">
-        <h3 style="font:600 1.25rem/1.3 'IBM Plex Sans';margin:0 0 8px;color:oklch(18% 0.02 255);">Assistant</h3>
-        <p style="font:400 0.9375rem/1.6 'IBM Plex Sans';color:oklch(46% 0.012 140);margin:0 0 20px;">Altijd een antwoord klaar — voor de solo-praktijk die net begint met AI.</p>
-        <div style="margin:20px 0;padding:20px;background:oklch(99% 0.003 90);border-radius:8px;border:1px solid oklch(91% 0.006 90);">
-          <div style="font:700 1.875rem/1 'IBM Plex Mono';color:oklch(48% 0.12 230);">Op aanvraag</div>
-          <div style="font:400 0.875rem/1.5 'IBM Plex Sans';color:oklch(46% 0.012 140);margin-top:6px;">1–2 weken</div>
+      <div data-reveal style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:clamp(28px,4vw,36px);display:flex;flex-direction:column;transition:opacity 600ms ease, transform 600ms ease;">
+        <h3 style="font:600 1.25rem/1.3 'IBM Plex Sans';margin:0 0 8px;color:var(--text);">Assistant</h3>
+        <p style="font:400 0.9375rem/1.6 'IBM Plex Sans';color:var(--text-muted);margin:0 0 20px;">Altijd een antwoord klaar — voor de solo-praktijk die net begint met AI.</p>
+        <div style="margin:20px 0;padding:20px;background:var(--surface-inset);border-radius:8px;border:1px solid var(--border);">
+          <div style="font:700 1.875rem/1 'IBM Plex Mono';color:var(--accent-text);">Op aanvraag</div>
+          <div style="font:400 0.875rem/1.5 'IBM Plex Sans';color:var(--text-muted);margin-top:6px;">1–2 weken</div>
         </div>
         <ul style="list-style:none;margin:0 0 24px;padding:0;display:flex;flex-direction:column;gap:12px;flex:1;">
-          <li style="display:flex;gap:10px;align-items:flex-start;font:400 0.9375rem/1.5 'IBM Plex Sans';color:oklch(46% 0.012 140);"><div class="icon icon-check" style="width:15px;height:15px;color:oklch(48% 0.12 230);margin-top:3px;flex-shrink:0;"></div><span>Beantwoordt veelgestelde vragen (openingstijden, locatie, behandelingen)</span></li>
-          <li style="display:flex;gap:10px;align-items:flex-start;font:400 0.9375rem/1.5 'IBM Plex Sans';color:oklch(46% 0.012 140);"><div class="icon icon-check" style="width:15px;height:15px;color:oklch(48% 0.12 230);margin-top:3px;flex-shrink:0;"></div><span>Intake-formulier direct in de chat</span></li>
-          <li style="display:flex;gap:10px;align-items:flex-start;font:400 0.9375rem/1.5 'IBM Plex Sans';color:oklch(46% 0.012 140);"><div class="icon icon-check" style="width:15px;height:15px;color:oklch(48% 0.12 230);margin-top:3px;flex-shrink:0;"></div><span>Automatische afspraakherinneringen — minder no-shows</span></li>
-          <li style="display:flex;gap:10px;align-items:flex-start;font:400 0.9375rem/1.5 'IBM Plex Sans';color:oklch(46% 0.012 140);"><div class="icon icon-check" style="width:15px;height:15px;color:oklch(48% 0.12 230);margin-top:3px;flex-shrink:0;"></div><span>Basisbranding in jouw huisstijl</span></li>
+          <li style="display:flex;gap:10px;align-items:flex-start;font:400 0.9375rem/1.5 'IBM Plex Sans';color:var(--text-muted);"><div class="icon icon-check" style="width:15px;height:15px;color:var(--accent-text);margin-top:3px;flex-shrink:0;"></div><span>Beantwoordt veelgestelde vragen (openingstijden, locatie, behandelingen)</span></li>
+          <li style="display:flex;gap:10px;align-items:flex-start;font:400 0.9375rem/1.5 'IBM Plex Sans';color:var(--text-muted);"><div class="icon icon-check" style="width:15px;height:15px;color:var(--accent-text);margin-top:3px;flex-shrink:0;"></div><span>Intake-formulier direct in de chat</span></li>
+          <li style="display:flex;gap:10px;align-items:flex-start;font:400 0.9375rem/1.5 'IBM Plex Sans';color:var(--text-muted);"><div class="icon icon-check" style="width:15px;height:15px;color:var(--accent-text);margin-top:3px;flex-shrink:0;"></div><span>Automatische afspraakherinneringen — minder no-shows</span></li>
+          <li style="display:flex;gap:10px;align-items:flex-start;font:400 0.9375rem/1.5 'IBM Plex Sans';color:var(--text-muted);"><div class="icon icon-check" style="width:15px;height:15px;color:var(--accent-text);margin-top:3px;flex-shrink:0;"></div><span>Basisbranding in jouw huisstijl</span></li>
         </ul>
         <a href="./index.html#contact" style="background:oklch(70% 0.14 220);color:#001a2e;padding:12px 20px;border-radius:6px;text-align:center;font-weight:600;font-size:0.9375rem;transition:all 200ms ease;white-space:nowrap;">Plan gesprek</a>
       </div>
 
-      <div data-reveal style="background:#FFF;border:2px solid oklch(48% 0.12 230);border-radius:12px;padding:clamp(28px,4vw,36px);display:flex;flex-direction:column;position:relative;box-shadow:0 8px 24px oklch(48% 0.12 230 / 0.15);transition:opacity 600ms ease, transform 600ms ease;">
+      <div data-reveal style="background:var(--surface);border:2px solid var(--accent-text);border-radius:12px;padding:clamp(28px,4vw,36px);display:flex;flex-direction:column;position:relative;box-shadow:0 8px 24px oklch(48% 0.12 230 / 0.15);transition:opacity 600ms ease, transform 600ms ease;">
         <div style="position:absolute;top:-13px;left:28px;background:oklch(48% 0.12 230);color:#FFF;padding:4px 12px;border-radius:20px;font:600 0.75rem/1 'IBM Plex Mono';letter-spacing:0.04em;text-transform:uppercase;">Meest gekozen</div>
-        <h3 style="font:600 1.25rem/1.3 'IBM Plex Sans';margin:0 0 8px;color:oklch(18% 0.02 255);">Concierge</h3>
-        <p style="font:400 0.9375rem/1.6 'IBM Plex Sans';color:oklch(46% 0.012 140);margin:0 0 20px;">Kent je klant, denkt met je mee — voor de groeiende praktijk met een bestaand CRM/agenda.</p>
-        <div style="margin:20px 0;padding:20px;background:oklch(99% 0.003 90);border-radius:8px;border:1px solid oklch(91% 0.006 90);">
-          <div style="font:700 1.875rem/1 'IBM Plex Mono';color:oklch(48% 0.12 230);">Op aanvraag</div>
-          <div style="font:400 0.875rem/1.5 'IBM Plex Sans';color:oklch(46% 0.012 140);margin-top:6px;">3–4 weken</div>
+        <h3 style="font:600 1.25rem/1.3 'IBM Plex Sans';margin:0 0 8px;color:var(--text);">Concierge</h3>
+        <p style="font:400 0.9375rem/1.6 'IBM Plex Sans';color:var(--text-muted);margin:0 0 20px;">Kent je klant, denkt met je mee — voor de groeiende praktijk met een bestaand CRM/agenda.</p>
+        <div style="margin:20px 0;padding:20px;background:var(--surface-inset);border-radius:8px;border:1px solid var(--border);">
+          <div style="font:700 1.875rem/1 'IBM Plex Mono';color:var(--accent-text);">Op aanvraag</div>
+          <div style="font:400 0.875rem/1.5 'IBM Plex Sans';color:var(--text-muted);margin-top:6px;">3–4 weken</div>
         </div>
         <ul style="list-style:none;margin:0 0 24px;padding:0;display:flex;flex-direction:column;gap:12px;flex:1;">
-          <li style="display:flex;gap:10px;align-items:flex-start;font:400 0.9375rem/1.5 'IBM Plex Sans';color:oklch(46% 0.012 140);"><div class="icon icon-check" style="width:15px;height:15px;color:oklch(48% 0.12 230);margin-top:3px;flex-shrink:0;"></div><span>Alles uit Assistant</span></li>
-          <li style="display:flex;gap:10px;align-items:flex-start;font:400 0.9375rem/1.5 'IBM Plex Sans';color:oklch(46% 0.012 140);"><div class="icon icon-check" style="width:15px;height:15px;color:oklch(48% 0.12 230);margin-top:3px;flex-shrink:0;"></div><span>Koppeling met je agenda/CRM (o.a. Clinicminds) — ziet actuele beschikbaarheid</span></li>
-          <li style="display:flex;gap:10px;align-items:flex-start;font:400 0.9375rem/1.5 'IBM Plex Sans';color:oklch(46% 0.012 140);"><div class="icon icon-check" style="width:15px;height:15px;color:oklch(48% 0.12 230);margin-top:3px;flex-shrink:0;"></div><span>Boekt en bevestigt afspraken automatisch</span></li>
-          <li style="display:flex;gap:10px;align-items:flex-start;font:400 0.9375rem/1.5 'IBM Plex Sans';color:oklch(46% 0.012 140);"><div class="icon icon-check" style="width:15px;height:15px;color:oklch(48% 0.12 230);margin-top:3px;flex-shrink:0;"></div><span>Vult afzeggingen automatisch aan vanuit de wachtlijst</span></li>
-          <li style="display:flex;gap:10px;align-items:flex-start;font:400 0.9375rem/1.5 'IBM Plex Sans';color:oklch(46% 0.012 140);"><div class="icon icon-check" style="width:15px;height:15px;color:oklch(48% 0.12 230);margin-top:3px;flex-shrink:0;"></div><span>Herkent spoedvragen en geeft ze voorrang bij je team</span></li>
-          <li style="display:flex;gap:10px;align-items:flex-start;font:400 0.9375rem/1.5 'IBM Plex Sans';color:oklch(46% 0.012 140);"><div class="icon icon-check" style="width:15px;height:15px;color:oklch(48% 0.12 230);margin-top:3px;flex-shrink:0;"></div><span>Basis rapportage-dashboard</span></li>
+          <li style="display:flex;gap:10px;align-items:flex-start;font:400 0.9375rem/1.5 'IBM Plex Sans';color:var(--text-muted);"><div class="icon icon-check" style="width:15px;height:15px;color:var(--accent-text);margin-top:3px;flex-shrink:0;"></div><span>Alles uit Assistant</span></li>
+          <li style="display:flex;gap:10px;align-items:flex-start;font:400 0.9375rem/1.5 'IBM Plex Sans';color:var(--text-muted);"><div class="icon icon-check" style="width:15px;height:15px;color:var(--accent-text);margin-top:3px;flex-shrink:0;"></div><span>Koppeling met je agenda/CRM (o.a. Clinicminds) — ziet actuele beschikbaarheid</span></li>
+          <li style="display:flex;gap:10px;align-items:flex-start;font:400 0.9375rem/1.5 'IBM Plex Sans';color:var(--text-muted);"><div class="icon icon-check" style="width:15px;height:15px;color:var(--accent-text);margin-top:3px;flex-shrink:0;"></div><span>Boekt en bevestigt afspraken automatisch</span></li>
+          <li style="display:flex;gap:10px;align-items:flex-start;font:400 0.9375rem/1.5 'IBM Plex Sans';color:var(--text-muted);"><div class="icon icon-check" style="width:15px;height:15px;color:var(--accent-text);margin-top:3px;flex-shrink:0;"></div><span>Vult afzeggingen automatisch aan vanuit de wachtlijst</span></li>
+          <li style="display:flex;gap:10px;align-items:flex-start;font:400 0.9375rem/1.5 'IBM Plex Sans';color:var(--text-muted);"><div class="icon icon-check" style="width:15px;height:15px;color:var(--accent-text);margin-top:3px;flex-shrink:0;"></div><span>Herkent spoedvragen en geeft ze voorrang bij je team</span></li>
+          <li style="display:flex;gap:10px;align-items:flex-start;font:400 0.9375rem/1.5 'IBM Plex Sans';color:var(--text-muted);"><div class="icon icon-check" style="width:15px;height:15px;color:var(--accent-text);margin-top:3px;flex-shrink:0;"></div><span>Basis rapportage-dashboard</span></li>
         </ul>
         <a href="./index.html#contact" style="background:oklch(48% 0.12 230);color:#FFF;padding:12px 20px;border-radius:6px;text-align:center;font-weight:600;font-size:0.9375rem;transition:all 200ms ease;white-space:nowrap;">Plan gesprek</a>
       </div>
 
-      <div data-reveal style="background:#FFF;border:1px solid oklch(91% 0.006 90);border-radius:12px;padding:clamp(28px,4vw,36px);display:flex;flex-direction:column;transition:opacity 600ms ease, transform 600ms ease;">
-        <h3 style="font:600 1.25rem/1.3 'IBM Plex Sans';margin:0 0 8px;color:oklch(18% 0.02 255);">Partner</h3>
-        <p style="font:400 0.9375rem/1.6 'IBM Plex Sans';color:oklch(46% 0.012 140);margin:0 0 20px;">Jouw praktijk, volledig op maat — voor de multi-locatie kliniek met eigen workflows.</p>
-        <div style="margin:20px 0;padding:20px;background:oklch(99% 0.003 90);border-radius:8px;border:1px solid oklch(91% 0.006 90);">
-          <div style="font:700 1.875rem/1 'IBM Plex Mono';color:oklch(48% 0.12 230);">Op aanvraag</div>
-          <div style="font:400 0.875rem/1.5 'IBM Plex Sans';color:oklch(46% 0.012 140);margin-top:6px;">Op maat, in overleg</div>
+      <div data-reveal style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:clamp(28px,4vw,36px);display:flex;flex-direction:column;transition:opacity 600ms ease, transform 600ms ease;">
+        <h3 style="font:600 1.25rem/1.3 'IBM Plex Sans';margin:0 0 8px;color:var(--text);">Partner</h3>
+        <p style="font:400 0.9375rem/1.6 'IBM Plex Sans';color:var(--text-muted);margin:0 0 20px;">Jouw praktijk, volledig op maat — voor de multi-locatie kliniek met eigen workflows.</p>
+        <div style="margin:20px 0;padding:20px;background:var(--surface-inset);border-radius:8px;border:1px solid var(--border);">
+          <div style="font:700 1.875rem/1 'IBM Plex Mono';color:var(--accent-text);">Op aanvraag</div>
+          <div style="font:400 0.875rem/1.5 'IBM Plex Sans';color:var(--text-muted);margin-top:6px;">Op maat, in overleg</div>
         </div>
         <ul style="list-style:none;margin:0 0 24px;padding:0;display:flex;flex-direction:column;gap:12px;flex:1;">
-          <li style="display:flex;gap:10px;align-items:flex-start;font:400 0.9375rem/1.5 'IBM Plex Sans';color:oklch(46% 0.012 140);"><div class="icon icon-check" style="width:15px;height:15px;color:oklch(48% 0.12 230);margin-top:3px;flex-shrink:0;"></div><span>Alles uit Concierge</span></li>
-          <li style="display:flex;gap:10px;align-items:flex-start;font:400 0.9375rem/1.5 'IBM Plex Sans';color:oklch(46% 0.012 140);"><div class="icon icon-check" style="width:15px;height:15px;color:oklch(48% 0.12 230);margin-top:3px;flex-shrink:0;"></div><span>Meerdere kanalen: website, WhatsApp, telefonie, e-mail</span></li>
-          <li style="display:flex;gap:10px;align-items:flex-start;font:400 0.9375rem/1.5 'IBM Plex Sans';color:oklch(46% 0.012 140);"><div class="icon icon-check" style="width:15px;height:15px;color:oklch(48% 0.12 230);margin-top:3px;flex-shrink:0;"></div><span>Custom workflows en multi-agent routing</span></li>
-          <li style="display:flex;gap:10px;align-items:flex-start;font:400 0.9375rem/1.5 'IBM Plex Sans';color:oklch(46% 0.012 140);"><div class="icon icon-check" style="width:15px;height:15px;color:oklch(48% 0.12 230);margin-top:3px;flex-shrink:0;"></div><span>Automatische reviewverzoeken en heractivatie van no-shows</span></li>
-          <li style="display:flex;gap:10px;align-items:flex-start;font:400 0.9375rem/1.5 'IBM Plex Sans';color:oklch(46% 0.012 140);"><div class="icon icon-check" style="width:15px;height:15px;color:oklch(48% 0.12 230);margin-top:3px;flex-shrink:0;"></div><span>Signaleert kansen op vervolgbehandelingen en flagt ze voor je team</span></li>
-          <li style="display:flex;gap:10px;align-items:flex-start;font:400 0.9375rem/1.5 'IBM Plex Sans';color:oklch(46% 0.012 140);"><div class="icon icon-check" style="width:15px;height:15px;color:oklch(48% 0.12 230);margin-top:3px;flex-shrink:0;"></div><span>Ondersteunt meerdere locaties vanuit één centraal brein</span></li>
-          <li style="display:flex;gap:10px;align-items:flex-start;font:400 0.9375rem/1.5 'IBM Plex Sans';color:oklch(46% 0.012 140);"><div class="icon icon-check" style="width:15px;height:15px;color:oklch(48% 0.12 230);margin-top:3px;flex-shrink:0;"></div><span>Uitgebreide rapportage & inzichten</span></li>
-          <li style="display:flex;gap:10px;align-items:flex-start;font:400 0.9375rem/1.5 'IBM Plex Sans';color:oklch(46% 0.012 140);"><div class="icon icon-check" style="width:15px;height:15px;color:oklch(48% 0.12 230);margin-top:3px;flex-shrink:0;"></div><span>Dedicated implementatiebegeleiding en support</span></li>
+          <li style="display:flex;gap:10px;align-items:flex-start;font:400 0.9375rem/1.5 'IBM Plex Sans';color:var(--text-muted);"><div class="icon icon-check" style="width:15px;height:15px;color:var(--accent-text);margin-top:3px;flex-shrink:0;"></div><span>Alles uit Concierge</span></li>
+          <li style="display:flex;gap:10px;align-items:flex-start;font:400 0.9375rem/1.5 'IBM Plex Sans';color:var(--text-muted);"><div class="icon icon-check" style="width:15px;height:15px;color:var(--accent-text);margin-top:3px;flex-shrink:0;"></div><span>Meerdere kanalen: website, WhatsApp, telefonie, e-mail</span></li>
+          <li style="display:flex;gap:10px;align-items:flex-start;font:400 0.9375rem/1.5 'IBM Plex Sans';color:var(--text-muted);"><div class="icon icon-check" style="width:15px;height:15px;color:var(--accent-text);margin-top:3px;flex-shrink:0;"></div><span>Custom workflows en multi-agent routing</span></li>
+          <li style="display:flex;gap:10px;align-items:flex-start;font:400 0.9375rem/1.5 'IBM Plex Sans';color:var(--text-muted);"><div class="icon icon-check" style="width:15px;height:15px;color:var(--accent-text);margin-top:3px;flex-shrink:0;"></div><span>Automatische reviewverzoeken en heractivatie van no-shows</span></li>
+          <li style="display:flex;gap:10px;align-items:flex-start;font:400 0.9375rem/1.5 'IBM Plex Sans';color:var(--text-muted);"><div class="icon icon-check" style="width:15px;height:15px;color:var(--accent-text);margin-top:3px;flex-shrink:0;"></div><span>Signaleert kansen op vervolgbehandelingen en flagt ze voor je team</span></li>
+          <li style="display:flex;gap:10px;align-items:flex-start;font:400 0.9375rem/1.5 'IBM Plex Sans';color:var(--text-muted);"><div class="icon icon-check" style="width:15px;height:15px;color:var(--accent-text);margin-top:3px;flex-shrink:0;"></div><span>Ondersteunt meerdere locaties vanuit één centraal brein</span></li>
+          <li style="display:flex;gap:10px;align-items:flex-start;font:400 0.9375rem/1.5 'IBM Plex Sans';color:var(--text-muted);"><div class="icon icon-check" style="width:15px;height:15px;color:var(--accent-text);margin-top:3px;flex-shrink:0;"></div><span>Uitgebreide rapportage & inzichten</span></li>
+          <li style="display:flex;gap:10px;align-items:flex-start;font:400 0.9375rem/1.5 'IBM Plex Sans';color:var(--text-muted);"><div class="icon icon-check" style="width:15px;height:15px;color:var(--accent-text);margin-top:3px;flex-shrink:0;"></div><span>Dedicated implementatiebegeleiding en support</span></li>
         </ul>
         <a href="./index.html#contact" style="background:oklch(70% 0.14 220);color:#001a2e;padding:12px 20px;border-radius:6px;text-align:center;font-weight:600;font-size:0.9375rem;transition:all 200ms ease;white-space:nowrap;">Plan gesprek</a>
       </div>
@@ -251,101 +302,101 @@
   </div>
 </section>
 
-<section id="how" style="padding:clamp(56px,7vw,88px) clamp(20px,5vw,40px);background:#FFF;border-top:1px solid oklch(90% 0.006 90);">
+<section id="how" style="padding:clamp(56px,7vw,88px) clamp(20px,5vw,40px);background:var(--surface);border-top:1px solid var(--border);">
   <div style="max-width:900px;margin:0 auto;text-align:center;">
-    <h2 style="font:600 clamp(1.75rem,4vw,2.25rem)/1.2 'IBM Plex Sans';margin:0 0 48px;letter-spacing:-0.02em;color:oklch(18% 0.02 255);">Hoe het werkt</h2>
+    <h2 style="font:600 clamp(1.75rem,4vw,2.25rem)/1.2 'IBM Plex Sans';margin:0 0 48px;letter-spacing:-0.02em;color:var(--text);">Hoe het werkt</h2>
     <div data-reveal-grid style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:28px;text-align:left;">
       <div data-reveal style="transition:opacity 600ms ease, transform 600ms ease;">
-        <div style="font:600 1.5rem/1 'IBM Plex Mono';color:oklch(48% 0.12 230);margin-bottom:12px;">1</div>
-        <h3 style="font:600 1.0625rem/1.3 'IBM Plex Sans';margin:0 0 8px;color:oklch(18% 0.02 255);">Intake & scope</h3>
-        <p style="font:400 0.9375rem/1.6 'IBM Plex Sans';color:oklch(46% 0.012 140);margin:0;">We bepalen samen welk pakket past en welke content/kennis de bot nodig heeft.</p>
+        <div style="font:600 1.5rem/1 'IBM Plex Mono';color:var(--accent-text);margin-bottom:12px;">1</div>
+        <h3 style="font:600 1.0625rem/1.3 'IBM Plex Sans';margin:0 0 8px;color:var(--text);">Intake & scope</h3>
+        <p style="font:400 0.9375rem/1.6 'IBM Plex Sans';color:var(--text-muted);margin:0;">We bepalen samen welk pakket past en welke content/kennis de bot nodig heeft.</p>
       </div>
       <div data-reveal style="transition:opacity 600ms ease, transform 600ms ease;">
-        <div style="font:600 1.5rem/1 'IBM Plex Mono';color:oklch(48% 0.12 230);margin-bottom:12px;">2</div>
-        <h3 style="font:600 1.0625rem/1.3 'IBM Plex Sans';margin:0 0 8px;color:oklch(18% 0.02 255);">Bouw & training</h3>
-        <p style="font:400 0.9375rem/1.6 'IBM Plex Sans';color:oklch(46% 0.012 140);margin:0;">We richten de bot in, koppelen systemen waar nodig, en testen met echte vragen uit jouw praktijk.</p>
+        <div style="font:600 1.5rem/1 'IBM Plex Mono';color:var(--accent-text);margin-bottom:12px;">2</div>
+        <h3 style="font:600 1.0625rem/1.3 'IBM Plex Sans';margin:0 0 8px;color:var(--text);">Bouw & training</h3>
+        <p style="font:400 0.9375rem/1.6 'IBM Plex Sans';color:var(--text-muted);margin:0;">We richten de bot in, koppelen systemen waar nodig, en testen met echte vragen uit jouw praktijk.</p>
       </div>
       <div data-reveal style="transition:opacity 600ms ease, transform 600ms ease;">
-        <div style="font:600 1.5rem/1 'IBM Plex Mono';color:oklch(48% 0.12 230);margin-bottom:12px;">3</div>
-        <h3 style="font:600 1.0625rem/1.3 'IBM Plex Sans';margin:0 0 8px;color:oklch(18% 0.02 255);">Live & optimalisatie</h3>
-        <p style="font:400 0.9375rem/1.6 'IBM Plex Sans';color:oklch(46% 0.012 140);margin:0;">De bot gaat live; we monitoren gesprekken en verfijnen antwoorden op basis van echt gebruik.</p>
+        <div style="font:600 1.5rem/1 'IBM Plex Mono';color:var(--accent-text);margin-bottom:12px;">3</div>
+        <h3 style="font:600 1.0625rem/1.3 'IBM Plex Sans';margin:0 0 8px;color:var(--text);">Live & optimalisatie</h3>
+        <p style="font:400 0.9375rem/1.6 'IBM Plex Sans';color:var(--text-muted);margin:0;">De bot gaat live; we monitoren gesprekken en verfijnen antwoorden op basis van echt gebruik.</p>
       </div>
     </div>
   </div>
 </section>
 
-<section id="faq" style="padding:clamp(56px,7vw,88px) clamp(20px,5vw,40px);background:#FFF;border-top:1px solid oklch(90% 0.006 90);">
+<section id="faq" style="padding:clamp(56px,7vw,88px) clamp(20px,5vw,40px);background:var(--surface);border-top:1px solid var(--border);">
   <div style="max-width:800px;margin:0 auto;">
     <div style="text-align:center;margin-bottom:clamp(40px,5vw,56px);">
-      <div style="font:500 0.8125rem/1.3 'IBM Plex Mono';letter-spacing:0.06em;text-transform:uppercase;color:oklch(48% 0.12 230);margin-bottom:12px;">Vragen</div>
-      <h2 style="font:600 clamp(1.75rem,4vw,2.25rem)/1.2 'IBM Plex Sans';margin:0;letter-spacing:-0.02em;color:oklch(18% 0.02 255);">Veelgestelde vragen</h2>
+      <div style="font:500 0.8125rem/1.3 'IBM Plex Mono';letter-spacing:0.06em;text-transform:uppercase;color:var(--accent-text);margin-bottom:12px;">Vragen</div>
+      <h2 style="font:600 clamp(1.75rem,4vw,2.25rem)/1.2 'IBM Plex Sans';margin:0;letter-spacing:-0.02em;color:var(--text);">Veelgestelde vragen</h2>
     </div>
     <div style="display:flex;flex-direction:column;gap:12px;">
-      <details class="faq-item" style="border:1px solid oklch(90% 0.006 90);border-radius:10px;padding:18px 22px;background:oklch(98% 0.004 90);">
-        <summary style="display:flex;align-items:center;justify-content:space-between;gap:16px;font:600 1rem/1.4 'IBM Plex Sans';color:oklch(18% 0.02 255);cursor:pointer;">
+      <details class="faq-item" style="border:1px solid var(--border);border-radius:10px;padding:18px 22px;background:var(--bg);">
+        <summary style="display:flex;align-items:center;justify-content:space-between;gap:16px;font:600 1rem/1.4 'IBM Plex Sans';color:var(--text);cursor:pointer;">
           <span>Werkt dit met ons huidige systeem (bv. Clinicminds)?</span>
-          <div class="icon icon-chevron-down faq-chevron" style="width:18px;height:18px;color:oklch(48% 0.12 230);transition:transform 200ms ease;flex-shrink:0;"></div>
+          <div class="icon icon-chevron-down faq-chevron" style="width:18px;height:18px;color:var(--accent-text);transition:transform 200ms ease;flex-shrink:0;"></div>
         </summary>
-        <p style="font:400 0.9375rem/1.65 'IBM Plex Sans';color:oklch(46% 0.012 140);margin:14px 0 0;">Ja, Concierge en Partner koppelen met de meest gebruikte agenda/CRM-systemen in de sector; we bespreken de specifieke koppeling vooraf.</p>
+        <p style="font:400 0.9375rem/1.65 'IBM Plex Sans';color:var(--text-muted);margin:14px 0 0;">Ja, Concierge en Partner koppelen met de meest gebruikte agenda/CRM-systemen in de sector; we bespreken de specifieke koppeling vooraf.</p>
       </details>
-      <details class="faq-item" style="border:1px solid oklch(90% 0.006 90);border-radius:10px;padding:18px 22px;background:oklch(98% 0.004 90);">
-        <summary style="display:flex;align-items:center;justify-content:space-between;gap:16px;font:600 1rem/1.4 'IBM Plex Sans';color:oklch(18% 0.02 255);cursor:pointer;">
+      <details class="faq-item" style="border:1px solid var(--border);border-radius:10px;padding:18px 22px;background:var(--bg);">
+        <summary style="display:flex;align-items:center;justify-content:space-between;gap:16px;font:600 1rem/1.4 'IBM Plex Sans';color:var(--text);cursor:pointer;">
           <span>Wat als de bot een vraag niet kan beantwoorden?</span>
-          <div class="icon icon-chevron-down faq-chevron" style="width:18px;height:18px;color:oklch(48% 0.12 230);transition:transform 200ms ease;flex-shrink:0;"></div>
+          <div class="icon icon-chevron-down faq-chevron" style="width:18px;height:18px;color:var(--accent-text);transition:transform 200ms ease;flex-shrink:0;"></div>
         </summary>
-        <p style="font:400 0.9375rem/1.65 'IBM Plex Sans';color:oklch(46% 0.012 140);margin:14px 0 0;">De bot herkent wanneer een vraag buiten zijn kennis valt en verwijst door naar jouw team, met de context van het gesprek erbij.</p>
+        <p style="font:400 0.9375rem/1.65 'IBM Plex Sans';color:var(--text-muted);margin:14px 0 0;">De bot herkent wanneer een vraag buiten zijn kennis valt en verwijst door naar jouw team, met de context van het gesprek erbij.</p>
       </details>
-      <details class="faq-item" style="border:1px solid oklch(90% 0.006 90);border-radius:10px;padding:18px 22px;background:oklch(98% 0.004 90);">
-        <summary style="display:flex;align-items:center;justify-content:space-between;gap:16px;font:600 1rem/1.4 'IBM Plex Sans';color:oklch(18% 0.02 255);cursor:pointer;">
+      <details class="faq-item" style="border:1px solid var(--border);border-radius:10px;padding:18px 22px;background:var(--bg);">
+        <summary style="display:flex;align-items:center;justify-content:space-between;gap:16px;font:600 1rem/1.4 'IBM Plex Sans';color:var(--text);cursor:pointer;">
           <span>Kunnen we later upgraden naar een hoger pakket?</span>
-          <div class="icon icon-chevron-down faq-chevron" style="width:18px;height:18px;color:oklch(48% 0.12 230);transition:transform 200ms ease;flex-shrink:0;"></div>
+          <div class="icon icon-chevron-down faq-chevron" style="width:18px;height:18px;color:var(--accent-text);transition:transform 200ms ease;flex-shrink:0;"></div>
         </summary>
-        <p style="font:400 0.9375rem/1.65 'IBM Plex Sans';color:oklch(46% 0.012 140);margin:14px 0 0;">Ja, je kunt altijd doorgroeien; we nemen bestaande content en instellingen mee naar het volgende pakket.</p>
+        <p style="font:400 0.9375rem/1.65 'IBM Plex Sans';color:var(--text-muted);margin:14px 0 0;">Ja, je kunt altijd doorgroeien; we nemen bestaande content en instellingen mee naar het volgende pakket.</p>
       </details>
-      <details class="faq-item" style="border:1px solid oklch(90% 0.006 90);border-radius:10px;padding:18px 22px;background:oklch(98% 0.004 90);">
-        <summary style="display:flex;align-items:center;justify-content:space-between;gap:16px;font:600 1rem/1.4 'IBM Plex Sans';color:oklch(18% 0.02 255);cursor:pointer;">
+      <details class="faq-item" style="border:1px solid var(--border);border-radius:10px;padding:18px 22px;background:var(--bg);">
+        <summary style="display:flex;align-items:center;justify-content:space-between;gap:16px;font:600 1rem/1.4 'IBM Plex Sans';color:var(--text);cursor:pointer;">
           <span>Waar wordt onze klantdata opgeslagen?</span>
-          <div class="icon icon-chevron-down faq-chevron" style="width:18px;height:18px;color:oklch(48% 0.12 230);transition:transform 200ms ease;flex-shrink:0;"></div>
+          <div class="icon icon-chevron-down faq-chevron" style="width:18px;height:18px;color:var(--accent-text);transition:transform 200ms ease;flex-shrink:0;"></div>
         </summary>
-        <p style="font:400 0.9375rem/1.65 'IBM Plex Sans';color:oklch(46% 0.012 140);margin:14px 0 0;">Data wordt verwerkt volgens de AVG en, waar relevant, de EU AI Act — hetzelfde uitgangspunt als bij de rest van Tessar.</p>
+        <p style="font:400 0.9375rem/1.65 'IBM Plex Sans';color:var(--text-muted);margin:14px 0 0;">Data wordt verwerkt volgens de AVG en, waar relevant, de EU AI Act — hetzelfde uitgangspunt als bij de rest van Tessar.</p>
       </details>
-      <details class="faq-item" style="border:1px solid oklch(90% 0.006 90);border-radius:10px;padding:18px 22px;background:oklch(98% 0.004 90);">
-        <summary style="display:flex;align-items:center;justify-content:space-between;gap:16px;font:600 1rem/1.4 'IBM Plex Sans';color:oklch(18% 0.02 255);cursor:pointer;">
+      <details class="faq-item" style="border:1px solid var(--border);border-radius:10px;padding:18px 22px;background:var(--bg);">
+        <summary style="display:flex;align-items:center;justify-content:space-between;gap:16px;font:600 1rem/1.4 'IBM Plex Sans';color:var(--text);cursor:pointer;">
           <span>Hoe lang duurt de implementatie?</span>
-          <div class="icon icon-chevron-down faq-chevron" style="width:18px;height:18px;color:oklch(48% 0.12 230);transition:transform 200ms ease;flex-shrink:0;"></div>
+          <div class="icon icon-chevron-down faq-chevron" style="width:18px;height:18px;color:var(--accent-text);transition:transform 200ms ease;flex-shrink:0;"></div>
         </summary>
-        <p style="font:400 0.9375rem/1.65 'IBM Plex Sans';color:oklch(46% 0.012 140);margin:14px 0 0;">1–2 weken voor Assistant, 3–4 weken voor Concierge, op maat voor Partner afhankelijk van de integraties.</p>
+        <p style="font:400 0.9375rem/1.65 'IBM Plex Sans';color:var(--text-muted);margin:14px 0 0;">1–2 weken voor Assistant, 3–4 weken voor Concierge, op maat voor Partner afhankelijk van de integraties.</p>
       </details>
-      <details class="faq-item" style="border:1px solid oklch(90% 0.006 90);border-radius:10px;padding:18px 22px;background:oklch(98% 0.004 90);">
-        <summary style="display:flex;align-items:center;justify-content:space-between;gap:16px;font:600 1rem/1.4 'IBM Plex Sans';color:oklch(18% 0.02 255);cursor:pointer;">
+      <details class="faq-item" style="border:1px solid var(--border);border-radius:10px;padding:18px 22px;background:var(--bg);">
+        <summary style="display:flex;align-items:center;justify-content:space-between;gap:16px;font:600 1rem/1.4 'IBM Plex Sans';color:var(--text);cursor:pointer;">
           <span>Wie schrijft de content/antwoorden van de bot?</span>
-          <div class="icon icon-chevron-down faq-chevron" style="width:18px;height:18px;color:oklch(48% 0.12 230);transition:transform 200ms ease;flex-shrink:0;"></div>
+          <div class="icon icon-chevron-down faq-chevron" style="width:18px;height:18px;color:var(--accent-text);transition:transform 200ms ease;flex-shrink:0;"></div>
         </summary>
-        <p style="font:400 0.9375rem/1.65 'IBM Plex Sans';color:oklch(46% 0.012 140);margin:14px 0 0;">Wij stellen een eerste versie op basis van jouw bestaande materiaal; jij controleert en vult aan waar nodig.</p>
+        <p style="font:400 0.9375rem/1.65 'IBM Plex Sans';color:var(--text-muted);margin:14px 0 0;">Wij stellen een eerste versie op basis van jouw bestaande materiaal; jij controleert en vult aan waar nodig.</p>
       </details>
-      <details class="faq-item" style="border:1px solid oklch(90% 0.006 90);border-radius:10px;padding:18px 22px;background:oklch(98% 0.004 90);">
-        <summary style="display:flex;align-items:center;justify-content:space-between;gap:16px;font:600 1rem/1.4 'IBM Plex Sans';color:oklch(18% 0.02 255);cursor:pointer;">
+      <details class="faq-item" style="border:1px solid var(--border);border-radius:10px;padding:18px 22px;background:var(--bg);">
+        <summary style="display:flex;align-items:center;justify-content:space-between;gap:16px;font:600 1rem/1.4 'IBM Plex Sans';color:var(--text);cursor:pointer;">
           <span>Helpt dit ook tegen no-shows en lege plekken in de agenda?</span>
-          <div class="icon icon-chevron-down faq-chevron" style="width:18px;height:18px;color:oklch(48% 0.12 230);transition:transform 200ms ease;flex-shrink:0;"></div>
+          <div class="icon icon-chevron-down faq-chevron" style="width:18px;height:18px;color:var(--accent-text);transition:transform 200ms ease;flex-shrink:0;"></div>
         </summary>
-        <p style="font:400 0.9375rem/1.65 'IBM Plex Sans';color:oklch(46% 0.012 140);margin:14px 0 0;">Ja — vanaf Assistant stuurt de bot automatische afspraakherinneringen, en vanaf Concierge vult hij afzeggingen ook automatisch aan vanuit je wachtlijst.</p>
+        <p style="font:400 0.9375rem/1.65 'IBM Plex Sans';color:var(--text-muted);margin:14px 0 0;">Ja — vanaf Assistant stuurt de bot automatische afspraakherinneringen, en vanaf Concierge vult hij afzeggingen ook automatisch aan vanuit je wachtlijst.</p>
       </details>
-      <details class="faq-item" style="border:1px solid oklch(90% 0.006 90);border-radius:10px;padding:18px 22px;background:oklch(98% 0.004 90);">
-        <summary style="display:flex;align-items:center;justify-content:space-between;gap:16px;font:600 1rem/1.4 'IBM Plex Sans';color:oklch(18% 0.02 255);cursor:pointer;">
+      <details class="faq-item" style="border:1px solid var(--border);border-radius:10px;padding:18px 22px;background:var(--bg);">
+        <summary style="display:flex;align-items:center;justify-content:space-between;gap:16px;font:600 1rem/1.4 'IBM Plex Sans';color:var(--text);cursor:pointer;">
           <span>Begrijpt de bot onze behandelingen en vaktermen?</span>
-          <div class="icon icon-chevron-down faq-chevron" style="width:18px;height:18px;color:oklch(48% 0.12 230);transition:transform 200ms ease;flex-shrink:0;"></div>
+          <div class="icon icon-chevron-down faq-chevron" style="width:18px;height:18px;color:var(--accent-text);transition:transform 200ms ease;flex-shrink:0;"></div>
         </summary>
-        <p style="font:400 0.9375rem/1.65 'IBM Plex Sans';color:oklch(46% 0.012 140);margin:14px 0 0;">Ja — we trainen de bot op jouw eigen behandelingen, prijzen en manier van communiceren, niet op een generiek sjabloon.</p>
+        <p style="font:400 0.9375rem/1.65 'IBM Plex Sans';color:var(--text-muted);margin:14px 0 0;">Ja — we trainen de bot op jouw eigen behandelingen, prijzen en manier van communiceren, niet op een generiek sjabloon.</p>
       </details>
     </div>
   </div>
 </section>
 
-<section id="cta" style="padding:clamp(56px,7vw,88px) clamp(20px,5vw,40px);background:oklch(98% 0.004 90);border-top:1px solid oklch(90% 0.006 90);">
+<section id="cta" style="padding:clamp(56px,7vw,88px) clamp(20px,5vw,40px);background:var(--bg);border-top:1px solid var(--border);">
   <div data-reveal style="max-width:800px;margin:0 auto;text-align:center;transition:opacity 600ms ease, transform 600ms ease;">
-    <h2 style="font:600 clamp(1.5rem,3vw,1.875rem)/1.3 'IBM Plex Sans';margin:0 0 16px;color:oklch(18% 0.02 255);">Klaar om te starten?</h2>
-    <p style="font:400 1rem/1.7 'IBM Plex Sans';color:oklch(46% 0.012 140);margin:0 0 32px;">Plan een gratis kennismaking van 30 minuten. We bepalen samen welk pakket bij jouw praktijk past.</p>
-    <a href="./prijzen.html" style="display:inline-block;border:2px solid oklch(48% 0.12 230);color:oklch(18% 0.02 255);padding:14px 32px;border-radius:6px;font-weight:700;font-size:0.95rem;margin-right:16px;transition:all 200ms ease;">Bekijk prijzen</a>
+    <h2 style="font:600 clamp(1.5rem,3vw,1.875rem)/1.3 'IBM Plex Sans';margin:0 0 16px;color:var(--text);">Klaar om te starten?</h2>
+    <p style="font:400 1rem/1.7 'IBM Plex Sans';color:var(--text-muted);margin:0 0 32px;">Plan een gratis kennismaking van 30 minuten. We bepalen samen welk pakket bij jouw praktijk past.</p>
+    <a href="./prijzen.html" style="display:inline-block;border:2px solid var(--accent-text);color:var(--text);padding:14px 32px;border-radius:6px;font-weight:700;font-size:0.95rem;margin-right:16px;transition:all 200ms ease;">Bekijk prijzen</a>
     <a href="./index.html#contact" style="display:inline-block;background:linear-gradient(135deg, oklch(70% 0.14 220), oklch(60% 0.12 230));color:#001a2e;padding:14px 32px;border-radius:6px;font-weight:700;font-size:0.95rem;box-shadow:0 12px 32px rgba(0, 212, 255, 0.25);transition:all 280ms ease;">Plan een kennismaking</a>
   </div>
 </section>
@@ -387,9 +438,9 @@
       tabs.forEach(function (t) {
         var active = t === tab;
         t.setAttribute("aria-pressed", active ? "true" : "false");
-        t.style.background = active ? "oklch(48% 0.12 230)" : "#FFF";
-        t.style.borderColor = active ? "oklch(48% 0.12 230)" : "oklch(88% 0.006 90)";
-        t.style.color = active ? "#FFF" : "oklch(46% 0.012 140)";
+        t.style.background = active ? "oklch(48% 0.12 230)" : "var(--surface)";
+        t.style.borderColor = active ? "oklch(48% 0.12 230)" : "var(--border)";
+        t.style.color = active ? "#FFF" : "var(--text-muted)";
       });
       panels.forEach(function (p) {
         p.style.display = p.getAttribute("data-demo-panel") === target ? "flex" : "none";
@@ -420,6 +471,28 @@
         btn2.setAttribute("aria-expanded", "false");
       }
     }
+  });
+})();
+</script>
+<script>
+(function () {
+  "use strict";
+  var KEY = "tessar-theme";
+  var root = document.documentElement;
+
+  function currentTheme() {
+    var stored = null;
+    try { stored = localStorage.getItem(KEY); } catch (e) {}
+    if (stored === "dark" || stored === "light") return stored;
+    return (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) ? "dark" : "light";
+  }
+
+  document.addEventListener("click", function (e) {
+    var btn = e.target.closest && e.target.closest("#theme-toggle-btn");
+    if (!btn) return;
+    var next = currentTheme() === "dark" ? "light" : "dark";
+    root.setAttribute("data-theme", next);
+    try { localStorage.setItem(KEY, next); } catch (e2) {}
   });
 })();
 </script>
