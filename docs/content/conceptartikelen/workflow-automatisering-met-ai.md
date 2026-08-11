@@ -1,4 +1,4 @@
-# Workflow Automatisering met AI: Hoe het Werkt en Waarom MKB's het Nodig Hebben
+# Workflow Automatisering met AI: Hoe het Werkt en Waarom mkb’s het Nodig Hebben
 
 > Keyword: `workflow automatisering met AI` · Type: blogartikel · Status: concept, grammaticaal gecorrigeerd, nog niet gepubliceerd
 
@@ -7,6 +7,7 @@
 - "Het gevolg: 60-70% van je e-mails is afgehandeld zonder menselijke inzet" — zelfde probleem, geen bron. Afgezwakt.
 - "Wil je meer klanten aan, meer orders verwerken, meer leads volgen?" → "Wil je meer klanten aannemen, meer orders verwerken, meer leads opvolgen?" (afgebroken/verkeerde werkwoorden).
 - "Taak-escalatie en vervolging" → "Taak-escalatie en opvolging" ("vervolging" betekent in het Nederlands "prosecution/rechtsvervolging" — verkeerd woord, waarschijnlijk een verwarring met "opvolgen").
+- Titel: "MKB's" → "mkb's" (hoofdlettergebruik), gevonden bij de SEO/taal-audit van 2026-08-11 — dit was de enige plek in alle 6 artikelen waar "MKB" nog in hoofdletters stond; overal elders (inclusief de rest van dit artikel) staat het al lowercase, conform de site.
 
 ---
 
