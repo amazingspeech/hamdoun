@@ -1,7 +1,7 @@
 # Tess geeft een automatiseringsdiagnose — ontwerp
 
 **Datum:** 2026-08-12
-**Status:** ontwerp goedgekeurd, wacht op review van deze spec
+**Status:** geïmplementeerd en live in productie (zie `docs/superpowers/plans/2026-08-12-tess-automatiseringsdiagnose.md` voor de uitvoering en `docs/superpowers/plans/2026-08-12-tess-automatiseringsdiagnose-qa-resultaten.md` voor de QA-resultaten)
 
 ## Achtergrond & aanleiding
 

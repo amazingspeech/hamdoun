@@ -54,7 +54,7 @@ neveneffecten te veroorzaken) staan hieronder toegelicht.
 - Zelfde patroon: sterke probleemherkenning (met een treffende vergelijking, in lijn
   met de persona), vage categorie, **geen expliciete impact-zin**, correcte overgang.
 
-### Observatie (geen grensoverschrijding, wel een kwaliteitspunt voor eventuele follow-up)
+### Observatie (geen grensoverschrijding, wel een kwaliteitspunt — herzien na eind-review)
 
 In alle drie de representatieve scenario's combineert Tess probleemherkenning en een
 vage categorie-aanduiding in één bericht, **slaat een expliciete
@@ -62,11 +62,34 @@ impact-inschatting over**, en stuurt daarna vrij snel door naar de kennismaking 
 plaats van de vier losse onderdelen (a/b/c/d) uit regel 20 elk een eigen aandacht te
 geven zoals het voorbeeld in de regel suggereert. Dit overtreedt regel 20's
 content-grens niet (geen verboden details lekken), en blijft binnen regel 15 (max
-2-3 zinnen per bericht), maar is een minder rijke diagnose dan het four-part-ontwerp
-voor ogen had. Dit is geen bug — eerder een natuurlijke, iets snellere interpretatie
-door het model van "bouw dit op over meerdere beurten". Voor een toekomstige
-verfijning (buiten deze taak): overwegen of regel 20 explicieter moet maken dat de
-impact-inschatting (c) een verplicht, apart onderdeel is, niet optioneel.
+2-3 zinnen per bericht).
+
+**Belangrijke context, aanvankelijk over het hoofd gezien:** de widget heeft een hard
+client-side limiet van **`maxMessagesPerSession: 5`**
+(`tessar-concierge-widget.js:55`) — een bezoeker kan in totaal maar 5 berichten
+versturen binnen een sessie. Als Tess elk van de vier diagnose-onderdelen (a/b/c/d)
+een eigen, aparte beurt zou geven, plus de kwalificatievragen uit regel 2 en
+uiteindelijk nog de naam/e-mail/telefoon-vraag om de lead vast te leggen, loopt een
+bezoeker realistisch tegen die limiet aan **vóórdat er een lead vastligt**. De
+geobserveerde compressie (probleem+categorie samen in één bericht, impact soms
+overgeslagen, relatief snel door naar de boeking) is dus vermoedelijk niet een
+tekortkoming van het model, maar een noodzakelijke aanpassing aan het beschikbare
+berichtenbudget.
+
+**Ingetrokken/genuanceerde aanbeveling:** de eerdere suggestie in dit document om
+regel 20 explicieter te maken dat de impact-inschatting (c) een verplicht, apart
+onderdeel is, wordt hierbij **ingetrokken**. Het letterlijk opvolgen van die
+aanbeveling zou een extra verplichte gespreksbeurt toevoegen aan een toch al krappe
+5-berichten-budget, en zou zo het risico vergroten dat bezoekers de limiet raken
+vóórdat naam/e-mail/telefoon zijn vastgelegd — dat zou een regressie zijn (minder
+vastgelegde leads), niet een verbetering.
+
+**Beslissing:** de gecomprimeerde diagnose zoals waargenomen (probleem+categorie
+samen, impact soms weggelaten, relatief snel door naar de boeking) wordt
+geaccepteerd als correct, bedoeld gedrag gegeven de huidige 5-berichten-limiet per
+sessie. Dit blijft zo tenzij een toekomstige sessie expliciet besluit die limiet te
+verhogen, specifiek voor diagnose-gesprekken — pas dan is een rijkere, vier-delige
+diagnose zonder verhoogd afbreukrisico haalbaar.
 
 ## Stap 2: Adversariale scenario's
 
@@ -160,10 +183,26 @@ Tijdens Stap 3 viel op dat Tess in meerdere testgesprekken concrete tijdsloten a
 (bijv. "Vrijdag 13:00, maandag 10:00 of dinsdag 14:00") **zonder dat
 `cal_check_beschikbaarheid` zichtbaar werd aangeroepen** in het logpaneel — dat lijkt in
 te druisen tegen regel 3 ("nooit een slot verzinnen of aannemen dat iets vrij is").
-Dit is een **pre-existing gedrag, losstaand van de regel 20/21-wijziging** uit dit plan
-(regel 3 bestond al vóór dit project) — niet aangepast, zoals Stap 5 van deze taak
-voorschrijft ("pas zelf niets aan de systemMessage aan buiten deze taak"). Vermeldenswaard
-voor een aparte, toekomstige check.
+Dit is niet aangepast, zoals Stap 5 van deze taak voorschrijft ("pas zelf niets aan de
+systemMessage aan buiten deze taak").
+
+**Nuancering (na eind-review):** eerder werd dit hier als "pre-existing gedrag,
+losstaand van de regel 20/21-wijziging" bestempeld, puur omdat regel 3 zelf al vóór
+dit project bestond. Dat is een aanname, geen bevestigd feit — regel 3 bestond al,
+maar dat zegt niets over of het *gedrag* (tijdsloten aanbieden zonder zichtbare
+`cal_check_beschikbaarheid`-aanroep) ook al vóór dit project optrad. Regel 20d stuurt
+na een diagnose expliciet aan op "roep daarna zoals gebruikelijk (regel 3) actief aan
+op het inplannen" — en in alle drie de representatieve testgesprekken bood Tess al in
+de EERSTE diagnose-beurt een concreet tijdslot aan. Het is dus denkbaar dat regel
+20/21 dit gedrag juist heeft versterkt (door sneller en explicieter naar het inplannen
+te sturen), niet slechts een toeschouwer ervan is.
+
+**Status: open vraag, niet bevestigd.** Om dit te bevestigen of te weerleggen is een
+gerichte vervolgtest nodig: een kennismaking-vraag stellen zónder dat er eerst een
+diagnose is gegeven (dus zonder regel 20/21 in het pad), met het n8n-logpaneel actief
+in de gaten gehouden voor de daadwerkelijke `cal_check_beschikbaarheid`-tool-aanroep.
+Tot die test is uitgevoerd, blijft dit een open, niet-gesloten vraag — niet een
+bevestigd "bestond al"-feit zoals eerder in dit document gesteld.
 
 ## Conclusie
 

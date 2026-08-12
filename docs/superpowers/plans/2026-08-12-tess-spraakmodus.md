@@ -1,5 +1,14 @@
 # Tess krijgt een stem — Implementation Plan
 
+> **Status: AFGEBLAZEN.** Geen van de taken/stappen in dit plan is uitgevoerd — het
+> vereiste een STT/TTS-stap via een niet-Anthropic partij (OpenAI), wat botst met de
+> staande eis dat Tessar's AI-productwerk uitsluitend via Claude/Anthropic loopt. Zie
+> in plaats daarvan `docs/superpowers/specs/2026-08-12-tess-automatiseringsdiagnose-design.md`
+> en `docs/superpowers/plans/2026-08-12-tess-automatiseringsdiagnose.md` voor het
+> project dat wél is gebouwd en live staat. De checkbox-syntax (`- [ ]`) hieronder
+> reflecteert dus geen voortgang — de stappen zijn nooit begonnen, niet alleen nog niet
+> afgevinkt.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Voeg spraakinvoer/-uitvoer toe aan de bestaande Tess-conciergewidget op tessar.nl, door de bestaande n8n-chatworkflow uit te breiden met een STT→(bestaande agent)→TTS-pad, zonder de bestaande tekst-chat te breken.

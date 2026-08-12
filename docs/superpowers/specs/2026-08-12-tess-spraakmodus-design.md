@@ -1,5 +1,12 @@
 # Tess krijgt een stem — ontwerp
 
+> **Status: AFGEBLAZEN.** Dit ontwerp is nooit uitgevoerd — het vereiste een STT/TTS-stap
+> via een niet-Anthropic partij (OpenAI), wat botst met de staande eis dat Tessar's
+> AI-productwerk uitsluitend via Claude/Anthropic loopt. Zie in plaats daarvan
+> `docs/superpowers/specs/2026-08-12-tess-automatiseringsdiagnose-design.md` voor het
+> project dat wél is gebouwd en live staat. Dit document blijft staan als historisch
+> ontwerp-/discovery-materiaal.
+
 **Datum:** 2026-08-12
 **Status:** ontwerp goedgekeurd, wacht op review van deze spec
 

@@ -1,5 +1,15 @@
 # Task 1 — Bevindingen: bestaande Tess-chatworkflow (baseline voor spraakmodus)
 
+> **Status: AFGEBLAZEN.** Het spraakmodus-plan waarvoor deze notes de baseline vormden
+> is nooit uitgevoerd — het vereiste een STT/TTS-stap via een niet-Anthropic partij
+> (OpenAI), wat botst met de staande eis dat Tessar's AI-productwerk uitsluitend via
+> Claude/Anthropic loopt. Zie in plaats daarvan
+> `docs/superpowers/specs/2026-08-12-tess-automatiseringsdiagnose-design.md` voor het
+> project dat wél is gebouwd en live staat. Dit document blijft staan als nuttige
+> documentatie: met name de node-inventarisatie hieronder is nog steeds een van de
+> weinige geschreven beschrijvingen van de bestaande, verder ongedocumenteerde
+> productie-workflow.
+
 Gebaseerd op export van de live workflow **"Tessar AI Concierge - Website"**
 (n8n workflow-ID `8CEpt2Es06RJChRB`, `active: true`) op `https://n8n.tessar.nl`,
 op 2026-08-12. Export staat in `n8n-workflows/tessar-concierge-chat.json`.

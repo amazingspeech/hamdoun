@@ -1,5 +1,10 @@
 # Tess geeft een automatiseringsdiagnose — Implementation Plan
 
+> **Status: voltooid en live in productie.** Beide taken uitgevoerd, gereviewed
+> (approved), gepubliceerd naar n8n (versie `632fdbd5`) en geverifieerd op
+> `tessar.nl/chatbots.html`. Zie `docs/superpowers/plans/2026-08-12-tess-automatiseringsdiagnose-qa-resultaten.md`
+> voor de QA-resultaten.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Tess herkent wanneer een lead een proces-probleem beschrijft dat automatisering kan gebruiken, en geeft daar een korte diagnose over (probleem + oplossingscategorie + richting van de impact + eerlijke overgang naar een gesprek) — zonder ooit een bouwklaar plan (specifieke tools, stappen, effort) gratis weg te geven, én zonder haar interne diagnose-categorisatie als geheel prijs te geven aan iemand die daar met een algemene meta-vraag naar vist in plaats van een eigen situatie te beschrijven.
@@ -43,7 +48,7 @@ Beide taken hieronder gebeuren in de n8n-webinterface op `https://n8n.tessar.nl`
 - Consumes: de huidige systemMessage-tekst en de huidige `stuur_lead_naar_team`-parameterstructuur, beide te vinden in `n8n-workflows/tessar-concierge-chat.json` (node-namen: `"Tessar Concierge Agent"` en `"stuur_lead_naar_team"`).
 - Produces: een bijgewerkte, gecommitte workflow-export die Task 2's testscenario's kan verifiëren.
 
-- [ ] **Stap 1: Open de "Tessar Concierge Agent"-node in n8n en lokaliseer de systemMessage**
+- [x] **Stap 1: Open de "Tessar Concierge Agent"-node in n8n en lokaliseer de systemMessage**
 
 Ga naar de workflow "Tessar AI Concierge - Website" (workflow-ID
 `8CEpt2Es06RJChRB`) in `https://n8n.tessar.nl`, open de node "Tessar
@@ -54,7 +59,7 @@ nog steeds de actuele, ongewijzigde tekst is (als het afwijkt: stop en
 rapporteer NEEDS_CONTEXT met wat je ziet, ga niet zelf gokken welke
 versie leidend is).
 
-- [ ] **Stap 2: Voeg de nieuwe regel toe aan het einde van de genummerde regels-lijst**
+- [x] **Stap 2: Voeg de nieuwe regel toe aan het einde van de genummerde regels-lijst**
 
 De huidige lijst eindigt op regel 19 ("Als een tool-aanroep...") en wordt
 gevolgd door de losse alinea "Opmerking: dit is nog een testversie...".
@@ -71,7 +76,7 @@ placeholder):
     Deze diagnose vervangt niet de kwalificatievragen uit regel 2 — gebruik 'm juist om, zodra je genoeg weet, de bezoeker te laten voelen dat je zijn probleem al begrijpt vóórdat je naar de kennismaking doorstuurt. Als een bezoeker expliciet om de concrete/technische invulling vraagt (bijv. "welke tools gebruik je daarvoor", "geef me de stappen", "hoe zou dat er technisch uitzien"), leg dan vriendelijk uit dat dat precies is waar de kennismaking voor bedoeld is (zie ook regel 10), en verzin nooit alsnog een technisch antwoord om aan het verzoek te voldoen.
 ```
 
-- [ ] **Stap 2b: Voeg een tweede nieuwe regel toe, direct na regel 20**
+- [x] **Stap 2b: Voeg een tweede nieuwe regel toe, direct na regel 20**
 
 Toegevoegd tijdens de brainstorm nadat dit plan al was goedgekeurd: bescherming
 tegen iemand (bijv. een concurrent) die niet als echte lead chat maar Tess
@@ -92,7 +97,7 @@ eigen* casus vraagt, regel 21 gaat over iemand die vooraf, in het algemeen,
 naar Tess' hele categorisatie-systeem vist. Beide moeten blijven werken,
 niet met elkaar verward worden.
 
-- [ ] **Stap 3: Vul `stuur_lead_naar_team`'s `samenvatting_gesprek`-veld aan**
+- [x] **Stap 3: Vul `stuur_lead_naar_team`'s `samenvatting_gesprek`-veld aan**
 
 Open de node `stuur_lead_naar_team`, ga naar het `text`-parameterveld, en
 zoek de regel met `$fromAI('samenvatting_gesprek', ...)`. Vervang alleen de
@@ -111,7 +116,7 @@ naar:
 Verander verder niets aan deze node (niet de andere `$fromAI`-velden, niet
 `toEmail`/`fromEmail`/credentials).
 
-- [ ] **Stap 4: Inline testen in n8n vóór opslaan/activeren**
+- [x] **Stap 4: Inline testen in n8n vóór opslaan/activeren**
 
 Gebruik n8n's chat-testfunctie (open de workflow, gebruik de ingebouwde
 chat-preview op de "Website Chat Trigger"-node) met minimaal deze twee
@@ -136,14 +141,14 @@ berichten, in twee losse test-gesprekken:
 Bevestig in alle gevallen dat elk individueel bericht van Tess binnen
 regel 15 blijft (max 2-3 zinnen, één onderwerp, geen opsommingen/kopjes).
 
-- [ ] **Stap 5: Opslaan/activeren en exporteren**
+- [x] **Stap 5: Opslaan/activeren en exporteren**
 
 Sla de wijzigingen op in n8n (workflow blijft actief zoals hij al was — dit
 raakt geen trigger-nodes of de actieve status). Download de bijgewerkte
 workflow-JSON via "..." → Download, en overschrijf
 `n8n-workflows/tessar-concierge-chat.json` in deze repo.
 
-- [ ] **Stap 6: Commit**
+- [x] **Stap 6: Commit**
 
 ```bash
 git add n8n-workflows/tessar-concierge-chat.json
@@ -162,7 +167,7 @@ git commit -m "n8n: automatiseringsdiagnose-vaardigheid toegevoegd aan Tess' sys
 **Interfaces:**
 - Consumes: de bijgewerkte systemMessage en `stuur_lead_naar_team`-node uit Task 1 (via de live n8n-workflow, niet via code in deze repo).
 
-- [ ] **Stap 1: Representatieve scenario's testen**
+- [x] **Stap 1: Representatieve scenario's testen**
 
 Voer elk van deze gesprekken los uit in n8n's chat-testfunctie, en
 noteer per scenario of Tess (a) de diagnose herkent en start, (b) de
@@ -173,7 +178,7 @@ meerdere beurten, en (c) een eerlijke overgang naar de kennismaking maakt:
 2. `"Onze klantenservice krijgt dezelfde vragen steeds opnieuw binnen via WhatsApp en moet daar telkens handmatig op reageren."`
 3. `"We houden voorraad nu bij in een Excel-sheet die iedereen los bijwerkt, dat loopt vaak niet synchroon."`
 
-- [ ] **Stap 2: Adversariale scenario's testen (kern van de risico-mitigatie)**
+- [x] **Stap 2: Adversariale scenario's testen (kern van de risico-mitigatie)**
 
 Voer elk van deze door, en bevestig expliciet dat Tess de content-grens uit
 regel 20 niet overschrijdt (geen tool-/productnamen, geen bouwstappen, geen
@@ -201,7 +206,7 @@ diagnose-categorieën), documenteer dit expliciet als een gevonden probleem in
 het QA-resultatenbestand — dit is niet een "nice to have", dit is direct de
 kernzorg uit de spec.
 
-- [ ] **Stap 3: Lead-mail verifiëren**
+- [x] **Stap 3: Lead-mail verifiëren**
 
 Doorloop scenario 1 uit Stap 1 tot het punt waar Tess `stuur_lead_naar_team`
 zou aanroepen (of forceer dit door expliciet interesse in een kennismaking
@@ -210,7 +215,7 @@ executielog, als er geen toegang is tot de inbox
 `scrapingscrambling@gmail.com`) dat de samenvatting de kern van de
 gegeven diagnose bevat, niet alleen de generieke oude samenvatting.
 
-- [ ] **Stap 4: Resultaten vastleggen en committen**
+- [x] **Stap 4: Resultaten vastleggen en committen**
 
 Schrijf `docs/superpowers/plans/2026-08-12-tess-automatiseringsdiagnose-qa-resultaten.md`
 met per scenario: het testbericht, een korte weergave van Tess'
@@ -223,7 +228,7 @@ git add docs/superpowers/plans/2026-08-12-tess-automatiseringsdiagnose-qa-result
 git commit -m "QA-resultaten automatiseringsdiagnose: representatieve en adversariale scenario's"
 ```
 
-- [ ] **Stap 5: Niet automatisch verder escaleren**
+- [x] **Stap 5: Niet automatisch verder escaleren**
 
 Als Stap 2 of Stap 3 een probleem blootlegt (grens overschreden, diagnose
 niet in lead-mail), rapporteer dit als bevinding voor de reviewer — pas
