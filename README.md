@@ -28,3 +28,18 @@ de bestaande nav/hero/footer-structuur van bijvoorbeeld `chatbots.html`.
 Elke push naar `main` triggert `.github/workflows/deploy-tessar.yml`: een
 rsync van de repo-root naar de productieserver, direct naar `tessar.nl`
 (geen staging-omgeving, geen preview-URL). Behandel `main` dus als live.
+
+## Testen
+
+- `npm run test:unit` — kale `node:assert`-tests, geen dependencies (zelfde
+  stijl als `n8n-workflows/src/*.test.js`).
+- `npm run test:e2e` — Playwright-tests voor `tessar-concierge-widget.js`
+  (devdependency, eenmalig `npx playwright install chromium` nodig). Draait
+  tegen een lokale statische server met het echte widget-bestand; de
+  n8n-webhook wordt gemockt, er gaan geen requests naar productie.
+- `npm test` draait beide.
+
+De systeemprompt en overige backend-logica van Tess (n8n-workflow "Tessar AI
+Concierge - Website") leven **niet** in deze repo — zie
+`docs/tessar-concierge-systeemprompt.md` voor de laatst bekende, vastgelegde
+tekst en wijzigingsgeschiedenis.
