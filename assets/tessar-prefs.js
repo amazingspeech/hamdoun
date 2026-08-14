@@ -1,5 +1,12 @@
 /*
- * Tessar — cookie-consent banner voor Google Analytics (GA4).
+ * Tessar — cookiebanner voor Google Analytics (GA4).
+ *
+ * Bestand heet bewust NIET "cookie-consent.js" of iets vergelijkbaars: die
+ * naam staat op vrijwel elke ad-/cookieblocker-filterlijst (bv. EasyList
+ * "Cookie Notices"), waardoor het script bij veel bezoekers stil zou falen
+ * en de banner nooit zou verschijnen. Zie ook: git-geschiedenis van dit
+ * bestand (was eerst assets/cookie-consent.js, hernoemd na een testbezoek
+ * waarbij de banner niet laadde).
  *
  * Werkt samen met de inline Consent Mode v2-snippet in de <head> van elke
  * pagina (die zet analytics_storage/ad_* standaard op "denied" vóórdat
