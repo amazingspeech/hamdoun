@@ -24,15 +24,15 @@ function itemLine(content) { return line({ type: 'item', content: content, metad
 function endLine() { return line({ type: 'end', metadata: {} }); }
 
 run('losse turn: begin -> items -> end levert precies de geconcateneerde tekst op', () => {
-  const state = { ended: false };
+  const state = { blockCount: 0 };
   const raw = beginLine() + itemLine('Hoi') + itemLine(' daar') + itemLine('!') + endLine();
   const text = parseStreamChunk(raw, state);
   assert.strictEqual(text, 'Hoi daar!');
-  assert.strictEqual(state.ended, true);
+  assert.strictEqual(state.blockCount, 1);
 });
 
 run('meerdere losse decoded chunks (zoals de echte reader-loop) accumuleren correct', () => {
-  const state = { ended: false };
+  const state = { blockCount: 0 };
   let acc = '';
   acc += parseStreamChunk(beginLine(), state);
   acc += parseStreamChunk(itemLine('Deel een.'), state);
@@ -41,48 +41,52 @@ run('meerdere losse decoded chunks (zoals de echte reader-loop) accumuleren corr
   assert.strictEqual(acc, 'Deel een. Deel twee.');
 });
 
-run('BUG 1: twee begin/end-blokken in één respons -> alleen het eerste blok telt mee', () => {
-  // Dit is het exacte patroon dat tijdens de live-reproductie is gevangen:
-  // twee volledige agent-antwoorden, geconcateneerd, geen scheiding.
-  const state = { ended: false };
+run('meerdere begin/end-blokken in één respons zijn LEGITIEM (aankondiging + antwoord na een tool-aanroep) en worden allebei getoond', () => {
+  // Live gereproduceerd op 2026-08-14: een boekingsbevestiging bestond uit
+  // exact dit patroon (aankondiging, dan het echte antwoord na
+  // cal_boek_afspraak). Een eerdere versie van parseStreamChunk gooide het
+  // tweede blok weg - de bezoeker zag toen alleen de aankondiging en daarna
+  // niets meer, ook al was de boeking al gelukt. Beide blokken moeten nu
+  // altijd behouden blijven, met een scheiding ertussen zodat ze niet als
+  // "week!Fijn" aan elkaar plakken.
+  const state = { blockCount: 0 };
   const raw =
     beginLine() +
-    itemLine('Wat kost je nu het meeste tijd, of wat zou je graag anders willen doen?') +
+    itemLine('Even checken wat er nog open is deze week!') +
     endLine() +
     beginLine() +
-    itemLine('Dat is zeker iets voor jullie!') +
+    itemLine('Fijn, er is wat ruimte deze week!') +
     endLine();
   const text = parseStreamChunk(raw, state);
-  assert.strictEqual(
-    text,
-    'Wat kost je nu het meeste tijd, of wat zou je graag anders willen doen?'
-  );
-  assert.ok(!text.includes('Dat is zeker iets voor jullie'), 'tweede blok mag niet doorsijpelen');
+  assert.ok(text.includes('Even checken wat er nog open is deze week!'), 'aankondiging moet blijven staan');
+  assert.ok(text.includes('Fijn, er is wat ruimte deze week!'), 'het echte antwoord mag nooit verdwijnen');
+  assert.ok(!text.includes('week!Fijn'), 'blokken mogen niet zonder scheiding aan elkaar plakken');
+  assert.strictEqual(state.blockCount, 2);
 });
 
 run('onherkenbare (niet-JSON) regels crashen niet en leveren geen tekst op', () => {
-  const state = { ended: false };
+  const state = { blockCount: 0 };
   const raw = beginLine() + 'dit is geen json\n' + itemLine('Wel geldig.') + endLine();
   const text = parseStreamChunk(raw, state);
   assert.strictEqual(text, 'Wel geldig.');
 });
 
 run('lege/whitespace-regels worden overgeslagen', () => {
-  const state = { ended: false };
+  const state = { blockCount: 0 };
   const raw = '\n   \n' + beginLine() + itemLine('Tekst.') + '\n' + endLine();
   const text = parseStreamChunk(raw, state);
   assert.strictEqual(text, 'Tekst.');
 });
 
 run('data:-prefix (SSE-stijl) wordt gestript voordat er geparsed wordt', () => {
-  const state = { ended: false };
+  const state = { blockCount: 0 };
   const raw = 'data: ' + JSON.stringify({ type: 'item', content: 'Prefix-tekst' }) + '\n';
   const text = parseStreamChunk(raw, state);
   assert.strictEqual(text, 'Prefix-tekst');
 });
 
 run('fallback-velden (chunk/text/output) werken ook zonder "content"', () => {
-  const state = { ended: false };
+  const state = { blockCount: 0 };
   const raw =
     line({ type: 'item', chunk: 'A' }) +
     line({ type: 'item', text: 'B' }) +
