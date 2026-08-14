@@ -446,7 +446,12 @@ if (typeof document !== "undefined") {
           chatInput: text,
           sessionId: sessionId,
           clientId: CONFIG.clientId,
-          metadata: { page: location.href, referrer: document.referrer }
+          metadata: {
+            page: location.href,
+            referrer: document.referrer,
+            localTime: new Date().toISOString(),
+            timeZone: (Intl && Intl.DateTimeFormat) ? Intl.DateTimeFormat().resolvedOptions().timeZone : "Europe/Amsterdam"
+          }
         })
       });
 
