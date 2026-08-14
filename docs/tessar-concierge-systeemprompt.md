@@ -11,6 +11,15 @@ bestand bij in dezelfde commit/PR als waarin je het meldt.
 
 ## Wijzigingslog
 
+**2026-08-15 — geheugenvenster opgehoogd + stale comment gecorrigeerd (geen systemMessage-wijziging)**
+- Node "Gesprekgeheugen" (`memoryBufferWindow`): `contextWindowLength` 12 → 30.
+  Sinds `maxMessagesPerSession` in de widget naar 15 ging zonder te blokkeren
+  (zie hierboven), kon een lang gesprek voorbij het oude venster van 12 lopen
+  en vroege context "vergeten" - 30 dekt 15 beurten met ruime marge.
+- Node "Claude Model": de `notes`-comment beweerde `maxTokensToSample=800`,
+  de daadwerkelijk geconfigureerde waarde was en is 500 - comment
+  gecorrigeerd, geen gedragswijziging.
+
 **2026-08-15 — regel 22 aangescherpt: verbied het letterlijk narreren van een tool-aanroep**
 Live gevangen tijdens een echte boekingsbevestiging: de zichtbare bubbel
 bevatte kortstondig "Calling stuur_lead_naar_team with input: {...}" met
