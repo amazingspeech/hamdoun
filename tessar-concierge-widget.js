@@ -94,8 +94,12 @@ if (typeof document !== "undefined") {
     // echt wil, kan 'm omzeilen door sessionStorage te wissen of de webhook direct
     // aan te roepen. De echte backstop hoort op edge-niveau (zie opmerking bij
     // CONFIG.webhookUrl hierboven) en/of een spend-limit in de Anthropic Console.
-    maxMessagesPerSession: 5,
-    limitReachedMessage: "Ik denk dat ik je al goed op weg kan helpen, en het scherpste vervolg is nu een gratis kennismaking van 30 minuten — daar bespreken we jouw situatie echt concreet. Plan die hierboven in, of mail ons via het contactformulier onderaan de pagina."
+    // Verhoogd van 5 naar 15 (2026-08-14): bij 5 werd een normaal
+    // kwalificatiegesprek (vragen + 5 leadvelden + evt. boeken) structureel
+    // afgekapt. De teller blokkeert niet langer - zie sendMessage(): een
+    // bericht boven de teller wordt nu gewoon verstuurd, het gesprek eindigt
+    // via de systeemprompt in plaats van via een harde client-side afkap.
+    maxMessagesPerSession: 15
   };
 
   // ----------------------- STYLES -----------------------
@@ -416,15 +420,12 @@ if (typeof document !== "undefined") {
     if (isSending) return;
     isSending = true;
 
-    if (getMessageCount() >= CONFIG.maxMessagesPerSession) {
-      hasSentFirstMessage = true;
-      addMessage("user", text);
-      inputEl.value = "";
-      startersEl.style.display = "none";
-      addMessage("bot", CONFIG.limitReachedMessage);
-      isSending = false;
-      return;
-    }
+    // Kostenbeheersing/telemetrie: telt door, maar blokkeert bericht 16+
+    // niet meer. Voorheen werd het bericht van de bezoeker hier lokaal
+    // getoond maar NOOIT naar de webhook gestuurd - de widget negeerde
+    // daarna alles wat de bezoeker nog typte (inclusief leadgegevens en
+    // meta-klachten zoals "je vroeg net nog om mijn gegevens") en gaf altijd
+    // dezelfde statische tekst terug. Zie BUG 3/4/6/7 in het diagnoserapport.
     incrementMessageCount();
 
     hasSentFirstMessage = true;
