@@ -134,3 +134,40 @@ test('meerdere begin/end-blokken in één respons (aankondiging + antwoord na ee
   await expect(lastBubble).toContainText('Ik zet');
   await expect(lastBubble).toContainText('Mooi, je kennismaking staat in!');
 });
+
+test('een gelekte tool-aanroep ("Calling ... with input: {...}") wordt nooit getoond aan de bezoeker', async ({ page }) => {
+  // Live gevangen op 2026-08-14 tijdens een boekingsbevestiging - de
+  // gelekte velden matchten exact de parameters van de stuur_lead_naar_team-
+  // tool. Regel 22 in de systeemprompt garandeert dat dit patroon nooit
+  // legitiem zichtbaar mag zijn.
+  const leak = 'Calling stuur_lead_naar_team with input: {"naam":"Job Nop","email":"test@example.com","telefoon":"0612345678"}';
+  await page.route(WEBHOOK_PATTERN, async (route) => {
+    const body =
+      JSON.stringify({ type: 'begin' }) + '\n' +
+      JSON.stringify({ type: 'item', content: 'Top, ik zet het voor je klaar!' }) + '\n' +
+      JSON.stringify({ type: 'end' }) + '\n' +
+      JSON.stringify({ type: 'begin' }) + '\n' +
+      JSON.stringify({ type: 'item', content: leak }) + '\n' +
+      JSON.stringify({ type: 'end' }) + '\n' +
+      JSON.stringify({ type: 'begin' }) + '\n' +
+      JSON.stringify({ type: 'item', content: 'Perfect! Je kennismaking is geboekt.' }) + '\n' +
+      JSON.stringify({ type: 'end' }) + '\n';
+    await route.fulfill({
+      status: 200,
+      headers: { 'Content-Type': 'text/plain; charset=utf-8', 'Access-Control-Allow-Origin': '*' },
+      body
+    });
+  });
+  const input = await openPanelAndGetInput(page);
+
+  await input.fill('Vraag');
+  await input.press('Enter');
+  await page.waitForTimeout(300);
+
+  const lastBubble = page.locator('.tsc-msg-bot').last();
+  await expect(lastBubble).toContainText('Top, ik zet het voor je klaar!');
+  await expect(lastBubble).toContainText('Perfect! Je kennismaking is geboekt.');
+  const bubbleText = await lastBubble.textContent();
+  expect(bubbleText).not.toContain('Calling');
+  expect(bubbleText).not.toContain('{');
+});
