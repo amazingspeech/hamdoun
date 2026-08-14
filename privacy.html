@@ -24,46 +24,24 @@
 <script src="./assets/cookie-consent.js" defer></script>
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Contact — Tessar | AI-implementatie voor het mkb</title>
-<meta name="description" content="Neem contact op met Tessar voor AI-automatisering en AI-geintegreerde applicaties. Telefoon, e-mail en bedrijfsgegevens, of stuur direct een bericht.">
-<link rel="canonical" href="https://tessar.nl/contact.html">
+<title>Privacybeleid — Tessar</title>
+<meta name="description" content="Welke gegevens Tessar verzamelt via het contactformulier, de AI-chatwidget en Google Analytics, waarom, en welke rechten je hebt onder de AVG.">
+<link rel="canonical" href="https://tessar.nl/privacy.html">
 <meta name="theme-color" content="#0a0a0f">
+<meta name="robots" content="noindex, follow">
 <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon-32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="./assets/favicon-16.png">
 <link rel="apple-touch-icon" href="./assets/apple-touch-icon.png">
 
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "ProfessionalService",
-  "name": "Tessar",
-  "url": "https://tessar.nl/",
-  "email": "info@tessar.nl",
-  "telephone": "+31625577016",
-  "taxID": "NL004739184B63",
-  "vatID": "NL004739184B63",
-  "identifier": "89498593",
-  "areaServed": ["NL", "Europe"],
-  "contactPoint": {
-    "@type": "ContactPoint",
-    "contactType": "customer service",
-    "telephone": "+31625577016",
-    "email": "info@tessar.nl",
-    "areaServed": ["NL", "Europe"],
-    "availableLanguage": ["nl", "en"]
-  }
-}
-</script>
-
 <meta property="og:type" content="website">
 <meta property="og:locale" content="nl_NL">
-<meta property="og:url" content="https://tessar.nl/contact.html">
-<meta property="og:title" content="Contact — Tessar">
-<meta property="og:description" content="Telefoon, e-mail en bedrijfsgegevens van Tessar, of stuur direct een bericht.">
+<meta property="og:url" content="https://tessar.nl/privacy.html">
+<meta property="og:title" content="Privacybeleid — Tessar">
+<meta property="og:description" content="Welke gegevens Tessar verzamelt, waarom, en welke rechten je hebt onder de AVG.">
 <meta property="og:image" content="https://tessar.nl/og-image.jpg">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Contact — Tessar">
-<meta name="twitter:description" content="Telefoon, e-mail en bedrijfsgegevens van Tessar, of stuur direct een bericht.">
+<meta name="twitter:title" content="Privacybeleid — Tessar">
+<meta name="twitter:description" content="Welke gegevens Tessar verzamelt, waarom, en welke rechten je hebt onder de AVG.">
 <meta name="twitter:image" content="https://tessar.nl/og-image.jpg">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -118,8 +96,8 @@
   html, body { margin:0; padding:0; background:var(--bg); }
   html { scroll-behavior:smooth; }
   body { font-family:'IBM Plex Sans', -apple-system, 'Segoe UI', sans-serif; color:var(--text); line-height:1.55; -webkit-font-smoothing:antialiased; }
-  a { color:var(--text); text-decoration:none; }
-  a:hover { color:var(--accent-text); }
+  a { color:var(--accent-text); text-decoration:none; }
+  a:hover { text-decoration:underline; }
   [data-reveal] { opacity:0; transform:translateY(18px); transition:opacity 600ms ease, transform 600ms ease; }
   [data-reveal].is-visible { opacity:1; transform:translateY(0); }
   .nav-toggle { display:none; background:none; border:none; cursor:pointer; padding:8px; flex-direction:column; gap:5px; margin-left:4px; }
@@ -136,9 +114,6 @@
     .nav-toggle.nav-toggle-active span:nth-child(2) { opacity:0; }
     .nav-toggle.nav-toggle-active span:nth-child(3) { transform:translateY(-7px) rotate(-45deg); }
   }
-  /* Sits left of the fixed Tess concierge launcher (60px circle at bottom:24px/right:24px, see
-     tessar-concierge-widget.js), same row, so it never collides with the launcher or its hint bubble
-     (which pops up above the launcher, not beside it). */
   #back-to-top { position:fixed; right:100px; bottom:24px; z-index:40; width:48px; height:48px; border-radius:50%; border:none; background:oklch(70% 0.14 220); color:#001a2e; display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:0 8px 24px oklch(20% 0.02 255 / 0.25); opacity:0; transform:translateY(12px); pointer-events:none; transition:opacity 260ms ease, transform 260ms ease, box-shadow 200ms ease; }
   #back-to-top.is-visible { opacity:1; transform:translateY(0); pointer-events:auto; }
   #back-to-top:hover { transform:translateY(-3px); box-shadow:0 12px 32px rgba(0,212,255,0.35); }
@@ -149,9 +124,17 @@
     html { scroll-behavior:auto; }
     #back-to-top { transition:opacity 200ms ease; transform:none; }
   }
-  .contact-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:clamp(24px,4vw,40px); }
-  .contact-field { background:oklch(100% 0 0 / 0.95); border:1px solid oklch(70% 0.14 220 / 0.3); border-radius:6px; padding:14px 18px; font:400 0.95rem/1.5 'IBM Plex Sans'; color:var(--text); transition:all 200ms ease; width:100%; box-sizing:border-box; }
-  .contact-field:focus { border-color:oklch(70% 0.14 220); box-shadow:0 0 0 2px oklch(70% 0.14 220 / 0.1); outline:none; }
+  .legal { max-width:760px; margin:0 auto; }
+  .legal h2 { font:700 1.3125rem/1.35 'IBM Plex Sans'; color:var(--text); margin:40px 0 14px; letter-spacing:-0.01em; }
+  .legal h2:first-child { margin-top:0; }
+  .legal p { font:400 0.9625rem/1.7 'IBM Plex Sans'; color:var(--text-muted); margin:0 0 14px; }
+  .legal ul { margin:0 0 14px; padding-left:20px; }
+  .legal li { font:400 0.9625rem/1.7 'IBM Plex Sans'; color:var(--text-muted); margin-bottom:6px; }
+  .legal table { width:100%; border-collapse:collapse; margin:0 0 14px; font-size:0.875rem; }
+  .legal th, .legal td { text-align:left; padding:10px 12px; border-bottom:1px solid var(--border); vertical-align:top; }
+  .legal th { font:600 0.75rem/1.3 'IBM Plex Sans'; text-transform:uppercase; letter-spacing:0.04em; color:var(--text-muted-2); }
+  .legal td { color:var(--text-muted); }
+  .legal .meta-updated { font:500 0.8125rem/1.5 'IBM Plex Mono'; color:var(--text-muted-2); margin-bottom:36px; }
 </style>
 </head>
 <body>
@@ -168,8 +151,8 @@
       <a href="./prijzen.html" class="nav-link" style="color:var(--text-muted);transition:color 200ms ease;">Prijzen</a>
       <a href="./chatbots.html" class="nav-link" style="color:var(--text-muted);transition:color 200ms ease;">Chatbots</a>
       <a href="./blog.html" class="nav-link" style="color:var(--text-muted);transition:color 200ms ease;">Blog</a>
-      <a href="./contact.html" class="nav-link" style="color:var(--text);font-weight:600;">Contact</a>
-      <a class="nav-link" href="#stuur-bericht" style="background:oklch(70% 0.14 220);color:#001a2e;padding:10px 20px;border-radius:6px;font-weight:600;transition:all 200ms ease;">Plan gesprek</a>
+      <a href="./contact.html" class="nav-link" style="color:var(--text-muted);transition:color 200ms ease;">Contact</a>
+      <a class="nav-link" href="./contact.html#stuur-bericht" style="background:oklch(70% 0.14 220);color:#001a2e;padding:10px 20px;border-radius:6px;font-weight:600;transition:all 200ms ease;">Plan gesprek</a>
     </nav>
     <button type="button" class="theme-toggle" id="theme-toggle-btn" aria-label="Wissel tussen licht en donker thema">
       <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
@@ -185,108 +168,70 @@
       <a href="./prijzen.html" style="color:var(--text-muted);transition:color 200ms ease;">Prijzen</a>
       <a href="./chatbots.html" style="color:var(--text-muted);transition:color 200ms ease;">Chatbots</a>
       <a href="./blog.html" style="color:var(--text-muted);transition:color 200ms ease;">Blog</a>
-      <a href="./contact.html" style="color:var(--text);font-weight:600;">Contact</a>
-      <a href="#stuur-bericht" style="background:oklch(70% 0.14 220);color:#001a2e;padding:10px 20px;border-radius:6px;font-weight:600;transition:all 200ms ease;">Plan gesprek</a>
+      <a href="./contact.html" style="color:var(--text-muted);transition:color 200ms ease;">Contact</a>
+      <a href="./contact.html#stuur-bericht" style="background:oklch(70% 0.14 220);color:#001a2e;padding:10px 20px;border-radius:6px;font-weight:600;transition:all 200ms ease;">Plan gesprek</a>
   </div>
 </header>
 
-<section style="position:relative;overflow:hidden;background:linear-gradient(135deg, oklch(6% 0 0) 0%, oklch(12% 0.03 260) 100%);color:#FFF;padding:clamp(64px,9vw,100px) clamp(20px,5vw,40px) clamp(56px,7vw,80px);text-align:center;">
+<section style="position:relative;overflow:hidden;background:linear-gradient(135deg, oklch(6% 0 0) 0%, oklch(12% 0.03 260) 100%);color:#FFF;padding:clamp(56px,8vw,84px) clamp(20px,5vw,40px) clamp(48px,6vw,64px);text-align:center;">
   <div style="max-width:800px;margin:0 auto;position:relative;z-index:1;">
-    <div style="display:inline-block;background:oklch(70% 0.14 220 / 0.15);border:1px solid oklch(70% 0.14 220 / 0.3);padding:10px 16px;border-radius:20px;margin-bottom:24px;font-size:0.8125rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:oklch(70% 0.14 220);">Contact</div>
-    <h1 style="font:800 clamp(2rem,4.5vw,3rem)/1.2 'IBM Plex Sans';margin:0 0 18px;letter-spacing:-0.02em;">Neem contact op</h1>
-    <p style="font:400 clamp(1rem,1.6vw,1.125rem)/1.7 'IBM Plex Sans';color:oklch(75% 0.10 250);margin:0;">Vragen, een concreet idee of gewoon kennismaken — bereik ons rechtstreeks of stuur een bericht.</p>
+    <div style="display:inline-block;background:oklch(70% 0.14 220 / 0.15);border:1px solid oklch(70% 0.14 220 / 0.3);padding:10px 16px;border-radius:20px;margin-bottom:24px;font-size:0.8125rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:oklch(70% 0.14 220);">Privacy</div>
+    <h1 style="font:800 clamp(1.75rem,4vw,2.625rem)/1.25 'IBM Plex Sans';margin:0 0 18px;letter-spacing:-0.02em;">Privacybeleid</h1>
+    <p style="font:400 clamp(1rem,1.6vw,1.125rem)/1.7 'IBM Plex Sans';color:oklch(75% 0.10 250);margin:0;">Welke gegevens we verzamelen op tessar.nl, waarom, en hoe je dat kunt beheren.</p>
   </div>
 </section>
 
-<section style="padding:clamp(56px,7vw,88px) clamp(20px,5vw,40px);background:var(--surface);">
-  <div class="contact-grid" style="max-width:1100px;margin:0 auto;align-items:start;">
+<section style="padding:clamp(48px,7vw,72px) clamp(20px,5vw,40px);background:var(--surface);">
+  <div class="legal" data-reveal>
 
-    <div data-reveal style="padding:clamp(4px,1vw,8px) 4px;transition:opacity 600ms ease, transform 600ms ease;">
-      <h2 style="font:600 0.75rem/1.2 'IBM Plex Mono';letter-spacing:0.06em;text-transform:uppercase;margin:0 0 18px;color:var(--text-muted-2);">Bedrijfsgegevens</h2>
-      <dl style="margin:0;display:flex;flex-direction:column;gap:14px;">
-        <div>
-          <dt style="font:500 0.75rem/1.2 'IBM Plex Sans';color:var(--text-muted-2);margin-bottom:3px;">Telefoon</dt>
-          <dd style="margin:0;font:400 0.9375rem/1.5 'IBM Plex Sans';"><a href="tel:+31625577016" style="color:var(--text-muted);">+31 6 25577016</a></dd>
-        </div>
-        <div>
-          <dt style="font:500 0.75rem/1.2 'IBM Plex Sans';color:var(--text-muted-2);margin-bottom:3px;">E-mail</dt>
-          <dd style="margin:0;font:400 0.9375rem/1.5 'IBM Plex Sans';"><a href="mailto:info@tessar.nl" style="color:var(--text-muted);">info@tessar.nl</a></dd>
-        </div>
-        <div>
-          <dt style="font:500 0.75rem/1.2 'IBM Plex Sans';color:var(--text-muted-2);margin-bottom:3px;">BTW-nummer</dt>
-          <dd style="margin:0;font:400 0.9375rem/1.5 'IBM Plex Sans';color:var(--text-muted-2);">NL004739184B63</dd>
-        </div>
-        <div>
-          <dt style="font:500 0.75rem/1.2 'IBM Plex Sans';color:var(--text-muted-2);margin-bottom:3px;">KVK-nummer</dt>
-          <dd style="margin:0;font:400 0.9375rem/1.5 'IBM Plex Sans';color:var(--text-muted-2);">89498593</dd>
-        </div>
-      </dl>
+    <p class="meta-updated">Laatst bijgewerkt: 14 augustus 2026</p>
+
+    <h2>Wie is verantwoordelijk</h2>
+    <p>Tessar is verwerkingsverantwoordelijke voor de persoonsgegevens die via tessar.nl worden verzameld.</p>
+    <ul>
+      <li>KVK-nummer: 89498593</li>
+      <li>BTW-nummer: NL004739184B63</li>
+      <li>E-mail: <a href="mailto:info@tessar.nl">info@tessar.nl</a></li>
+      <li>Telefoon: <a href="tel:+31625577016">+31 6 25577016</a></li>
+    </ul>
+    <p>Vragen over dit beleid of over je gegevens? Mail naar <a href="mailto:info@tessar.nl">info@tessar.nl</a>.</p>
+
+    <h2>Welke gegevens we verzamelen, en waarom</h2>
+    <p><strong>Contactformulier.</strong> Als je het formulier op de contactpagina invult, ontvangen wij je naam, e-mailadres, eventueel telefoonnummer en je bericht. We gebruiken dit alleen om te reageren op je vraag. Grondslag: gerechtvaardigd belang (het afhandelen van een verzoek dat je zelf indient).</p>
+    <p><strong>AI-chatwidget ("Tess").</strong> Berichten die je typt in de chatwidget rechtsonder op de site worden doorgestuurd naar onze workflow-omgeving, die een AI-taalmodel gebruikt om te antwoorden. We gebruiken chatinhoud niet voor iets anders dan het beantwoorden van je vraag op dat moment. Er wordt geen chatgeschiedenis blijvend aan een persoon gekoppeld opgeslagen buiten wat nodig is om het gesprek te laten werken.</p>
+    <p><strong>Google Analytics (GA4).</strong> Alleen als je hiervoor toestemming geeft via de cookiebanner meten we bezoekersstatistieken (bezochte pagina's, apparaattype, bij benadering regio) om te zien hoe de site wordt gebruikt en waar die beter kan. Zonder jouw toestemming blijft dit uitgeschakeld — dat is standaard zo ingesteld (Google Consent Mode, status "geweigerd" totdat je op "Accepteren" klikt).</p>
+    <p><strong>Functionele voorkeuren.</strong> Je thema-keuze (licht/donker) en je cookiekeuze zelf worden lokaal in je browser opgeslagen (localStorage). Deze gegevens verlaten je apparaat niet.</p>
+
+    <h2>Cookies en vergelijkbare technieken</h2>
+    <div style="overflow-x:auto;">
+    <table>
+      <thead>
+        <tr><th>Naam</th><th>Doel</th><th>Bewaartermijn</th><th>Toestemming nodig?</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>tessar-theme</code></td><td>Onthoudt of je de site in licht of donker thema bekijkt</td><td>Tot je 'm wist</td><td>Nee — functioneel</td></tr>
+        <tr><td><code>tessar-consent</code></td><td>Onthoudt je keuze in de cookiebanner</td><td>Tot je 'm wist</td><td>Nee — functioneel</td></tr>
+        <tr><td><code>_ga</code>, <code>_ga_*</code></td><td>Google Analytics — geaggregeerde bezoekstatistieken</td><td>Max. 14 maanden</td><td>Ja — alleen na "Accepteren"</td></tr>
+      </tbody>
+    </table>
     </div>
+    <p>Je kunt je keuze op elk moment wijzigen door <code>tessar-consent</code> te wissen uit je browseropslag (bijv. via de site-instellingen van je browser); de banner verschijnt dan opnieuw.</p>
 
-    <div id="stuur-bericht" data-reveal style="border:1px solid var(--border);border-radius:12px;padding:clamp(28px,4vw,40px);scroll-margin-top:100px;transition:opacity 600ms ease, transform 600ms ease;">
-      <h2 style="font:600 1.375rem/1.3 'IBM Plex Sans';margin:0 0 20px;color:var(--text);">Stuur een bericht</h2>
-      <form id="contact-form" style="display:flex;flex-direction:column;gap:16px;">
-        <input type="text" name="name" id="cf-name" required placeholder="Naam" class="contact-field"/>
-        <input type="email" name="email" id="cf-email" required placeholder="E-mailadres" class="contact-field"/>
-        <input type="tel" name="phone" id="cf-phone" placeholder="Telefoonnummer (optioneel)" class="contact-field"/>
-        <textarea name="message" id="cf-message" required placeholder="Je bericht" rows="5" class="contact-field" style="resize:none;"></textarea>
-        <input type="text" name="website" id="cf-website" autocomplete="off" tabindex="-1" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;">
-        <button type="submit" id="cf-submit" style="background:linear-gradient(135deg, oklch(70% 0.14 220), oklch(60% 0.12 230));color:#001a2e;padding:14px 28px;border:none;border-radius:6px;font-weight:700;font-size:0.95rem;cursor:pointer;transition:all 280ms ease;">Verstuur bericht</button>
-        <p id="cf-status" role="status" style="font:400 0.9rem/1.5 'IBM Plex Sans';margin:0;min-height:1.4em;"></p>
-      </form>
-      <script>
-      (function () {
-        var pageLoadTime = Date.now();
+    <h2>Delen met derden</h2>
+    <ul>
+      <li><strong>Google Ireland Limited</strong> — verwerkt Analytics-gegevens, uitsluitend als je toestemming hebt gegeven.</li>
+      <li><strong>Onze workflow- en AI-leveranciers</strong> — verwerken chatberichten om de chatwidget te laten werken, alleen als je de chat zelf gebruikt.</li>
+      <li>We verkopen geen gegevens aan derden en gebruiken geen advertentietracking.</li>
+    </ul>
 
-        document.addEventListener("submit", function (e) {
-          var form = e.target;
-          if (!form || form.id !== "contact-form") return;
-          e.preventDefault();
+    <h2>Bewaartermijn</h2>
+    <p>Contactformulier- en chatberichten bewaren we niet langer dan nodig is om je vraag af te handelen, met een maximum van 2 jaar. Analytics-gegevens worden bewaard volgens de standaard bewaartermijn van Google Analytics (zie tabel hierboven).</p>
 
-          var submitBtn = form.querySelector("#cf-submit");
-          var status = form.querySelector("#cf-status");
-          var originalBtnText = submitBtn.textContent;
-          submitBtn.disabled = true;
-          submitBtn.textContent = "Versturen...";
-          status.textContent = "";
-          status.style.color = "";
+    <h2>Jouw rechten</h2>
+    <p>Onder de AVG heb je het recht op inzage, correctie en verwijdering van je gegevens, en het recht om bezwaar te maken tegen verwerking. Stuur een verzoek naar <a href="mailto:info@tessar.nl">info@tessar.nl</a> — we reageren binnen 4 weken. Ben je het niet eens met hoe we je gegevens verwerken, dan kun je een klacht indienen bij de <a href="https://www.autoriteitpersoonsgegevens.nl" target="_blank" rel="noopener">Autoriteit Persoonsgegevens</a>.</p>
 
-          fetch("/api/contact", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              name: form.querySelector("#cf-name").value,
-              email: form.querySelector("#cf-email").value,
-              phone: form.querySelector("#cf-phone").value,
-              industry: "",
-              message: form.querySelector("#cf-message").value,
-              website: form.querySelector("#cf-website").value,
-              started_at: pageLoadTime
-            })
-          })
-            .then(function (res) { return res.json().then(function (data) { return { ok: res.ok, data: data }; }); })
-            .then(function (result) {
-              if (result.ok && result.data.ok) {
-                form.reset();
-                status.style.color = "oklch(70% 0.14 220)";
-                status.textContent = "Bedankt! We nemen zo snel mogelijk contact op.";
-              } else {
-                status.style.color = "oklch(65% 0.20 30)";
-                status.textContent = (result.data && result.data.error) || "Er ging iets mis, probeer het later opnieuw.";
-              }
-            })
-            .catch(function () {
-              status.style.color = "oklch(65% 0.20 30)";
-              status.textContent = "Er ging iets mis, probeer het later opnieuw.";
-            })
-            .finally(function () {
-              submitBtn.disabled = false;
-              submitBtn.textContent = originalBtnText;
-            });
-        });
-      })();
-      </script>
-    </div>
+    <h2>Wijzigingen in dit beleid</h2>
+    <p>We kunnen dit beleid aanpassen, bijvoorbeeld als we een nieuwe tool toevoegen aan de site. De datum bovenaan deze pagina geeft aan wanneer het voor het laatst is bijgewerkt.</p>
 
   </div>
 </section>

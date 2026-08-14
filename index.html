@@ -3,6 +3,26 @@
 <head>
 <script>(function(){try{var t=localStorage.getItem("tessar-theme");if(t==="dark"||t==="light"){document.documentElement.setAttribute("data-theme",t);}}catch(e){}})();</script>
 <meta charset="utf-8">
+
+<!-- Google Consent Mode v2 (default: geweigerd totdat bezoeker akkoord geeft) -->
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('consent', 'default', {
+    'ad_storage': 'denied',
+    'ad_user_data': 'denied',
+    'ad_personalization': 'denied',
+    'analytics_storage': 'denied'
+  });
+</script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-729MRG65E1"></script>
+<script>
+  gtag('js', new Date());
+  gtag('config', 'G-729MRG65E1');
+</script>
+<script src="./assets/cookie-consent.js" defer></script>
+
 <script>
 if (location.hostname === "amazingspeech.github.io") {
   location.replace("https://tessar.nl" + location.pathname.replace(/^\/hamdoun/, "") + location.search + location.hash);
@@ -778,7 +798,7 @@ if (location.hostname === "amazingspeech.github.io") {
     </div>
     <div style="padding-top:24px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font:400 0.8125rem/1.5 'IBM Plex Sans';color:oklch(45% 0.02 250);">
       <span>{{ footerCopyright }}</span>
-      <span style="display:flex;gap:16px;align-items:center;">{{ footerBuiltWith }}<a href="/login" style="color:oklch(45% 0.02 250);">{{ footerLogin }}</a></span>
+      <span style="display:flex;gap:16px;align-items:center;">{{ footerBuiltWith }}<a href="./privacy.html" style="color:oklch(45% 0.02 250);">{{ footerPrivacy }}</a><a href="/login" style="color:oklch(45% 0.02 250);">{{ footerLogin }}</a></span>
     </div>
   </div>
 </footer>
@@ -1038,7 +1058,8 @@ const copyNL = {
   footerContactLink: 'Stuur een bericht',
   footerCopyright: '(c) 2026 Tessar. Alle rechten voorbehouden.',
   footerBuiltWith: 'Gevestigd in Nederland.',
-  footerLogin: 'Login'
+  footerLogin: 'Login',
+  footerPrivacy: 'Privacybeleid'
 };
 
 const copyEN = {
@@ -1289,7 +1310,8 @@ const copyEN = {
   footerContactLink: 'Send a message',
   footerCopyright: '(c) 2026 Tessar. All rights reserved.',
   footerBuiltWith: 'Based in the Netherlands.',
-  footerLogin: 'Login'
+  footerLogin: 'Login',
+  footerPrivacy: 'Privacy policy'
 };
 
 function formatEuro(n) {
