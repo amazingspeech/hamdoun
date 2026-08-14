@@ -2,7 +2,19 @@
  * Tessar AI Concierge - embeddable website widget
  * ---------------------------------------------------------
  * Zelfstandig script, geen dependencies. Voeg toe vlak voor </body>:
- *   <script src="./tessar-concierge-widget.js" defer></script>
+ *   <script src="./tessar-concierge-widget.js?v=2" defer></script>
+ *
+ * LET OP - cache-busting: de productieserver stuurt op dit bestand
+ * `Cache-Control: public, max-age=31536000, immutable` (server-config, niet
+ * in deze repo, en op 2026-08-14 niet fixbaar gebleken - SSH naar de server
+ * werkt momenteel niet voor deze gebruiker). Dat betekent dat elke deploy
+ * van dit bestand ONZICHTBAAR blijft voor bezoekers die het script al eerder
+ * laadden, tot een jaar lang, tenzij de URL zelf verandert. Verhoog daarom
+ * bij ELKE inhoudelijke wijziging aan dit bestand de `?v=N`-querystring in
+ * alle `<script src="./tessar-concierge-widget.js?v=...">`-tags (13
+ * HTML-bestanden, `grep -rl tessar-concierge-widget.js *.html`) - vergeet je
+ * dit, dan lijkt een fix live terwijl bestaande bezoekers de oude bug
+ * blijven zien.
  *
  * BELANGRIJK - dit moet je nog invullen voordat dit live kan:
  *   1) WEBHOOK_URL hieronder: de echte production-URL van de "Website Chat
@@ -63,11 +75,47 @@ function parseStreamChunk(raw, state) {
   return text;
 }
 
+// Vangnet tegen interne tool-aanroep-tracering die soms in de tekststream
+// meekomt, bijv. "Calling stuur_lead_naar_team with input:
+// {"naam":"...","email":"...", ...}" - live gevangen op 2026-08-14 tijdens
+// een boekingsbevestiging (de gelekte velden matchen exact de parameters
+// van de stuur_lead_naar_team-tool). Niet met zekerheid vastgesteld of dit
+// van het model komt of van n8n's eigen tracing, maar dat maakt niet uit:
+// de systeemprompt (regel 22) garandeert dat een zichtbaar bericht dit
+// patroon nooit legitiem bevat ("Je zichtbare bericht bevat daarom nooit
+// code-achtige fragmenten zoals {...}, JSON"), dus knippen is altijd veilig.
+// Telt accolades om ook geneste JSON correct te matchen; sluit de laatste
+// accolade nog niet (JSON nog niet volledig binnen), dan wordt alles vanaf
+// "Calling" voorlopig verborgen totdat 'm compleet is.
+function stripToolCallLeaks(text) {
+  var marker = /Calling [A-Za-z0-9_]+ with input:\s*\{/g;
+  var result = "";
+  var lastIndex = 0;
+  var m;
+  while ((m = marker.exec(text))) {
+    var braceStart = text.indexOf("{", m.index);
+    var depth = 0;
+    var i = braceStart;
+    for (; i < text.length; i++) {
+      if (text[i] === "{") depth++;
+      else if (text[i] === "}") {
+        depth--;
+        if (depth === 0) { i++; break; }
+      }
+    }
+    result += text.slice(lastIndex, m.index);
+    lastIndex = i;
+    marker.lastIndex = i;
+  }
+  result += text.slice(lastIndex);
+  return result;
+}
+
 // De rest van dit bestand bouwt DOM op en raakt dus de browser aan. Deze
-// guard laat parseStreamChunk hierboven ook zonder browser (bijv. in een
-// Node-unit-test) los importeren, zonder dat het gedrag in de browser zelf
-// verandert (document bestaat daar altijd, dus de IIFE draait daar exact
-// zoals voorheen).
+// guard laat parseStreamChunk/stripToolCallLeaks hierboven ook zonder
+// browser (bijv. in een Node-unit-test) los importeren, zonder dat het
+// gedrag in de browser zelf verandert (document bestaat daar altijd, dus de
+// IIFE draait daar exact zoals voorheen).
 if (typeof document !== "undefined") {
 (function () {
   "use strict";
@@ -472,11 +520,16 @@ if (typeof document !== "undefined") {
           if (chunk.done) break;
           var decoded = decoder.decode(chunk.value, { stream: true });
           accumulated += parseStreamChunk(decoded, streamState);
+          // stripToolCallLeaks draait op de VOLLEDIGE ruwe accumulatie, elke
+          // keer opnieuw - nooit op een al opgeschoonde tussenwaarde, anders
+          // raakt de functie een nog niet volledig binnengekomen JSON-blob
+          // kwijt zodra het vervolg in een latere chunk binnenkomt.
+          var visibleText = stripToolCallLeaks(accumulated);
           if (!botMsgEl) {
             typingEl.remove();
-            botMsgEl = addMessage("bot", accumulated);
+            botMsgEl = addMessage("bot", visibleText);
           } else {
-            botMsgEl.innerHTML = renderBotHtml(accumulated);
+            botMsgEl.innerHTML = renderBotHtml(visibleText);
             bodyEl.scrollTop = bodyEl.scrollHeight;
           }
         }
@@ -542,5 +595,5 @@ if (typeof document !== "undefined") {
 // Heeft geen effect in de browser (module is daar undefined) en verandert
 // niets aan het widget-gedrag.
 if (typeof module !== "undefined" && module.exports) {
-  module.exports = { parseStreamChunk: parseStreamChunk };
+  module.exports = { parseStreamChunk: parseStreamChunk, stripToolCallLeaks: stripToolCallLeaks };
 }
