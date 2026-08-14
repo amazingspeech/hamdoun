@@ -2,3 +2,10 @@
 
 # lokale secrets
 .env
+
+# test-tooling (Playwright, e2e-widgettests)
+node_modules/
+test-results/
+playwright-report/
+blob-report/
+playwright/.cache/
