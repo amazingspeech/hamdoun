@@ -24,28 +24,34 @@
 // Best-effort parser voor een gestreamde chatrespons. n8n's LangChain
 // chatTrigger streamt newline-gescheiden JSON-objecten: {"type":"begin",...},
 // dan een of meer {"type":"item","content":"..."} delta-chunks, dan
-// {"type":"end",...}. `state.ended` onthoudt of we het einde van de EERSTE
-// beurt in deze HTTP-respons al gezien hebben - content die daarna nog
-// binnenkomt wordt behandeld als corruptie (bijv. twee gelijktijdige
-// requests voor dezelfde sessie waarvan de streams server-side door elkaar
-// zijn gaan lopen - live gereproduceerd tijdens het onderzoek naar BUG 1,
-// zie docs/superpowers/specs/2026-08-14-tess-widget-bugfixes-design.md) en
-// wordt genegeerd in plaats van aan de bestaande bubbel geplakt.
+// {"type":"end",...}.
+//
+// BELANGRIJK (2026-08-14, herzien): één HTTP-respons kan LEGITIEM meerdere
+// begin/item/end-blokken bevatten - bijv. een korte aankondiging vóór een
+// tool-aanroep, gevolgd door het echte antwoord na het tool-resultaat (de
+// systeemprompt moedigt dat expliciet aan). Dit is live bevestigd: een
+// boekingsbevestiging bestond uit 2 blokken, en een eerdere versie van deze
+// functie gooide het TWEEDE (het daadwerkelijke antwoord) weg omdat die
+// alles na het eerste "end" negeerde - de bezoeker zag toen alleen de
+// aankondiging en daarna niets meer. state.blockCount telt daarom alleen om
+// tussen blokken een alinea-scheiding toe te voegen (voorkomt het
+// "week!Fijn"-aan-elkaar-plak-effect uit de oorspronkelijke bugreport) -
+// content wordt nooit meer weggegooid.
 function parseStreamChunk(raw, state) {
   var text = "";
   raw.split("\n").forEach(function (line) {
     line = line.trim();
     if (!line) return;
     if (line.indexOf("data:") === 0) line = line.slice(5).trim();
-    if (state.ended) {
-      console.warn("[Tessar concierge] content ontvangen na het einde van de beurt, genegeerd (mogelijk twee samengevoegde antwoorden):", line);
-      return;
-    }
     try {
       var obj = JSON.parse(line);
       if (typeof obj === "string") { text += obj; return; }
-      if (obj.type === "end") { state.ended = true; return; }
-      if (obj.type === "begin") { return; }
+      if (obj.type === "begin") {
+        if (state.blockCount > 0) text += "\n\n";
+        state.blockCount = (state.blockCount || 0) + 1;
+        return;
+      }
+      if (obj.type === "end") { return; }
       text += obj.content || obj.chunk || obj.text || obj.output || "";
     } catch (e) {
       // Onherkenbare (niet-JSON) regels stil negeren i.p.v. tonen aan de
@@ -436,7 +442,7 @@ if (typeof document !== "undefined") {
 
     var typingEl = showTyping();
     var botMsgEl = null;
-    var streamState = { ended: false };
+    var streamState = { blockCount: 0 };
 
     try {
       var res = await fetch(CONFIG.webhookUrl, {

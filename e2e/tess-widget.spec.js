@@ -100,20 +100,23 @@ test('na een afgeronde beurt werkt een nieuw bericht gewoon (de lock blijft niet
   await expect(page.locator('.tsc-msg-bot')).toHaveCount(3);
 });
 
-test('twee gelijktijdige beurten voor dezelfde sessie op serverniveau blijven client-side ontkoppeld (stream-boundary-hardening)', async ({ page }) => {
-  // Simuleert het exacte, live gereproduceerde defect: n8n's streaming-
-  // webhook die twee volledige antwoorden op één HTTP-respons plakt. Ook al
-  // zou de request-lock om wat voor reden dan ook omzeild worden, mag de
-  // widget nooit twee beurten in één bubbel tonen.
+test('meerdere begin/end-blokken in één respons (aankondiging + antwoord na een tool-aanroep) worden allebei getoond, niet weggegooid', async ({ page }) => {
+  // Regressietest voor een bug die de eerdere versie van deze fix zelf
+  // introduceerde: n8n stuurt bij een tool-aanroep vaak een korte
+  // aankondiging (begin/item/end) gevolgd door het echte antwoord (nog een
+  // begin/item/end) in DEZELFDE respons - dit is normaal, geen corruptie.
+  // Live gereproduceerd op 2026-08-14: een boekingsbevestiging bestond uit
+  // precies dit patroon, en de bezoeker zag na de aankondiging niets meer
+  // omdat het tweede (echte) blok werd genegeerd. Dat mag nooit meer.
   const requests = [];
   await page.route(WEBHOOK_PATTERN, async (route) => {
     requests.push(route.request().postData());
     const body =
       JSON.stringify({ type: 'begin' }) + '\n' +
-      JSON.stringify({ type: 'item', content: 'Eerste antwoord.' }) + '\n' +
+      JSON.stringify({ type: 'item', content: "Ik zet 'm even voor je klaar." }) + '\n' +
       JSON.stringify({ type: 'end' }) + '\n' +
       JSON.stringify({ type: 'begin' }) + '\n' +
-      JSON.stringify({ type: 'item', content: 'Tweede antwoord.' }) + '\n' +
+      JSON.stringify({ type: 'item', content: 'Mooi, je kennismaking staat in!' }) + '\n' +
       JSON.stringify({ type: 'end' }) + '\n';
     await route.fulfill({
       status: 200,
@@ -128,6 +131,6 @@ test('twee gelijktijdige beurten voor dezelfde sessie op serverniveau blijven cl
   await page.waitForTimeout(300);
 
   const lastBubble = page.locator('.tsc-msg-bot').last();
-  await expect(lastBubble).toContainText('Eerste antwoord.');
-  await expect(lastBubble).not.toContainText('Tweede antwoord.');
+  await expect(lastBubble).toContainText('Ik zet');
+  await expect(lastBubble).toContainText('Mooi, je kennismaking staat in!');
 });
