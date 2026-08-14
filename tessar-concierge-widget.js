@@ -21,6 +21,48 @@
  * met de browser Network-tab zodra de echte webhook-URL is ingevuld, en
  * pas parseStreamChunk() aan als het werkelijke formaat afwijkt.
  */
+// Best-effort parser voor een gestreamde chatrespons. n8n's LangChain
+// chatTrigger streamt newline-gescheiden JSON-objecten: {"type":"begin",...},
+// dan een of meer {"type":"item","content":"..."} delta-chunks, dan
+// {"type":"end",...}. `state.ended` onthoudt of we het einde van de EERSTE
+// beurt in deze HTTP-respons al gezien hebben - content die daarna nog
+// binnenkomt wordt behandeld als corruptie (bijv. twee gelijktijdige
+// requests voor dezelfde sessie waarvan de streams server-side door elkaar
+// zijn gaan lopen - live gereproduceerd tijdens het onderzoek naar BUG 1,
+// zie docs/superpowers/specs/2026-08-14-tess-widget-bugfixes-design.md) en
+// wordt genegeerd in plaats van aan de bestaande bubbel geplakt.
+function parseStreamChunk(raw, state) {
+  var text = "";
+  raw.split("\n").forEach(function (line) {
+    line = line.trim();
+    if (!line) return;
+    if (line.indexOf("data:") === 0) line = line.slice(5).trim();
+    if (state.ended) {
+      console.warn("[Tessar concierge] content ontvangen na het einde van de beurt, genegeerd (mogelijk twee samengevoegde antwoorden):", line);
+      return;
+    }
+    try {
+      var obj = JSON.parse(line);
+      if (typeof obj === "string") { text += obj; return; }
+      if (obj.type === "end") { state.ended = true; return; }
+      if (obj.type === "begin") { return; }
+      text += obj.content || obj.chunk || obj.text || obj.output || "";
+    } catch (e) {
+      // Onherkenbare (niet-JSON) regels stil negeren i.p.v. tonen aan de
+      // bezoeker - dit voorkomt dat interne fout-/debugoutput van n8n
+      // (bijv. een falende tool-aanroep) rechtstreeks in de chat lekt.
+      console.warn("[Tessar concierge] kon streamregel niet verwerken, genegeerd:", line);
+    }
+  });
+  return text;
+}
+
+// De rest van dit bestand bouwt DOM op en raakt dus de browser aan. Deze
+// guard laat parseStreamChunk hierboven ook zonder browser (bijv. in een
+// Node-unit-test) los importeren, zonder dat het gedrag in de browser zelf
+// verandert (document bestaat daar altijd, dus de IIFE draait daar exact
+// zoals voorheen).
+if (typeof document !== "undefined") {
 (function () {
   "use strict";
 
@@ -128,6 +170,12 @@
 
   var isOpen = false;
   var hasSentFirstMessage = false;
+  // Voorkomt dat er twee gelijktijdige requests voor dezelfde sessie lopen
+  // (dubbelklik, snel achter elkaar Enter, of typen tijdens een lopend
+  // verzoek). sendBtn.disabled alleen was niet genoeg: de Enter-toets in
+  // het invoerveld ging daar nooit langs, dus die kon een tweede request
+  // afvuren terwijl de eerste nog liep. Zie BUG 1 in het diagnoserapport.
+  var isSending = false;
 
   // ----------------------- DOM -----------------------
   var root = document.createElement("div");
@@ -351,29 +399,6 @@
     return el;
   }
 
-  // Best-effort parser for a streamed chat response. n8n's LangChain
-  // chatTrigger in streaming mode typically emits newline-separated JSON
-  // objects; this tries a few known shapes and falls back to raw text.
-  function parseStreamChunk(raw) {
-    var text = "";
-    raw.split("\n").forEach(function (line) {
-      line = line.trim();
-      if (!line) return;
-      if (line.indexOf("data:") === 0) line = line.slice(5).trim();
-      try {
-        var obj = JSON.parse(line);
-        if (typeof obj === "string") { text += obj; return; }
-        text += obj.content || obj.chunk || obj.text || obj.output || "";
-      } catch (e) {
-        // Onherkenbare (niet-JSON) regels stil negeren i.p.v. tonen aan de
-        // bezoeker - dit voorkomt dat interne fout-/debugoutput van n8n
-        // (bijv. een falende tool-aanroep) rechtstreeks in de chat lekt.
-        console.warn("[Tessar concierge] kon streamregel niet verwerken, genegeerd:", line);
-      }
-    });
-    return text;
-  }
-
   function getMessageCount() {
     try { return parseInt(sessionStorage.getItem("tsc_msg_count") || "0", 10) || 0; } catch (e) { return 0; }
   }
@@ -384,6 +409,12 @@
   async function sendMessage(text) {
     text = (text || inputEl.value).trim();
     if (!text) return;
+    // Request-lock: er mag maar 1 verzoek tegelijk lopen voor deze sessie.
+    // Dit is de daadwerkelijke fix voor BUG 1 (voorkomt dat de race die twee
+    // antwoorden aan elkaar plakte, ooit ontstaat) - de stream-boundary-
+    // check in parseStreamChunk hierboven is het vangnet als dit toch faalt.
+    if (isSending) return;
+    isSending = true;
 
     if (getMessageCount() >= CONFIG.maxMessagesPerSession) {
       hasSentFirstMessage = true;
@@ -391,6 +422,7 @@
       inputEl.value = "";
       startersEl.style.display = "none";
       addMessage("bot", CONFIG.limitReachedMessage);
+      isSending = false;
       return;
     }
     incrementMessageCount();
@@ -403,6 +435,7 @@
 
     var typingEl = showTyping();
     var botMsgEl = null;
+    var streamState = { ended: false };
 
     try {
       var res = await fetch(CONFIG.webhookUrl, {
@@ -426,7 +459,7 @@
           var chunk = await reader.read();
           if (chunk.done) break;
           var decoded = decoder.decode(chunk.value, { stream: true });
-          accumulated += parseStreamChunk(decoded);
+          accumulated += parseStreamChunk(decoded, streamState);
           if (!botMsgEl) {
             typingEl.remove();
             botMsgEl = addMessage("bot", accumulated);
@@ -449,6 +482,7 @@
       addMessage("bot", "Er ging iets mis bij het versturen van je bericht. Probeer het later opnieuw, of neem contact op via het formulier onderaan de pagina.");
       console.error("[Tessar concierge] fout bij ophalen antwoord:", err);
     } finally {
+      isSending = false;
       sendBtn.disabled = false;
       inputEl.focus();
     }
@@ -490,3 +524,11 @@
     }, AUTO_OPEN_DELAY_MS);
   }
 })();
+}
+
+// Voor unit tests (Node, geen browser): exporteer de pure streamparser.
+// Heeft geen effect in de browser (module is daar undefined) en verandert
+// niets aan het widget-gedrag.
+if (typeof module !== "undefined" && module.exports) {
+  module.exports = { parseStreamChunk: parseStreamChunk };
+}
