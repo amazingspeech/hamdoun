@@ -2,3 +2,4 @@
 
 # lokale secrets
 .env
+.claude/settings.local.json
