@@ -1,0 +1,27 @@
+# Tessar
+
+> Praktische AI-automatisering en AI-geintegreerde applicaties voor het Nederlandse en Europese mkb, gebouwd door één persoon — van eerste kennismaking tot livegang en support.
+
+Tessar levert vijf kerndiensten: AI-procesautomatisering, voorspellende modellen & besluitondersteuning, AI-geintegreerde applicaties, systeemintegratie & datapipelines, en AI-readiness advies. Vaste prijs waar het kan, maatwerk waar het moet. Elk traject loopt via dezelfde persoon, van intake tot oplevering en support, gebouwd rond bestaande systemen (CRM/ERP, n8n, Make, Zapier). Data wordt verwerkt volgens de AVG en, waar relevant, de EU AI Act, op EU-servers.
+
+## Diensten en prijzen
+
+- [Home](https://tessar.nl/): Overzicht van Tessar — wat we doen, voor wie, en hoe een traject verloopt.
+- [Diensten](https://tessar.nl/services.html): Vijf AI-diensten — procesautomatisering, voorspellende modellen, AI-geintegreerde applicaties, systeemintegratie en AI-readiness advies, elk apart of gecombineerd af te nemen.
+- [Chatbots](https://tessar.nl/chatbots.html): AI-chatbots voor klinieken en praktijken in drie pakketten (Assistant, Concierge, Partner), met vaste scope en vaste prijs.
+- [Prijzen](https://tessar.nl/prijzen.html): Vijf pakketten, van gratis kennismaking tot volledige implementatie.
+- [Contact](https://tessar.nl/contact.html): Contactgegevens, bedrijfsgegevens en contactformulier. 24/7 bereikbaar, reactie binnen 24 uur.
+
+## Blog
+
+- [Blog-overzicht](https://tessar.nl/blog.html): Alle artikelen over AI-automatisering voor het Nederlandse mkb.
+- [AI-receptionist voor bedrijven](https://tessar.nl/ai-receptioniste-voor-bedrijven.html): Hoe een AI-receptionist oproepen aanneemt, afspraken plant en leads categoriseert — 24/7, ook buiten kantooruren.
+- [AI Telefonist voor Bedrijf](https://tessar.nl/ai-telefonist-voor-bedrijf.html): Wat een AI-telefonist wel en niet kan, en hoe je eraan begint.
+- [AI Chatbot voor Bedrijven](https://tessar.nl/ai-chatbot-voor-bedrijven.html): Hoe een AI-chatbot dagelijks terugkerende vragen automatisch beantwoordt.
+- [Workflow Automatisering met AI](https://tessar.nl/workflow-automatisering-met-ai.html): Hoe AI-workflow-automatisering repetitief werk overneemt, van inkomende e-mails tot factuurverwerking.
+- [AI implementatie laten uitvoeren](https://tessar.nl/ai-implementatie-laten-uitvoeren.html): Hoe Tessar AI-implementatie voor het mkb aanpakt, van AI-receptionist tot volledige klantinteractie-automatisering.
+- [Bedrijfsprocessen automatiseren met AI](https://tessar.nl/bedrijfsprocessen-automatiseren-met-ai.html): Welke processen zich lenen voor AI-automatisering, en een stappenplan om te beginnen.
+
+## Overig
+
+- [Privacybeleid](https://tessar.nl/privacy.html): Welke gegevens Tessar verzamelt, waarom, en welke rechten je hebt onder de AVG.
