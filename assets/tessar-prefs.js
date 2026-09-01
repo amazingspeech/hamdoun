@@ -99,7 +99,7 @@
     accept.type = "button";
     accept.textContent = "Accepteren";
     accept.style.cssText =
-      "background:linear-gradient(135deg, oklch(72% 0.15 210), oklch(62% 0.14 235));" +
+      "background:oklch(70% 0.14 220);" +
       "color:#001a2e;border:none;border-radius:6px;padding:10px 20px;" +
       "font:700 0.875rem/1 inherit;cursor:pointer;transition:transform 160ms ease;";
 

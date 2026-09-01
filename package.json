@@ -3,6 +3,7 @@
   "private": true,
   "description": "Tests voor de Tessar-website (widget-unittests + e2e). Geen productie-dependencies - de site en de widget zijn en blijven zelfstandige, dependency-loze bestanden.",
   "scripts": {
+    "build": "node scripts/prerender-index.mjs > index.html.tmp && mv index.html.tmp index.html",
     "test:unit": "node tessar-concierge-widget.test.js",
     "test:e2e": "playwright test",
     "test": "npm run test:unit && npm run test:e2e"
