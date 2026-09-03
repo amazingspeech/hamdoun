@@ -1009,3 +1009,50 @@ Playwright-screenshots desktop (1440px) en mobiel (390px), bekeken met de Read-t
 git add index.src.html index.html
 git commit -m "feat: homepage-hero volledig beeldvullend met nieuw lichtgetint beeld"
 ```
+
+---
+
+### Taak 24: Homepage-hero — subtiele "levend"-animatie op het achtergrondbeeld (gratis, geen Higgsfield)
+
+**Nieuwe taak, directe instructie van de gebruiker.** Na Taak 23 vroeg de gebruiker om de hero "levend" te maken. Gekozen aanpak (gratis, geen nieuwe Higgsfield-generatie): een subtiele, eenmalige zoom/settle-animatie op het achtergrondbeeld bij het laden van de pagina — geen doorlopende loop (dat oogt onrustig/goedkoop), maar één rustige overgang die samen met de bestaande `heroContentIn`-tekst-animatie (spec sectie 6, al aanwezig) de hero bij het laden laat "landen".
+
+**Files:**
+- Modify: `index.src.html`
+- Modify: `index.html` (via `npm run build`)
+
+**Interfaces:**
+- Consumes: `.hero-full-bg`/`.hero-full-scrim` uit Taak 23 (ongewijzigde structuur, alleen een animatie toegevoegd aan `.hero-full-bg`).
+
+- [ ] **Stap 1: Voeg de animatie toe aan `.hero-full-bg`**
+
+```css
+.hero-full-bg { animation: heroBgSettle 2.2s cubic-bezier(0.16,1,0.3,1) both; }
+@keyframes heroBgSettle {
+  0% { transform: scale(1.06); opacity: 0.92; }
+  100% { transform: scale(1); opacity: 1; }
+}
+```
+(Exacte duur/schaal mag je naar eigen smaak bijstellen na visuele controle — dit is een startpunt, geen exacte eis. Doel: subtiel, premium, geen goedkope "zoom-whoosh".)
+
+- [ ] **Stap 2: `prefers-reduced-motion` respecteren**
+
+Voeg `.hero-full-bg` toe aan de bestaande `@media (prefers-reduced-motion: reduce)`-regel (zoek de regel die nu al `.hero-content`/`.hero-scroll-cue` bevat) zodat de animatie wordt uitgeschakeld:
+```css
+.hero-full-bg { animation: none; }
+```
+
+- [ ] **Stap 3: Build en visuele controle**
+
+```bash
+npm run build
+grep -o "heroBgSettle" index.html | head -1
+```
+Expected: treffer. Maak een Playwright-screenshot/video-achtige reeks stills vlak na page-load (bijv. 0ms, 500ms, 1000ms, 2500ms na `page.goto`) op desktop, en bekijk ze met de Read-tool om te bevestigen dat de overgang rustig en subtiel oogt, niet abrupt of storend. Test ook met `page.emulateMedia({ reducedMotion: 'reduce' })` dat de animatie dan wegvalt (beeld staat meteen op eindstand).
+
+- [ ] **Stap 4: `npm test` en commit**
+
+```bash
+npm test
+git add index.src.html index.html
+git commit -m "feat: subtiele settle-animatie op de homepage-hero-achtergrond"
+```
