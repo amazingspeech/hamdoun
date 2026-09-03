@@ -1,0 +1,20 @@
+:root {
+  color-scheme: light;
+  --bg:            #F7F2E9;
+  --surface:       #F1EADA;
+  --surface-inset: #EAE1CC;
+  --border:        #DCD0B8;
+  --text:          #211C14;
+  --text-muted:    #5F5646;
+  --text-muted-2:  #8A8070;
+  --accent:        #0F5C57;
+  --accent-hover:  #0C4B47;
+  --accent-text:   #0F5C57;
+  --accent-dim:    #E3EEEC;
+  --ok-bg:         #EAF3E9;
+  --ok-border:     #C3DCC0;
+  --ok-text:       #2F6B2C;
+  --danger-bg:     #FBEAE6;
+  --danger-border: #E8C3B8;
+  --danger-text:   #A23F24;
+}
