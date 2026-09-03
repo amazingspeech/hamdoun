@@ -161,35 +161,10 @@ if (location.hostname === "amazingspeech.github.io") {
   [data-reveal-grid] > [data-reveal]:nth-child(2) { transition-delay:90ms; }
   [data-reveal-grid] > [data-reveal]:nth-child(3) { transition-delay:180ms; }
   [data-reveal-grid] > [data-reveal]:nth-child(4) { transition-delay:270ms; }
-  .hero-layout { display:grid; grid-template-columns:1fr; gap:clamp(40px,6vw,64px); align-items:center; max-width:1280px; margin:0 auto; position:relative; z-index:1; }
-  .hero-text { order:2; text-align:left; }
-  .hero-visual { order:1; position:relative; }
-  .hero-visual::before {
-    content:"";
-    position:absolute;
-    inset:-18%;
-    background:radial-gradient(closest-side, oklch(72% 0.13 55 / 0.4), transparent 72%);
-    filter:blur(48px);
-    z-index:0;
-    pointer-events:none;
-  }
-  .hero-visual img {
-    position:relative;
-    z-index:1;
-    display:block;
-    width:100%;
-    height:auto;
-    /* ellipse sized to closest-side (not a fixed 72%/72%) so the fade actually reaches full
-       transparency by the image's own edge instead of leaving it ~55% opaque there — on the
-       old near-black --bg that residual opacity was invisible, but against the new light
-       --bg it showed as a visible dark smudge around the photo instead of a clean dissolve. */
-    mask-image:radial-gradient(ellipse closest-side at 50% 50%, black 45%, transparent 100%);
-    -webkit-mask-image:radial-gradient(ellipse closest-side at 50% 50%, black 45%, transparent 100%);
-  }
-  @media (min-width: 900px) {
-    .hero-layout { grid-template-columns:1.05fr 0.95fr; }
-    .hero-text { order:1; }
-    .hero-visual { order:2; }
+  .hero-full-bg { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:right center; z-index:0; }
+  .hero-full-scrim { position:absolute; inset:0; background:linear-gradient(90deg, var(--bg) 0%, var(--bg) 32%, transparent 68%); pointer-events:none; z-index:0; }
+  @media (max-width: 640px) {
+    .hero-full-scrim { background:linear-gradient(90deg, var(--bg) 0%, var(--bg) 62%, transparent 100%); }
   }
 
   .hero-grain { position:absolute; inset:0; opacity:0.05; mix-blend-mode:overlay; pointer-events:none; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
@@ -364,34 +339,31 @@ if (location.hostname === "amazingspeech.github.io") {
   </div>
 </header>
 
-<section id="top" style="position:relative;overflow:hidden;background:var(--bg);padding:clamp(64px,8vw,88px) clamp(20px,5vw,40px);">
+<section id="top" style="position:relative;overflow:hidden;background:var(--bg);min-height:clamp(560px,82vh,820px);display:flex;align-items:center;padding:clamp(64px,8vw,88px) clamp(20px,5vw,40px);">
   <div class="hero-grain"></div>
 
-  <div class="hero-layout">
-    <div class="hero-text hero-content">
-      <div class="hero-badge">
-        <span class="hero-badge-dot"></span>{{ badge }}
-      </div>
+  <img class="hero-full-bg" src="./assets/hero-visual-full.webp" srcset="./assets/hero-visual-full-sm.webp 960w, ./assets/hero-visual-full.webp 2400w" sizes="100vw" width="2400" height="1357" alt="" loading="eager" fetchpriority="high">
+  <div class="hero-full-scrim"></div>
 
-      <h1 style="font:800 clamp(2.25rem,5.6vw,4rem)/1.15 'Outfit';margin:0 0 22px;letter-spacing:-0.025em;text-wrap:pretty;">{{ heroHeadingPre }}<span class="grad-text">{{ heroHeadingHi1 }}</span>{{ heroHeadingMid }}<span class="grad-text-warm">{{ heroHeadingHi2 }}</span>{{ heroHeadingPost }}</h1>
-
-      <p style="font:400 clamp(1.0625rem,1.9vw,1.375rem)/1.7 'IBM Plex Sans';color:var(--text-muted);margin:0 0 36px;max-width:520px;text-wrap:pretty;">{{ heroSubtext }}</p>
-
-      <div style="display:flex;gap:16px;flex-wrap:wrap;">
-        <a href="#contact" class="hero-cta-primary">{{ ctaPrimary }}</a>
-      </div>
-
-      <div style="display:flex;gap:clamp(12px,2vw,16px);margin-top:60px;flex-wrap:wrap;">
-        <div class="hero-trust-pill"><span class="hero-badge-dot"></span>{{ trustA }}</div>
-        <div class="hero-trust-pill"><span class="hero-badge-dot"></span>{{ trustB }}</div>
-        <div class="hero-trust-pill"><span class="hero-badge-dot"></span>{{ trustC }}</div>
-        <div class="hero-trust-pill"><span class="hero-badge-dot"></span>{{ trustD }}</div>
-        <div class="hero-trust-pill"><span class="hero-badge-dot"></span>{{ trustE }}</div>
-      </div>
+  <div class="hero-content" style="position:relative;z-index:1;max-width:560px;width:100%;text-align:left;">
+    <div class="hero-badge">
+      <span class="hero-badge-dot"></span>{{ badge }}
     </div>
 
-    <div class="hero-visual">
-      <img src="./assets/hero-visual.webp" srcset="./assets/hero-visual-sm.webp 960w, ./assets/hero-visual.webp 1920w" sizes="(min-width: 900px) 45vw, 100vw" width="1920" height="1086" alt="" loading="eager" fetchpriority="high">
+    <h1 style="font:800 clamp(2.25rem,5.6vw,4rem)/1.15 'Outfit';margin:0 0 22px;letter-spacing:-0.025em;text-wrap:pretty;">{{ heroHeadingPre }}<span class="grad-text">{{ heroHeadingHi1 }}</span>{{ heroHeadingMid }}<span class="grad-text-warm">{{ heroHeadingHi2 }}</span>{{ heroHeadingPost }}</h1>
+
+    <p style="font:400 clamp(1.0625rem,1.9vw,1.375rem)/1.7 'IBM Plex Sans';color:var(--text-muted);margin:0 0 36px;max-width:520px;text-wrap:pretty;">{{ heroSubtext }}</p>
+
+    <div style="display:flex;gap:16px;flex-wrap:wrap;">
+      <a href="#contact" class="hero-cta-primary">{{ ctaPrimary }}</a>
+    </div>
+
+    <div style="display:flex;gap:clamp(12px,2vw,16px);margin-top:60px;flex-wrap:wrap;">
+      <div class="hero-trust-pill"><span class="hero-badge-dot"></span>{{ trustA }}</div>
+      <div class="hero-trust-pill"><span class="hero-badge-dot"></span>{{ trustB }}</div>
+      <div class="hero-trust-pill"><span class="hero-badge-dot"></span>{{ trustC }}</div>
+      <div class="hero-trust-pill"><span class="hero-badge-dot"></span>{{ trustD }}</div>
+      <div class="hero-trust-pill"><span class="hero-badge-dot"></span>{{ trustE }}</div>
     </div>
   </div>
 
