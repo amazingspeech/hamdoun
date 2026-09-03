@@ -951,3 +951,61 @@ npm test
 Expected: alle tests slagen.
 
 - [ ] **Stap 5: Geen commit nodig tenzij stap 1 of 2 een fix vereiste** (dan een losse `fix:`-commit met de specifieke afwijking benoemd).
+
+---
+
+### Taak 23: Homepage-hero — volledig beeldvullend met nieuw beeld (vervangt Taak 11's hero-layout)
+
+**Nieuwe, na Taak 11 toegevoegde taak — directe instructie van de gebruiker.** Taak 11 leverde de homepage-hero op als een twee-koloms grid (tekst links, beeld rechts in een gemaskeerd/wegvloeiend kader — het "gevouwen metaal"-beeld met een radiale mask-fade). De gebruiker wil dit vervangen door een **volledig beeldvullende hero** ("fullscreen"), met de koptekst rechtstreeks over het beeld heen (zoals het Vapi-model uit spec sectie 4/5, nu ook toegepast op de homepage) — geen twee-koloms lay-out, geen gemaskeerd kader meer. Het beeld zelf is ook vervangen: een nieuw, door de gebruiker goedgekeurd Higgsfield-beeld met dezelfde "verkreukeld → precies geometrisch"-signatuurstijl, maar op een lichte, warme achtergrond (niet meer bijna-zwart) — bewust zo gegenereerd omdat het donkere beeld niet meer paste op de nu lichte site. Alle overige Taak 11-wijzigingen (tokens, SEO-JSON-LD, em-dash-cleanup, kleur-literal-migratie, kaart-variatie) blijven ongewijzigd — deze taak raakt alleen de hero-sectie se structuur en het beeld.
+
+**Files:**
+- Modify: `index.src.html`
+- Modify: `index.html` (via `npm run build`, niet handmatig)
+- De nieuwe beeldbestanden staan al klaar: `assets/hero-visual-full.webp` (2400px breed, desktop) en `assets/hero-visual-full-sm.webp` (960×1200, mobiel, portrait-crop met de linkerkant van het object — reeds gegenereerd/gecropt en gecommit door de controller). De oude `assets/hero-visual.webp`/`hero-visual-sm.webp` blijven op schijf staan (niet verwijderen — geen ruimte om na te gaan of iets anders ernaar verwijst) maar worden door de homepage niet langer gebruikt.
+
+**Interfaces:**
+- Consumes: `assets/hero-visual-full.webp`/`-sm.webp` (al aangeleverd), alle Taak 11-tokens/structuur (ongewijzigd).
+
+- [ ] **Stap 1: Herbouw de heropbouw naar één laag-op-laag structuur (geen twee-koloms grid meer)**
+
+Zoek de huidige `#top`-sectie met de `.hero-layout`/`.hero-text`/`.hero-visual`-structuur (uit Taak 11/eerdere sessie-taken). Vervang door:
+- Eén relatief gepositioneerde `<section id="top">` (behoud de bestaande verticale padding-conventie van de site, bijv. `clamp(64px,8vw,88px)`, maar controleer of die nog past bij een volledig beeldvullende hero of dat de sectie een eigen, hogere `min-height` nodig heeft om echt "fullscreen" aan te voelen — gebruik je eigen visuele oordeel, iets in de orde van `min-height:clamp(560px,82vh,820px)` is een redelijk startpunt, gebaseerd op eerdere sessie-onderzoek naar hero-hoogtes; niet letterlijk 100vh, dat was eerder al te hoog gebleken).
+- Een absoluut gepositioneerde achtergrond-`<img>` die de hele sectie vult:
+```html
+<img class="hero-full-bg" src="./assets/hero-visual-full.webp" srcset="./assets/hero-visual-full-sm.webp 960w, ./assets/hero-visual-full.webp 2400w" sizes="100vw" width="2400" height="1357" alt="" loading="eager" fetchpriority="high" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center center;z-index:0;">
+```
+(Breedte/hoogte-attributen kloppen al met de aangeleverde bestanden — controleer bij twijfel met een snelle Pillow-check.) Test `object-position` visueel op desktop en mobiel; het beeld se rustige zone zit rechts, dus `right center` kan op sommige breedtes beter werken dan `center center` — kies wat op de meeste viewport-breedtes het minst van het interessante deel van het beeld wegsnijdt.
+- Een scrim-laag die de linkerkant (waar de tekst komt) laat overvloeien naar de paginakleur, zodat de tekst leesbaar blijft zonder een nieuwe, losse overlay-kleur te verzinnen:
+```html
+<div class="hero-full-scrim" style="position:absolute;inset:0;background:linear-gradient(90deg, var(--bg) 0%, var(--bg) 32%, transparent 68%);pointer-events:none;z-index:0;"></div>
+```
+- De bestaande tekst-inhoud (badge, H1, subtekst, CTA, trust-pills) blijft **inhoudelijk en structureel ongewijzigd** — verwijder alleen de omliggende `.hero-layout`/`.hero-text`-wrapper-divs en zet de content direct in de sectie met `position:relative;z-index:1;max-width` vergelijkbaar met de oude `.hero-text`-kolombreedte (zodat de tekst niet over de volle breedte van de nu bredere sectie uitrekt).
+- Verwijder de nu overbodige CSS: `.hero-layout`, `.hero-visual` (incl. `::before`-gloed en `mask-image`, die specifiek voor het oude gemaskeerde-kader-beeld waren), en de bijbehorende media-query-regels. Nieuwe, kleinere CSS-regels voor `.hero-full-bg`/`.hero-full-scrim` mogen als losse classes (i.p.v. alles inline) als dat de sectie leesbaarder maakt — jouw keuze, zolang het patroon van de rest van het bestand (veel inline styling, een paar gedeelde classes voor herbruikte elementen) niet doorbroken wordt.
+
+- [ ] **Stap 2: Mobiele/smalle-viewport-tuning**
+
+Controleer via een Playwright-screenshot op 390px breedte of de scrim-verhouding (32%/68%) nog steeds voldoende leesbaarheid geeft — op een smalle viewport toont `object-fit:cover` een smaller deel van het beeld, dus de scrim-percentages moeten mogelijk breder (bijv. `var(--bg) 0%, var(--bg) 50%, transparent 85%`) om de tekst leesbaar te houden. Gebruik een `@media`-query op `.hero-full-scrim` als de desktop- en mobiele verhouding uiteen moeten lopen.
+
+- [ ] **Stap 3: WCAG-contrastcontrole**
+
+Controleer dat de koptekst/subtekst/badge op de scrim-overgang (het gebied waar het beeld nog gedeeltelijk doorschijnt) voldoende contrast houdt — als de tekst een vaste `max-width` heeft die ruim binnen de `var(--bg) 0%...32%`-zone blijft (waar de scrim vrijwel ondoorzichtig is), is dit vermoedelijk geen probleem, maar verifieer met een screenshot.
+
+- [ ] **Stap 4: Build en verificatie**
+
+```bash
+npm run build
+grep -o "hero-visual-full.webp" index.html | head -1
+grep -o "hero-full-scrim" index.html | head -1
+```
+Expected: beide geven een treffer.
+
+- [ ] **Stap 5: Visuele controle + `npm test`**
+
+Playwright-screenshots desktop (1440px) en mobiel (390px), bekeken met de Read-tool: bevestig dat (a) het beeld nu volledig beeldvullend is, geen kader/doosje meer, (b) de koptekst goed leesbaar is over het beeld, (c) de rustige/lichte zone van het beeld (rechts) nog steeds zichtbaar is en niet volledig onder de scrim verdwijnt, (d) er geen layout-breuk is t.o.v. de rest van de pagina (de secties direct onder de hero moeten nog normaal aansluiten). Draai `npm test` — moet groen blijven.
+
+- [ ] **Stap 6: Commit**
+
+```bash
+git add index.src.html index.html
+git commit -m "feat: homepage-hero volledig beeldvullend met nieuw lichtgetint beeld"
+```
