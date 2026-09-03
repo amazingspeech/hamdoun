@@ -52,6 +52,51 @@ bestaande beelden; alle andere hero-pagina's (Taak 12, 13, 15, 16, 17, 18)
 krijgen geen beeld. Taak 19 (blog-kaart-thumbnails bijwerken naar nieuwe
 foto's) is om dezelfde reden vervallen.
 
+## Verplichte extra stap: hardcoded kleur-literals migreren (ontdekt tijdens Taak 11)
+
+**Dit raakt elke resterende paginataak (12-18), bovenop hun eigen `:root`-swap-stap.**
+
+Taak 11 ontdekte dat `:root`-tokens vervangen door een `<link>` naar het
+gedeelde bestand **niet voldoende is**: de codebase gebruikt op veel plekken
+hardcoded `oklch(...)`-kleurwaarden direct in inline `style=""`-attributen
+(oude cyaan/blauw-accent-hue 220/230/200, en lichte "tekst-op-bijna-zwart"
+-tinten met hue 250) in plaats van `var(--accent-text)` etc. Die literals
+veranderen niet mee met de tokenswap. Zonder deze stap: onleesbare tekst en
+blijvend felblauwe knoppen op wat verder een crème/teal-pagina is geworden.
+
+**Methodologie (dezelfde als Taak 11, per pagina toe te passen als
+onderdeel van de componentregel-audit-stap):**
+
+1. Zoek alle hardcoded `oklch(... 220 ...)`/`oklch(... 230 ...)`/
+   `oklch(... 200 ...)` (oude accentkleur) en `color:#FFF`/vergelijkbare
+   witte tekst-literals in de pagina.
+2. Voor **zelfstandige UI-elementen** (knoppen, bolletjes/dots, randen —
+   dingen die hun eigen interne contrast met hun eigen tekstkleur hebben,
+   ongeacht de paginabodem): roteer de hue naar `188` (dezelfde hue als
+   `--accent` `#0F5C57`), lichtheid/chroma **ongewijzigd**.
+3. Voor kleuren die **als tekst/icoon direct op de nieuwe lichte
+   `--bg`/`--surface` staan** (percentages, iconen, labels): roteer naar
+   hue `188` én **verlaag de lichtheid naar ~42-45%** voor voldoende
+   contrast — controleer met een WCAG-berekening (zie Taak 21's
+   contrastformule) dat het resultaat ≥ 4.5:1 haalt tegen zijn achtergrond.
+4. Voor lichte "tekst-op-donker"-literals (hue 250, lichtheid 70-98%) die
+   nu op een lichte achtergrond staan: vervang door `var(--text-muted)` of
+   `var(--accent-text)` in plaats van een nieuwe eigen hardcoded waarde.
+5. `color:#FFF`/vergelijkbare witte-tekst-literals op secties die nu een
+   lichte `--bg` hebben: verwijderen (tekst erft dan `var(--text)` via
+   `body`) of expliciet naar `var(--text)` zetten.
+6. **Niet aanraken**: secties die *bewust* donker blijven (als de pagina
+   zoiets heeft, zoals de homepage's "why-us"-band en footer) — die hebben
+   hun eigen, intern consistente donkere styling en vallen buiten deze
+   migratie. Alleen aanpassen als de sectie zelf naar het lichte thema gaat.
+7. Documenteer in het taakrapport welke literals gevonden en aangepast zijn
+   (net als Taak 11 deed) — dit is geen stilzwijgende bijvangst, het is een
+   expliciet te rapporteren onderdeel van de taak.
+
+Dit is bewust **geen losse taak** maar een vaste toevoeging aan elke
+resterende paginataak se componentregel-audit-stap: elke pagina heeft zijn
+eigen literals, dus het hoort bij de taak die de pagina toch al aanraakt.
+
 ---
 
 ### Taak 1: Gedeeld tokenbestand aanmaken
