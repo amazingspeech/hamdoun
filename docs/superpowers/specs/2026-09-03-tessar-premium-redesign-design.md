@@ -31,13 +31,13 @@ merkkleur-verzadiging in AI/tech-branding.
   afgewezen voor zowel Lovable als Higgsfield's eigen website-builder-product).
 - **Nederlands-only, één stijl van CTA-copy, AVG/EU-servers-taal** blijven
   ongewijzigde harde eisen.
-- **Geen Higgsfield-beeldgeneratie zonder expliciet overleg vooraf.** De
-  gebruiker beheert een beperkt credit-budget (starter-plan; ~180 credits over
-  bij het schrijven van dit document) en wil per generatie-batch vooraf
-  akkoord geven — niet achteraf voor een voldongen feit worden gesteld. Elke
-  implementatietaak die beeldgeneratie behelst, vraagt eerst toestemming (aan
-  de gebruiker, via de controller/implementer) voordat er credits worden
-  besteed.
+- **Geen Higgsfield-beeldgeneratie meer, door niemand, tot de gebruiker er
+  zelf om vraagt.** Aanvankelijk gold "toestemming per batch"; na een
+  mislukte poging (zie sectie 4 — een op zich klichévrij concept dat
+  volledig losstond van Tessar's eigen merk-identiteit) is dit aangescherpt
+  tot een volledige pauze. Dit project gebruikt uitsluitend de twee al
+  bestaande, eerder gegenereerde beelden (homepage, AI-telefonist-pagina).
+  Geen enkele taak in dit plan mag een nieuwe Higgsfield-generatie starten.
 
 ## 1. Kleursysteem
 
@@ -126,44 +126,59 @@ van het merkteken zelf) worden het uitgangspunt nu de site licht wordt; de
 eventuele toekomstige donkere contexten (bijv. een voettekst-vlak in
 `--surface-inset` als dat ooit donker zou worden — vooralsnog niet gepland).
 
-## 4. Beeldtaal: van sculptuur naar documentair
+## 4. Beeldtaal: bestaande beelden hergebruiken, geen nieuwe generatie
 
-De twee al gegenereerde beelden deze sessie (het "gevouwen metaal"-motief op
-de homepage en de telefoonhoorn op de AI-telefonist-pagina) zijn **sculpturale
-kunstobject-stills**: mooi op zichzelf, maar in geen van de vijf onderzochte
-premium-referenties (Linear, Vercel, Anthropic, Ramp, Vapi) staat een
-vergelijkbaar "kunstwerk-in-een-kader" als primair hero-bewijs. Vapi — de
-meest directe categorie-vergelijking — gebruikt in plaats daarvan een
-**beeldvullende, documentair-ogende foto van een echt persoon in een echte
-situatie**, met de kop-tekst er rechtstreeks overheen (geen kader, geen
-rand).
+**Herzien tijdens implementatie, op expliciete instructie van de gebruiker.**
+Een poging om voor de homepage nieuwe, documentair-ogende hero-fotografie te
+laten genereren (Vapi-model: beeldvullende foto van een echt persoon in een
+echte situatie) liep vast op twee mislukte concepten — waarvan de tweede
+(een bakker/bloemist-scène) weliswaar los van eerdere fouten stond
+(geen kliché, wel een AI-automatiserings-signaal verwerkt), maar **volledig
+losstond van Tessar's eigen merk-identiteit**: de naam "Tessar" en het
+merkicoon zijn een geometrische wireframe-kubus (tesseract-achtig) — een
+willekeurige ambachtelijke-winkel-scène past daar niet bij, hoe goed
+uitgevoerd ook. Dit werd terecht afgekeurd.
 
-Nieuwe richtlijn voor alle toekomstige Higgsfield-generaties in dit project:
+**Nieuwe, definitieve richtlijn voor dit project:**
 
-- **Documentair/foto-realistisch, geen sculptuur/kunstobject-stijl.** Mensen
-  in herkenbare, alledaagse Nederlandse bedrijfscontext (kantoor, balie,
-  werkplek) — niet geïsoleerde still-life-objecten.
-  Extra kleursturing: warme oker/klei-tonen in de scène passen, geen
-  neon-cyaan/paars-gloed (bestaande AI-tell-regel), en een subtiele teal-hint
-  is toegestaan (bijv. kleding, een detail) maar niet verplicht.
-- **Beeldvullend, geen kader.** Foto's worden full-bleed toegepast met een
-  scrim/overlay voor tekstleesbaarheid — geen rounded-rectangle "doosje" meer
-  (dat gaf het plakplaatje-effect).
-- De reeds gegenereerde sculptuur-beelden (homepage, AI-telefonist) worden
-  **vervangen**, niet hergebruikt, zodra de bijbehorende pagina's aan de beurt
-  zijn in de uitrol (sectie 12) — ze pasten bij de vorige, inmiddels
-  losgelaten aanpak.
-- **Toestemming vooraf voor elke generatie-batch** (zie niet-onderhandelbare
-  randvoorwaarden) — dit geldt ook tijdens implementatie: een implementer mag
-  nooit zelfstandig Higgsfield-jobs starten zonder dat dit als expliciete,
-  goedgekeurde stap in het implementatieplan staat.
-- **OG-/social-preview-beeld volgt het hero-beeld.** Waar een pagina een nieuw
-  hero-beeld krijgt, wordt hetzelfde (of een toegesneden variant) ook het
-  `og:image`/`twitter:image` van die pagina — zoals al gedaan bij de
-  AI-telefonist-pagina. Geen pagina houdt een oud flat-icoon als social-preview
-  terwijl de pagina zelf al vernieuwd is.
+- **Geen nieuwe Higgsfield-generaties meer**, door niemand — controller
+  of implementer — totdat de gebruiker zelf expliciet om nieuwe fotografie
+  vraagt. Dit vervangt de eerdere "toestemming per batch"-regel met een
+  hardere: generatie is volledig gepauzeerd, geen batches meer voorstellen.
+- **De twee al bestaande, eerder deze sessie gegenereerde beelden blijven
+  gehandhaafd, niet vervangen:** het "gevouwen metaal"-motief (homepage) en
+  de telefoonhoorn (AI-telefonist-pagina). Beide zijn geometrisch/sculptuur
+  van aard — wat, met de tesseract-connectie nu expliciet erkend, párt bij
+  het merk in plaats van ertegen inwerkt zoals eerder aangenomen. Ze worden
+  in de uitrol (sectie 12) alleen qua **kleur/scrim aangepast** aan het
+  nieuwe lichte thema (dezelfde soort fix als al eerder live toegepast op de
+  homepage: radiale mask-fade + warme gloed i.p.v. een harde kader-rand),
+  niet vervangen door iets nieuws.
+- **Pagina's zonder bestaand bespoke beeld krijgen voorlopig geen hero-foto.**
+  Dit raakt `services.html`, `chatbots.html`, `ai-receptioniste-voor-bedrijven.html`,
+  `ai-chatbot-voor-bedrijven.html`, `bedrijfsprocessen-automatiseren-met-ai.html`,
+  `workflow-automatisering-met-ai.html` en `ai-implementatie-laten-uitvoeren.html`.
+  Deze pagina's krijgen wél het volledige kleursysteem, de Outfit-koptekst,
+  de componentregel-audit en motion — alleen geen nieuw beeld. Dit volgt het
+  Vercel/Linear-model uit het eerdere sitebrede onderzoek (dit was al een
+  volwaardig onderbouwde premium-richting, geen noodgreep): typografisch
+  zelfvertrouwen en lay-out dragen de pagina, geen beeld nodig. Hun huidige
+  `og:image`-thumbnails (de generieke flat-iconen) blijven vooralsnog staan —
+  ook dat wordt pas vervangen zodra er nieuwe fotografie is.
+- Wanneer de gebruiker later alsnog nieuwe fotografie laat maken, geldt
+  alsnog: documentair/foto-realistisch waar zinvol, beeldvullend zonder
+  kader, en — nieuw geleerd — **eerst expliciet toetsen of het concept bij
+  Tessar's eigen merk-identiteit past**, niet alleen of het op zichzelf goed
+  en klichévrij is.
 
-## 5. Hero-patroon (alle pagina's met een hero/intro-sectie)
+## 5. Hero-patroon
+
+Dit patroon geldt alleen voor de twee pagina's met een bestaand bespoke beeld
+(homepage, AI-telefonist — sectie 4). `services.html` en `chatbots.html`
+hebben ook een gecentreerde hero-sectie, maar krijgen **geen beeld**: die
+twee behouden een tekst-gedreven hero (groter/zelfverzekerder Outfit-koptekst,
+geen beeldvullende foto, geen kader) — het Vercel/Linear-model uit het
+sitebrede onderzoek, niet dit beeld-plus-scrim-patroon.
 
 ```
 ┌──────────────────────────────────────────────┐
@@ -371,25 +386,27 @@ voor bestaat. Vandaar het gedeelde bestand.
 ## 12. Pagina-inventaris en uitrol
 
 Alle pagina's krijgen minimaal het nieuwe kleursysteem (sectie 1) en een scan
-op de componentregels (sectie 7). Pagina's met een hero/intro-sectie krijgen
-daarnaast het nieuwe hero-patroon (sectie 5) met een nieuwe, documentaire foto
-(sectie 4, na toestemming). De gedeelde elementen uit sectie 9 worden **één
-keer** aangepast en gelden daarna voor alle pagina's die ze insluiten.
+op de componentregels (sectie 7). De twee pagina's met een bestaand bespoke
+beeld krijgen dat beeld herkleurd/opnieuw ge-scrimd voor het lichte thema
+(sectie 4/5) — geen nieuwe generatie. De overige hero-pagina's krijgen géén
+beeld (sectie 4), enkel kleursysteem/typografie/motion. De gedeelde elementen
+uit sectie 9 worden **één keer** aangepast en gelden daarna voor alle
+pagina's die ze insluiten.
 
-| Pagina | Kleursysteem | Nieuw hero-beeld | Opmerking |
+| Pagina | Kleursysteem | Hero-beeld | Opmerking |
 |---|---|---|---|
-| `index.src.html` (homepage) | ✅ | ✅ (vervangt het bronzen fold-beeld) | dc-runtime, via `npm run build` |
-| `ai-telefonist-voor-bedrijf.html` | ✅ | ✅ (vervangt de hoorn-sculptuur) | |
-| `ai-receptioniste-voor-bedrijven.html` | ✅ | ✅ | had nog het generieke flat-icoon |
-| `ai-chatbot-voor-bedrijven.html` | ✅ | ✅ | had nog het generieke flat-icoon |
-| `bedrijfsprocessen-automatiseren-met-ai.html` | ✅ | ✅ | had nog het generieke flat-icoon |
-| `workflow-automatisering-met-ai.html` | ✅ | ✅ | had nog het generieke flat-icoon |
-| `ai-implementatie-laten-uitvoeren.html` | ✅ | te beoordelen tijdens implementatie | inhoud nog niet geïnspecteerd |
-| `services.html` | ✅ | te beoordelen tijdens implementatie | inhoud nog niet geïnspecteerd |
-| `chatbots.html` | ✅ | te beoordelen tijdens implementatie | inhoud nog niet geïnspecteerd |
+| `index.src.html` (homepage) | ✅ | bestaand fold-beeld, herkleurd/scrim aangepast | dc-runtime, via `npm run build` |
+| `ai-telefonist-voor-bedrijf.html` | ✅ | bestaande hoorn-sculptuur, herkleurd/scrim aangepast | |
+| `ai-receptioniste-voor-bedrijven.html` | ✅ | geen (nog geen bespoke beeld, geen nieuwe generatie) | og:image blijft het huidige flat-icoon |
+| `ai-chatbot-voor-bedrijven.html` | ✅ | geen | og:image blijft het huidige flat-icoon |
+| `bedrijfsprocessen-automatiseren-met-ai.html` | ✅ | geen | og:image blijft het huidige flat-icoon |
+| `workflow-automatisering-met-ai.html` | ✅ | geen | og:image blijft het huidige flat-icoon |
+| `ai-implementatie-laten-uitvoeren.html` | ✅ | geen | og:image blijft het huidige flat-icoon |
+| `services.html` | ✅ | geen — typografie/lay-out draagt de hero (Vercel/Linear-model) | heeft wel een gecentreerde hero-sectie, alleen zonder beeld |
+| `chatbots.html` | ✅ | geen — idem | heeft wel een gecentreerde hero-sectie, alleen zonder beeld |
 | `prijzen.html` | ✅ | nee (prijstabel, geen hero-behoefte) | `data-mcp-*`-attributen (MCP-server) blijven ongewijzigd |
 | `contact.html` | ✅ | nee | formulier-functionaliteit blijft ongewijzigd; zie sectie 8 voor extra veld-states |
-| `blog.html` | ✅ | nee (overzichtspagina, kaarten blijven) | kaart-thumbnails volgen het per-artikel-beeld |
+| `blog.html` | ✅ | nee (overzichtspagina, kaarten blijven) | kaart-thumbnails blijven ongewijzigd (geen nieuwe artikel-beelden) |
 | `privacy.html` | ✅ | nee | puur tekst, geen hero |
 | `googleb2c866753bf6b639.html` | — | — | Google-verificatiebestand, geen echte pagina, buiten scope |
 | Cookie-banner + Tess-widget (sectie 9) | ✅ | n.v.t. | gedeeld, één keer aan te passen |
@@ -408,10 +425,9 @@ keer** aangepast en gelden daarna voor alle pagina's die ze insluiten.
   al bestaande component-CSS (`.hero-badge`, `.hero-cta-primary`, animaties,
   etc.) blijft inline per pagina; die volledig consolideren tot een
   gedeelde stylesheet is een grotere, aparte afweging.
-- **`ai-implementatie-laten-uitvoeren.html`, `services.html`, `chatbots.html`
-  se precieze hero-behoefte** — inhoud van deze drie pagina's is nog niet
-  geïnspecteerd; dit wordt onderdeel van de implementatietaak voor die
-  pagina, niet vooraf hier vastgelegd.
+- **Nieuwe hero-fotografie voor de pagina's zonder bestaand beeld** — bewust
+  uitgesteld tot de gebruiker er zelf om vraagt (zie sectie 4). Tot die tijd
+  dragen typografie en lay-out die pagina's.
 
 ## 14. Eind-consistentiecontrole
 
