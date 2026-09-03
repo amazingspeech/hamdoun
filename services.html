@@ -23,10 +23,10 @@
 <script src="./assets/tessar-prefs.js" defer></script>
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Diensten — Tessar | AI-automatisering, applicaties & advies</title>
+<title>Diensten van Tessar | AI-automatisering, applicaties & advies</title>
 <meta name="description" content="Vijf AI-diensten van Tessar: procesautomatisering, voorspellende modellen, AI-applicaties, systeemintegratie en AI-readiness advies voor het Nederlandse mkb.">
 <link rel="canonical" href="https://tessar.nl/services.html">
-<meta name="theme-color" content="#0a0a0f">
+<meta name="theme-color" content="#F7F2E9">
 <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon-32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="./assets/favicon-16.png">
 <link rel="apple-touch-icon" href="./assets/apple-touch-icon.png">
@@ -34,11 +34,11 @@
 <meta property="og:type" content="website">
 <meta property="og:locale" content="nl_NL">
 <meta property="og:url" content="https://tessar.nl/services.html">
-<meta property="og:title" content="Diensten — Tessar">
+<meta property="og:title" content="Diensten van Tessar">
 <meta property="og:description" content="AI-procesautomatisering, voorspellende modellen, AI-geintegreerde applicaties en AI-readiness advies voor het Nederlandse en Europese mkb.">
 <meta property="og:image" content="https://tessar.nl/og-image.jpg">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Diensten — Tessar">
+<meta name="twitter:title" content="Diensten van Tessar">
 <meta name="twitter:description" content="AI-procesautomatisering, voorspellende modellen, AI-geintegreerde applicaties en AI-readiness advies voor het Nederlandse en Europese mkb.">
 <meta name="twitter:image" content="https://tessar.nl/og-image.jpg">
 
@@ -65,26 +65,16 @@
     { "@type": "Question", "name": "Kan ik één dienst apart inhuren, of moet het een compleet traject zijn?", "acceptedAnswer": { "@type": "Answer", "text": "Elke dienst is los af te nemen, met een eigen scope en prijs. Veel klanten beginnen met één concreet proces en breiden later uit." } },
     { "@type": "Question", "name": "Wat kost een traject?", "acceptedAnswer": { "@type": "Answer", "text": "De prijs ligt per traject vooraf vast, maar hangt af van de scope. Een vrijblijvende kennismaking is gratis." } },
     { "@type": "Question", "name": "Werken jullie met onze bestaande systemen?", "acceptedAnswer": { "@type": "Answer", "text": "Ja. Automatiseringen en applicaties worden gebouwd rond wat je al gebruikt: je CRM, ERP, database of interne tools." } },
-    { "@type": "Question", "name": "Is onze data veilig?", "acceptedAnswer": { "@type": "Answer", "text": "Data wordt verwerkt volgens de AVG en, waar relevant, de EU AI Act, op EU-servers — je data blijft in de EU." } },
-    { "@type": "Question", "name": "We weten niet welke dienst we nodig hebben — wat nu?", "acceptedAnswer": { "@type": "Answer", "text": "AI-readiness & advies is daarvoor bedoeld — een kort traject dat in kaart brengt waar AI het meeste oplevert." } }
+    { "@type": "Question", "name": "Is onze data veilig?", "acceptedAnswer": { "@type": "Answer", "text": "Data wordt verwerkt volgens de AVG en, waar relevant, de EU AI Act, op EU-servers. Je data blijft in de EU." } },
+    { "@type": "Question", "name": "We weten niet welke dienst we nodig hebben, wat nu?", "acceptedAnswer": { "@type": "Answer", "text": "AI-readiness & advies is daarvoor bedoeld: een kort traject dat in kaart brengt waar AI het meeste oplevert." } }
   ]
 }
 </script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./assets/tessar-design-tokens.css">
 <style>
-  :root {
-    color-scheme: dark;
-    --bg: oklch(14% 0.016 260);
-    --surface: oklch(19% 0.016 260);
-    --text: oklch(95% 0.006 90);
-    --text-muted: oklch(72% 0.014 140);
-    --text-muted-2: oklch(60% 0.014 140);
-    --border: oklch(28% 0.014 260);
-    --accent-text: oklch(66% 0.13 226);
-    --surface-inset: oklch(25% 0.018 260);
-  }
   body { transition:background-color 200ms ease, color 200ms ease; }
   html, body { margin:0; padding:0; background:var(--bg); }
   html { scroll-behavior:smooth; }
@@ -120,9 +110,9 @@
   /* Sits left of the fixed Tess concierge launcher (60px circle at bottom:24px/right:24px, see
      tessar-concierge-widget.js), same row, so it never collides with the launcher or its hint bubble
      (which pops up above the launcher, not beside it). */
-  #back-to-top { position:fixed; right:100px; bottom:24px; z-index:40; width:48px; height:48px; border-radius:50%; border:none; background:oklch(70% 0.14 220); color:#001a2e; display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:0 8px 24px oklch(20% 0.02 255 / 0.25); opacity:0; transform:translateY(12px); pointer-events:none; transition:opacity 260ms ease, transform 260ms ease, box-shadow 200ms ease; }
+  #back-to-top { position:fixed; right:100px; bottom:24px; z-index:40; width:48px; height:48px; border-radius:50%; border:none; background:oklch(70% 0.14 188); color:#001a2e; display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:0 8px 24px oklch(20% 0.02 255 / 0.25); opacity:0; transform:translateY(12px); pointer-events:none; transition:opacity 260ms ease, transform 260ms ease, box-shadow 200ms ease; }
   #back-to-top.is-visible { opacity:1; transform:translateY(0); pointer-events:auto; }
-  #back-to-top:hover { transform:translateY(-3px); box-shadow:0 12px 32px rgba(0,212,255,0.35); }
+  #back-to-top:hover { transform:translateY(-3px); box-shadow:0 12px 32px rgba(15,92,87,0.35); }
   #back-to-top:focus-visible { outline:2px solid var(--accent-text); outline-offset:3px; }
   @media (max-width: 480px) { #back-to-top { right:92px; bottom:16px; } }
 
@@ -159,7 +149,7 @@
       <a href="./chatbots.html" class="nav-link" style="color:var(--text-muted);transition:color 200ms ease;">Chatbots</a>
       <a href="./blog.html" class="nav-link" style="color:var(--text-muted);transition:color 200ms ease;">Blog</a>
       <a href="./contact.html" class="nav-link" style="color:var(--text-muted);transition:color 200ms ease;">Contact</a>
-      <a class="nav-link" href="./index.html#contact" style="background:oklch(70% 0.14 220);color:#001a2e;padding:10px 20px;border-radius:6px;font-weight:600;transition:all 200ms ease;">Plan gesprek</a>
+      <a class="nav-link" href="./index.html#contact" style="background:oklch(70% 0.14 188);color:#001a2e;padding:10px 20px;border-radius:6px;font-weight:600;transition:all 200ms ease;">Plan gesprek</a>
     </nav>
     <button type="button" class="nav-toggle" id="nav-toggle-btn" aria-label="Menu" aria-expanded="false" aria-controls="nav-mobile-panel">
       <span></span><span></span><span></span>
@@ -172,15 +162,15 @@
       <a href="./chatbots.html" style="color:var(--text-muted);transition:color 200ms ease;">Chatbots</a>
       <a href="./blog.html" style="color:var(--text-muted);transition:color 200ms ease;">Blog</a>
       <a href="./contact.html" style="color:var(--text-muted);transition:color 200ms ease;">Contact</a>
-      <a href="./index.html#contact" style="background:oklch(70% 0.14 220);color:#001a2e;padding:10px 20px;border-radius:6px;font-weight:600;transition:all 200ms ease;">Plan gesprek</a>
+      <a href="./index.html#contact" style="background:oklch(70% 0.14 188);color:#001a2e;padding:10px 20px;border-radius:6px;font-weight:600;transition:all 200ms ease;">Plan gesprek</a>
   </div>
 </header>
 
-<section style="position:relative;overflow:hidden;background:var(--bg);color:#FFF;padding:clamp(64px,9vw,100px) clamp(20px,5vw,40px) clamp(56px,7vw,80px);text-align:center;">
+<section style="position:relative;overflow:hidden;background:var(--bg);padding:clamp(64px,9vw,100px) clamp(20px,5vw,40px) clamp(56px,7vw,80px);text-align:center;">
   <div style="max-width:800px;margin:0 auto;position:relative;z-index:1;">
-    <div style="display:inline-block;background:oklch(70% 0.14 220 / 0.15);border:1px solid oklch(70% 0.14 220 / 0.3);padding:10px 16px;border-radius:20px;margin-bottom:24px;font-size:0.8125rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:oklch(70% 0.14 220);">Diensten</div>
-    <h1 style="font:800 clamp(2rem,4.5vw,3rem)/1.2 'IBM Plex Sans';margin:0 0 18px;letter-spacing:-0.02em;">Vijf diensten, één aanpak</h1>
-    <p style="font:400 clamp(1rem,1.6vw,1.125rem)/1.7 'IBM Plex Sans';color:oklch(75% 0.10 250);margin:0;">Elk apart afgebakend, met een vaste scope en prijsindicatie vooraf. Los in te zetten of te combineren, afhankelijk van wat jouw situatie vraagt.</p>
+    <div style="display:inline-block;background:oklch(70% 0.14 188 / 0.15);border:1px solid oklch(70% 0.14 188 / 0.3);padding:10px 16px;border-radius:20px;margin-bottom:24px;font-size:0.8125rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--accent-text);">Diensten</div>
+    <h1 style="font:800 clamp(2rem,4.5vw,3rem)/1.2 'Outfit';margin:0 0 18px;letter-spacing:-0.02em;">Vijf diensten, één aanpak</h1>
+    <p style="font:400 clamp(1rem,1.6vw,1.125rem)/1.7 'IBM Plex Sans';color:var(--text-muted);margin:0;">Elk apart afgebakend, met een vaste scope en prijsindicatie vooraf. Los in te zetten of te combineren, afhankelijk van wat jouw situatie vraagt.</p>
   </div>
 </section>
 
@@ -188,8 +178,8 @@
   <div data-reveal-grid style="max-width:1100px;margin:0 auto;display:flex;flex-direction:column;gap:28px;">
 
     <div data-reveal class="svc-card" style="border:1px solid var(--border);border-radius:12px;padding:clamp(28px,4vw,40px);gap:clamp(16px,3vw,28px);align-items:start;transition:opacity 600ms ease, transform 600ms ease;">
-      <div class="icon icon-workflow" style="width:30px;height:30px;color:var(--accent-text);margin-top:4px;"></div>
-      <div class="svc-num" style="font:600 0.75rem/1.2 'IBM Plex Mono';letter-spacing:0.05em;text-transform:uppercase;color:var(--accent-text);padding-top:8px;">01</div>
+      <div class="icon icon-workflow" style="width:30px;height:30px;color:oklch(45% 0.14 188);margin-top:4px;"></div>
+      <div class="svc-num" style="font:600 0.75rem/1.2 'IBM Plex Mono';letter-spacing:0.05em;text-transform:uppercase;color:oklch(45% 0.14 188);padding-top:8px;">01</div>
       <div>
         <h2 style="font:600 1.375rem/1.3 'IBM Plex Sans';margin:0 0 12px;color:var(--text);">AI-procesautomatisering</h2>
         <p style="font:400 1rem/1.7 'IBM Plex Sans';color:var(--text-muted);margin:0 0 16px;">Automatisering van het handmatige werk dat nu tussen je systemen in blijft hangen: factuurverwerking, data-invoer, documentclassificatie, goedkeuringen, rapportages. De automatisering leest en schrijft in de tools die je al gebruikt, dus niemand hoeft zijn dagelijkse werkwijze aan te passen.</p>
@@ -203,8 +193,8 @@
     </div>
 
     <div data-reveal class="svc-card" style="border:1px solid var(--border);border-radius:12px;padding:clamp(28px,4vw,40px);gap:clamp(16px,3vw,28px);align-items:start;transition:opacity 600ms ease, transform 600ms ease;">
-      <div class="icon icon-trending-up" style="width:30px;height:30px;color:var(--accent-text);margin-top:4px;"></div>
-      <div class="svc-num" style="font:600 0.75rem/1.2 'IBM Plex Mono';letter-spacing:0.05em;text-transform:uppercase;color:var(--accent-text);padding-top:8px;">02</div>
+      <div class="icon icon-trending-up" style="width:30px;height:30px;color:oklch(42% 0.15 170);margin-top:4px;"></div>
+      <div class="svc-num" style="font:600 0.75rem/1.2 'IBM Plex Mono';letter-spacing:0.05em;text-transform:uppercase;color:oklch(42% 0.15 170);padding-top:8px;">02</div>
       <div>
         <h2 style="font:600 1.375rem/1.3 'IBM Plex Sans';margin:0 0 12px;color:var(--text);">Voorspellende modellen & besluitondersteuning</h2>
         <p style="font:400 1rem/1.7 'IBM Plex Sans';color:var(--text-muted);margin:0 0 16px;">Modellen getraind op je eigen data om vraag te voorspellen, risico's te scoren, afwijkingen te detecteren of binnenkomende gegevens te classificeren. Opgeleverd als dashboard, als API die je systemen kunnen aanroepen, of beide, met nauwkeurigheidscijfers die je kunt controleren tegen de werkelijkheid.</p>
@@ -218,11 +208,11 @@
     </div>
 
     <div data-reveal class="svc-card" style="border:1px solid var(--border);border-radius:12px;padding:clamp(28px,4vw,40px);gap:clamp(16px,3vw,28px);align-items:start;transition:opacity 600ms ease, transform 600ms ease;">
-      <div class="icon icon-puzzle" style="width:30px;height:30px;color:var(--accent-text);margin-top:4px;"></div>
-      <div class="svc-num" style="font:600 0.75rem/1.2 'IBM Plex Mono';letter-spacing:0.05em;text-transform:uppercase;color:var(--accent-text);padding-top:8px;">03</div>
+      <div class="icon icon-puzzle" style="width:30px;height:30px;color:oklch(45% 0.14 188);margin-top:4px;"></div>
+      <div class="svc-num" style="font:600 0.75rem/1.2 'IBM Plex Mono';letter-spacing:0.05em;text-transform:uppercase;color:oklch(45% 0.14 188);padding-top:8px;">03</div>
       <div>
         <h2 style="font:600 1.375rem/1.3 'IBM Plex Sans';margin:0 0 12px;color:var(--text);">AI-geintegreerde applicaties</h2>
-        <p style="font:400 1rem/1.7 'IBM Plex Sans';color:var(--text-muted);margin:0 0 16px;">Volwaardige applicaties met AI als kernfunctie in plaats van een toegevoegde feature: interne tools, klantgerichte producten en AI-agents die rechtstreeks in een bestaand platform worden ingebouwd — denk aan een AI-receptionist of AI-telefonist die telefonisch klantcontact overneemt. Omvat architectuur, backend, frontend en de modellaag als een geheel.</p>
+        <p style="font:400 1rem/1.7 'IBM Plex Sans';color:var(--text-muted);margin:0 0 16px;">Volwaardige applicaties met AI als kernfunctie in plaats van een toegevoegde feature: interne tools, klantgerichte producten en AI-agents die rechtstreeks in een bestaand platform worden ingebouwd. Denk aan een AI-receptionist of AI-telefonist die telefonisch klantcontact overneemt. Omvat architectuur, backend, frontend en de modellaag als een geheel.</p>
         <ul style="margin:0 0 16px;padding:0 0 0 20px;font:400 0.9375rem/1.7 'IBM Plex Sans';color:var(--text-muted);">
           <li>Productarchitectuur en technische scoping</li>
           <li>Full-stack ontwikkeling met geintegreerde AI-laag</li>
@@ -234,8 +224,8 @@
     </div>
 
     <div data-reveal class="svc-card" style="border:1px solid var(--border);border-radius:12px;padding:clamp(28px,4vw,40px);gap:clamp(16px,3vw,28px);align-items:start;transition:opacity 600ms ease, transform 600ms ease;">
-      <div class="icon icon-network" style="width:30px;height:30px;color:var(--accent-text);margin-top:4px;"></div>
-      <div class="svc-num" style="font:600 0.75rem/1.2 'IBM Plex Mono';letter-spacing:0.05em;text-transform:uppercase;color:var(--accent-text);padding-top:8px;">04</div>
+      <div class="icon icon-network" style="width:30px;height:30px;color:oklch(42% 0.15 170);margin-top:4px;"></div>
+      <div class="svc-num" style="font:600 0.75rem/1.2 'IBM Plex Mono';letter-spacing:0.05em;text-transform:uppercase;color:oklch(42% 0.15 170);padding-top:8px;">04</div>
       <div>
         <h2 style="font:600 1.375rem/1.3 'IBM Plex Sans';margin:0 0 12px;color:var(--text);">Systeemintegratie & datapipelines</h2>
         <p style="font:400 1rem/1.7 'IBM Plex Sans';color:var(--text-muted);margin:0 0 16px;">Automatiseringen en modellen zijn alleen zo goed als de data die ze voeden. Deze dienst koppelt je CRM, ERP, databases en interne tools zodat informatie automatisch stroomt in plaats van via handmatige exports en copy-paste.</p>
@@ -250,8 +240,8 @@
     </div>
 
     <div data-reveal class="svc-card" style="border:1px solid var(--border);border-radius:12px;padding:clamp(28px,4vw,40px);gap:clamp(16px,3vw,28px);align-items:start;transition:opacity 600ms ease, transform 600ms ease;">
-      <div class="icon icon-scan-search" style="width:30px;height:30px;color:var(--accent-text);margin-top:4px;"></div>
-      <div class="svc-num" style="font:600 0.75rem/1.2 'IBM Plex Mono';letter-spacing:0.05em;text-transform:uppercase;color:var(--accent-text);padding-top:8px;">05</div>
+      <div class="icon icon-scan-search" style="width:30px;height:30px;color:oklch(45% 0.14 188);margin-top:4px;"></div>
+      <div class="svc-num" style="font:600 0.75rem/1.2 'IBM Plex Mono';letter-spacing:0.05em;text-transform:uppercase;color:oklch(45% 0.14 188);padding-top:8px;">05</div>
       <div>
         <h2 style="font:600 1.375rem/1.3 'IBM Plex Sans';margin:0 0 12px;color:var(--text);">AI-readiness & advies</h2>
         <p style="font:400 1rem/1.7 'IBM Plex Sans';color:var(--text-muted);margin:0 0 16px;">Een kort, gericht traject om in kaart te brengen waar AI in jouw organisatie realistisch waarde kan toevoegen, te toetsen of je data dat ondersteunt, en use cases te rangschikken op verwacht rendement en inspanning. De uitkomst is een geprioriteerd plan met echte planning en budgetranges, geen generiek rapport.</p>
@@ -281,7 +271,6 @@
 <section style="padding:clamp(56px,7vw,88px) clamp(20px,5vw,40px);background:var(--bg);border-top:1px solid var(--border);">
   <div style="max-width:800px;margin:0 auto;">
     <div style="text-align:center;margin-bottom:clamp(32px,4vw,40px);">
-      <div style="font:500 0.8125rem/1.3 'IBM Plex Mono';letter-spacing:0.06em;text-transform:uppercase;color:var(--accent-text);margin-bottom:12px;">Vragen</div>
       <h2 style="font:600 clamp(1.5rem,3vw,1.875rem)/1.3 'IBM Plex Sans';margin:0;letter-spacing:-0.02em;color:var(--text);">Veelgestelde vragen</h2>
     </div>
     <div style="display:flex;flex-direction:column;gap:12px;">
@@ -290,14 +279,14 @@
           <span>Kan ik één dienst apart inhuren, of moet het een compleet traject zijn?</span>
           <div class="icon icon-chevron-down faq-chevron" style="width:18px;height:18px;color:var(--accent-text);transition:transform 200ms ease;flex-shrink:0;"></div>
         </summary>
-        <p style="font:400 0.9375rem/1.65 'IBM Plex Sans';color:var(--text-muted);margin:14px 0 0;">Elke dienst hierboven is los af te nemen, met een eigen scope en prijs. Veel klanten beginnen met één concreet proces en breiden later uit — dat hoeft niet vooraf vastgelegd te worden.</p>
+        <p style="font:400 0.9375rem/1.65 'IBM Plex Sans';color:var(--text-muted);margin:14px 0 0;">Elke dienst hierboven is los af te nemen, met een eigen scope en prijs. Veel klanten beginnen met één concreet proces en breiden later uit. Dat hoeft niet vooraf vastgelegd te worden.</p>
       </details>
       <details class="faq-item" style="border:1px solid var(--border);border-radius:10px;padding:18px 22px;background:var(--surface);">
         <summary style="display:flex;align-items:center;justify-content:space-between;gap:16px;font:600 1rem/1.4 'IBM Plex Sans';color:var(--text);cursor:pointer;">
           <span>Wat kost een traject?</span>
           <div class="icon icon-chevron-down faq-chevron" style="width:18px;height:18px;color:var(--accent-text);transition:transform 200ms ease;flex-shrink:0;"></div>
         </summary>
-        <p style="font:400 0.9375rem/1.65 'IBM Plex Sans';color:var(--text-muted);margin:14px 0 0;">De prijs ligt per traject vooraf vast, maar hangt af van de scope. Een vrijblijvende kennismaking is gratis — daar bespreken we een concrete prijsindicatie voor jouw situatie, dus geen verrassingen achteraf.</p>
+        <p style="font:400 0.9375rem/1.65 'IBM Plex Sans';color:var(--text-muted);margin:14px 0 0;">De prijs ligt per traject vooraf vast, maar hangt af van de scope. Een vrijblijvende kennismaking is gratis. Daar bespreken we een concrete prijsindicatie voor jouw situatie, dus geen verrassingen achteraf.</p>
       </details>
       <details class="faq-item" style="border:1px solid var(--border);border-radius:10px;padding:18px 22px;background:var(--surface);">
         <summary style="display:flex;align-items:center;justify-content:space-between;gap:16px;font:600 1rem/1.4 'IBM Plex Sans';color:var(--text);cursor:pointer;">
@@ -311,14 +300,14 @@
           <span>Is onze data veilig?</span>
           <div class="icon icon-chevron-down faq-chevron" style="width:18px;height:18px;color:var(--accent-text);transition:transform 200ms ease;flex-shrink:0;"></div>
         </summary>
-        <p style="font:400 0.9375rem/1.65 'IBM Plex Sans';color:var(--text-muted);margin:14px 0 0;">Data wordt verwerkt volgens de AVG en, waar relevant, de EU AI Act, op EU-servers — je data blijft in de EU. Waar jouw sector dat vereist, gaat de voorkeur uit naar Europese of on-premise dataopslag.</p>
+        <p style="font:400 0.9375rem/1.65 'IBM Plex Sans';color:var(--text-muted);margin:14px 0 0;">Data wordt verwerkt volgens de AVG en, waar relevant, de EU AI Act, op EU-servers. Je data blijft in de EU. Waar jouw sector dat vereist, gaat de voorkeur uit naar Europese of on-premise dataopslag.</p>
       </details>
       <details class="faq-item" style="border:1px solid var(--border);border-radius:10px;padding:18px 22px;background:var(--surface);">
         <summary style="display:flex;align-items:center;justify-content:space-between;gap:16px;font:600 1rem/1.4 'IBM Plex Sans';color:var(--text);cursor:pointer;">
-          <span>We weten niet welke dienst we nodig hebben — wat nu?</span>
+          <span>We weten niet welke dienst we nodig hebben, wat nu?</span>
           <div class="icon icon-chevron-down faq-chevron" style="width:18px;height:18px;color:var(--accent-text);transition:transform 200ms ease;flex-shrink:0;"></div>
         </summary>
-        <p style="font:400 0.9375rem/1.65 'IBM Plex Sans';color:var(--text-muted);margin:14px 0 0;">Daar is "AI-readiness & advies" (dienst 5) precies voor bedoeld — een kort traject dat in kaart brengt waar AI in jouw organisatie het meeste oplevert, voordat er iets gebouwd wordt.</p>
+        <p style="font:400 0.9375rem/1.65 'IBM Plex Sans';color:var(--text-muted);margin:14px 0 0;">Daar is "AI-readiness & advies" (dienst 5) precies voor bedoeld: een kort traject dat in kaart brengt waar AI in jouw organisatie het meeste oplevert, voordat er iets gebouwd wordt.</p>
       </details>
     </div>
   </div>
@@ -329,7 +318,7 @@
     <h2 style="font:600 clamp(1.5rem,3vw,1.875rem)/1.3 'IBM Plex Sans';margin:0 0 16px;color:var(--text);">Hoe trajecten worden afgebakend</h2>
     <p style="font:400 1rem/1.7 'IBM Plex Sans';color:var(--text-muted);margin:0 0 32px;">Elke dienst hierboven kan starten als een gratis kennismaking van 30 minuten, doorgroeien naar een proof of concept met vaste prijs, en eindigen in een volledige productie-implementatie met 90 dagen support. Vaste scope, vaste prijs, afgesproken voordat er wordt gestart.</p>
     <a href="./prijzen.html" style="display:inline-block;border:2px solid var(--accent-text);color:var(--text);padding:14px 32px;border-radius:6px;font-weight:700;font-size:0.95rem;margin-right:16px;transition:all 200ms ease;">Bekijk prijzen</a>
-    <a href="./index.html#contact" style="display:inline-block;background:oklch(70% 0.14 220);color:#001a2e;padding:14px 32px;border-radius:6px;font-weight:700;font-size:0.95rem;transition:all 280ms ease;">Plan een kennismaking</a>
+    <a href="./index.html#contact" style="display:inline-block;background:oklch(70% 0.14 188);color:#001a2e;padding:14px 32px;border-radius:6px;font-weight:700;font-size:0.95rem;transition:all 280ms ease;">Plan een kennismaking</a>
   </div>
 </section>
 
