@@ -1,3 +1,10 @@
+/* Contrast geverifieerd (WCAG AA) op 2026-09-04: alle tekst/achtergrond-combinaties
+   uit dit bestand voldoen aan 4.5:1 (lopende tekst) resp. 3:1 (grote tekst).
+   --text-muted-2 is hierbij verdonkerd van #8A8070 (3.49:1 op --bg, faalde AA) naar
+   #6A6153 (5.46:1 op --bg, 5.08:1 op --surface, 4.68:1 op --surface-inset) — dezelfde
+   getemperde warme bruin/taupe kleurfamilie (HSL-tint ~37°) als --text (#211C14) en
+   --text-muted (#5F5646), enkel donkerder gemaakt tot alle drie de achtergronden waarop
+   het token in de site voorkomt (--bg, --surface, --surface-inset) ≥4.5:1 halen. */
 :root {
   color-scheme: light;
   --bg:            #F7F2E9;
@@ -6,7 +13,7 @@
   --border:        #DCD0B8;
   --text:          #211C14;
   --text-muted:    #5F5646;
-  --text-muted-2:  #8A8070;
+  --text-muted-2:  #6A6153;
   --accent:        #0F5C57;
   --accent-hover:  #0C4B47;
   --accent-text:   #0F5C57;
