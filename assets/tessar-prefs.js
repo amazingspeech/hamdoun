@@ -72,7 +72,7 @@
     text.style.cssText = "margin:0;color:var(--text-dim,#5F5646);";
     text.appendChild(
       document.createTextNode(
-        "We gebruiken alleen analytics-cookies om te zien hoe bezoekers de site gebruiken — geen advertentietracking. Ga je akkoord? Lees ons "
+        "We gebruiken alleen analytics-cookies om te zien hoe bezoekers de site gebruiken, geen advertentietracking. Ga je akkoord? Lees ons "
       )
     );
     var policyLink = document.createElement("a");

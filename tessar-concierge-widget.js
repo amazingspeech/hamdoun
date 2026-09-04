@@ -141,7 +141,7 @@ if (typeof document !== "undefined") {
     panelTitle: "Tess",
     panelSubtitle: "AI-concierge bij Tessar",
     launcherLabel: "Chat met Tess van Tessar",
-    greetingMessage: "Hoi, ik ben Tess — de AI-concierge van Tessar. Stel gerust een vraag, of kies een van de opties hieronder.",
+    greetingMessage: "Hoi, ik ben Tess, de AI-concierge van Tessar. Stel gerust een vraag, of kies een van de opties hieronder.",
     // Kostenbeheersing: maximum aantal berichten dat 1 bezoeker in 1 browsersessie
     // mag versturen (telt door na een pagina-refresh, via sessionStorage, zolang
     // dezelfde tab/sessie openstaat). Dit is een client-side softcap - iemand die
