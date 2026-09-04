@@ -237,12 +237,12 @@
                 status.style.color = "var(--accent-text)";
                 status.textContent = "Bedankt! We nemen zo snel mogelijk contact op.";
               } else {
-                status.style.color = "oklch(65% 0.20 30)";
+                status.style.color = "var(--danger-text)";
                 status.textContent = (result.data && result.data.error) || "Er ging iets mis, probeer het later opnieuw.";
               }
             })
             .catch(function () {
-              status.style.color = "oklch(65% 0.20 30)";
+              status.style.color = "var(--danger-text)";
               status.textContent = "Er ging iets mis, probeer het later opnieuw.";
             })
             .finally(function () {
