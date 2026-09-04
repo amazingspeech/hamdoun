@@ -1056,3 +1056,64 @@ npm test
 git add index.src.html index.html
 git commit -m "feat: subtiele settle-animatie op de homepage-hero-achtergrond"
 ```
+
+---
+
+### Taak 25: Kleur-literal-migratie in één batch voor de resterende 10 pagina's
+
+**Nieuwe taak, gebruikersinstructie.** Taken 11-13 lieten zien dat elke pagina dozijnen hardcoded `oklch(...)`-literals bevat (oude hue 220/230/200-accentkleur, hue 250-lichte-tekst-op-donker, `color:#FFF`) die niet via de gedeelde `:root`-tokenswap meeveranderen — dat blijft zo, want de site zet kleuren in inline `style=""`-attributen, niet via `var()`-referenties, en dat is een bestaande codebase-conventie, geen keuze binnen dit plan. Een gedeeld CSS-bestand kan die letterlijke waarden niet overschrijven zonder `!important`-trucs.
+
+Maar de **bewerking zelf** is nu, na drie pagina's, een volledig vaste, mechanische regel (zie `kleur-literal-migratie.md`) — die hoeft niet meer per pagina opnieuw "ontdekt" te worden door een aparte subagent. Deze taak past de regel in één keer toe op de resterende 10 pagina's (de 6 met een nog te doen paginataak, plus de 4 uit Taak 18 — die hebben dezelfde gedeelde nav/footer/back-to-top-boilerplate met dezelfde literals):
+
+`ai-telefonist-voor-bedrijf.html`, `ai-receptioniste-voor-bedrijven.html`, `ai-chatbot-voor-bedrijven.html`, `bedrijfsprocessen-automatiseren-met-ai.html`, `workflow-automatisering-met-ai.html`, `ai-implementatie-laten-uitvoeren.html`, `prijzen.html`, `contact.html`, `blog.html`, `privacy.html`.
+
+Na deze taak hoeven Taken 14-18 alleen nog het **pagina-specifieke** werk te doen (tokenswap, Outfit op de eigen H1, em-dash/eyebrow-audit, hero-specifieke aanpassingen) — niet meer de kleur-ontdekking zelf.
+
+**Files:**
+- Modify: alle 10 hierboven genoemde `.html`-bestanden
+- Create (tijdelijk script, niet commiten): `/tmp/migrate-colors-batch.py`
+
+**Interfaces:**
+- Consumes: de methodologie uit `kleur-literal-migratie.md` (identiek toe te passen, geen nieuwe regels verzinnen).
+- Produces: 10 bestanden zonder hue-220/230/200-literals of `color:#FFF` op lichte secties — Taken 14-18 mogen dit als voldongen feit aannemen (met een korte eigen grep-controle, niet een volledige herontdekking).
+
+- [ ] **Stap 1: Schrijf één Python-script dat de regel toepast op alle 10 bestanden**
+
+Voor elk bestand: zoek elke `oklch(L% C H)`-waarde met hue 220, 230, 200 of 250, en elke `color:#FFF`/`color:#FFFFFF`/`color:white`-literal. Bepaal per treffer de CSS-eigenschap waar de waarde bij hoort (kijk terug naar de laatste `:` vóór de waarde binnen hetzelfde `style="..."`-blok):
+
+- Eigenschap is `background`, `background-color`, `border`, `border-color`, `box-shadow` (zelfstandig UI-element): hue → `188`, lichtheid/chroma **ongewijzigd**. (`rgba(0,212,255,X)`-varianten: zelfde regel, herbereken de rgb-waarden van hue 188 bij dezelfde lichtheid/verzadiging.)
+- Eigenschap is `color` (tekst/icoon) én de waarde had hue 220/230/200 met lichtheid ≥60% (was bedoeld als het felle accent, nu tekst op een lichte achtergrond): hue → `188`, lichtheid **verlagen naar ~42-45%**.
+- Eigenschap is `color` met hue 250 en lichtheid ≥70% (oude "lichte tekst op bijna-zwart"): vervang door `var(--text-muted)` (bij lichtheid 70-85%) of `var(--accent-text)` (als het duidelijk een link/accent-tekst was, niet gewone lopende tekst) — gebruik je beoordeling op basis van de omliggende context (is het een `<a>`, een label, gewone paragraaftekst?).
+- `color:#FFF`/`#FFFFFF`/`white` op een sectie/element waarvan de achtergrond niet meer donker is: verwijderen (tekst erft dan `var(--text)`) — **niet** aanraken op secties die bewust donker blijven (footer, eventuele andere donkere band — controleer per pagina of zoiets bestaat, net als de homepage se "why-us"-band).
+
+Herbruik zoveel mogelijk letterlijk dezelfde aanpak/code als in Taak 11's eigen (niet-gecommitte) script, als je die kunt reconstrueren uit de taak-11/12/13-rapporten — anders vanaf nul, met dezelfde regels.
+
+- [ ] **Stap 2: Voer het script uit op alle 10 bestanden**
+
+- [ ] **Stap 3: Verifieer mechanisch**
+
+```bash
+for f in ai-telefonist-voor-bedrijf.html ai-receptioniste-voor-bedrijven.html ai-chatbot-voor-bedrijven.html bedrijfsprocessen-automatiseren-met-ai.html workflow-automatisering-met-ai.html ai-implementatie-laten-uitvoeren.html prijzen.html contact.html blog.html privacy.html; do
+  echo "=== $f ==="
+  grep -c "oklch([^)]*220\|oklch([^)]*230\|oklch([^)]* 200 \|color:#FFF\|color:#FFFFFF" "$f"
+done
+```
+Expected: elk bestand toont `0`, behalve waar een bewust donkere sectie (footer e.d.) een hue-250-lichte-tekst-op-donker-waarde legitiem behoudt — controleer die uitzonderingen handmatig, net als bij Taak 11/12/13.
+
+- [ ] **Stap 4: Visuele steekproef**
+
+Maak van elk van de 10 pagina's minstens één desktop-screenshot (1440px) van de bovenste viewport, en van 2-3 willekeurig gekozen pagina's ook een screenshot verderop (bijv. een prijskaart-sectie, een FAQ) om te controleren dat de batch-regel geen rare uitzondering heeft gemist of verkeerd gecategoriseerd (bijv. een icoon dat nu te licht/onleesbaar is). Bekijk alle screenshots met de Read-tool.
+
+- [ ] **Stap 5: `npm test` en commit**
+
+```bash
+npm test
+git add ai-telefonist-voor-bedrijf.html ai-receptioniste-voor-bedrijven.html ai-chatbot-voor-bedrijven.html bedrijfsprocessen-automatiseren-met-ai.html workflow-automatisering-met-ai.html ai-implementatie-laten-uitvoeren.html prijzen.html contact.html blog.html privacy.html
+git commit -m "feat: kleur-literal-migratie in één batch voor de 10 resterende pagina's"
+```
+
+- [ ] **Stap 6: Ruim het tijdelijke script op**
+
+```bash
+rm /tmp/migrate-colors-batch.py
+```
