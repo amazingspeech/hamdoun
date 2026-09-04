@@ -28,10 +28,10 @@ if (location.hostname === "amazingspeech.github.io") {
 }
 </script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Tessar — AI-implementatie voor het Nederlandse mkb</title>
+<title>Tessar: AI-implementatie voor het Nederlandse mkb</title>
 <meta name="description" content="Praktische AI-automatisering en AI-applicaties voor het Nederlandse mkb, gericht op meetbaar resultaat. Geen rapporten, wel werkende systemen.">
 <link rel="canonical" href="https://tessar.nl/">
-<meta name="theme-color" content="#0a0a0f">
+<meta name="theme-color" content="#F7F2E9">
 <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon-32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="./assets/favicon-16.png">
 <link rel="apple-touch-icon" href="./assets/apple-touch-icon.png">
@@ -39,24 +39,44 @@ if (location.hostname === "amazingspeech.github.io") {
 <meta property="og:type" content="website">
 <meta property="og:locale" content="nl_NL">
 <meta property="og:url" content="https://tessar.nl/">
-<meta property="og:title" content="Tessar — AI-implementatie & AI-geintegreerde applicaties">
+<meta property="og:title" content="Tessar: AI-implementatie & AI-geintegreerde applicaties">
 <meta property="og:description" content="Praktische AI-implementatie voor Nederlandse en Europese mkb-bedrijven, gericht op meetbaar resultaat. Geen rapporten, wel werkende systemen.">
 <meta property="og:image" content="https://tessar.nl/og-image.jpg">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Tessar — AI-implementatie & AI-geintegreerde applicaties">
+<meta name="twitter:title" content="Tessar: AI-implementatie & AI-geintegreerde applicaties">
 <meta name="twitter:description" content="Praktische AI-implementatie voor Nederlandse en Europese mkb-bedrijven, gericht op meetbaar resultaat.">
 <meta name="twitter:image" content="https://tessar.nl/og-image.jpg">
 
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "ProfessionalService",
-  "name": "Tessar",
-  "url": "https://tessar.nl/",
-  "description": "Praktische AI-implementatie en AI-geintegreerde applicatieontwikkeling voor Nederlandse en Europese mkb-bedrijven.",
-  "areaServed": ["NL", "Europe"],
-  "availableLanguage": ["nl"],
-  "serviceType": ["AI-automatisering", "AI-geintegreerde applicatieontwikkeling"]
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://tessar.nl/#org",
+      "name": "Tessar",
+      "url": "https://tessar.nl",
+      "logo": "https://tessar.nl/assets/tessar-icon-optimized.png"
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://tessar.nl/#website",
+      "name": "Tessar",
+      "url": "https://tessar.nl",
+      "publisher": { "@id": "https://tessar.nl/#org" }
+    },
+    {
+      "@type": "ProfessionalService",
+      "@id": "https://tessar.nl/#service",
+      "name": "Tessar",
+      "url": "https://tessar.nl/",
+      "description": "Praktische AI-implementatie en AI-geintegreerde applicatieontwikkeling voor Nederlandse en Europese mkb-bedrijven.",
+      "image": { "@type": "ImageObject", "url": "https://tessar.nl/assets/hero-visual-full.webp", "width": 2400, "height": 1357 },
+      "areaServed": ["NL", "Europe"],
+      "availableLanguage": ["nl"],
+      "serviceType": ["AI-automatisering", "AI-geintegreerde applicatieontwikkeling"]
+    }
+  ]
 }
 </script>
 
@@ -68,7 +88,7 @@ if (location.hostname === "amazingspeech.github.io") {
     {
       "@type": "Question",
       "name": "Wat kost een traject?",
-      "acceptedAnswer": { "@type": "Answer", "text": "Voor Quick win en de AI-readiness scan geldt een vaste prijs, meteen te zien op deze pagina. Voor Proof of Concept en een volledige implementatie hangt de prijs af van de scope — die bepalen we samen in de gratis kennismaking, en pas daarna volgt een vaste prijs die niet meer verandert." }
+      "acceptedAnswer": { "@type": "Answer", "text": "Voor Quick win en de AI-readiness scan geldt een vaste prijs, meteen te zien op deze pagina. Voor Proof of Concept en een volledige implementatie hangt de prijs af van je project: na de gratis kennismaking, waarin we de scope samen bepalen, ontvang je een helder voorstel op maat." }
     },
     {
       "@type": "Question",
@@ -83,12 +103,12 @@ if (location.hostname === "amazingspeech.github.io") {
     {
       "@type": "Question",
       "name": "Is onze data veilig?",
-      "acceptedAnswer": { "@type": "Answer", "text": "Data wordt verwerkt volgens de AVG en, waar relevant, de EU AI Act, op EU-servers — je data blijft in de EU. Waar jouw sector dat vereist, gaat de voorkeur uit naar Europese of on-premise dataopslag." }
+      "acceptedAnswer": { "@type": "Answer", "text": "Data wordt verwerkt volgens de AVG en, waar relevant, de EU AI Act, op EU-servers. Je data blijft in de EU. Waar jouw sector dat vereist, gaat de voorkeur uit naar Europese of on-premise dataopslag." }
     },
     {
       "@type": "Question",
       "name": "Voor wie is dit geschikt?",
-      "acceptedAnswer": { "@type": "Answer", "text": "Voor mkb- en middelgrote bedrijven die AI concreet willen inzetten, niet alleen willen verkennen. De AI-readiness scan levert bewust een schriftelijk rapport op als eerste stap; de pakketten daarna — Quick win, proof of concept, volledige implementatie — eindigen altijd in een werkend systeem." }
+      "acceptedAnswer": { "@type": "Answer", "text": "Voor mkb- en middelgrote bedrijven die AI concreet willen inzetten, niet alleen willen verkennen. De AI-readiness scan levert bewust een schriftelijk rapport op als eerste stap; de pakketten daarna (Quick win, proof of concept, volledige implementatie) eindigen altijd in een werkend systeem." }
     },
     {
       "@type": "Question",
@@ -115,27 +135,20 @@ if (location.hostname === "amazingspeech.github.io") {
 <x-dc>
 <helmet>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./assets/tessar-design-tokens.css">
 <style>
+  /* --danger-*/--success-* blijven hier: page-lokaal voor de before/after-vergelijking,
+     horen niet in het gedeelde tokenbestand (komen alleen op deze pagina voor). */
   :root {
-    color-scheme: dark;
-    --bg: oklch(14% 0.016 260);
-    --surface: oklch(19% 0.016 260);
-    --text: oklch(95% 0.006 90);
-    --text-muted: oklch(72% 0.014 140);
-    --text-muted-2: oklch(60% 0.014 140);
-    --border: oklch(28% 0.014 260);
-    --accent-text: oklch(66% 0.13 226);
-    --surface-inset: oklch(25% 0.018 260);
-    /* page-local: "before/after" comparison cards (herkenbaar section) */
-    --danger-bg: oklch(22% 0.05 25);
-    --danger-border: oklch(32% 0.08 30);
-    --danger-text: oklch(85% 0.03 30);
-    --danger-accent: oklch(72% 0.16 30);
-    --success-bg: oklch(20% 0.04 165);
-    --success-border: oklch(30% 0.07 165);
-    --success-text: oklch(85% 0.03 165);
-    --success-accent: oklch(68% 0.15 165);
+    --danger-bg: oklch(97% 0.02 30);
+    --danger-border: oklch(88% 0.05 30);
+    --danger-text: oklch(45% 0.12 30);
+    --danger-accent: oklch(55% 0.16 30);
+    --success-bg: oklch(96% 0.03 155);
+    --success-border: oklch(85% 0.06 155);
+    --success-text: oklch(40% 0.10 155);
+    --success-accent: oklch(50% 0.14 155);
   }
   body { transition:background-color 200ms ease, color 200ms ease; }
   html, body { margin:0; padding:0; background:var(--bg); }
@@ -149,60 +162,43 @@ if (location.hostname === "amazingspeech.github.io") {
   [data-reveal-grid] > [data-reveal]:nth-child(2) { transition-delay:90ms; }
   [data-reveal-grid] > [data-reveal]:nth-child(3) { transition-delay:180ms; }
   [data-reveal-grid] > [data-reveal]:nth-child(4) { transition-delay:270ms; }
-  .hero-layout { display:grid; grid-template-columns:1fr; gap:clamp(40px,6vw,64px); align-items:center; max-width:1280px; margin:0 auto; position:relative; z-index:1; }
-  .hero-text { order:2; text-align:left; }
-  .hero-visual { order:1; position:relative; }
-  .hero-visual::before {
-    content:"";
-    position:absolute;
-    inset:-18%;
-    background:radial-gradient(closest-side, oklch(72% 0.13 55 / 0.4), transparent 72%);
-    filter:blur(48px);
-    z-index:0;
-    pointer-events:none;
-  }
-  .hero-visual img {
-    position:relative;
-    z-index:1;
-    display:block;
-    width:100%;
-    height:auto;
-    mask-image:radial-gradient(ellipse 72% 72% at 50% 50%, black 45%, transparent 100%);
-    -webkit-mask-image:radial-gradient(ellipse 72% 72% at 50% 50%, black 45%, transparent 100%);
-  }
-  @media (min-width: 900px) {
-    .hero-layout { grid-template-columns:1.05fr 0.95fr; }
-    .hero-text { order:1; }
-    .hero-visual { order:2; }
+  .hero-full-bg { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:right center; z-index:0; animation:heroBgSettle 2.2s cubic-bezier(0.16,1,0.3,1) both; }
+  @keyframes heroBgSettle { 0% { transform:scale(1.06); opacity:0.92; } 100% { transform:scale(1); opacity:1; } }
+  .hero-full-scrim { position:absolute; inset:0; background:linear-gradient(90deg, color-mix(in oklch, var(--bg) 80%, transparent) 0%, color-mix(in oklch, var(--bg) 80%, transparent) 32%, transparent 68%); pointer-events:none; z-index:0; }
+  @media (max-width: 640px) {
+    .hero-full-scrim { background:linear-gradient(90deg, color-mix(in oklch, var(--bg) 88%, transparent) 0%, color-mix(in oklch, var(--bg) 88%, transparent) 62%, transparent 100%); }
   }
 
   .hero-grain { position:absolute; inset:0; opacity:0.05; mix-blend-mode:overlay; pointer-events:none; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
 
-  .grad-text { color:oklch(70% 0.14 220); }
-  .grad-text-warm { color:oklch(72% 0.12 55); }
+  /* grad-text-warm is intentionally merged into the same teal as grad-text: the amber
+     bridge existed to reconcile the warm bronze hero photo with the old cool-cyan accent.
+     With a warm oker base + this teal accent, that clash is gone, so both headline
+     highlights now share one consistent brand accent instead of two competing hues. */
+  .grad-text, .grad-text-warm { color:var(--accent-text); }
 
-  .hero-badge { display:inline-flex; align-items:center; gap:9px; background:var(--surface); border:1px solid oklch(70% 0.14 220 / 0.35); padding:9px 18px 9px 14px; border-radius:24px; margin-bottom:30px; font:600 0.8125rem/1 'IBM Plex Mono'; letter-spacing:0.06em; text-transform:uppercase; color:oklch(78% 0.12 220); }
-  .hero-badge-dot { width:6px; height:6px; border-radius:50%; background:oklch(75% 0.16 200); flex-shrink:0; }
+  .hero-badge { display:inline-flex; align-items:center; gap:9px; background:var(--surface); border:1px solid oklch(70% 0.14 188 / 0.35); padding:9px 18px 9px 14px; border-radius:24px; margin-bottom:30px; font:600 0.8125rem/1 'IBM Plex Mono'; letter-spacing:0.06em; text-transform:uppercase; color:var(--accent-text); }
+  .hero-badge-dot { width:6px; height:6px; border-radius:50%; background:oklch(58% 0.16 188); flex-shrink:0; }
 
-  .hero-trust-pill { display:flex; align-items:center; gap:8px; background:var(--surface); border:1px solid var(--border); padding:8px 16px; border-radius:20px; font:500 0.8125rem/1 'IBM Plex Sans'; color:oklch(82% 0.06 250); }
-  .hero-trust-pill .hero-badge-dot { background:oklch(70% 0.14 220); }
+  .hero-trust-pill { display:flex; align-items:center; gap:8px; background:var(--surface); border:1px solid var(--border); padding:8px 16px; border-radius:20px; font:500 0.8125rem/1 'IBM Plex Sans'; color:var(--text-muted); }
+  .hero-trust-pill .hero-badge-dot { background:oklch(55% 0.16 188); }
 
-  .hero-cta-primary { display:inline-block; background:oklch(70% 0.14 220); color:#001a2e; padding:17px 38px; border-radius:6px; font-weight:700; font-size:0.9625rem; transition:all 280ms ease; white-space:nowrap; }
+  .hero-cta-primary { display:inline-block; background:var(--accent); color:var(--bg); padding:17px 38px; border-radius:6px; font-weight:700; font-size:0.9625rem; transition:all 280ms ease; white-space:nowrap; }
   .hero-cta-primary:hover { transform:translateY(-2px); }
 
   .hero-content { animation:heroContentIn 900ms cubic-bezier(0.16,1,0.3,1) both; }
   @keyframes heroContentIn { 0% { opacity:0; transform:translateY(18px); } 100% { opacity:1; transform:translateY(0); } }
 
   .hero-scroll-cue { position:absolute; left:50%; bottom:22px; transform:translateX(-50%); z-index:1; opacity:0.55; animation:scrollCue 2.2s ease-in-out infinite; }
-  .hero-scroll-cue .icon { width:20px; height:20px; color:oklch(75% 0.10 250); }
+  .hero-scroll-cue .icon { width:20px; height:20px; color:var(--accent-text); }
   @keyframes scrollCue { 0%,100% { transform:translate(-50%,0); opacity:0.35; } 50% { transform:translate(-50%,7px); opacity:0.7; } }
 
   /* Sits left of the fixed Tess concierge launcher (60px circle at bottom:24px/right:24px, see
      tessar-concierge-widget.js), same row, so it never collides with the launcher or its hint bubble
      (which pops up above the launcher, not beside it). */
-  #back-to-top { position:fixed; right:100px; bottom:24px; z-index:40; width:48px; height:48px; border-radius:50%; border:none; background:oklch(70% 0.14 220); color:#001a2e; display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:0 8px 24px oklch(20% 0.02 255 / 0.25); opacity:0; transform:translateY(12px); pointer-events:none; transition:opacity 260ms ease, transform 260ms ease, box-shadow 200ms ease; }
+  #back-to-top { position:fixed; right:100px; bottom:24px; z-index:40; width:48px; height:48px; border-radius:50%; border:none; background:var(--accent); color:var(--bg); display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:0 8px 24px oklch(20% 0.02 255 / 0.25); opacity:0; transform:translateY(12px); pointer-events:none; transition:opacity 260ms ease, transform 260ms ease, box-shadow 200ms ease; }
   #back-to-top.is-visible { opacity:1; transform:translateY(0); pointer-events:auto; }
-  #back-to-top:hover { transform:translateY(-3px); box-shadow:0 12px 32px rgba(0,212,255,0.35); }
+  #back-to-top:hover { transform:translateY(-3px); box-shadow:0 12px 32px rgba(15,92,87,0.35); }
   #back-to-top:focus-visible { outline:2px solid var(--accent-text); outline-offset:3px; }
   @media (max-width: 480px) { #back-to-top { right:92px; bottom:16px; } }
 
@@ -210,6 +206,7 @@ if (location.hostname === "amazingspeech.github.io") {
     [data-reveal] { opacity:1; transform:none; transition:none; }
     html { scroll-behavior:auto; }
     .hero-content { animation:none; }
+    .hero-full-bg { animation:none; }
     #back-to-top { transition:opacity 200ms ease; transform:none; }
     .hero-scroll-cue { animation:none; }
   }
@@ -235,17 +232,29 @@ if (location.hostname === "amazingspeech.github.io") {
   @media (max-width: 700px) {
     .about-grid { grid-template-columns:1fr !important; }
     .stack-row { grid-template-columns:1fr !important; gap:10px !important; max-width:none; }
+    .footer-grid { grid-template-columns:repeat(2,1fr) !important; }
   }
-  @media (max-width: 480px) { .process-grid { grid-template-columns:1fr !important; } }
+  @media (max-width: 480px) { .process-grid { grid-template-columns:1fr !important; } .footer-grid { grid-template-columns:1fr !important; } }
   .faq-item[open] .faq-chevron { transform:rotate(180deg); }
   .faq-item summary::-webkit-details-marker { display:none; }
   .faq-item summary { list-style:none; cursor:pointer; }
+
+  /* Component-rule audit (spec sectie 7, punt 1): the why-us row and the capabilities
+     accordion previously rendered every item with identical icon sizing/alignment.
+     A small, deliberate size/alignment offset per position avoids the "every card is
+     a clone" look without adding new visual noise. */
+  .why-us-grid > [data-reveal]:nth-child(2) { align-items:center; }
+  .why-us-grid > [data-reveal]:nth-child(2) .icon { width:26px; height:26px; }
+  .why-us-grid > [data-reveal]:nth-child(3) .icon { width:19px; height:19px; margin-top:4px; }
+  .capabilities-grid-icon { transition:transform 200ms ease; }
+  .capabilities-grid > [data-reveal]:nth-child(1) .capabilities-grid-icon { width:32px; height:32px; }
+  .capabilities-grid > [data-reveal]:nth-child(4) .capabilities-grid-icon { width:24px; height:24px; }
 
   .flow-row { display:flex; align-items:flex-start; justify-content:center; flex-wrap:wrap; }
   .flow-node { position:relative; display:flex; flex-direction:column; align-items:center; gap:8px; width:88px; }
   .flow-node:not(:last-child) { margin-right:40px; }
   .flow-node:not(:last-child)::after { content:''; position:absolute; top:25px; left:100%; width:40px; height:2px; background:oklch(82% 0.03 230); }
-  .flow-node:not(:last-child)::before { content:''; position:absolute; top:22px; left:100%; width:6px; height:6px; border-radius:50%; background:oklch(60% 0.16 220); animation:flowDot 2.2s linear infinite; opacity:0; }
+  .flow-node:not(:last-child)::before { content:''; position:absolute; top:22px; left:100%; width:6px; height:6px; border-radius:50%; background:oklch(55% 0.16 188); animation:flowDot 2.2s linear infinite; opacity:0; }
   .flow-node:nth-child(1)::before { animation-delay:0s; }
   .flow-node:nth-child(2)::before { animation-delay:0.44s; }
   .flow-node:nth-child(3)::before { animation-delay:0.88s; }
@@ -317,7 +326,7 @@ if (location.hostname === "amazingspeech.github.io") {
       <a href="./chatbots.html" class="nav-link" style="color:var(--text-muted);transition:color 200ms ease;" style-hover="color:var(--text);">{{ navChatbots }}</a>
       <a href="./blog.html" class="nav-link" style="color:var(--text-muted);transition:color 200ms ease;" style-hover="color:var(--text);">{{ navBlog }}</a>
       <a href="./contact.html" class="nav-link" style="color:var(--text-muted);transition:color 200ms ease;" style-hover="color:var(--text);">Contact</a>
-      <a class="nav-link" href="#contact" style="background:oklch(70% 0.14 220);color:#001a2e;padding:10px 20px;border-radius:6px;font-weight:600;transition:all 200ms ease;white-space:nowrap;" style-hover="transform:translateY(-2px);box-shadow:0 8px 24px rgba(0, 212, 255, 0.25);">{{ navBookCall }}</a>
+      <a class="nav-link" href="#contact" style="background:var(--accent);color:var(--bg);padding:10px 20px;border-radius:6px;font-weight:600;transition:all 200ms ease;white-space:nowrap;" style-hover="transform:translateY(-2px);box-shadow:0 8px 24px rgba(15, 92, 87, 0.25);">{{ navBookCall }}</a>
     </nav>
     <button type="button" class="nav-toggle" id="nav-toggle-btn" aria-label="Menu" aria-expanded="false" aria-controls="nav-mobile-panel">
       <span></span><span></span><span></span>
@@ -330,38 +339,35 @@ if (location.hostname === "amazingspeech.github.io") {
     <a href="./chatbots.html">{{ navChatbots }}</a>
     <a href="./blog.html">{{ navBlog }}</a>
     <a href="./contact.html">Contact</a>
-    <a href="#contact" style="background:oklch(70% 0.14 220);color:#001a2e !important;text-align:center;border-radius:6px;font-weight:600;">{{ navBookCall }}</a>
+    <a href="#contact" style="background:var(--accent);color:var(--bg) !important;text-align:center;border-radius:6px;font-weight:600;">{{ navBookCall }}</a>
   </div>
 </header>
 
-<section id="top" style="position:relative;overflow:hidden;background:var(--bg);color:#FFF;padding:clamp(64px,8vw,88px) clamp(20px,5vw,40px);">
+<section id="top" style="position:relative;overflow:hidden;background:var(--bg);min-height:clamp(560px,82vh,820px);display:flex;align-items:center;padding:clamp(64px,8vw,88px) clamp(20px,5vw,40px);">
   <div class="hero-grain"></div>
 
-  <div class="hero-layout">
-    <div class="hero-text hero-content">
-      <div class="hero-badge">
-        <span class="hero-badge-dot"></span>{{ badge }}
-      </div>
+  <img class="hero-full-bg" src="./assets/hero-visual-full.webp" srcset="./assets/hero-visual-full-sm.webp 960w, ./assets/hero-visual-full.webp 2400w" sizes="100vw" width="2400" height="1357" alt="Verkreukeld metaal dat overgaat in een scherp geometrisch gevouwen vorm, symbool voor AI-transformatie bij Tessar" loading="eager" fetchpriority="high">
+  <div class="hero-full-scrim"></div>
 
-      <h1 style="font:800 clamp(2.25rem,5.6vw,4rem)/1.15 'IBM Plex Sans';margin:0 0 22px;letter-spacing:-0.025em;text-wrap:pretty;">{{ heroHeadingPre }}<span class="grad-text">{{ heroHeadingHi1 }}</span>{{ heroHeadingMid }}<span class="grad-text-warm">{{ heroHeadingHi2 }}</span>{{ heroHeadingPost }}</h1>
-
-      <p style="font:400 clamp(1.0625rem,1.9vw,1.375rem)/1.7 'IBM Plex Sans';color:oklch(78% 0.09 250);margin:0 0 36px;max-width:520px;text-wrap:pretty;">{{ heroSubtext }}</p>
-
-      <div style="display:flex;gap:16px;flex-wrap:wrap;">
-        <a href="#contact" class="hero-cta-primary">{{ ctaPrimary }}</a>
-      </div>
-
-      <div style="display:flex;gap:clamp(12px,2vw,16px);margin-top:60px;flex-wrap:wrap;">
-        <div class="hero-trust-pill"><span class="hero-badge-dot"></span>{{ trustA }}</div>
-        <div class="hero-trust-pill"><span class="hero-badge-dot"></span>{{ trustB }}</div>
-        <div class="hero-trust-pill"><span class="hero-badge-dot"></span>{{ trustC }}</div>
-        <div class="hero-trust-pill"><span class="hero-badge-dot"></span>{{ trustD }}</div>
-        <div class="hero-trust-pill"><span class="hero-badge-dot"></span>{{ trustE }}</div>
-      </div>
+  <div class="hero-content" style="position:relative;z-index:1;max-width:560px;width:100%;text-align:left;">
+    <div class="hero-badge">
+      <span class="hero-badge-dot"></span>{{ badge }}
     </div>
 
-    <div class="hero-visual">
-      <img src="./assets/hero-visual.webp" srcset="./assets/hero-visual-sm.webp 960w, ./assets/hero-visual.webp 1920w" sizes="(min-width: 900px) 45vw, 100vw" width="1920" height="1086" alt="" loading="eager" fetchpriority="high">
+    <h1 style="font:800 clamp(2.25rem,5.6vw,4rem)/1.15 'Outfit';margin:0 0 22px;letter-spacing:-0.025em;text-wrap:pretty;">{{ heroHeadingPre }}<span class="grad-text">{{ heroHeadingHi1 }}</span>{{ heroHeadingMid }}<span class="grad-text-warm">{{ heroHeadingHi2 }}</span>{{ heroHeadingPost }}</h1>
+
+    <p style="font:400 clamp(1.0625rem,1.9vw,1.375rem)/1.7 'IBM Plex Sans';color:var(--text-muted);margin:0 0 36px;max-width:520px;text-wrap:pretty;">{{ heroSubtext }}</p>
+
+    <div style="display:flex;gap:16px;flex-wrap:wrap;">
+      <a href="#contact" class="hero-cta-primary">{{ ctaPrimary }}</a>
+    </div>
+
+    <div style="display:flex;gap:clamp(12px,2vw,16px);margin-top:60px;flex-wrap:wrap;">
+      <div class="hero-trust-pill"><span class="hero-badge-dot"></span>{{ trustA }}</div>
+      <div class="hero-trust-pill"><span class="hero-badge-dot"></span>{{ trustB }}</div>
+      <div class="hero-trust-pill"><span class="hero-badge-dot"></span>{{ trustC }}</div>
+      <div class="hero-trust-pill"><span class="hero-badge-dot"></span>{{ trustD }}</div>
+      <div class="hero-trust-pill"><span class="hero-badge-dot"></span>{{ trustE }}</div>
     </div>
   </div>
 
@@ -371,10 +377,10 @@ if (location.hostname === "amazingspeech.github.io") {
 </section>
 
 <section style="padding:clamp(40px,5vw,56px) clamp(20px,5vw,40px);background:oklch(12% 0.02 255);border-top:1px solid oklch(22% 0.02 255);">
-  <div data-reveal-grid style="max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:clamp(20px,3vw,32px);">
+  <div data-reveal-grid class="why-us-grid" style="max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:clamp(20px,3vw,32px);">
     <sc-for list="{{ whyUs }}" as="w" hint-placeholder-count="3">
       <div data-reveal style="display:flex;align-items:flex-start;gap:14px;transition:opacity 600ms ease, transform 600ms ease;">
-        <div class="icon {{ w.iconClass }}" style="width:22px;height:22px;color:oklch(70% 0.14 220);margin-top:3px;"></div>
+        <div class="icon {{ w.iconClass }}" style="width:22px;height:22px;color:var(--accent-text);margin-top:3px;"></div>
         <p style="font:400 0.9375rem/1.6 'IBM Plex Sans';color:oklch(80% 0.02 250);margin:0;">{{ w.text }}</p>
       </div>
     </sc-for>
@@ -385,7 +391,7 @@ if (location.hostname === "amazingspeech.github.io") {
   <div style="max-width:1100px;margin:0 auto;">
     <div style="text-align:center;margin-bottom:clamp(48px,6vw,64px);">
       <div style="font:500 clamp(0.7rem,1.2vw,0.8125rem)/1.3 'IBM Plex Mono';letter-spacing:0.06em;text-transform:uppercase;color:var(--accent-text);margin-bottom:12px;">{{ problemLabel }}</div>
-      <h2 style="font:600 clamp(1.75rem,4vw,2.25rem)/1.2 'IBM Plex Sans';margin:0;letter-spacing:-0.02em;color:var(--text);">{{ problemHeading }}</h2>
+      <h2 style="font:600 clamp(1.75rem,4vw,2.25rem)/1.2 'Outfit';margin:0;letter-spacing:-0.02em;color:var(--text);">{{ problemHeading }}</h2>
     </div>
 
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:clamp(24px,3vw,32px);">
@@ -420,16 +426,16 @@ if (location.hostname === "amazingspeech.github.io") {
   <div style="max-width:1200px;margin:0 auto;">
     <div style="text-align:center;margin-bottom:clamp(40px,5vw,56px);">
       <div style="font:500 clamp(0.7rem,1.2vw,0.8125rem)/1.3 'IBM Plex Mono';letter-spacing:0.06em;text-transform:uppercase;color:var(--accent-text);margin-bottom:12px;">{{ capabilitiesLabel }}</div>
-      <h2 style="font:600 clamp(1.75rem,4vw,2.25rem)/1.2 'IBM Plex Sans';margin:0 0 16px;letter-spacing:-0.02em;color:var(--text);">{{ capabilitiesHeading }}</h2>
+      <h2 style="font:600 clamp(1.75rem,4vw,2.25rem)/1.2 'Outfit';margin:0 0 16px;letter-spacing:-0.02em;color:var(--text);">{{ capabilitiesHeading }}</h2>
       <p style="font:400 clamp(0.95rem,1.5vw,1rem)/1.6 'IBM Plex Sans';color:var(--text-muted);max-width:560px;margin:0 auto;">{{ capabilitiesSubtext }}</p>
     </div>
 
-    <div data-reveal-grid style="display:flex;flex-direction:column;gap:14px;max-width:820px;margin:0 auto;">
+    <div data-reveal-grid class="capabilities-grid" style="display:flex;flex-direction:column;gap:14px;max-width:820px;margin:0 auto;">
       <sc-for list="{{ capabilities }}" as="cap" hint-placeholder-count="5">
         <details data-reveal class="faq-item" style="border:1px solid var(--border);border-radius:12px;padding:clamp(22px,3vw,28px) clamp(24px,3.5vw,32px);background:var(--surface);transition:opacity 600ms ease, transform 600ms ease;">
           <summary style="display:flex;align-items:center;justify-content:space-between;gap:16px;">
             <div style="display:flex;align-items:center;gap:16px;">
-              <div class="icon {{ cap.iconClass }}" style="width:28px;height:28px;color:{{ cap.color }};flex-shrink:0;"></div>
+              <div class="icon {{ cap.iconClass }} capabilities-grid-icon" style="width:28px;height:28px;color:{{ cap.color }};flex-shrink:0;"></div>
               <h3 style="font:600 clamp(1.0625rem,1.8vw,1.25rem)/1.35 'IBM Plex Sans';margin:0;color:var(--text);">{{ cap.title }}</h3>
             </div>
             <div class="icon icon-chevron-down faq-chevron" style="width:18px;height:18px;color:{{ cap.color }};transition:transform 200ms ease;flex-shrink:0;"></div>
@@ -457,7 +463,7 @@ if (location.hostname === "amazingspeech.github.io") {
   <div style="max-width:1100px;margin:0 auto;">
     <div style="text-align:center;margin-bottom:clamp(40px,5vw,56px);">
       <div style="font:500 clamp(0.7rem,1.2vw,0.8125rem)/1.3 'IBM Plex Mono';letter-spacing:0.06em;text-transform:uppercase;color:var(--accent-text);margin-bottom:12px;">{{ stackLabel }}</div>
-      <h2 style="font:600 clamp(1.75rem,4vw,2.25rem)/1.2 'IBM Plex Sans';margin:0 0 16px;letter-spacing:-0.02em;color:var(--text);">{{ stackHeading }}</h2>
+      <h2 style="font:600 clamp(1.75rem,4vw,2.25rem)/1.2 'Outfit';margin:0 0 16px;letter-spacing:-0.02em;color:var(--text);">{{ stackHeading }}</h2>
       <p style="font:400 clamp(0.95rem,1.5vw,1rem)/1.6 'IBM Plex Sans';color:var(--text-muted);max-width:600px;margin:0 auto;">{{ stackSubtext }}</p>
     </div>
 
@@ -477,13 +483,13 @@ if (location.hostname === "amazingspeech.github.io") {
   <div style="max-width:920px;margin:0 auto;">
     <div style="text-align:center;margin-bottom:clamp(40px,5vw,56px);">
       <div style="font:500 clamp(0.7rem,1.2vw,0.8125rem)/1.3 'IBM Plex Mono';letter-spacing:0.06em;text-transform:uppercase;color:var(--accent-text);margin-bottom:12px;">{{ industryLabel }}</div>
-      <h2 style="font:600 clamp(1.75rem,4vw,2.25rem)/1.2 'IBM Plex Sans';margin:0 0 16px;letter-spacing:-0.02em;color:var(--text);">{{ industryHeading }}</h2>
+      <h2 style="font:600 clamp(1.75rem,4vw,2.25rem)/1.2 'Outfit';margin:0 0 16px;letter-spacing:-0.02em;color:var(--text);">{{ industryHeading }}</h2>
       <p style="font:400 clamp(0.95rem,1.5vw,1.0625rem)/1.6 'IBM Plex Sans';color:var(--text-muted);max-width:560px;margin:0 auto;">{{ industrySubtext }}</p>
     </div>
 
     <div data-reveal style="display:flex;flex-wrap:wrap;justify-content:center;gap:10px;transition:opacity 600ms ease, transform 600ms ease;">
       <sc-for list="{{ industries }}" as="ind" hint-placeholder-count="21">
-        <span style="display:inline-flex;align-items:center;background:oklch(48% 0.12 230 / 0.08);border:1px solid oklch(48% 0.12 230 / 0.25);padding:9px 16px;border-radius:20px;font:600 0.8125rem/1.3 'IBM Plex Mono';letter-spacing:0.01em;color:var(--accent-text);">{{ ind.title }}</span>
+        <span style="display:inline-flex;align-items:center;background:oklch(48% 0.12 188 / 0.08);border:1px solid oklch(48% 0.12 188 / 0.25);padding:9px 16px;border-radius:20px;font:600 0.8125rem/1.3 'IBM Plex Mono';letter-spacing:0.01em;color:var(--accent-text);">{{ ind.title }}</span>
       </sc-for>
     </div>
   </div>
@@ -493,7 +499,7 @@ if (location.hostname === "amazingspeech.github.io") {
   <div style="max-width:1200px;margin:0 auto;">
     <div style="text-align:center;margin-bottom:clamp(48px,6vw,64px);">
       <div style="font:500 clamp(0.7rem,1.2vw,0.8125rem)/1.3 'IBM Plex Mono';letter-spacing:0.06em;text-transform:uppercase;color:var(--accent-text);margin-bottom:12px;">{{ casesLabel }}</div>
-      <h2 style="font:600 clamp(1.75rem,4vw,2.25rem)/1.2 'IBM Plex Sans';margin:0;letter-spacing:-0.02em;color:var(--text);">{{ casesHeading }}</h2>
+      <h2 style="font:600 clamp(1.75rem,4vw,2.25rem)/1.2 'Outfit';margin:0;letter-spacing:-0.02em;color:var(--text);">{{ casesHeading }}</h2>
       <p style="font:400 clamp(0.95rem,1.5vw,1.0625rem)/1.6 'IBM Plex Sans';color:var(--text-muted);margin:20px auto 0;max-width:600px;">{{ casesSubtext }}</p>
     </div>
 
@@ -529,14 +535,14 @@ if (location.hostname === "amazingspeech.github.io") {
 <section id="how" style="padding:clamp(80px,10vw,120px) clamp(20px,5vw,40px);background:var(--bg);border-top:1px solid var(--border);">
   <div style="max-width:1000px;margin:0 auto;">
     <div style="text-align:center;margin-bottom:clamp(48px,6vw,64px);">
-      <h2 style="font:600 clamp(1.75rem,4vw,2.25rem)/1.2 'IBM Plex Sans';margin:0 0 16px;letter-spacing:-0.02em;color:var(--text);">{{ processHeading }}</h2>
+      <h2 style="font:600 clamp(1.75rem,4vw,2.25rem)/1.2 'Outfit';margin:0 0 16px;letter-spacing:-0.02em;color:var(--text);">{{ processHeading }}</h2>
       <p style="font:400 clamp(0.95rem,1.5vw,1rem)/1.6 'IBM Plex Sans';color:var(--text-muted);max-width:600px;margin:0 auto;">{{ processSubtext }}</p>
     </div>
 
     <div data-reveal-grid class="process-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(clamp(200px,100%,280px),1fr));gap:clamp(24px,3vw,32px);">
       <sc-for list="{{ process }}" as="step" hint-placeholder-count="4">
         <div data-reveal style="display:flex;flex-direction:column;gap:16px;transition:opacity 600ms ease, transform 600ms ease;">
-          <div style="width:64px;height:64px;background:oklch(48% 0.12 230 / 0.08);border:2px solid var(--accent-text);border-radius:50%;display:flex;align-items:center;justify-content:center;font:700 1.5rem/1 'IBM Plex Mono';color:var(--accent-text);">{{ step.n }}</div>
+          <div style="width:64px;height:64px;background:oklch(48% 0.12 188 / 0.08);border:2px solid var(--accent-text);border-radius:50%;display:flex;align-items:center;justify-content:center;font:700 1.5rem/1 'IBM Plex Mono';color:var(--accent-text);">{{ step.n }}</div>
           <div>
             <h3 style="font:600 clamp(1rem,1.8vw,1.125rem)/1.3 'IBM Plex Sans';margin:0 0 8px;color:var(--text);">{{ step.title }}</h3>
             <p style="font:400 clamp(0.85rem,1.4vw,0.9375rem)/1.6 'IBM Plex Sans';color:var(--text-muted);margin:0;">{{ step.desc }}</p>
@@ -551,7 +557,7 @@ if (location.hostname === "amazingspeech.github.io") {
   <div class="about-grid" style="max-width:1000px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,0.9fr);gap:clamp(32px,5vw,56px);align-items:center;">
     <div data-reveal style="transition:opacity 600ms ease, transform 600ms ease;">
       <div style="font:500 clamp(0.7rem,1.2vw,0.8125rem)/1.3 'IBM Plex Mono';letter-spacing:0.06em;text-transform:uppercase;color:var(--accent-text);margin-bottom:12px;">{{ aboutLabel }}</div>
-      <h2 style="font:600 clamp(1.5rem,3.4vw,2rem)/1.25 'IBM Plex Sans';margin:0 0 18px;letter-spacing:-0.02em;color:var(--text);">{{ aboutHeading }}</h2>
+      <h2 style="font:600 clamp(1.5rem,3.4vw,2rem)/1.25 'Outfit';margin:0 0 18px;letter-spacing:-0.02em;color:var(--text);">{{ aboutHeading }}</h2>
       <p style="font:400 1rem/1.75 'IBM Plex Sans';color:var(--text-muted);margin:0;">{{ aboutBody }}</p>
     </div>
     <div data-reveal style="display:flex;flex-direction:column;gap:20px;transition:opacity 600ms ease, transform 600ms ease;">
@@ -569,7 +575,7 @@ if (location.hostname === "amazingspeech.github.io") {
   <div style="max-width:840px;margin:0 auto;">
     <div style="text-align:center;margin-bottom:clamp(40px,5vw,56px);">
       <div style="font:500 clamp(0.7rem,1.2vw,0.8125rem)/1.3 'IBM Plex Mono';letter-spacing:0.06em;text-transform:uppercase;color:var(--accent-text);margin-bottom:12px;">{{ roiLabel }}</div>
-      <h2 style="font:600 clamp(1.75rem,4vw,2.25rem)/1.2 'IBM Plex Sans';margin:0 0 16px;letter-spacing:-0.02em;color:var(--text);">{{ roiHeading }}</h2>
+      <h2 style="font:600 clamp(1.75rem,4vw,2.25rem)/1.2 'Outfit';margin:0 0 16px;letter-spacing:-0.02em;color:var(--text);">{{ roiHeading }}</h2>
       <p style="font:400 clamp(0.95rem,1.5vw,1rem)/1.6 'IBM Plex Sans';color:var(--text-muted);max-width:600px;margin:0 auto;">{{ roiSubtext }}</p>
     </div>
 
@@ -608,13 +614,13 @@ if (location.hostname === "amazingspeech.github.io") {
 <section id="pricing" style="padding:clamp(80px,10vw,120px) clamp(20px,5vw,40px);border-top:1px solid var(--border);">
   <div style="max-width:1240px;margin:0 auto;">
     <div style="text-align:center;margin-bottom:clamp(48px,6vw,64px);">
-      <h2 style="font:600 clamp(1.75rem,4vw,2.25rem)/1.2 'IBM Plex Sans';margin:0 0 16px;letter-spacing:-0.02em;color:var(--text);">{{ pricingHeading }}</h2>
+      <h2 style="font:600 clamp(1.75rem,4vw,2.25rem)/1.2 'Outfit';margin:0 0 16px;letter-spacing:-0.02em;color:var(--text);">{{ pricingHeading }}</h2>
       <p style="font:400 clamp(0.95rem,1.5vw,1rem)/1.6 'IBM Plex Sans';color:var(--text-muted);max-width:600px;margin:0 auto;">{{ pricingSubtext }}</p>
     </div>
 
     <div data-reveal-grid style="display:grid;grid-template-columns:repeat(auto-fit,minmax(clamp(240px,100%,280px),1fr));gap:clamp(16px,2vw,24px);">
       <sc-for list="{{ pricing }}" as="tier" hint-placeholder-count="4">
-        <div data-reveal style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:clamp(28px,4vw,36px);display:flex;flex-direction:column;transition:all 220ms ease, opacity 600ms ease, transform 600ms ease;" style-hover="border-color:var(--accent-text);box-shadow:0 8px 24px oklch(48% 0.12 230 / 0.15);">
+        <div data-reveal style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:clamp(28px,4vw,36px);display:flex;flex-direction:column;transition:all 220ms ease, opacity 600ms ease, transform 600ms ease;" style-hover="border-color:var(--accent-text);box-shadow:0 8px 24px oklch(48% 0.12 188 / 0.15);">
           <h3 style="font:600 clamp(1.0625rem,1.8vw,1.25rem)/1.3 'IBM Plex Sans';margin:0 0 8px;color:var(--text);">{{ tier.name }}</h3>
           <p style="font:400 0.9375rem/1.6 'IBM Plex Sans';color:var(--text-muted);margin:0 0 20px;">{{ tier.desc }}</p>
           <div style="margin:20px 0;padding:20px;background:var(--surface-inset);border-radius:8px;border:1px solid var(--border);">
@@ -626,7 +632,7 @@ if (location.hostname === "amazingspeech.github.io") {
               <li style="display:flex;gap:10px;align-items:flex-start;font:400 0.9375rem/1.5 'IBM Plex Sans';color:var(--text-muted);"><div class="icon icon-check" style="width:15px;height:15px;color:var(--accent-text);margin-top:3px;flex-shrink:0;"></div><span>{{ inc }}</span></li>
             </sc-for>
           </ul>
-          <a href="#contact" style="background:oklch(70% 0.14 220);color:#001a2e;padding:12px 20px;border-radius:6px;text-align:center;font-weight:600;font-size:0.9375rem;transition:all 200ms ease;white-space:nowrap;" style-hover="transform:translateY(-2px);box-shadow:0 8px 24px rgba(0, 212, 255, 0.25);">{{ tier.cta }}</a>
+          <a href="#contact" style="background:var(--accent);color:var(--bg);padding:12px 20px;border-radius:6px;text-align:center;font-weight:600;font-size:0.9375rem;transition:all 200ms ease;white-space:nowrap;" style-hover="transform:translateY(-2px);box-shadow:0 8px 24px rgba(15, 92, 87, 0.25);">{{ tier.cta }}</a>
         </div>
       </sc-for>
     </div>
@@ -640,7 +646,7 @@ if (location.hostname === "amazingspeech.github.io") {
   <div style="max-width:800px;margin:0 auto;">
     <div style="text-align:center;margin-bottom:clamp(40px,5vw,56px);">
       <div style="font:500 clamp(0.7rem,1.2vw,0.8125rem)/1.3 'IBM Plex Mono';letter-spacing:0.06em;text-transform:uppercase;color:var(--accent-text);margin-bottom:12px;">{{ faqLabel }}</div>
-      <h2 style="font:600 clamp(1.75rem,4vw,2.25rem)/1.2 'IBM Plex Sans';margin:0;letter-spacing:-0.02em;color:var(--text);">{{ faqHeading }}</h2>
+      <h2 style="font:600 clamp(1.75rem,4vw,2.25rem)/1.2 'Outfit';margin:0;letter-spacing:-0.02em;color:var(--text);">{{ faqHeading }}</h2>
     </div>
 
     <div style="display:flex;flex-direction:column;gap:12px;">
@@ -657,27 +663,27 @@ if (location.hostname === "amazingspeech.github.io") {
   </div>
 </section>
 
-<section id="contact" style="padding:clamp(80px,10vw,120px) clamp(20px,5vw,40px);background:var(--bg);color:#FFF;">
+<section id="contact" style="padding:clamp(80px,10vw,120px) clamp(20px,5vw,40px);background:var(--bg);">
   <div style="max-width:700px;margin:0 auto;">
     <div style="text-align:center;margin-bottom:clamp(40px,6vw,56px);">
-      <h2 style="font:600 clamp(1.75rem,4vw,2.25rem)/1.2 'IBM Plex Sans';margin:0 0 16px;letter-spacing:-0.02em;">{{ contactHeading }}</h2>
-      <p style="font:400 clamp(0.95rem,1.5vw,1rem)/1.6 'IBM Plex Sans';color:oklch(75% 0.10 250);margin:0;">{{ contactSubtext }}</p>
+      <h2 style="font:600 clamp(1.75rem,4vw,2.25rem)/1.2 'Outfit';margin:0 0 16px;letter-spacing:-0.02em;">{{ contactHeading }}</h2>
+      <p style="font:400 clamp(0.95rem,1.5vw,1rem)/1.6 'IBM Plex Sans';color:var(--text-muted);margin:0;">{{ contactSubtext }}</p>
     </div>
 
     <form id="contact-form" style="display:flex;flex-direction:column;gap:18px;">
-      <input type="text" name="name" id="cf-name" required placeholder="{{ formNamePlaceholder }}" style="background:oklch(100% 0 0 / 0.95);border:1px solid oklch(70% 0.14 220 / 0.3);border-radius:6px;padding:14px 18px;font:400 1rem/1.5 'IBM Plex Sans';color:var(--text);transition:all 200ms ease;" style-focus="border-color:oklch(70% 0.14 220);box-shadow:0 0 0 2px oklch(70% 0.14 220 / 0.1);outline:none;"/>
-      <input type="email" name="email" id="cf-email" required placeholder="{{ formEmailPlaceholder }}" style="background:oklch(100% 0 0 / 0.95);border:1px solid oklch(70% 0.14 220 / 0.3);border-radius:6px;padding:14px 18px;font:400 1rem/1.5 'IBM Plex Sans';color:var(--text);transition:all 200ms ease;" style-focus="border-color:oklch(70% 0.14 220);box-shadow:0 0 0 2px oklch(70% 0.14 220 / 0.1);outline:none;"/>
-      <input type="tel" name="phone" id="cf-phone" placeholder="{{ formPhonePlaceholder }}" style="background:oklch(100% 0 0 / 0.95);border:1px solid oklch(70% 0.14 220 / 0.3);border-radius:6px;padding:14px 18px;font:400 1rem/1.5 'IBM Plex Sans';color:var(--text);transition:all 200ms ease;" style-focus="border-color:oklch(70% 0.14 220);box-shadow:0 0 0 2px oklch(70% 0.14 220 / 0.1);outline:none;"/>
+      <input type="text" name="name" id="cf-name" required placeholder="{{ formNamePlaceholder }}" style="background:oklch(100% 0 0 / 0.95);border:1px solid oklch(70% 0.14 188 / 0.3);border-radius:6px;padding:14px 18px;font:400 1rem/1.5 'IBM Plex Sans';color:var(--text);transition:all 200ms ease;" style-focus="outline:2px solid var(--accent);outline-offset:2px;border-color:var(--accent);"/>
+      <input type="email" name="email" id="cf-email" required placeholder="{{ formEmailPlaceholder }}" style="background:oklch(100% 0 0 / 0.95);border:1px solid oklch(70% 0.14 188 / 0.3);border-radius:6px;padding:14px 18px;font:400 1rem/1.5 'IBM Plex Sans';color:var(--text);transition:all 200ms ease;" style-focus="outline:2px solid var(--accent);outline-offset:2px;border-color:var(--accent);"/>
+      <input type="tel" name="phone" id="cf-phone" placeholder="{{ formPhonePlaceholder }}" style="background:oklch(100% 0 0 / 0.95);border:1px solid oklch(70% 0.14 188 / 0.3);border-radius:6px;padding:14px 18px;font:400 1rem/1.5 'IBM Plex Sans';color:var(--text);transition:all 200ms ease;" style-focus="outline:2px solid var(--accent);outline-offset:2px;border-color:var(--accent);"/>
       <label for="cf-industry" style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;">{{ formIndustryPlaceholder }}</label>
-      <select name="industry" id="cf-industry" style="background:oklch(100% 0 0 / 0.95);border:1px solid oklch(70% 0.14 220 / 0.3);border-radius:6px;padding:14px 18px;font:400 1rem/1.5 'IBM Plex Sans';color:var(--text);transition:all 200ms ease;cursor:pointer;" style-focus="border-color:oklch(70% 0.14 220);outline:none;">
+      <select name="industry" id="cf-industry" style="background:oklch(100% 0 0 / 0.95);border:1px solid oklch(70% 0.14 188 / 0.3);border-radius:6px;padding:14px 18px;font:400 1rem/1.5 'IBM Plex Sans';color:var(--text);transition:all 200ms ease;cursor:pointer;" style-focus="outline:2px solid var(--accent);outline-offset:2px;border-color:var(--accent);">
         <option value="">{{ formIndustryPlaceholder }}</option>
         <sc-for list="{{ industries }}" as="opt" hint-placeholder-count="0">
           <option value="{{ opt.title }}">{{ opt.title }}</option>
         </sc-for>
       </select>
-      <textarea name="message" id="cf-message" required placeholder="{{ formMessagePlaceholder }}" rows="4" style="background:oklch(100% 0 0 / 0.95);border:1px solid oklch(70% 0.14 220 / 0.3);border-radius:6px;padding:14px 18px;font:400 1rem/1.5 'IBM Plex Sans';color:var(--text);resize:none;transition:all 200ms ease;" style-focus="border-color:oklch(70% 0.14 220);box-shadow:0 0 0 2px oklch(70% 0.14 220 / 0.1);outline:none;"></textarea>
+      <textarea name="message" id="cf-message" required placeholder="{{ formMessagePlaceholder }}" rows="4" style="background:oklch(100% 0 0 / 0.95);border:1px solid oklch(70% 0.14 188 / 0.3);border-radius:6px;padding:14px 18px;font:400 1rem/1.5 'IBM Plex Sans';color:var(--text);resize:none;transition:all 200ms ease;" style-focus="outline:2px solid var(--accent);outline-offset:2px;border-color:var(--accent);"></textarea>
       <input type="text" name="website" id="cf-website" autocomplete="off" tabindex="-1" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;">
-      <button type="submit" id="cf-submit" style="background:oklch(70% 0.14 220);color:#001a2e;padding:14px 28px;border:none;border-radius:6px;font-weight:700;font-size:0.95rem;cursor:pointer;transition:all 280ms ease;" style-hover="transform:translateY(-2px);">{{ contactCTA }}</button>
+      <button type="submit" id="cf-submit" style="background:var(--accent);color:var(--bg);padding:14px 28px;border:none;border-radius:6px;font-weight:700;font-size:0.95rem;cursor:pointer;transition:all 280ms ease;" style-hover="transform:translateY(-2px);">{{ contactCTA }}</button>
       <p id="cf-status" role="status" style="font:400 0.9rem/1.5 'IBM Plex Sans';margin:0;min-height:1.4em;"></p>
     </form>
     <script>
@@ -717,15 +723,15 @@ if (location.hostname === "amazingspeech.github.io") {
           .then(function (result) {
             if (result.ok && result.data.ok) {
               form.reset();
-              status.style.color = "oklch(70% 0.14 220)";
+              status.style.color = "var(--accent-text)";
               status.textContent = "Bedankt! We nemen zo snel mogelijk contact op.";
             } else {
-              status.style.color = "oklch(65% 0.20 30)";
+              status.style.color = "var(--danger-text)";
               status.textContent = (result.data && result.data.error) || "Er ging iets mis, probeer het later opnieuw.";
             }
           })
           .catch(function () {
-            status.style.color = "oklch(65% 0.20 30)";
+            status.style.color = "var(--danger-text)";
             status.textContent = "Er ging iets mis, probeer het later opnieuw.";
           })
           .finally(function () {
@@ -736,13 +742,13 @@ if (location.hostname === "amazingspeech.github.io") {
     })();
     </script>
 
-    <p style="font:400 clamp(0.8rem,1.2vw,0.85rem)/1.6 'IBM Plex Sans';color:oklch(70% 0.10 250);text-align:center;margin:28px 0 0;padding-top:28px;border-top:1px solid oklch(70% 0.14 220 / 0.2);">{{ contactFooter }}</p>
+    <p style="font:400 clamp(0.8rem,1.2vw,0.85rem)/1.6 'IBM Plex Sans';color:var(--text-muted);text-align:center;margin:28px 0 0;padding-top:28px;border-top:1px solid oklch(70% 0.14 188 / 0.2);">{{ contactFooter }}</p>
   </div>
 </section>
 
 <footer style="padding:clamp(48px,6vw,64px) clamp(20px,5vw,40px) 32px;background:oklch(4% 0 0);color:oklch(62% 0.02 250);">
   <div style="max-width:1200px;margin:0 auto;">
-    <div style="display:grid;grid-template-columns:minmax(220px,1.4fr) repeat(3,minmax(140px,1fr));gap:clamp(28px,4vw,48px);padding-bottom:clamp(32px,4vw,44px);border-bottom:1px solid oklch(20% 0.01 255);">
+    <div class="footer-grid" style="display:grid;grid-template-columns:minmax(220px,1.4fr) repeat(3,minmax(140px,1fr));gap:clamp(28px,4vw,48px);padding-bottom:clamp(32px,4vw,44px);border-bottom:1px solid oklch(20% 0.01 255);">
       <div>
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
           <img src="./assets/tessar-icon-optimized.png" width="26" height="28" alt="Tessar logo" style="height:26px;width:auto;opacity:0.9;">
@@ -815,12 +821,12 @@ const copyNL = {
   trustA: 'EU AI Act-bewust',
   trustB: 'AVG-bewust',
   trustC: '2-4 weken naar livegang',
-  trustD: 'Vaste prijs, vooraf afgesproken',
+  trustD: 'Heldere prijsafspraken vooraf',
   trustE: '24/7 bereikbaar, reactie binnen 24 uur',
 
   whyUs: [
     { iconClass: 'icon-message-square', text: 'Rechtstreeks contact met wie het ook daadwerkelijk bouwt, geen account manager ertussen.' },
-    { iconClass: 'icon-file-text', text: 'Vaste prijs en vaste scope, afgesproken voordat er gebouwd wordt.' },
+    { iconClass: 'icon-file-text', text: 'Heldere scope en prijsafspraken, altijd vastgelegd voordat er gebouwd wordt.' },
     { iconClass: 'icon-target', text: 'Elk traject eindigt in een werkend systeem in productie, niet in een adviesrapport.' }
   ],
 
@@ -843,15 +849,15 @@ const copyNL = {
 
   capabilitiesLabel: 'Wat we bouwen',
   capabilitiesHeading: 'Vijf manieren waarop we AI inzetten',
-  capabilitiesSubtext: 'Van kleine procesautomatisering tot een volwaardig AI-product. Elk van deze vijf diensten is ook los in te huren, met een eigen vaste prijs.',
+  capabilitiesSubtext: 'Van kleine procesautomatisering tot een volwaardig AI-product. Elk van deze vijf diensten is ook los in te huren, met een prijsvoorstel op maat.',
   capabilitiesCta: 'Bekijk alle diensten',
   capabilitiesChatbotsCta: 'Bekijk onze AI-chatbots',
   capabilities: [
-    { iconClass: 'icon-workflow', title: 'AI-procesautomatisering', desc: 'Automatiseer het handmatige, repetitieve deel van je organisatie: data-invoer, rapportages, documentverwerking, besluitondersteuning. Systemen die aansluiten op wat je al gebruikt.', color: 'oklch(70% 0.14 220)', bullets: ['In kaart brengen van workflows en automatiseringsontwerp', 'Document- en dataverwerkingspipelines', 'Integratie met bestaand CRM, ERP en interne tools', 'Monitoring en foutafhandeling in productie'] },
-    { iconClass: 'icon-trending-up', title: 'Voorspellende modellen & besluitondersteuning', desc: 'Modellen op jouw eigen data om vraag te voorspellen, risico\'s te scoren of afwijkingen te detecteren, met nauwkeurigheidscijfers die je kan controleren.', color: 'oklch(60% 0.15 170)', bullets: ['Datapipeline en feature-voorbereiding', 'Modeltraining, validatie en nauwkeurigheidsrapportage', 'Vraagvoorspelling, risicoscoring en afwijkingsdetectie', 'Oplevering als API of intern dashboard'] },
-    { iconClass: 'icon-puzzle', title: 'AI-geintegreerde applicaties', desc: 'Volwaardige producten met AI in de kern, niet als toevoeging achteraf. Interne tools, klantgerichte applicaties zoals een AI-receptionist of AI-telefonist, en platforms die vanaf de grond zijn opgebouwd rond wat moderne modellen kunnen.', color: 'oklch(70% 0.14 220)', bullets: ['Productarchitectuur en technische scoping', 'Full-stack ontwikkeling met geintegreerde AI-laag', 'AI-agents en copilots ingebouwd in bestaande producten', 'MVP-bouw voor AI-first producten, klaar om over te dragen of te onderhouden'] },
-    { iconClass: 'icon-network', title: 'Systeemintegratie & datapipelines', desc: 'Koppelt je CRM, ERP, databases en interne tools zodat informatie automatisch stroomt, in plaats van via handmatige exports en copy-paste.', color: 'oklch(60% 0.15 170)', bullets: ['API-integraties tussen bestaande platformen', 'Inrichten en plannen van datapipelines', 'Connectoren voor legacy-systemen zonder API', 'Doorlopende datakwaliteit en monitoring'] },
-    { iconClass: 'icon-scan-search', title: 'AI-readiness & advies', desc: 'Een kort, gericht traject om te bepalen waar AI echt waarde toevoegt in jouw organisatie, met een geprioriteerd plan op basis van ROI en haalbaarheid.', color: 'oklch(70% 0.14 220)', bullets: ['In kaart brengen van AI-kansen in je organisatie', 'Assessment van data- en infrastructuur-gereedheid', 'Prioritering van use cases op ROI en haalbaarheid', 'Advies over leveranciers en zelf bouwen versus inkopen'] }
+    { iconClass: 'icon-workflow', title: 'AI-procesautomatisering', desc: 'Automatiseer het handmatige, repetitieve deel van je organisatie: data-invoer, rapportages, documentverwerking, besluitondersteuning. Systemen die aansluiten op wat je al gebruikt.', color: 'oklch(45% 0.14 188)', bullets: ['In kaart brengen van workflows en automatiseringsontwerp', 'Document- en dataverwerkingspipelines', 'Integratie met bestaand CRM, ERP en interne tools', 'Monitoring en foutafhandeling in productie'] },
+    { iconClass: 'icon-trending-up', title: 'Voorspellende modellen & besluitondersteuning', desc: 'Modellen op jouw eigen data om vraag te voorspellen, risico\'s te scoren of afwijkingen te detecteren, met nauwkeurigheidscijfers die je kan controleren.', color: 'oklch(42% 0.15 170)', bullets: ['Datapipeline en feature-voorbereiding', 'Modeltraining, validatie en nauwkeurigheidsrapportage', 'Vraagvoorspelling, risicoscoring en afwijkingsdetectie', 'Oplevering als API of intern dashboard'] },
+    { iconClass: 'icon-puzzle', title: 'AI-geintegreerde applicaties', desc: 'Volwaardige producten met AI in de kern, niet als toevoeging achteraf. Interne tools, klantgerichte applicaties zoals een AI-receptionist of AI-telefonist, en platforms die vanaf de grond zijn opgebouwd rond wat moderne modellen kunnen.', color: 'oklch(45% 0.14 188)', bullets: ['Productarchitectuur en technische scoping', 'Full-stack ontwikkeling met geintegreerde AI-laag', 'AI-agents en copilots ingebouwd in bestaande producten', 'MVP-bouw voor AI-first producten, klaar om over te dragen of te onderhouden'] },
+    { iconClass: 'icon-network', title: 'Systeemintegratie & datapipelines', desc: 'Koppelt je CRM, ERP, databases en interne tools zodat informatie automatisch stroomt, in plaats van via handmatige exports en copy-paste.', color: 'oklch(42% 0.15 170)', bullets: ['API-integraties tussen bestaande platformen', 'Inrichten en plannen van datapipelines', 'Connectoren voor legacy-systemen zonder API', 'Doorlopende datakwaliteit en monitoring'] },
+    { iconClass: 'icon-scan-search', title: 'AI-readiness & advies', desc: 'Een kort, gericht traject om te bepalen waar AI echt waarde toevoegt in jouw organisatie, met een geprioriteerd plan op basis van ROI en haalbaarheid.', color: 'oklch(45% 0.14 188)', bullets: ['In kaart brengen van AI-kansen in je organisatie', 'Assessment van data- en infrastructuur-gereedheid', 'Prioritering van use cases op ROI en haalbaarheid', 'Advies over leveranciers en zelf bouwen versus inkopen'] }
   ],
 
   flowNodes: [
@@ -976,9 +982,9 @@ const copyNL = {
   casesHeading: 'Echte resultaten uit echte projecten',
   casesSubtext: 'Geanonimiseerd vanwege NDA. Alle cijfers zijn afkomstig van systemen die in productie draaien.',
   cases: [
-    { num: '01', title: 'Factuurautomatisering', industry: 'Financiele dienstverlening', desc: 'Geautomatiseerde verwerking van inkoopfacturen voor een financieel team in het mkb. Handmatige invoer geelimineerd en doorlooptijd flink verkort.', color: 'oklch(70% 0.14 220)', metric1Label: 'Kostenreductie', metric1: '68%', metric2Label: 'Tijd tot waarde', metric2: '8 weken' },
-    { num: '02', title: 'Vraagvoorspelling', industry: 'Operations', desc: 'Voorspellend model voor supply chain-inzicht. Betere voorraadplanning en minder kans op nee-verkoop.', color: 'oklch(60% 0.15 170)', metric1Label: 'Nauwkeurigheid', metric1: '92%', metric2Label: 'Voorraadkosten', metric2: '-24%' },
-    { num: '03', title: 'Klantsegmentatie', industry: 'Retail', desc: 'ML-gedreven segmentatie voor persoonlijke campagnes. Hogere campagne-ROI door betere targeting.', color: 'oklch(75% 0.12 160)', metric1Label: 'ROI-stijging', metric1: '+31%', metric2Label: 'Betrokkenheid', metric2: '+42%' }
+    { num: '01', title: 'Factuurautomatisering', industry: 'Financiele dienstverlening', desc: 'Geautomatiseerde verwerking van inkoopfacturen voor een financieel team in het mkb. Handmatige invoer geelimineerd en doorlooptijd flink verkort.', color: 'oklch(45% 0.14 188)', metric1Label: 'Kostenreductie', metric1: '68%', metric2Label: 'Tijd tot waarde', metric2: '8 weken' },
+    { num: '02', title: 'Vraagvoorspelling', industry: 'Operations', desc: 'Voorspellend model voor supply chain-inzicht. Betere voorraadplanning en minder kans op nee-verkoop.', color: 'oklch(42% 0.15 170)', metric1Label: 'Nauwkeurigheid', metric1: '92%', metric2Label: 'Voorraadkosten', metric2: '-24%' },
+    { num: '03', title: 'Klantsegmentatie', industry: 'Retail', desc: 'ML-gedreven segmentatie voor persoonlijke campagnes. Hogere campagne-ROI door betere targeting.', color: 'oklch(45% 0.12 160)', metric1Label: 'ROI-stijging', metric1: '+31%', metric2Label: 'Betrokkenheid', metric2: '+42%' }
   ],
 
   processHeading: 'Hoe het werkt',
@@ -992,7 +998,7 @@ const copyNL = {
 
   aboutLabel: 'Over Tessar',
   aboutHeading: 'Direct met de bouwer, niet met een verkoopteam',
-  aboutBody: 'Elk traject loopt via dezelfde persoon: van de eerste kennismaking, door de bouw, tot de oplevering en de support erna. Geen wisseling van team halverwege, geen overdracht aan iemand die de context nog moet inhalen. Dat houdt de communicatie kort en de beslissingen snel — wat wordt afgesproken, wordt ook gebouwd door wie het heeft afgesproken.',
+  aboutBody: 'Elk traject loopt via dezelfde persoon: van de eerste kennismaking, door de bouw, tot de oplevering en de support erna. Geen wisseling van team halverwege, geen overdracht aan iemand die de context nog moet inhalen. Dat houdt de communicatie kort en de beslissingen snel: wat wordt afgesproken, wordt ook gebouwd door wie het heeft afgesproken.',
   aboutPoints: [
     { iconClass: 'icon-target', text: 'Focus op meetbare ROI, niet op technologie om de technologie' },
     { iconClass: 'icon-message-square', text: 'Dezelfde persoon van intake tot livegang, geen overdracht halverwege' },
@@ -1001,7 +1007,7 @@ const copyNL = {
 
   roiLabel: 'Reken het uit',
   roiHeading: 'Wat kost repetitief werk je nu echt?',
-  roiSubtext: 'Vul je eigen uren en uurtarief in. De berekening gaat uit van automatisering van 70% van dat repetitieve werk — een gangbaar uitgangspunt, geen garantie voor jouw specifieke proces.',
+  roiSubtext: 'Vul je eigen uren en uurtarief in. De berekening gaat uit van automatisering van 70% van dat repetitieve werk. Dat is een gangbaar uitgangspunt, geen garantie voor jouw specifieke proces.',
   roiHoursLabel: 'Uren per week aan repetitief werk',
   roiRateLabel: 'Uurtarief (€)',
   roiWeeklyLabel: 'Besparing per week',
@@ -1010,12 +1016,12 @@ const copyNL = {
   roiDisclaimer: 'Indicatief, gebaseerd op je eigen invoer. De werkelijke besparing hangt af van je proces en wordt pas hard na een AI-readiness scan of proof of concept.',
 
   pricingHeading: 'Vaste prijs waar het kan, maatwerk waar het moet',
-  pricingSubtext: 'Vaste scope, vaste prijs zodra we de scope kennen. Klein beginnen kan, groot bouwen ook.',
+  pricingSubtext: 'Voor Quick win en de AI-readiness scan zie je de prijs meteen. Voor grotere trajecten bepalen we eerst samen de scope, en volgt een voorstel op maat.',
   pricingFullLink: 'Bekijk volledige prijzen →',
   pricing: [
     { name: 'Kennismaking', desc: 'Je kans in kaart brengen', price: 'Gratis', timeframe: '30 minuten', cta: 'Plan gesprek', includes: ['Eerste inschatting van je AI-kansen', 'Kansen met hoogste ROI identificeren', 'Realistische planning en budget'] },
     { name: 'AI-readiness scan', desc: 'Diepteanalyse met schriftelijk rapport', price: 'vanaf €295', timeframe: '2-3 dagen', cta: 'Vraag een scan aan', includes: ['Analyse van je huidige processen en systemen', 'Concreet rapport met kansen, geschat rendement en risico\'s', 'Eén aanbevolen vervolgstap (Quick win, PoC of volledige implementatie)'] },
-    { name: 'Quick win', desc: 'Eén proces automatiseren', price: '€1.250', timeframe: '1 week', cta: 'Bespreek dit pakket', includes: ['Eén concreet proces geautomatiseerd', 'Koppeling met 1-2 bestaande systemen (standaard API — maatwerk-koppelingen apart besproken)', '30 dagen nazorg', '2 revisierondes inbegrepen', 'Overdracht en documentatie'] },
+    { name: 'Quick win', desc: 'Eén proces automatiseren', price: '€1.250', timeframe: '1 week', cta: 'Bespreek dit pakket', includes: ['Eén concreet proces geautomatiseerd', 'Koppeling met 1-2 bestaande systemen (standaard API, maatwerk-koppelingen apart besproken)', '30 dagen nazorg', '2 revisierondes inbegrepen', 'Overdracht en documentatie'] },
     { name: 'Proof of Concept', desc: 'De aanpak valideren', price: 'Op aanvraag', timeframe: '2-3 weken', cta: 'Bespreek dit pakket', includes: ['Prototype op jouw data', 'Eerste nauwkeurigheidscijfers', 'Integratieplan', 'Training van je team'] },
     { name: 'Volledige implementatie', desc: 'Live en opschalen', price: 'Op aanvraag', timeframe: '2-4 weken', cta: 'Bespreek dit pakket', includes: ['Productie-implementatie', 'Systeemintegratie', 'Doorlopende monitoring', '90 dagen support'] }
   ],
@@ -1023,11 +1029,11 @@ const copyNL = {
   faqLabel: 'Vragen',
   faqHeading: 'Veelgestelde vragen',
   faqs: [
-    { q: 'Wat kost een traject?', a: 'Voor Quick win en de AI-readiness scan geldt een vaste prijs, meteen te zien op deze pagina. Voor Proof of Concept en een volledige implementatie hangt de prijs af van de scope — die bepalen we samen in de gratis kennismaking, en pas daarna volgt een vaste prijs die niet meer verandert.' },
+    { q: 'Wat kost een traject?', a: 'Voor Quick win en de AI-readiness scan geldt een vaste prijs, meteen te zien op deze pagina. Voor Proof of Concept en een volledige implementatie hangt de prijs af van je project: na de gratis kennismaking, waarin we de scope samen bepalen, ontvang je een helder voorstel op maat.' },
     { q: 'Hoe lang duurt een traject?', a: 'Een quick win duurt ongeveer 1 week, een proof of concept 2 tot 3 weken en een volledige implementatie 2 tot 4 weken. Bij een volledige implementatie volgt daarna nog 90 dagen support om te zorgen dat het systeem ook echt blijft werken.' },
     { q: 'Werken jullie met onze bestaande systemen?', a: 'Ja. Automatiseringen en applicaties worden gebouwd rond wat je al gebruikt: je CRM, ERP, database of interne tools. Geen noodzaak om over te stappen naar nieuwe software.' },
-    { q: 'Is onze data veilig?', a: 'Data wordt verwerkt volgens de AVG en, waar relevant, de EU AI Act, op EU-servers — je data blijft in de EU. Waar jouw sector dat vereist, gaat de voorkeur uit naar Europese of on-premise dataopslag.' },
-    { q: 'Voor wie is dit geschikt?', a: 'Voor mkb- en middelgrote bedrijven die AI concreet willen inzetten, niet alleen willen verkennen. De AI-readiness scan levert bewust een schriftelijk rapport op als eerste stap; de pakketten daarna — Quick win, proof of concept, volledige implementatie — eindigen altijd in een werkend systeem.' },
+    { q: 'Is onze data veilig?', a: 'Data wordt verwerkt volgens de AVG en, waar relevant, de EU AI Act, op EU-servers. Je data blijft in de EU. Waar jouw sector dat vereist, gaat de voorkeur uit naar Europese of on-premise dataopslag.' },
+    { q: 'Voor wie is dit geschikt?', a: 'Voor mkb- en middelgrote bedrijven die AI concreet willen inzetten, niet alleen willen verkennen. De AI-readiness scan levert bewust een schriftelijk rapport op als eerste stap; de pakketten daarna (Quick win, proof of concept, volledige implementatie) eindigen altijd in een werkend systeem.' },
     { q: 'Wat als het niet werkt zoals verwacht?', a: 'Een proof of concept is er juist op gericht om vooraf te bewijzen dat de aanpak werkt, voordat je committeert aan de volledige implementatie. Zo blijft het risico op een investering die niets oplevert beperkt.' }
   ],
 
@@ -1072,7 +1078,7 @@ class Component extends DCLogic {
 
   renderVals() {
     const t = copyNL;
-    const active = { background: 'oklch(70% 0.14 220)', color: '#001a2e' };
+    const active = { background: 'var(--accent)', color: 'var(--bg)' };
     const inactive = { background: 'transparent', color: 'oklch(46% 0.012 140)' };
     const s = this.state;
 
@@ -1323,6 +1329,6 @@ class Component extends DCLogic {
   rateEl.addEventListener("input", recalc);
 })();
 </script>
-<script src="./tessar-concierge-widget.js?v=2" defer></script>
+<script src="./tessar-concierge-widget.js?v=3" defer></script>
 </body>
 </html>

@@ -23,10 +23,10 @@
 <script src="./assets/tessar-prefs.js" defer></script>
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Contact — Tessar | AI-implementatie voor het mkb</title>
+<title>Contact met Tessar | AI-implementatie voor het mkb</title>
 <meta name="description" content="Neem contact op met Tessar voor AI-automatisering en AI-geintegreerde applicaties. Telefoon, e-mail en bedrijfsgegevens, of stuur direct een bericht.">
 <link rel="canonical" href="https://tessar.nl/contact.html">
-<meta name="theme-color" content="#0a0a0f">
+<meta name="theme-color" content="#F7F2E9">
 <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon-32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="./assets/favicon-16.png">
 <link rel="apple-touch-icon" href="./assets/apple-touch-icon.png">
@@ -57,28 +57,18 @@
 <meta property="og:type" content="website">
 <meta property="og:locale" content="nl_NL">
 <meta property="og:url" content="https://tessar.nl/contact.html">
-<meta property="og:title" content="Contact — Tessar">
+<meta property="og:title" content="Contact met Tessar">
 <meta property="og:description" content="Telefoon, e-mail en bedrijfsgegevens van Tessar, of stuur direct een bericht.">
 <meta property="og:image" content="https://tessar.nl/og-image.jpg">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Contact — Tessar">
+<meta name="twitter:title" content="Contact met Tessar">
 <meta name="twitter:description" content="Telefoon, e-mail en bedrijfsgegevens van Tessar, of stuur direct een bericht.">
 <meta name="twitter:image" content="https://tessar.nl/og-image.jpg">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./assets/tessar-design-tokens.css">
 <style>
-  :root {
-    color-scheme: dark;
-    --bg: oklch(14% 0.016 260);
-    --surface: oklch(19% 0.016 260);
-    --text: oklch(95% 0.006 90);
-    --text-muted: oklch(72% 0.014 140);
-    --text-muted-2: oklch(60% 0.014 140);
-    --border: oklch(28% 0.014 260);
-    --accent-text: oklch(66% 0.13 226);
-    --surface-inset: oklch(25% 0.018 260);
-  }
   body { transition:background-color 200ms ease, color 200ms ease; }
   html, body { margin:0; padding:0; background:var(--bg); }
   html { scroll-behavior:smooth; }
@@ -87,6 +77,8 @@
   a:hover { color:var(--accent-text); }
   [data-reveal] { opacity:0; transform:translateY(18px); transition:opacity 600ms ease, transform 600ms ease; }
   [data-reveal].is-visible { opacity:1; transform:translateY(0); }
+  [data-reveal-grid] > [data-reveal]:nth-child(1) { transition-delay:0ms; }
+  [data-reveal-grid] > [data-reveal]:nth-child(2) { transition-delay:90ms; }
   .nav-toggle { display:none; background:none; border:none; cursor:pointer; padding:8px; flex-direction:column; gap:5px; margin-left:4px; }
   .nav-toggle span { display:block; width:22px; height:2px; background:var(--text); border-radius:2px; transition:transform 200ms ease, opacity 200ms ease; }
   .nav-mobile-panel { display:none; }
@@ -104,9 +96,9 @@
   /* Sits left of the fixed Tess concierge launcher (60px circle at bottom:24px/right:24px, see
      tessar-concierge-widget.js), same row, so it never collides with the launcher or its hint bubble
      (which pops up above the launcher, not beside it). */
-  #back-to-top { position:fixed; right:100px; bottom:24px; z-index:40; width:48px; height:48px; border-radius:50%; border:none; background:oklch(70% 0.14 220); color:#001a2e; display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:0 8px 24px oklch(20% 0.02 255 / 0.25); opacity:0; transform:translateY(12px); pointer-events:none; transition:opacity 260ms ease, transform 260ms ease, box-shadow 200ms ease; }
+  #back-to-top { position:fixed; right:100px; bottom:24px; z-index:40; width:48px; height:48px; border-radius:50%; border:none; background:var(--accent); color:var(--bg); display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:0 8px 24px oklch(20% 0.02 255 / 0.25); opacity:0; transform:translateY(12px); pointer-events:none; transition:opacity 260ms ease, transform 260ms ease, box-shadow 200ms ease; }
   #back-to-top.is-visible { opacity:1; transform:translateY(0); pointer-events:auto; }
-  #back-to-top:hover { transform:translateY(-3px); box-shadow:0 12px 32px rgba(0,212,255,0.35); }
+  #back-to-top:hover { transform:translateY(-3px); box-shadow:0 12px 32px rgba(15,92,87,0.35); }
   #back-to-top:focus-visible { outline:2px solid var(--accent-text); outline-offset:3px; }
   @media (max-width: 480px) { #back-to-top { right:92px; bottom:16px; } }
   @media (prefers-reduced-motion: reduce) {
@@ -115,8 +107,8 @@
     #back-to-top { transition:opacity 200ms ease; transform:none; }
   }
   .contact-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:clamp(24px,4vw,40px); }
-  .contact-field { background:oklch(100% 0 0 / 0.95); border:1px solid oklch(70% 0.14 220 / 0.3); border-radius:6px; padding:14px 18px; font:400 1rem/1.5 'IBM Plex Sans'; color:var(--text); transition:all 200ms ease; width:100%; box-sizing:border-box; }
-  .contact-field:focus { border-color:oklch(70% 0.14 220); box-shadow:0 0 0 2px oklch(70% 0.14 220 / 0.1); outline:none; }
+  .contact-field { background:oklch(100% 0 0 / 0.95); border:1px solid oklch(70% 0.14 188 / 0.3); border-radius:6px; padding:14px 18px; font:400 1rem/1.5 'IBM Plex Sans'; color:var(--text); transition:all 200ms ease; width:100%; box-sizing:border-box; }
+  .contact-field:focus { outline:2px solid var(--accent); outline-offset:2px; border-color:var(--accent); }
 </style>
 </head>
 <body>
@@ -134,7 +126,7 @@
       <a href="./chatbots.html" class="nav-link" style="color:var(--text-muted);transition:color 200ms ease;">Chatbots</a>
       <a href="./blog.html" class="nav-link" style="color:var(--text-muted);transition:color 200ms ease;">Blog</a>
       <a href="./contact.html" class="nav-link" style="color:var(--text);font-weight:600;">Contact</a>
-      <a class="nav-link" href="#stuur-bericht" style="background:oklch(70% 0.14 220);color:#001a2e;padding:10px 20px;border-radius:6px;font-weight:600;transition:all 200ms ease;">Plan gesprek</a>
+      <a class="nav-link" href="#stuur-bericht" style="background:var(--accent);color:var(--bg);padding:10px 20px;border-radius:6px;font-weight:600;transition:all 200ms ease;">Plan gesprek</a>
     </nav>
     <button type="button" class="nav-toggle" id="nav-toggle-btn" aria-label="Menu" aria-expanded="false" aria-controls="nav-mobile-panel">
       <span></span><span></span><span></span>
@@ -147,20 +139,20 @@
       <a href="./chatbots.html" style="color:var(--text-muted);transition:color 200ms ease;">Chatbots</a>
       <a href="./blog.html" style="color:var(--text-muted);transition:color 200ms ease;">Blog</a>
       <a href="./contact.html" style="color:var(--text);font-weight:600;">Contact</a>
-      <a href="#stuur-bericht" style="background:oklch(70% 0.14 220);color:#001a2e;padding:10px 20px;border-radius:6px;font-weight:600;transition:all 200ms ease;">Plan gesprek</a>
+      <a href="#stuur-bericht" style="background:var(--accent);color:var(--bg);padding:10px 20px;border-radius:6px;font-weight:600;transition:all 200ms ease;">Plan gesprek</a>
   </div>
 </header>
 
-<section style="position:relative;overflow:hidden;background:var(--bg);color:#FFF;padding:clamp(64px,9vw,100px) clamp(20px,5vw,40px) clamp(56px,7vw,80px);text-align:center;">
+<section style="position:relative;overflow:hidden;background:var(--bg);padding:clamp(64px,9vw,100px) clamp(20px,5vw,40px) clamp(56px,7vw,80px);text-align:center;">
   <div style="max-width:800px;margin:0 auto;position:relative;z-index:1;">
-    <div style="display:inline-block;background:oklch(70% 0.14 220 / 0.15);border:1px solid oklch(70% 0.14 220 / 0.3);padding:10px 16px;border-radius:20px;margin-bottom:24px;font-size:0.8125rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:oklch(70% 0.14 220);">Contact</div>
-    <h1 style="font:800 clamp(2rem,4.5vw,3rem)/1.2 'IBM Plex Sans';margin:0 0 18px;letter-spacing:-0.02em;">Neem contact op</h1>
-    <p style="font:400 clamp(1rem,1.6vw,1.125rem)/1.7 'IBM Plex Sans';color:oklch(75% 0.10 250);margin:0;">Vragen, een concreet idee of gewoon kennismaken — bereik ons rechtstreeks of stuur een bericht. 24/7 bereikbaar, reactie binnen 24 uur.</p>
+    <div style="display:inline-block;background:oklch(70% 0.14 188 / 0.15);border:1px solid oklch(70% 0.14 188 / 0.3);padding:10px 16px;border-radius:20px;margin-bottom:24px;font-size:0.8125rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--accent-text);">Contact</div>
+    <h1 style="font:800 clamp(2rem,4.5vw,3rem)/1.2 'Outfit';margin:0 0 18px;letter-spacing:-0.02em;">Neem contact op</h1>
+    <p style="font:400 clamp(1rem,1.6vw,1.125rem)/1.7 'IBM Plex Sans';color:var(--text-muted);margin:0;">Vragen, een concreet idee of gewoon kennismaken: bereik ons rechtstreeks of stuur een bericht. 24/7 bereikbaar, reactie binnen 24 uur.</p>
   </div>
 </section>
 
 <section style="padding:clamp(56px,7vw,88px) clamp(20px,5vw,40px);background:var(--surface);">
-  <div class="contact-grid" style="max-width:1100px;margin:0 auto;align-items:start;">
+  <div class="contact-grid" data-reveal-grid style="max-width:1100px;margin:0 auto;align-items:start;">
 
     <div data-reveal style="padding:clamp(4px,1vw,8px) 4px;transition:opacity 600ms ease, transform 600ms ease;">
       <h2 style="font:600 0.75rem/1.2 'IBM Plex Mono';letter-spacing:0.06em;text-transform:uppercase;margin:0 0 18px;color:var(--text-muted-2);">Bedrijfsgegevens</h2>
@@ -185,15 +177,27 @@
     </div>
 
     <div id="stuur-bericht" data-reveal style="border:1px solid var(--border);border-radius:12px;padding:clamp(28px,4vw,40px);scroll-margin-top:100px;transition:opacity 600ms ease, transform 600ms ease;">
-      <h2 style="font:600 1.375rem/1.3 'IBM Plex Sans';margin:0 0 20px;color:var(--text);">Stuur een bericht</h2>
+      <h2 style="font:600 1.375rem/1.3 'Outfit';margin:0 0 20px;color:var(--text);">Stuur een bericht</h2>
       <form id="contact-form" style="display:flex;flex-direction:column;gap:16px;">
-        <input type="text" name="name" id="cf-name" required placeholder="Naam" class="contact-field"/>
-        <input type="email" name="email" id="cf-email" required placeholder="E-mailadres" class="contact-field"/>
-        <input type="tel" name="phone" id="cf-phone" placeholder="Telefoonnummer (optioneel)" class="contact-field"/>
-        <textarea name="message" id="cf-message" required placeholder="Je bericht" rows="5" class="contact-field" style="resize:none;"></textarea>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <label for="cf-name" style="font:500 0.875rem/1.4 'IBM Plex Sans';color:var(--text-muted);">Naam</label>
+          <input type="text" name="name" id="cf-name" required placeholder="Naam" class="contact-field"/>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <label for="cf-email" style="font:500 0.875rem/1.4 'IBM Plex Sans';color:var(--text-muted);">E-mailadres</label>
+          <input type="email" name="email" id="cf-email" required placeholder="E-mailadres" class="contact-field"/>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <label for="cf-phone" style="font:500 0.875rem/1.4 'IBM Plex Sans';color:var(--text-muted);">Telefoonnummer (optioneel)</label>
+          <input type="tel" name="phone" id="cf-phone" placeholder="Telefoonnummer (optioneel)" class="contact-field"/>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <label for="cf-message" style="font:500 0.875rem/1.4 'IBM Plex Sans';color:var(--text-muted);">Je bericht</label>
+          <textarea name="message" id="cf-message" required placeholder="Je bericht" rows="5" class="contact-field" style="resize:none;"></textarea>
+        </div>
         <input type="text" name="website" id="cf-website" autocomplete="off" tabindex="-1" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;">
-        <button type="submit" id="cf-submit" style="background:oklch(70% 0.14 220);color:#001a2e;padding:14px 28px;border:none;border-radius:6px;font-weight:700;font-size:0.95rem;cursor:pointer;transition:all 280ms ease;">Verstuur bericht</button>
-        <p style="font:400 0.8125rem/1.5 'IBM Plex Sans';color:var(--text-muted-2);margin:0;">Je gegevens worden verwerkt volgens de AVG, op EU-servers — je data blijft in de EU. Zie ons <a href="./privacy.html" style="color:var(--text-muted);">privacybeleid</a>.</p>
+        <button type="submit" id="cf-submit" style="background:var(--accent);color:var(--bg);padding:14px 28px;border:none;border-radius:6px;font-weight:700;font-size:0.95rem;cursor:pointer;transition:all 280ms ease;">Verstuur bericht</button>
+        <p style="font:400 0.8125rem/1.5 'IBM Plex Sans';color:var(--text-muted-2);margin:0;">Je gegevens worden verwerkt volgens de AVG, op EU-servers, je data blijft in de EU. Zie ons <a href="./privacy.html" style="color:var(--text-muted);">privacybeleid</a>.</p>
         <p id="cf-status" role="status" style="font:400 0.9rem/1.5 'IBM Plex Sans';margin:0;min-height:1.4em;"></p>
       </form>
       <script>
@@ -230,15 +234,15 @@
             .then(function (result) {
               if (result.ok && result.data.ok) {
                 form.reset();
-                status.style.color = "oklch(70% 0.14 220)";
+                status.style.color = "var(--accent-text)";
                 status.textContent = "Bedankt! We nemen zo snel mogelijk contact op.";
               } else {
-                status.style.color = "oklch(65% 0.20 30)";
+                status.style.color = "var(--danger-text)";
                 status.textContent = (result.data && result.data.error) || "Er ging iets mis, probeer het later opnieuw.";
               }
             })
             .catch(function () {
-              status.style.color = "oklch(65% 0.20 30)";
+              status.style.color = "var(--danger-text)";
               status.textContent = "Er ging iets mis, probeer het later opnieuw.";
             })
             .finally(function () {
@@ -277,7 +281,7 @@
         io.unobserve(entry.target);
       }
     });
-  }, { threshold: 0.12, rootMargin: "0px 0px -40px 0px" });
+  }, { threshold: 0, rootMargin: "0px 0px -40px 0px" });
   els.forEach(function (el) { io.observe(el); });
 })();
 </script>
@@ -333,6 +337,6 @@
   });
 })();
 </script>
-<script src="./tessar-concierge-widget.js?v=2" defer></script>
+<script src="./tessar-concierge-widget.js?v=3" defer></script>
 </body>
 </html>

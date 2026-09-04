@@ -23,10 +23,10 @@
 <script src="./assets/tessar-prefs.js" defer></script>
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Blog — Tessar | AI-automatisering voor het mkb</title>
+<title>Blog van Tessar | AI-automatisering voor het mkb</title>
 <meta name="description" content="Inzichten uit echte AI-implementaties voor het Nederlandse mkb: wat werkt, wat niet, en hoe we omgaan met de AI Act en grenzen in de praktijk.">
 <link rel="canonical" href="https://tessar.nl/blog.html">
-<meta name="theme-color" content="#0a0a0f">
+<meta name="theme-color" content="#F7F2E9">
 <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon-32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="./assets/favicon-16.png">
 <link rel="apple-touch-icon" href="./assets/apple-touch-icon.png">
@@ -76,27 +76,17 @@
 <meta property="og:type" content="website">
 <meta property="og:locale" content="nl_NL">
 <meta property="og:url" content="https://tessar.nl/blog.html">
-<meta property="og:title" content="Blog — Tessar">
+<meta property="og:title" content="Blog van Tessar">
 <meta property="og:description" content="Inzichten uit echte AI-implementaties voor het Nederlandse mkb: wat werkt, wat niet, en hoe we omgaan met de AI Act en grenzen in de praktijk.">
 <meta property="og:image" content="https://tessar.nl/og-image.jpg">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Blog — Tessar">
+<meta name="twitter:title" content="Blog van Tessar">
 <meta name="twitter:image" content="https://tessar.nl/og-image.jpg">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./assets/tessar-design-tokens.css">
 <style>
-  :root {
-    color-scheme: dark;
-    --bg: oklch(14% 0.016 260);
-    --surface: oklch(19% 0.016 260);
-    --text: oklch(95% 0.006 90);
-    --text-muted: oklch(72% 0.014 140);
-    --text-muted-2: oklch(60% 0.014 140);
-    --border: oklch(28% 0.014 260);
-    --accent-text: oklch(66% 0.13 226);
-    --surface-inset: oklch(25% 0.018 260);
-  }
   body { transition:background-color 200ms ease, color 200ms ease; }
   html, body { margin:0; padding:0; background:var(--bg); }
   html { scroll-behavior:smooth; }
@@ -142,7 +132,7 @@
       <a href="./chatbots.html" class="nav-link" style="color:var(--text-muted);transition:color 200ms ease;">Chatbots</a>
       <a href="./blog.html" class="nav-link" style="color:var(--text);font-weight:600;">Blog</a>
       <a href="./contact.html" class="nav-link" style="color:var(--text-muted);transition:color 200ms ease;">Contact</a>
-      <a class="nav-link" href="./index.html#contact" style="background:oklch(70% 0.14 220);color:#001a2e;padding:10px 20px;border-radius:6px;font-weight:600;transition:all 200ms ease;">Plan gesprek</a>
+      <a class="nav-link" href="./index.html#contact" style="background:var(--accent);color:var(--bg);padding:10px 20px;border-radius:6px;font-weight:600;transition:all 200ms ease;">Plan gesprek</a>
     </nav>
     <button type="button" class="nav-toggle" id="nav-toggle-btn" aria-label="Menu" aria-expanded="false" aria-controls="nav-mobile-panel">
       <span></span><span></span><span></span>
@@ -155,15 +145,15 @@
       <a href="./chatbots.html">Chatbots</a>
       <a href="./blog.html">Blog</a>
       <a href="./contact.html">Contact</a>
-      <a href="./index.html#contact" style="background:oklch(70% 0.14 220);color:#001a2e !important;text-align:center;border-radius:6px;font-weight:600;">Plan gesprek</a>
+      <a href="./index.html#contact" style="background:var(--accent);color:var(--bg) !important;text-align:center;border-radius:6px;font-weight:600;">Plan gesprek</a>
   </div>
 </header>
 <main>
-<section style="position:relative;overflow:hidden;background:var(--bg);color:#FFF;padding:clamp(64px,9vw,100px) clamp(20px,5vw,40px) clamp(56px,7vw,80px);text-align:center;">
+<section style="position:relative;overflow:hidden;background:var(--bg);padding:clamp(64px,9vw,100px) clamp(20px,5vw,40px) clamp(56px,7vw,80px);text-align:center;">
   <div style="max-width:800px;margin:0 auto;position:relative;z-index:1;">
-    <div style="display:inline-block;background:oklch(70% 0.14 220 / 0.15);border:1px solid oklch(70% 0.14 220 / 0.3);padding:10px 16px;border-radius:20px;margin-bottom:24px;font-size:0.8125rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:oklch(70% 0.14 220);">Blog</div>
-    <h1 style="font:800 clamp(2rem,4.5vw,3rem)/1.2 'IBM Plex Sans';margin:0 0 18px;letter-spacing:-0.02em;">Wat we leren onderweg</h1>
-    <p style="font:400 clamp(1rem,1.6vw,1.125rem)/1.7 'IBM Plex Sans';color:oklch(75% 0.10 250);margin:0;">Inzichten uit live deployments, echte gebruikers, en het navigeren van AI-ethiek in de praktijk — geen contentkalender-vulling, alleen wat we zelf onderweg tegenkomen.</p>
+    <div style="display:inline-block;background:oklch(70% 0.14 188 / 0.15);border:1px solid oklch(70% 0.14 188 / 0.3);padding:10px 16px;border-radius:20px;margin-bottom:24px;font-size:0.8125rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--accent-text);">Blog</div>
+    <h1 style="font:800 clamp(2rem,4.5vw,3rem)/1.2 'Outfit';margin:0 0 18px;letter-spacing:-0.02em;">Wat we leren onderweg</h1>
+    <p style="font:400 clamp(1rem,1.6vw,1.125rem)/1.7 'IBM Plex Sans';color:var(--text-muted);margin:0;">Inzichten uit live deployments, echte gebruikers, en het navigeren van AI-ethiek in de praktijk, geen contentkalender-vulling, alleen wat we zelf onderweg tegenkomen.</p>
   </div>
 </section>
 
@@ -175,55 +165,67 @@
   <div style="max-width:1200px;margin:0 auto;">
     <div data-reveal-grid style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:clamp(20px,3vw,40px);">
       <article data-reveal style="background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;box-shadow:0 1px 2px oklch(20% 0.02 255 / 0.04), 0 16px 32px -20px oklch(20% 0.02 255 / 0.12);transition:all 220ms ease, opacity 600ms ease, transform 600ms ease;">
-        <img src="./assets/blog/ai-receptioniste-voor-bedrijven.png" alt="AI-receptionist voor bedrijven" width="600" height="160" loading="lazy" style="width:100%;height:160px;object-fit:cover;display:block;background:var(--border);">
+        <a href="./ai-receptioniste-voor-bedrijven.html" aria-hidden="true" tabindex="-1" style="display:block;">
+          <img src="./assets/blog/ai-receptioniste-voor-bedrijven.png" alt="AI-receptionist voor bedrijven" width="600" height="160" loading="lazy" style="width:100%;height:160px;object-fit:cover;display:block;background:var(--border);">
+        </a>
         <div style="padding:clamp(22px,3vw,28px);">
           <div style="font:500 0.75rem/1 'IBM Plex Mono';color:var(--accent-text);margin-bottom:12px;text-transform:uppercase;letter-spacing:0.05em;">Augustus 2026</div>
-          <h2 style="font:600 1.1875rem/1.35 'IBM Plex Sans';margin:0 0 12px;letter-spacing:-0.01em;color:var(--text);">AI-receptionist voor bedrijven: 24/7 professioneel, automatisch antwoord</h2>
+          <h2 style="font:600 1.1875rem/1.35 'Outfit';margin:0 0 12px;letter-spacing:-0.01em;color:var(--text);">AI-receptionist voor bedrijven: 24/7 professioneel, automatisch antwoord</h2>
           <p style="font:400 0.9375rem/1.6 'IBM Plex Sans';color:var(--text-muted);margin:0 0 20px;">Elke gemiste oproep is een klant die naar de concurrent belt. Hoe een AI-receptionist dat oplost, wat het kost, en hoe de eerste twee weken eruitzien.</p>
           <a href="./ai-receptioniste-voor-bedrijven.html" style="font:500 0.875rem/1 'IBM Plex Mono';color:var(--accent-text);">Lees meer →</a>
         </div>
       </article>
       <article data-reveal style="background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;box-shadow:0 1px 2px oklch(20% 0.02 255 / 0.04), 0 16px 32px -20px oklch(20% 0.02 255 / 0.12);transition:all 220ms ease, opacity 600ms ease, transform 600ms ease;">
-        <img src="./assets/blog/ai-telefonist-voor-bedrijf.png" alt="AI Telefonist voor bedrijf" width="600" height="160" loading="lazy" style="width:100%;height:160px;object-fit:cover;display:block;background:var(--border);">
+        <a href="./ai-telefonist-voor-bedrijf.html" aria-hidden="true" tabindex="-1" style="display:block;">
+          <img src="./assets/blog/ai-telefonist-voor-bedrijf.png" alt="AI Telefonist voor bedrijf" width="600" height="160" loading="lazy" style="width:100%;height:160px;object-fit:cover;display:block;background:var(--border);">
+        </a>
         <div style="padding:clamp(22px,3vw,28px);">
           <div style="font:500 0.75rem/1 'IBM Plex Mono';color:var(--accent-text);margin-bottom:12px;text-transform:uppercase;letter-spacing:0.05em;">Augustus 2026</div>
-          <h2 style="font:600 1.1875rem/1.35 'IBM Plex Sans';margin:0 0 12px;letter-spacing:-0.01em;color:var(--text);">AI Telefonist voor Bedrijf – 24/7 Bereikbaarheid zonder Gedoe</h2>
+          <h2 style="font:600 1.1875rem/1.35 'Outfit';margin:0 0 12px;letter-spacing:-0.01em;color:var(--text);">AI Telefonist voor Bedrijf – 24/7 Bereikbaarheid zonder Gedoe</h2>
           <p style="font:400 0.9375rem/1.6 'IBM Plex Sans';color:var(--text-muted);margin:0 0 20px;">Geen gemiste oproepen meer, geen voicemail die niemand terugbelt. Wat een AI-telefonist wel en niet voor jouw bedrijf kan doen.</p>
           <a href="./ai-telefonist-voor-bedrijf.html" style="font:500 0.875rem/1 'IBM Plex Mono';color:var(--accent-text);">Lees meer →</a>
         </div>
       </article>
       <article data-reveal style="background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;box-shadow:0 1px 2px oklch(20% 0.02 255 / 0.04), 0 16px 32px -20px oklch(20% 0.02 255 / 0.12);transition:all 220ms ease, opacity 600ms ease, transform 600ms ease;">
-        <img src="./assets/blog/ai-chatbot-voor-bedrijven.png" alt="AI Chatbot voor bedrijven" width="600" height="160" loading="lazy" style="width:100%;height:160px;object-fit:cover;display:block;background:var(--border);">
+        <a href="./ai-chatbot-voor-bedrijven.html" aria-hidden="true" tabindex="-1" style="display:block;">
+          <img src="./assets/blog/ai-chatbot-voor-bedrijven.png" alt="AI Chatbot voor bedrijven" width="600" height="160" loading="lazy" style="width:100%;height:160px;object-fit:cover;display:block;background:var(--border);">
+        </a>
         <div style="padding:clamp(22px,3vw,28px);">
           <div style="font:500 0.75rem/1 'IBM Plex Mono';color:var(--accent-text);margin-bottom:12px;text-transform:uppercase;letter-spacing:0.05em;">Augustus 2026</div>
-          <h2 style="font:600 1.1875rem/1.35 'IBM Plex Sans';margin:0 0 12px;letter-spacing:-0.01em;color:var(--text);">AI Chatbot voor Bedrijven: Automatiseer Klantenservice in 5 Stappen</h2>
+          <h2 style="font:600 1.1875rem/1.35 'Outfit';margin:0 0 12px;letter-spacing:-0.01em;color:var(--text);">AI Chatbot voor Bedrijven: Automatiseer Klantenservice in 5 Stappen</h2>
           <p style="font:400 0.9375rem/1.6 'IBM Plex Sans';color:var(--text-muted);margin:0 0 20px;">Van dezelfde vraag tien keer per dag naar direct antwoord, dag en nacht. Zo zet je een AI-chatbot op zonder IT-afdeling.</p>
           <a href="./ai-chatbot-voor-bedrijven.html" style="font:500 0.875rem/1 'IBM Plex Mono';color:var(--accent-text);">Lees meer →</a>
         </div>
       </article>
       <article data-reveal style="background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;box-shadow:0 1px 2px oklch(20% 0.02 255 / 0.04), 0 16px 32px -20px oklch(20% 0.02 255 / 0.12);transition:all 220ms ease, opacity 600ms ease, transform 600ms ease;">
-        <img src="./assets/blog/workflow-automatisering-met-ai.png" alt="Workflow automatisering met AI" width="600" height="160" loading="lazy" style="width:100%;height:160px;object-fit:cover;display:block;background:var(--border);">
+        <a href="./workflow-automatisering-met-ai.html" aria-hidden="true" tabindex="-1" style="display:block;">
+          <img src="./assets/blog/workflow-automatisering-met-ai.png" alt="Workflow automatisering met AI" width="600" height="160" loading="lazy" style="width:100%;height:160px;object-fit:cover;display:block;background:var(--border);">
+        </a>
         <div style="padding:clamp(22px,3vw,28px);">
           <div style="font:500 0.75rem/1 'IBM Plex Mono';color:var(--accent-text);margin-bottom:12px;text-transform:uppercase;letter-spacing:0.05em;">Augustus 2026</div>
-          <h2 style="font:600 1.1875rem/1.35 'IBM Plex Sans';margin:0 0 12px;letter-spacing:-0.01em;color:var(--text);">Workflow Automatisering met AI: Hoe het Werkt en Waarom mkb's het Nodig Hebben</h2>
+          <h2 style="font:600 1.1875rem/1.35 'Outfit';margin:0 0 12px;letter-spacing:-0.01em;color:var(--text);">Workflow Automatisering met AI: Hoe het Werkt en Waarom mkb's het Nodig Hebben</h2>
           <p style="font:400 0.9375rem/1.6 'IBM Plex Sans';color:var(--text-muted);margin:0 0 20px;">Repetitief werk hoort niet in je agenda thuis. Praktische voorbeelden, een stappenplan, en hoe je bepaalt wat je als eerste automatiseert.</p>
           <a href="./workflow-automatisering-met-ai.html" style="font:500 0.875rem/1 'IBM Plex Mono';color:var(--accent-text);">Lees meer →</a>
         </div>
       </article>
       <article data-reveal style="background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;box-shadow:0 1px 2px oklch(20% 0.02 255 / 0.04), 0 16px 32px -20px oklch(20% 0.02 255 / 0.12);transition:all 220ms ease, opacity 600ms ease, transform 600ms ease;">
-        <img src="./assets/blog/ai-implementatie-laten-uitvoeren.png" alt="AI implementatie laten uitvoeren" width="600" height="160" loading="lazy" style="width:100%;height:160px;object-fit:cover;display:block;background:var(--border);">
+        <a href="./ai-implementatie-laten-uitvoeren.html" aria-hidden="true" tabindex="-1" style="display:block;">
+          <img src="./assets/blog/ai-implementatie-laten-uitvoeren.png" alt="AI implementatie laten uitvoeren" width="600" height="160" loading="lazy" style="width:100%;height:160px;object-fit:cover;display:block;background:var(--border);">
+        </a>
         <div style="padding:clamp(22px,3vw,28px);">
           <div style="font:500 0.75rem/1 'IBM Plex Mono';color:var(--accent-text);margin-bottom:12px;text-transform:uppercase;letter-spacing:0.05em;">Augustus 2026</div>
-          <h2 style="font:600 1.1875rem/1.35 'IBM Plex Sans';margin:0 0 12px;letter-spacing:-0.01em;color:var(--text);">AI implementatie laten uitvoeren: Maatwerk automation voor jouw mkb</h2>
-          <p style="font:400 0.9375rem/1.6 'IBM Plex Sans';color:var(--text-muted);margin:0 0 20px;">Snel, laagdrempelig, resultaatgericht — hoe een AI-implementatietraject bij Tessar er in de praktijk uitziet, stap voor stap.</p>
+          <h2 style="font:600 1.1875rem/1.35 'Outfit';margin:0 0 12px;letter-spacing:-0.01em;color:var(--text);">AI implementatie laten uitvoeren: Maatwerk automation voor jouw mkb</h2>
+          <p style="font:400 0.9375rem/1.6 'IBM Plex Sans';color:var(--text-muted);margin:0 0 20px;">Snel, laagdrempelig, resultaatgericht: hoe een AI-implementatietraject bij Tessar er in de praktijk uitziet, stap voor stap.</p>
           <a href="./ai-implementatie-laten-uitvoeren.html" style="font:500 0.875rem/1 'IBM Plex Mono';color:var(--accent-text);">Lees meer →</a>
         </div>
       </article>
       <article data-reveal style="background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;box-shadow:0 1px 2px oklch(20% 0.02 255 / 0.04), 0 16px 32px -20px oklch(20% 0.02 255 / 0.12);transition:all 220ms ease, opacity 600ms ease, transform 600ms ease;">
-        <img src="./assets/blog/bedrijfsprocessen-automatiseren-met-ai.png" alt="Bedrijfsprocessen automatiseren met AI" width="600" height="160" loading="lazy" style="width:100%;height:160px;object-fit:cover;display:block;background:var(--border);">
+        <a href="./bedrijfsprocessen-automatiseren-met-ai.html" aria-hidden="true" tabindex="-1" style="display:block;">
+          <img src="./assets/blog/bedrijfsprocessen-automatiseren-met-ai.png" alt="Bedrijfsprocessen automatiseren met AI" width="600" height="160" loading="lazy" style="width:100%;height:160px;object-fit:cover;display:block;background:var(--border);">
+        </a>
         <div style="padding:clamp(22px,3vw,28px);">
           <div style="font:500 0.75rem/1 'IBM Plex Mono';color:var(--accent-text);margin-bottom:12px;text-transform:uppercase;letter-spacing:0.05em;">Augustus 2026</div>
-          <h2 style="font:600 1.1875rem/1.35 'IBM Plex Sans';margin:0 0 12px;letter-spacing:-0.01em;color:var(--text);">Bedrijfsprocessen automatiseren met AI: praktische gids voor het mkb</h2>
+          <h2 style="font:600 1.1875rem/1.35 'Outfit';margin:0 0 12px;letter-spacing:-0.01em;color:var(--text);">Bedrijfsprocessen automatiseren met AI: praktische gids voor het mkb</h2>
           <p style="font:400 0.9375rem/1.6 'IBM Plex Sans';color:var(--text-muted);margin:0 0 20px;">Niet elk proces is geschikt voor automatisering. Een selectiematrix, een stappenplan, en concrete voorbeelden uit de dagelijkse mkb-praktijk.</p>
           <a href="./bedrijfsprocessen-automatiseren-met-ai.html" style="font:500 0.875rem/1 'IBM Plex Mono';color:var(--accent-text);">Lees meer →</a>
         </div>
@@ -234,9 +236,9 @@
 
 <section style="padding:clamp(56px,7vw,80px) clamp(20px,5vw,40px);background:var(--surface);border-top:1px solid var(--border);">
   <div data-reveal style="max-width:720px;margin:0 auto;text-align:center;transition:opacity 600ms ease, transform 600ms ease;">
-    <h2 style="font:600 clamp(1.5rem,3vw,1.875rem)/1.3 'IBM Plex Sans';margin:0 0 16px;color:var(--text);">Liever direct sparren?</h2>
+    <h2 style="font:600 clamp(1.5rem,3vw,1.875rem)/1.3 'Outfit';margin:0 0 16px;color:var(--text);">Liever direct sparren?</h2>
     <p style="font:400 1rem/1.7 'IBM Plex Sans';color:var(--text-muted);margin:0 0 32px;">Plan een gratis kennismaking van 30 minuten. We brengen je AI-kans in kaart en laten zien wat mogelijk is.</p>
-    <a href="./index.html#contact" style="display:inline-block;background:oklch(70% 0.14 220);color:#001a2e;padding:14px 32px;border-radius:6px;font-weight:700;font-size:0.95rem;transition:all 280ms ease;">Plan gesprek</a>
+    <a href="./index.html#contact" style="display:inline-block;background:var(--accent);color:var(--bg);padding:14px 32px;border-radius:6px;font-weight:700;font-size:0.95rem;transition:all 280ms ease;">Plan gesprek</a>
   </div>
 </section>
 </main>
@@ -260,7 +262,7 @@
         io.unobserve(entry.target);
       }
     });
-  }, { threshold: 0.12, rootMargin: "0px 0px -40px 0px" });
+  }, { threshold: 0, rootMargin: "0px 0px -40px 0px" });
   els.forEach(function (el) { io.observe(el); });
 })();
 </script>
@@ -289,6 +291,6 @@
   });
 })();
 </script>
-<script src="./tessar-concierge-widget.js?v=2" defer></script>
+<script src="./tessar-concierge-widget.js?v=3" defer></script>
 </body>
 </html>

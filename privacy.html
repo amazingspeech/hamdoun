@@ -23,10 +23,10 @@
 <script src="./assets/tessar-prefs.js" defer></script>
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Privacybeleid — Tessar</title>
+<title>Privacybeleid van Tessar</title>
 <meta name="description" content="Welke gegevens Tessar verzamelt via het contactformulier, de AI-chatwidget en Google Analytics, waarom, en welke rechten je hebt onder de AVG.">
 <link rel="canonical" href="https://tessar.nl/privacy.html">
-<meta name="theme-color" content="#0a0a0f">
+<meta name="theme-color" content="#F7F2E9">
 <meta name="robots" content="noindex, follow">
 <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon-32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="./assets/favicon-16.png">
@@ -35,28 +35,18 @@
 <meta property="og:type" content="website">
 <meta property="og:locale" content="nl_NL">
 <meta property="og:url" content="https://tessar.nl/privacy.html">
-<meta property="og:title" content="Privacybeleid — Tessar">
+<meta property="og:title" content="Privacybeleid van Tessar">
 <meta property="og:description" content="Welke gegevens Tessar verzamelt, waarom, en welke rechten je hebt onder de AVG.">
 <meta property="og:image" content="https://tessar.nl/og-image.jpg">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Privacybeleid — Tessar">
+<meta name="twitter:title" content="Privacybeleid van Tessar">
 <meta name="twitter:description" content="Welke gegevens Tessar verzamelt, waarom, en welke rechten je hebt onder de AVG.">
 <meta name="twitter:image" content="https://tessar.nl/og-image.jpg">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./assets/tessar-design-tokens.css">
 <style>
-  :root {
-    color-scheme: dark;
-    --bg: oklch(14% 0.016 260);
-    --surface: oklch(19% 0.016 260);
-    --text: oklch(95% 0.006 90);
-    --text-muted: oklch(72% 0.014 140);
-    --text-muted-2: oklch(60% 0.014 140);
-    --border: oklch(28% 0.014 260);
-    --accent-text: oklch(66% 0.13 226);
-    --surface-inset: oklch(25% 0.018 260);
-  }
   body { transition:background-color 200ms ease, color 200ms ease; }
   html, body { margin:0; padding:0; background:var(--bg); }
   html { scroll-behavior:smooth; }
@@ -79,9 +69,9 @@
     .nav-toggle.nav-toggle-active span:nth-child(2) { opacity:0; }
     .nav-toggle.nav-toggle-active span:nth-child(3) { transform:translateY(-7px) rotate(-45deg); }
   }
-  #back-to-top { position:fixed; right:100px; bottom:24px; z-index:40; width:48px; height:48px; border-radius:50%; border:none; background:oklch(70% 0.14 220); color:#001a2e; display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:0 8px 24px oklch(20% 0.02 255 / 0.25); opacity:0; transform:translateY(12px); pointer-events:none; transition:opacity 260ms ease, transform 260ms ease, box-shadow 200ms ease; }
+  #back-to-top { position:fixed; right:100px; bottom:24px; z-index:40; width:48px; height:48px; border-radius:50%; border:none; background:var(--accent); color:var(--bg); display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:0 8px 24px oklch(20% 0.02 255 / 0.25); opacity:0; transform:translateY(12px); pointer-events:none; transition:opacity 260ms ease, transform 260ms ease, box-shadow 200ms ease; }
   #back-to-top.is-visible { opacity:1; transform:translateY(0); pointer-events:auto; }
-  #back-to-top:hover { transform:translateY(-3px); box-shadow:0 12px 32px rgba(0,212,255,0.35); }
+  #back-to-top:hover { transform:translateY(-3px); box-shadow:0 12px 32px rgba(15,92,87,0.35); }
   #back-to-top:focus-visible { outline:2px solid var(--accent-text); outline-offset:3px; }
   @media (max-width: 480px) { #back-to-top { right:92px; bottom:16px; } }
   @media (prefers-reduced-motion: reduce) {
@@ -90,7 +80,7 @@
     #back-to-top { transition:opacity 200ms ease; transform:none; }
   }
   .legal { max-width:760px; margin:0 auto; }
-  .legal h2 { font:700 1.3125rem/1.35 'IBM Plex Sans'; color:var(--text); margin:40px 0 14px; letter-spacing:-0.01em; }
+  .legal h2 { font:700 1.3125rem/1.35 'Outfit'; color:var(--text); margin:40px 0 14px; letter-spacing:-0.01em; }
   .legal h2:first-child { margin-top:0; }
   .legal p { font:400 0.9625rem/1.7 'IBM Plex Sans'; color:var(--text-muted); margin:0 0 14px; }
   .legal ul { margin:0 0 14px; padding-left:20px; }
@@ -117,7 +107,7 @@
       <a href="./chatbots.html" class="nav-link" style="color:var(--text-muted);transition:color 200ms ease;">Chatbots</a>
       <a href="./blog.html" class="nav-link" style="color:var(--text-muted);transition:color 200ms ease;">Blog</a>
       <a href="./contact.html" class="nav-link" style="color:var(--text-muted);transition:color 200ms ease;">Contact</a>
-      <a class="nav-link" href="./contact.html#stuur-bericht" style="background:oklch(70% 0.14 220);color:#001a2e;padding:10px 20px;border-radius:6px;font-weight:600;transition:all 200ms ease;">Plan gesprek</a>
+      <a class="nav-link" href="./contact.html#stuur-bericht" style="background:var(--accent);color:var(--bg);padding:10px 20px;border-radius:6px;font-weight:600;transition:all 200ms ease;">Plan gesprek</a>
     </nav>
     <button type="button" class="nav-toggle" id="nav-toggle-btn" aria-label="Menu" aria-expanded="false" aria-controls="nav-mobile-panel">
       <span></span><span></span><span></span>
@@ -130,15 +120,15 @@
       <a href="./chatbots.html" style="color:var(--text-muted);transition:color 200ms ease;">Chatbots</a>
       <a href="./blog.html" style="color:var(--text-muted);transition:color 200ms ease;">Blog</a>
       <a href="./contact.html" style="color:var(--text-muted);transition:color 200ms ease;">Contact</a>
-      <a href="./contact.html#stuur-bericht" style="background:oklch(70% 0.14 220);color:#001a2e;padding:10px 20px;border-radius:6px;font-weight:600;transition:all 200ms ease;">Plan gesprek</a>
+      <a href="./contact.html#stuur-bericht" style="background:var(--accent);color:var(--bg);padding:10px 20px;border-radius:6px;font-weight:600;transition:all 200ms ease;">Plan gesprek</a>
   </div>
 </header>
 
-<section style="position:relative;overflow:hidden;background:var(--bg);color:#FFF;padding:clamp(56px,8vw,84px) clamp(20px,5vw,40px) clamp(48px,6vw,64px);text-align:center;">
+<section style="position:relative;overflow:hidden;background:var(--bg);padding:clamp(56px,8vw,84px) clamp(20px,5vw,40px) clamp(48px,6vw,64px);text-align:center;">
   <div style="max-width:800px;margin:0 auto;position:relative;z-index:1;">
-    <div style="display:inline-block;background:oklch(70% 0.14 220 / 0.15);border:1px solid oklch(70% 0.14 220 / 0.3);padding:10px 16px;border-radius:20px;margin-bottom:24px;font-size:0.8125rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:oklch(70% 0.14 220);">Privacy</div>
-    <h1 style="font:800 clamp(1.75rem,4vw,2.625rem)/1.25 'IBM Plex Sans';margin:0 0 18px;letter-spacing:-0.02em;">Privacybeleid</h1>
-    <p style="font:400 clamp(1rem,1.6vw,1.125rem)/1.7 'IBM Plex Sans';color:oklch(75% 0.10 250);margin:0;">Welke gegevens we verzamelen op tessar.nl, waarom, en hoe je dat kunt beheren.</p>
+    <div style="display:inline-block;background:oklch(70% 0.14 188 / 0.15);border:1px solid oklch(70% 0.14 188 / 0.3);padding:10px 16px;border-radius:20px;margin-bottom:24px;font-size:0.8125rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--accent-text);">Privacy</div>
+    <h1 style="font:800 clamp(1.75rem,4vw,2.625rem)/1.25 'Outfit';margin:0 0 18px;letter-spacing:-0.02em;">Privacybeleid</h1>
+    <p style="font:400 clamp(1rem,1.6vw,1.125rem)/1.7 'IBM Plex Sans';color:var(--text-muted);margin:0;">Welke gegevens we verzamelen op tessar.nl, waarom, en hoe je dat kunt beheren.</p>
   </div>
 </section>
 
@@ -160,7 +150,7 @@
     <h2>Welke gegevens we verzamelen, en waarom</h2>
     <p><strong>Contactformulier.</strong> Als je het formulier op de contactpagina invult, ontvangen wij je naam, e-mailadres, eventueel telefoonnummer en je bericht. We gebruiken dit alleen om te reageren op je vraag. Grondslag: gerechtvaardigd belang (het afhandelen van een verzoek dat je zelf indient).</p>
     <p><strong>AI-chatwidget ("Tess").</strong> Berichten die je typt in de chatwidget rechtsonder op de site worden doorgestuurd naar onze workflow-omgeving, die een AI-taalmodel gebruikt om te antwoorden. We gebruiken chatinhoud niet voor iets anders dan het beantwoorden van je vraag op dat moment. Er wordt geen chatgeschiedenis blijvend aan een persoon gekoppeld opgeslagen buiten wat nodig is om het gesprek te laten werken.</p>
-    <p><strong>Google Analytics (GA4).</strong> Alleen als je hiervoor toestemming geeft via de cookiebanner meten we bezoekersstatistieken (bezochte pagina's, apparaattype, bij benadering regio) om te zien hoe de site wordt gebruikt en waar die beter kan. Zonder jouw toestemming blijft dit uitgeschakeld — dat is standaard zo ingesteld (Google Consent Mode, status "geweigerd" totdat je op "Accepteren" klikt).</p>
+    <p><strong>Google Analytics (GA4).</strong> Alleen als je hiervoor toestemming geeft via de cookiebanner meten we bezoekersstatistieken (bezochte pagina's, apparaattype, bij benadering regio) om te zien hoe de site wordt gebruikt en waar die beter kan. Zonder jouw toestemming blijft dit uitgeschakeld: dat is standaard zo ingesteld (Google Consent Mode, status "geweigerd" totdat je op "Accepteren" klikt).</p>
     <p><strong>Functionele voorkeuren.</strong> Je thema-keuze (licht/donker) en je cookiekeuze zelf worden lokaal in je browser opgeslagen (localStorage). Deze gegevens verlaten je apparaat niet.</p>
 
     <h2>Cookies en vergelijkbare technieken</h2>
@@ -170,8 +160,8 @@
         <tr><th>Naam</th><th>Doel</th><th>Bewaartermijn</th><th>Toestemming nodig?</th></tr>
       </thead>
       <tbody>
-        <tr><td><code>tessar-consent</code></td><td>Onthoudt je keuze in de cookiebanner</td><td>Tot je 'm wist</td><td>Nee — functioneel</td></tr>
-        <tr><td><code>_ga</code>, <code>_ga_*</code></td><td>Google Analytics — geaggregeerde bezoekstatistieken</td><td>Max. 14 maanden</td><td>Ja — alleen na "Accepteren"</td></tr>
+        <tr><td><code>tessar-consent</code></td><td>Onthoudt je keuze in de cookiebanner</td><td>Tot je 'm wist</td><td>Nee: functioneel</td></tr>
+        <tr><td><code>_ga</code>, <code>_ga_*</code></td><td>Google Analytics: geaggregeerde bezoekstatistieken</td><td>Max. 14 maanden</td><td>Ja: alleen na "Accepteren"</td></tr>
       </tbody>
     </table>
     </div>
@@ -179,8 +169,8 @@
 
     <h2>Delen met derden</h2>
     <ul>
-      <li><strong>Google Ireland Limited</strong> — verwerkt Analytics-gegevens, uitsluitend als je toestemming hebt gegeven.</li>
-      <li><strong>Onze workflow- en AI-leveranciers</strong> — verwerken chatberichten om de chatwidget te laten werken, alleen als je de chat zelf gebruikt.</li>
+      <li><strong>Google Ireland Limited</strong>: verwerkt Analytics-gegevens, uitsluitend als je toestemming hebt gegeven.</li>
+      <li><strong>Onze workflow- en AI-leveranciers</strong>: verwerken chatberichten om de chatwidget te laten werken, alleen als je de chat zelf gebruikt.</li>
       <li>We verkopen geen gegevens aan derden en gebruiken geen advertentietracking.</li>
     </ul>
 
@@ -188,7 +178,7 @@
     <p>Contactformulier- en chatberichten bewaren we niet langer dan nodig is om je vraag af te handelen, met een maximum van 2 jaar. Analytics-gegevens worden bewaard volgens de standaard bewaartermijn van Google Analytics (zie tabel hierboven).</p>
 
     <h2>Jouw rechten</h2>
-    <p>Onder de AVG heb je het recht op inzage, correctie en verwijdering van je gegevens, en het recht om bezwaar te maken tegen verwerking. Stuur een verzoek naar <a href="mailto:info@tessar.nl">info@tessar.nl</a> — we reageren binnen 4 weken. Ben je het niet eens met hoe we je gegevens verwerken, dan kun je een klacht indienen bij de <a href="https://www.autoriteitpersoonsgegevens.nl" target="_blank" rel="noopener">Autoriteit Persoonsgegevens</a>.</p>
+    <p>Onder de AVG heb je het recht op inzage, correctie en verwijdering van je gegevens, en het recht om bezwaar te maken tegen verwerking. Stuur een verzoek naar <a href="mailto:info@tessar.nl">info@tessar.nl</a>. We reageren binnen 4 weken. Ben je het niet eens met hoe we je gegevens verwerken, dan kun je een klacht indienen bij de <a href="https://www.autoriteitpersoonsgegevens.nl" target="_blank" rel="noopener">Autoriteit Persoonsgegevens</a>.</p>
 
     <h2>Wijzigingen in dit beleid</h2>
     <p>We kunnen dit beleid aanpassen, bijvoorbeeld als we een nieuwe tool toevoegen aan de site. De datum bovenaan deze pagina geeft aan wanneer het voor het laatst is bijgewerkt.</p>
@@ -220,7 +210,7 @@
         io.unobserve(entry.target);
       }
     });
-  }, { threshold: 0.12, rootMargin: "0px 0px -40px 0px" });
+  }, { threshold: 0, rootMargin: "0px 0px -40px 0px" });
   els.forEach(function (el) { io.observe(el); });
 })();
 </script>
@@ -276,6 +266,6 @@
   });
 })();
 </script>
-<script src="./tessar-concierge-widget.js?v=2" defer></script>
+<script src="./tessar-concierge-widget.js?v=3" defer></script>
 </body>
 </html>

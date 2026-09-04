@@ -60,7 +60,7 @@
     wrap.style.cssText =
       "position:fixed;left:16px;right:16px;bottom:16px;z-index:9999;" +
       "max-width:520px;margin:0 auto;" +
-      "background:var(--bg,#0f1115);color:var(--text,#f2f2f2);" +
+      "background:var(--bg,#F1EADA);color:var(--text,#211C14);" +
       "border:1px solid var(--border,rgba(255,255,255,0.14));" +
       "border-radius:12px;padding:20px 22px;" +
       "box-shadow:0 12px 36px rgba(0,0,0,0.35);" +
@@ -69,15 +69,15 @@
       "opacity:0;transform:translateY(24px);transition:opacity 220ms ease,transform 220ms ease;";
 
     var text = document.createElement("p");
-    text.style.cssText = "margin:0;color:var(--text-dim,#b8b8b8);";
+    text.style.cssText = "margin:0;color:var(--text-dim,#5F5646);";
     text.appendChild(
       document.createTextNode(
-        "We gebruiken alleen analytics-cookies om te zien hoe bezoekers de site gebruiken — geen advertentietracking. Ga je akkoord? Lees ons "
+        "We gebruiken alleen analytics-cookies om te zien hoe bezoekers de site gebruiken, geen advertentietracking. Ga je akkoord? Lees ons "
       )
     );
     var policyLink = document.createElement("a");
     policyLink.href = "/privacy.html";
-    policyLink.style.cssText = "color:var(--accent-text,#7dd3fc);text-decoration:underline;";
+    policyLink.style.cssText = "color:var(--accent-text,#0F5C57);text-decoration:underline;";
     policyLink.textContent = "privacybeleid";
     text.appendChild(policyLink);
     text.appendChild(document.createTextNode("."));
@@ -90,7 +90,7 @@
     decline.type = "button";
     decline.textContent = "Weigeren";
     decline.style.cssText =
-      "background:transparent;color:var(--text,#f2f2f2);" +
+      "background:transparent;color:var(--text,#211C14);" +
       "border:1px solid var(--border,rgba(255,255,255,0.24));" +
       "border-radius:6px;padding:10px 18px;font:600 0.875rem/1 inherit;" +
       "cursor:pointer;transition:border-color 160ms ease;";
@@ -99,8 +99,8 @@
     accept.type = "button";
     accept.textContent = "Accepteren";
     accept.style.cssText =
-      "background:oklch(70% 0.14 220);" +
-      "color:#001a2e;border:none;border-radius:6px;padding:10px 20px;" +
+      "background:#0F5C57;" +
+      "color:#F7F2E9;border:none;border-radius:6px;padding:10px 20px;" +
       "font:700 0.875rem/1 inherit;cursor:pointer;transition:transform 160ms ease;";
 
     accept.addEventListener("click", function () {

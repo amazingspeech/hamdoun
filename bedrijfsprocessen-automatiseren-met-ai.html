@@ -23,10 +23,10 @@
 <script src="./assets/tessar-prefs.js" defer></script>
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Bedrijfsprocessen automatiseren met AI — Tessar</title>
+<title>Bedrijfsprocessen automatiseren met AI | Tessar</title>
 <meta name="description" content="Welke processen zich lenen voor AI-automatisering, hoe je prioriteert, en een stappenplan om binnen weken je eerste proces te automatiseren.">
 <link rel="canonical" href="https://tessar.nl/bedrijfsprocessen-automatiseren-met-ai.html">
-<meta name="theme-color" content="#0a0a0f">
+<meta name="theme-color" content="#F7F2E9">
 <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon-32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="./assets/favicon-16.png">
 <link rel="apple-touch-icon" href="./assets/apple-touch-icon.png">
@@ -34,11 +34,11 @@
 <meta property="og:type" content="article">
 <meta property="og:locale" content="nl_NL">
 <meta property="og:url" content="https://tessar.nl/bedrijfsprocessen-automatiseren-met-ai.html">
-<meta property="og:title" content="Bedrijfsprocessen automatiseren met AI — Tessar">
+<meta property="og:title" content="Bedrijfsprocessen automatiseren met AI | Tessar">
 <meta property="og:description" content="Welke processen zich lenen voor AI-automatisering, hoe je prioriteert, en een stappenplan om binnen weken je eerste proces te automatiseren.">
 <meta property="og:image" content="https://tessar.nl/assets/blog/bedrijfsprocessen-automatiseren-met-ai.png">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Bedrijfsprocessen automatiseren met AI — Tessar">
+<meta name="twitter:title" content="Bedrijfsprocessen automatiseren met AI | Tessar">
 <meta name="twitter:image" content="https://tessar.nl/assets/blog/bedrijfsprocessen-automatiseren-met-ai.png">
 
 <script type="application/ld+json">
@@ -60,7 +60,7 @@
     { "@type": "Question", "name": "Hoeveel kost dit?", "acceptedAnswer": { "@type": "Answer", "text": "Dat verschilt sterk naargelang wat je automatiseert. Een AI-receptionist voor telefonische intake kan voor kleine bedrijven rond €200-500/maand liggen. Simpele automatisering voor factuurverwerking kan goedkoper zijn. Het belangrijkste: vergelijk dit met de tijd en fouten die je nu bespaart. Als je 6 uur/week bespaart en je medewerker verdient €20/uur, dan scheelt dat al enkele honderden euro's per maand." } },
     { "@type": "Question", "name": "Heb ik technische kennis nodig?", "acceptedAnswer": { "@type": "Answer", "text": "Nee. Moderne AI-automatiseringstoolkits zijn ontworpen voor niet-technische gebruikers. Je hoeft geen code te schrijven; je configureert via interfaces. Wel handig: iemand in je team die graag nieuwe tools leert." } },
     { "@type": "Question", "name": "Kan het integreren met mijn huidige systemen?", "acceptedAnswer": { "@type": "Answer", "text": "Meestal wel. AI-tools werken nu met de meeste populaire CRM- en boekhoudplatforms. Als je iets heel niche gebruikt, check dan vooraf of integratie mogelijk is. Dit is meestal geen showstopper, alleen iets om van tevoren te verifiëren." } },
-    { "@type": "Question", "name": "Wat gebeurt er met mijn medewerkers?", "acceptedAnswer": { "@type": "Answer", "text": "Dit is een terechte vraag. Automatisering vervangt meestal geen mensen — het vervangt repetitief werk. Je receptionist neemt minder telefoontjes aan, maar handelt meer complexe klantvragen beter af. Je administratief medewerker hoeft niet meer handmatig facturen in te voeren, maar kan zich op relatiebeheer concentreren. Het helpt vooral bedrijven om meer te doen met hetzelfde team." } },
+    { "@type": "Question", "name": "Wat gebeurt er met mijn medewerkers?", "acceptedAnswer": { "@type": "Answer", "text": "Dit is een terechte vraag. Automatisering vervangt meestal geen mensen: het vervangt repetitief werk. Je receptionist neemt minder telefoontjes aan, maar handelt meer complexe klantvragen beter af. Je administratief medewerker hoeft niet meer handmatig facturen in te voeren, maar kan zich op relatiebeheer concentreren. Het helpt vooral bedrijven om meer te doen met hetzelfde team." } },
     { "@type": "Question", "name": "En als iets misgaat?", "acceptedAnswer": { "@type": "Answer", "text": "Goed ontworpen automatisering heeft controlemomenten ingebouwd. Een AI-receptionist escaleert complexe vragen naar een mens. Factuurverwerking stuurt uitkomsten ter controle naar je team. Je hebt altijd de mogelijkheid om in te grijpen." } },
     { "@type": "Question", "name": "Hoeveel tijd kost implementatie?", "acceptedAnswer": { "@type": "Answer", "text": "Voor simpele processen: 1-4 weken. Voor complexere integraties: 4-8 weken. Dit is veel sneller dan traditionele IT-projecten." } }
   ]
@@ -68,19 +68,9 @@
 </script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./assets/tessar-design-tokens.css">
 <style>
-  :root {
-    color-scheme: dark;
-    --bg: oklch(14% 0.016 260);
-    --surface: oklch(19% 0.016 260);
-    --text: oklch(95% 0.006 90);
-    --text-muted: oklch(72% 0.014 140);
-    --text-muted-2: oklch(60% 0.014 140);
-    --border: oklch(28% 0.014 260);
-    --accent-text: oklch(66% 0.13 226);
-    --surface-inset: oklch(25% 0.018 260);
-  }
   body { transition:background-color 200ms ease, color 200ms ease; }
   html, body { margin:0; padding:0; background:var(--bg); }
   html { scroll-behavior:smooth; }
@@ -89,6 +79,12 @@
   a:hover { color:var(--accent-text); }
   [data-reveal] { opacity:0; transform:translateY(18px); transition:opacity 600ms ease, transform 600ms ease; }
   [data-reveal].is-visible { opacity:1; transform:translateY(0); }
+  [data-reveal-grid] > [data-reveal]:nth-child(1) { transition-delay:0ms; }
+  [data-reveal-grid] > [data-reveal]:nth-child(2) { transition-delay:90ms; }
+  [data-reveal-grid] > [data-reveal]:nth-child(3) { transition-delay:180ms; }
+  [data-reveal-grid] > [data-reveal]:nth-child(4) { transition-delay:270ms; }
+  [data-reveal-grid] > [data-reveal]:nth-child(5) { transition-delay:360ms; }
+  [data-reveal-grid] > [data-reveal]:nth-child(6) { transition-delay:450ms; }
   .nav-toggle { display:none; background:none; border:none; cursor:pointer; padding:8px; flex-direction:column; gap:5px; margin-left:4px; }
   .nav-toggle span { display:block; width:22px; height:2px; background:var(--text); border-radius:2px; transition:transform 200ms ease, opacity 200ms ease; }
   .nav-mobile-panel { display:none; }
@@ -128,7 +124,7 @@
       <a href="./chatbots.html" class="nav-link" style="color:var(--text-muted);transition:color 200ms ease;">Chatbots</a>
       <a href="./blog.html" class="nav-link" style="color:var(--text);font-weight:600;">Blog</a>
       <a href="./contact.html" class="nav-link" style="color:var(--text-muted);transition:color 200ms ease;">Contact</a>
-      <a class="nav-link" href="./index.html#contact" style="background:oklch(70% 0.14 220);color:#001a2e;padding:10px 20px;border-radius:6px;font-weight:600;transition:all 200ms ease;">Plan gesprek</a>
+      <a class="nav-link" href="./index.html#contact" style="background:var(--accent);color:var(--bg);padding:10px 20px;border-radius:6px;font-weight:600;transition:all 200ms ease;">Plan gesprek</a>
     </nav>
     <button type="button" class="nav-toggle" id="nav-toggle-btn" aria-label="Menu" aria-expanded="false" aria-controls="nav-mobile-panel">
       <span></span><span></span><span></span>
@@ -141,7 +137,7 @@
       <a href="./chatbots.html">Chatbots</a>
       <a href="./blog.html">Blog</a>
       <a href="./contact.html">Contact</a>
-      <a href="./index.html#contact" style="background:oklch(70% 0.14 220);color:#001a2e !important;text-align:center;border-radius:6px;font-weight:600;">Plan gesprek</a>
+      <a href="./index.html#contact" style="background:var(--accent);color:var(--bg) !important;text-align:center;border-radius:6px;font-weight:600;">Plan gesprek</a>
   </div>
 </header>
 
@@ -151,47 +147,57 @@
   <div style="max-width:700px;margin:0 auto;">
     <a href="./blog.html" style="display:inline-flex;align-items:center;gap:6px;font:500 0.8125rem/1 'IBM Plex Mono';color:var(--text-muted);margin-bottom:22px;">&larr; Terug naar blog</a>
     <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px;">
-      <span style="display:inline-block;background:oklch(70% 0.14 220 / 0.12);border:1px solid oklch(70% 0.14 220 / 0.3);padding:6px 12px;border-radius:20px;font:600 0.75rem/1 'IBM Plex Sans';letter-spacing:0.04em;text-transform:uppercase;color:var(--accent-text);">Gids</span>
+      <span style="display:inline-block;background:oklch(70% 0.14 188 / 0.12);border:1px solid oklch(70% 0.14 188 / 0.3);padding:6px 12px;border-radius:20px;font:600 0.75rem/1 'IBM Plex Sans';letter-spacing:0.04em;text-transform:uppercase;color:var(--accent-text);">Gids</span>
       <span style="font:500 0.8125rem/1 'IBM Plex Mono';color:var(--text-muted-2);">Augustus 2026</span>
     </div>
-    <h1 style="font:800 clamp(1.75rem,4.5vw,2.75rem)/1.25 'IBM Plex Sans';margin:0 0 18px;letter-spacing:-0.02em;color:var(--text);">Bedrijfsprocessen automatiseren met AI: praktische gids voor het mkb</h1>
+    <h1 style="font:800 clamp(1.75rem,4.5vw,2.75rem)/1.25 'Outfit';margin:0 0 18px;letter-spacing:-0.02em;color:var(--text);">Bedrijfsprocessen automatiseren met AI: praktische gids voor het mkb</h1>
     <p style="font:400 clamp(1rem,1.6vw,1.1875rem)/1.65 'IBM Plex Sans';color:var(--text-muted);margin:0;">Niet elk proces is geschikt voor automatisering. Een selectiematrix, een stappenplan, en concrete voorbeelden uit de dagelijkse mkb-praktijk.</p>
   </div>
 </section>
 
 <section style="padding:0 clamp(20px,5vw,40px) clamp(56px,7vw,88px);background:var(--bg);">
   <div class="article-prose" style="max-width:700px;margin:0 auto;">
-<p style="font:400 1.0625rem/1.8 'IBM Plex Sans';color:var(--text);margin:0 0 22px;">Veel mkb-eigenaren worstelen met dezelfde uitdaging: handmatige processen die tijd opslokken, fouten veroorzaken en groei in de weg staan. Telefonische vragen die steeds terugkomen, inkomende facturen die handmatig worden ingevoerd, afspraken die ingepland moeten worden — het kost uren per week. Tegelijk lijkt automatisering met AI iets voor grote bedrijven met technische afdelingen.</p>
-<p style="font:400 1.0625rem/1.8 'IBM Plex Sans';color:var(--text);margin:0 0 22px;">Niets is minder waar. AI-automatisering is juist voor het mkb een spelwisselaar, omdat het je helpt meer te bereiken zonder extra personeelskosten of complexe IT-infrastructuur. Deze gids laat je zien welke processen geschikt zijn, hoe je praktisch begint, en welke stappen je snel winst opleveren — allemaal gericht op bedrijven zonder technische IT-afdeling.</p>
-<h2 style="font:600 clamp(1.375rem,2.8vw,1.75rem)/1.3 'IBM Plex Sans';margin:44px 0 18px;letter-spacing:-0.015em;color:var(--text);">Waarom bedrijfsprocessen automatiseren met AI? De voordelen voor het mkb</h2>
+  <div data-reveal style="transition:opacity 600ms ease, transform 600ms ease;">
+<p style="font:400 1.0625rem/1.8 'IBM Plex Sans';color:var(--text);margin:0 0 22px;">Veel mkb-eigenaren worstelen met dezelfde uitdaging: handmatige processen die tijd opslokken, fouten veroorzaken en groei in de weg staan. Telefonische vragen die steeds terugkomen, inkomende facturen die handmatig worden ingevoerd, afspraken die ingepland moeten worden. Het kost uren per week. Tegelijk lijkt automatisering met AI iets voor grote bedrijven met technische afdelingen.</p>
+<p style="font:400 1.0625rem/1.8 'IBM Plex Sans';color:var(--text);margin:0 0 22px;">Niets is minder waar. AI-automatisering is juist voor het mkb een spelwisselaar, omdat het je helpt meer te bereiken zonder extra personeelskosten of complexe IT-infrastructuur. Deze gids laat je zien welke processen geschikt zijn, hoe je praktisch begint, en welke stappen je snel winst opleveren, allemaal gericht op bedrijven zonder technische IT-afdeling.</p>
+  </div>
+  <div data-reveal style="transition:opacity 600ms ease, transform 600ms ease;">
+<h2 style="font:600 clamp(1.375rem,2.8vw,1.75rem)/1.3 'Outfit';margin:44px 0 18px;letter-spacing:-0.015em;color:var(--text);">Waarom bedrijfsprocessen automatiseren met AI? De voordelen voor het mkb</h2>
 <p style="font:400 1.0625rem/1.8 'IBM Plex Sans';color:var(--text);margin:0 0 22px;">AI-automatisering biedt voor het mkb vooral één groot voordeel: tijd terugwinnen voor het werk dat echt telt.</p>
 <p style="font:400 1.0625rem/1.8 'IBM Plex Sans';color:var(--text);margin:0 0 22px;">Neem bereikbaarheid als voorbeeld. Een gemiddeld mkb-bedrijf met één receptionist ontvangt misschien 20 tot 30 inkomende oproepen per dag. Veel van die gesprekken volgen hetzelfde patroon: zaakstatus opvragen, een afspraak inplannen, basis bedrijfsgegevens checken. Een AI-receptionist kan dit 24/7 aan, waardoor je receptionist zich op complexere klantvragen kan concentreren en geen telefoongesprekken meer mist buiten kantooruren.</p>
-<p style="font:400 1.0625rem/1.8 'IBM Plex Sans';color:var(--text);margin:0 0 22px;">Op administratief vlak helpt AI-automatisering bij herhalende taken zonder echte creativiteit. Facturen invoeren in je boekhoudsysteem, gegevens uit e-mails in je CRM zetten, basis eligibiliteitschecks uitvoeren — allemaal processen die foutgevoelig zijn en veel tijd kosten als ze handmatig gebeuren. Met automatisering nemen fouten af, en je team bespaart gemiddeld 5 tot 10 uur per week.</p>
+<p style="font:400 1.0625rem/1.8 'IBM Plex Sans';color:var(--text);margin:0 0 22px;">Op administratief vlak helpt AI-automatisering bij herhalende taken zonder echte creativiteit. Facturen invoeren in je boekhoudsysteem, gegevens uit e-mails in je CRM zetten, basis eligibiliteitschecks uitvoeren, allemaal processen die foutgevoelig zijn en veel tijd kosten als ze handmatig gebeuren. Met automatisering nemen fouten af, en je team bespaart gemiddeld 5 tot 10 uur per week.</p>
 <p style="font:400 1.0625rem/1.8 'IBM Plex Sans';color:var(--text);margin:0 0 22px;">Kostenbesparing volgt uit beide: minder tijd op herhaling betekent minder uren per klant, minder administratieve overhead, en minder risico op dure invoerfouten.</p>
-<h2 style="font:600 clamp(1.375rem,2.8vw,1.75rem)/1.3 'IBM Plex Sans';margin:44px 0 18px;letter-spacing:-0.015em;color:var(--text);">Welke processen zijn geschikt voor AI-automatisering?</h2>
-<p style="font:400 1.0625rem/1.8 'IBM Plex Sans';color:var(--text);margin:0 0 22px;">Niet elk proces is geschikt voor automatisering — en dat is goed om te weten, want het scheelt veel frustratie.</p>
+  </div>
+  <div data-reveal style="transition:opacity 600ms ease, transform 600ms ease;">
+<h2 style="font:600 clamp(1.375rem,2.8vw,1.75rem)/1.3 'Outfit';margin:44px 0 18px;letter-spacing:-0.015em;color:var(--text);">Welke processen zijn geschikt voor AI-automatisering?</h2>
+<p style="font:400 1.0625rem/1.8 'IBM Plex Sans';color:var(--text);margin:0 0 22px;">Niet elk proces is geschikt voor automatisering, en dat is goed om te weten, want het scheelt veel frustratie.</p>
 <p style="font:400 1.0625rem/1.8 'IBM Plex Sans';color:var(--text);margin:0 0 22px;">AI-automatisering werkt het best bij processen die aan deze criteria voldoen:</p>
-<p style="font:400 1.0625rem/1.8 'IBM Plex Sans';color:var(--text);margin:0 0 22px;"><strong>Repetitief en voorspelbaar.</strong> Taken die elke dag hetzelfde voorkomen, volgen hetzelfde stappenplan. Telefonische vragen beantwoorden, intakeformulieren invullen, afspraken checken — allemaal processen met een vast patroon.</p>
+<p style="font:400 1.0625rem/1.8 'IBM Plex Sans';color:var(--text);margin:0 0 22px;"><strong>Repetitief en voorspelbaar.</strong> Taken die elke dag hetzelfde voorkomen, volgen hetzelfde stappenplan. Telefonische vragen beantwoorden, intakeformulieren invullen, afspraken checken, allemaal processen met een vast patroon.</p>
 <p style="font:400 1.0625rem/1.8 'IBM Plex Sans';color:var(--text);margin:0 0 22px;"><strong>Hoog volume, lage complexiteit.</strong> Veelvoorkomende vragen of taken met weinig uitzonderingen zijn ideaal. Standaard klantvragen, routinematige bestellingen verwerken, basale gegevensextractie.</p>
-<p style="font:400 1.0625rem/1.8 'IBM Plex Sans';color:var(--text);margin:0 0 22px;"><strong>Gestructureerde data.</strong> Processen die werken met duidelijke invoer en uitvoer — bijvoorbeeld: telefoon komt binnen, klant geeft naam en rekeningnummer, AI zoekt account op en geeft status door. Of: e-mailbericht bevat factuurgegevens, AI leest deze uit en voert ze in je systeem in.</p>
-<p style="font:400 1.0625rem/1.8 'IBM Plex Sans';color:var(--text);margin:0 0 22px;"><strong>Lage foutmarge acceptabel, of sterk reduceerbaar.</strong> Bij heel kritische processen (bijvoorbeeld medische diagnoses) is volledige automatisering risicovol. Maar zelfs daar kan AI helpen door voorbereiding of controle over te nemen. Factuurverwerking is minder kritisch — hier kan AI hoge nauwkeurigheid bereiken.</p>
+<p style="font:400 1.0625rem/1.8 'IBM Plex Sans';color:var(--text);margin:0 0 22px;"><strong>Gestructureerde data.</strong> Processen die werken met duidelijke invoer en uitvoer, bijvoorbeeld: telefoon komt binnen, klant geeft naam en rekeningnummer, AI zoekt account op en geeft status door. Of: e-mailbericht bevat factuurgegevens, AI leest deze uit en voert ze in je systeem in.</p>
+<p style="font:400 1.0625rem/1.8 'IBM Plex Sans';color:var(--text);margin:0 0 22px;"><strong>Lage foutmarge acceptabel, of sterk reduceerbaar.</strong> Bij heel kritische processen (bijvoorbeeld medische diagnoses) is volledige automatisering risicovol. Maar zelfs daar kan AI helpen door voorbereiding of controle over te nemen. Factuurverwerking is minder kritisch: hier kan AI hoge nauwkeurigheid bereiken.</p>
 <p style="font:400 1.0625rem/1.8 'IBM Plex Sans';color:var(--text);margin:0 0 22px;">Concrete voorbeelden van processen die mkb-bedrijven succesvol automatiseren:</p>
 <ul style="font:400 1.0625rem/1.75 'IBM Plex Sans';color:var(--text);margin:0 0 22px;padding-left:24px;"><li style="margin-bottom:11px;">Telefonische klantenservice: vragen over zaakstatus, afspraken inplannen, terugbelverzoeken opnemen</li><li style="margin-bottom:11px;">Intake en onboarding: initiële klantgegevens verzamelen, basis eligibiliteitschecks, routering naar juiste afdeling</li><li style="margin-bottom:11px;">Factuurverwerking: e-mails met facturen scannen, gegevens extraheren, in boekhoudsysteem invoeren</li><li style="margin-bottom:11px;">Afsprakenplanning: beschikbaarheid checken, afspraken voorstellen, bevestigingen versturen</li><li style="margin-bottom:11px;">Eerstelijnsonderzoek: veelgestelde vragen beantwoorden, veelvoorkomende problemen in kaart brengen</li></ul>
 <p style="font:400 1.0625rem/1.8 'IBM Plex Sans';color:var(--text);margin:0 0 22px;">Processen die juist niet goed automatiseren: zeer complexe, uitzonderingrijke situaties; taken die sterk creatief oordeel vereisen; processen waar persoonlijk contact centraal staat.</p>
-<h2 style="font:600 clamp(1.375rem,2.8vw,1.75rem)/1.3 'IBM Plex Sans';margin:44px 0 18px;letter-spacing:-0.015em;color:var(--text);">Stap voor stap: hoe start je met automatisering?</h2>
+  </div>
+  <div data-reveal style="transition:opacity 600ms ease, transform 600ms ease;">
+<h2 style="font:600 clamp(1.375rem,2.8vw,1.75rem)/1.3 'Outfit';margin:44px 0 18px;letter-spacing:-0.015em;color:var(--text);">Stap voor stap: hoe start je met automatisering?</h2>
 <p style="font:400 1.0625rem/1.8 'IBM Plex Sans';color:var(--text);margin:0 0 22px;">Automatisering hoeft geen groot IT-project te zijn. Een praktische aanpak volgt vier stappen.</p>
 <p style="font:400 1.0625rem/1.8 'IBM Plex Sans';color:var(--text);margin:0 0 22px;"><strong>Stap 1: Audit je huidige processen.</strong> Kies drie tot vijf processen die veel tijd kosten of veel handwerk vergen. Noteer: hoe vaak gebeurt dit per dag/week? Hoeveel tijd kost het? Welke stappen volgt het? Zijn er veel fouten? Dit kost ongeveer twee uur en geeft je duidelijkheid.</p>
 <p style="font:400 1.0625rem/1.8 'IBM Plex Sans';color:var(--text);margin:0 0 22px;"><strong>Stap 2: Bepaal prioriteiten.</strong> Welk proces levert de snelste winst en het minste gedoe op? Dit is vaak een proces met hoog volume, standaardstappen, en weinig uitzonderingen.</p>
 <p style="font:400 1.0625rem/1.8 'IBM Plex Sans';color:var(--text);margin:0 0 22px;"><strong>Stap 3: Selecteer een kleine quickwin.</strong> Begin niet met je meest kritische proces. Kies liever iets waar je zonder groot risico veel leert. Bijvoorbeeld: een AI-receptionist voor nabestelling-telefoontjes, of automatische factuurvoorverwerking voordat je accountant ze checkt.</p>
 <p style="font:400 1.0625rem/1.8 'IBM Plex Sans';color:var(--text);margin:0 0 22px;"><strong>Stap 4: Implementeer, meet, schaal.</strong> Implementatie duurt voor simpele automatisering vaak 1-4 weken (niet maanden). Meet vervolgens: hoeveel tijd bespaar je echt? Werkt het naar wens? Pas aan en schaal vervolgens naar andere processen.</p>
 <p style="font:400 1.0625rem/1.8 'IBM Plex Sans';color:var(--text);margin:0 0 22px;">Het hele traject van audit tot eerste live automatisering kan voor het mkb in 1-3 maanden, afhankelijk van complexiteit.</p>
-<h2 style="font:600 clamp(1.375rem,2.8vw,1.75rem)/1.3 'IBM Plex Sans';margin:44px 0 18px;letter-spacing:-0.015em;color:var(--text);">Welk proces moet je eerst automatiseren?</h2>
+  </div>
+  <div data-reveal style="transition:opacity 600ms ease, transform 600ms ease;">
+<h2 style="font:600 clamp(1.375rem,2.8vw,1.75rem)/1.3 'Outfit';margin:44px 0 18px;letter-spacing:-0.015em;color:var(--text);">Welk proces moet je eerst automatiseren?</h2>
 <p style="font:400 1.0625rem/1.8 'IBM Plex Sans';color:var(--text);margin:0 0 22px;">Dit is de vraag waar veel mkb-eigenaren blijven steken. Hoe kies je gericht?</p>
 <p style="font:400 1.0625rem/1.8 'IBM Plex Sans';color:var(--text);margin:0 0 22px;">Gebruik deze selectiematrix. Zet elk geauditeerd proces in drie kolommen:</p>
 <p style="font:400 1.0625rem/1.8 'IBM Plex Sans';color:var(--text);margin:0 0 22px;">| Proces | Tijd/week (uren) | Herhaalfrequentie | Foutgevoeligheid | Score | |--------|------------------|-------------------|------------------|-------| | Voorbeeld: telefonische vragen | 8 | Dagelijks | Laag (geen fouten) | HOOG | | Voorbeeld: facturen invoeren | 6 | 3x per week | Hoog (veel invoerfouten) | HOOG | | Voorbeeld: intakeformulieren | 4 | Dagelijks | Laag | GEMIDDELD |</p>
 <p style="font:400 1.0625rem/1.8 'IBM Plex Sans';color:var(--text);margin:0 0 22px;">Punten geven:</p>
-<ul style="font:400 1.0625rem/1.75 'IBM Plex Sans';color:var(--text);margin:0 0 22px;padding-left:24px;"><li style="margin-bottom:11px;">Tijd: &gt;6 uur/week = 3 punten; 3-6 uur = 2 punten; &lt;3 uur = 1 punt</li><li style="margin-bottom:11px;">Herhaalfrequentie: dagelijks = 3; meerdere keren/week = 2; wekelijks = 1</li><li style="margin-bottom:11px;">Foutgevoeligheid: hoog (veel fouten nu) = 3; gemiddeld = 2; laag = 1</li><li style="margin-bottom:11px;">Totaalscore &gt;7: start hier. Dit is je eerste automatisering.</li><li style="margin-bottom:11px;">Totaalscore 5-7: tweede keuze.</li><li style="margin-bottom:11px;">Totaalscore &lt;5: later automatiseren — te weinig impact voor nu.</li></ul>
+<ul style="font:400 1.0625rem/1.75 'IBM Plex Sans';color:var(--text);margin:0 0 22px;padding-left:24px;"><li style="margin-bottom:11px;">Tijd: &gt;6 uur/week = 3 punten; 3-6 uur = 2 punten; &lt;3 uur = 1 punt</li><li style="margin-bottom:11px;">Herhaalfrequentie: dagelijks = 3; meerdere keren/week = 2; wekelijks = 1</li><li style="margin-bottom:11px;">Foutgevoeligheid: hoog (veel fouten nu) = 3; gemiddeld = 2; laag = 1</li><li style="margin-bottom:11px;">Totaalscore &gt;7: start hier. Dit is je eerste automatisering.</li><li style="margin-bottom:11px;">Totaalscore 5-7: tweede keuze.</li><li style="margin-bottom:11px;">Totaalscore &lt;5: later automatiseren, te weinig impact voor nu.</li></ul>
 <p style="font:400 1.0625rem/1.8 'IBM Plex Sans';color:var(--text);margin:0 0 22px;">Daarnaast telt ook: welk proces kun je het snelst implementeren zonder grote systeemveranderingen? Een AI-receptionist kan binnen 2 weken live voor telefonie; diepere systeemintegratie kan 4-8 weken duren.</p>
+  </div>
   </div>
 </section>
 
@@ -199,45 +205,45 @@
   <div style="max-width:700px;margin:0 auto;">
     <div style="margin-bottom:clamp(32px,4vw,44px);">
       <div style="font:500 0.8125rem/1.3 'IBM Plex Mono';letter-spacing:0.06em;text-transform:uppercase;color:var(--accent-text);margin-bottom:12px;">Vragen</div>
-      <h2 style="font:600 clamp(1.5rem,3.2vw,1.875rem)/1.2 'IBM Plex Sans';margin:0;letter-spacing:-0.02em;color:var(--text);">Veelgestelde vragen</h2>
+      <h2 style="font:600 clamp(1.5rem,3.2vw,1.875rem)/1.2 'Outfit';margin:0;letter-spacing:-0.02em;color:var(--text);">Veelgestelde vragen</h2>
     </div>
-    <div style="display:flex;flex-direction:column;gap:12px;">
-      <details class="faq-item" style="border:1px solid var(--border);border-radius:10px;padding:18px 22px;background:var(--bg);">
+    <div data-reveal-grid style="display:flex;flex-direction:column;gap:12px;">
+      <details data-reveal class="faq-item" style="border:1px solid var(--border);border-radius:10px;padding:18px 22px;background:var(--bg);transition:opacity 600ms ease, transform 600ms ease;">
         <summary style="display:flex;align-items:center;justify-content:space-between;gap:16px;font:600 1rem/1.4 'IBM Plex Sans';color:var(--text);cursor:pointer;">
           <span>Hoeveel kost dit?</span>
           <div class="icon icon-chevron-down faq-chevron" style="width:18px;height:18px;color:var(--accent-text);transition:transform 200ms ease;flex-shrink:0;"></div>
         </summary>
         <p style="font:400 0.9375rem/1.65 'IBM Plex Sans';color:var(--text-muted);margin:14px 0 0;">Dat verschilt sterk naargelang wat je automatiseert. Een AI-receptionist voor telefonische intake kan voor kleine bedrijven rond €200-500/maand liggen. Simpele automatisering voor factuurverwerking kan goedkoper zijn. Het belangrijkste: vergelijk dit met de tijd en fouten die je nu bespaart. Als je 6 uur/week bespaart en je medewerker verdient €20/uur, dan scheelt dat al enkele honderden euro's per maand.</p>
       </details>
-      <details class="faq-item" style="border:1px solid var(--border);border-radius:10px;padding:18px 22px;background:var(--bg);">
+      <details data-reveal class="faq-item" style="border:1px solid var(--border);border-radius:10px;padding:18px 22px;background:var(--bg);transition:opacity 600ms ease, transform 600ms ease;">
         <summary style="display:flex;align-items:center;justify-content:space-between;gap:16px;font:600 1rem/1.4 'IBM Plex Sans';color:var(--text);cursor:pointer;">
           <span>Heb ik technische kennis nodig?</span>
           <div class="icon icon-chevron-down faq-chevron" style="width:18px;height:18px;color:var(--accent-text);transition:transform 200ms ease;flex-shrink:0;"></div>
         </summary>
         <p style="font:400 0.9375rem/1.65 'IBM Plex Sans';color:var(--text-muted);margin:14px 0 0;">Nee. Moderne AI-automatiseringstoolkits zijn ontworpen voor niet-technische gebruikers. Je hoeft geen code te schrijven; je configureert via interfaces. Wel handig: iemand in je team die graag nieuwe tools leert.</p>
       </details>
-      <details class="faq-item" style="border:1px solid var(--border);border-radius:10px;padding:18px 22px;background:var(--bg);">
+      <details data-reveal class="faq-item" style="border:1px solid var(--border);border-radius:10px;padding:18px 22px;background:var(--bg);transition:opacity 600ms ease, transform 600ms ease;">
         <summary style="display:flex;align-items:center;justify-content:space-between;gap:16px;font:600 1rem/1.4 'IBM Plex Sans';color:var(--text);cursor:pointer;">
           <span>Kan het integreren met mijn huidige systemen?</span>
           <div class="icon icon-chevron-down faq-chevron" style="width:18px;height:18px;color:var(--accent-text);transition:transform 200ms ease;flex-shrink:0;"></div>
         </summary>
         <p style="font:400 0.9375rem/1.65 'IBM Plex Sans';color:var(--text-muted);margin:14px 0 0;">Meestal wel. AI-tools werken nu met de meeste populaire CRM- en boekhoudplatforms. Als je iets heel niche gebruikt, check dan vooraf of integratie mogelijk is. Dit is meestal geen showstopper, alleen iets om van tevoren te verifiëren.</p>
       </details>
-      <details class="faq-item" style="border:1px solid var(--border);border-radius:10px;padding:18px 22px;background:var(--bg);">
+      <details data-reveal class="faq-item" style="border:1px solid var(--border);border-radius:10px;padding:18px 22px;background:var(--bg);transition:opacity 600ms ease, transform 600ms ease;">
         <summary style="display:flex;align-items:center;justify-content:space-between;gap:16px;font:600 1rem/1.4 'IBM Plex Sans';color:var(--text);cursor:pointer;">
           <span>Wat gebeurt er met mijn medewerkers?</span>
           <div class="icon icon-chevron-down faq-chevron" style="width:18px;height:18px;color:var(--accent-text);transition:transform 200ms ease;flex-shrink:0;"></div>
         </summary>
-        <p style="font:400 0.9375rem/1.65 'IBM Plex Sans';color:var(--text-muted);margin:14px 0 0;">Dit is een terechte vraag. Automatisering vervangt meestal geen mensen — het vervangt repetitief werk. Je receptionist neemt minder telefoontjes aan, maar handelt meer complexe klantvragen beter af. Je administratief medewerker hoeft niet meer handmatig facturen in te voeren, maar kan zich op relatiebeheer concentreren. Het helpt vooral bedrijven om meer te doen met hetzelfde team.</p>
+        <p style="font:400 0.9375rem/1.65 'IBM Plex Sans';color:var(--text-muted);margin:14px 0 0;">Dit is een terechte vraag. Automatisering vervangt meestal geen mensen: het vervangt repetitief werk. Je receptionist neemt minder telefoontjes aan, maar handelt meer complexe klantvragen beter af. Je administratief medewerker hoeft niet meer handmatig facturen in te voeren, maar kan zich op relatiebeheer concentreren. Het helpt vooral bedrijven om meer te doen met hetzelfde team.</p>
       </details>
-      <details class="faq-item" style="border:1px solid var(--border);border-radius:10px;padding:18px 22px;background:var(--bg);">
+      <details data-reveal class="faq-item" style="border:1px solid var(--border);border-radius:10px;padding:18px 22px;background:var(--bg);transition:opacity 600ms ease, transform 600ms ease;">
         <summary style="display:flex;align-items:center;justify-content:space-between;gap:16px;font:600 1rem/1.4 'IBM Plex Sans';color:var(--text);cursor:pointer;">
           <span>En als iets misgaat?</span>
           <div class="icon icon-chevron-down faq-chevron" style="width:18px;height:18px;color:var(--accent-text);transition:transform 200ms ease;flex-shrink:0;"></div>
         </summary>
         <p style="font:400 0.9375rem/1.65 'IBM Plex Sans';color:var(--text-muted);margin:14px 0 0;">Goed ontworpen automatisering heeft controlemomenten ingebouwd. Een AI-receptionist escaleert complexe vragen naar een mens. Factuurverwerking stuurt uitkomsten ter controle naar je team. Je hebt altijd de mogelijkheid om in te grijpen.</p>
       </details>
-      <details class="faq-item" style="border:1px solid var(--border);border-radius:10px;padding:18px 22px;background:var(--bg);">
+      <details data-reveal class="faq-item" style="border:1px solid var(--border);border-radius:10px;padding:18px 22px;background:var(--bg);transition:opacity 600ms ease, transform 600ms ease;">
         <summary style="display:flex;align-items:center;justify-content:space-between;gap:16px;font:600 1rem/1.4 'IBM Plex Sans';color:var(--text);cursor:pointer;">
           <span>Hoeveel tijd kost implementatie?</span>
           <div class="icon icon-chevron-down faq-chevron" style="width:18px;height:18px;color:var(--accent-text);transition:transform 200ms ease;flex-shrink:0;"></div>
@@ -249,18 +255,18 @@
 </section>
 
 <section style="padding:clamp(48px,6vw,64px) clamp(20px,5vw,40px);background:var(--bg);border-top:1px solid var(--border);">
-  <div class="article-prose" style="max-width:700px;margin:0 auto;">
+  <div class="article-prose" data-reveal style="max-width:700px;margin:0 auto;transition:opacity 600ms ease, transform 600ms ease;">
 <p style="font:400 1.0625rem/1.8 'IBM Plex Sans';color:var(--text);margin:0 0 22px;">AI-automatisering is niet voorbehouden aan grote bedrijven. Met een praktische aanpak kan je mkb-bedrijf binnen maanden concrete voordelen zien: minder handwerk, minder fouten, meer tijd voor groei.</p>
-<p style="font:400 1.0625rem/1.8 'IBM Plex Sans';color:var(--text);margin:0 0 22px;">Ben je benieuwd welke processen in jouw bedrijf geschikt zijn voor automatisering? Neem contact op — we bekijken samen welke processen jou het snelst voordeel opleveren en hoe je praktisch start, zonder gedoe.</p>
+<p style="font:400 1.0625rem/1.8 'IBM Plex Sans';color:var(--text);margin:0 0 22px;">Ben je benieuwd welke processen in jouw bedrijf geschikt zijn voor automatisering? Neem contact op: we bekijken samen welke processen jou het snelst voordeel opleveren en hoe je praktisch start, zonder gedoe.</p>
 <p style="font:400 1.0625rem/1.8 'IBM Plex Sans';color:var(--text);margin:0 0 22px;">Automatisering begint met één stap. Welke neem jij eerst?</p>
   </div>
 </section>
 <section id="cta" style="padding:clamp(56px,7vw,88px) clamp(20px,5vw,40px);background:var(--surface);border-top:1px solid var(--border);">
   <div data-reveal style="max-width:700px;margin:0 auto;text-align:center;transition:opacity 600ms ease, transform 600ms ease;">
-    <h2 style="font:600 clamp(1.5rem,3vw,1.875rem)/1.3 'IBM Plex Sans';margin:0 0 16px;color:var(--text);">Welk proces automatiseer je als eerste?</h2>
-    <p style="font:400 1rem/1.7 'IBM Plex Sans';color:var(--text-muted);margin:0 0 32px;">Neem contact op — we bekijken samen welke processen het snelst voordeel opleveren en hoe je praktisch start.</p>
+    <h2 style="font:600 clamp(1.5rem,3vw,1.875rem)/1.3 'Outfit';margin:0 0 16px;color:var(--text);">Welk proces automatiseer je als eerste?</h2>
+    <p style="font:400 1rem/1.7 'IBM Plex Sans';color:var(--text-muted);margin:0 0 32px;">Neem contact op: we bekijken samen welke processen het snelst voordeel opleveren en hoe je praktisch start.</p>
     <a href="./contact.html" style="display:inline-block;border:2px solid var(--accent-text);color:var(--text);padding:14px 32px;border-radius:6px;font-weight:700;font-size:0.95rem;margin-right:16px;transition:all 200ms ease;">Neem contact op</a>
-    <a href="./index.html#contact" style="display:inline-block;background:oklch(70% 0.14 220);color:#001a2e;padding:14px 32px;border-radius:6px;font-weight:700;font-size:0.95rem;transition:all 280ms ease;">Plan gratis demo</a>
+    <a href="./index.html#contact" style="display:inline-block;background:var(--accent);color:var(--bg);padding:14px 32px;border-radius:6px;font-weight:700;font-size:0.95rem;transition:all 280ms ease;">Plan gratis demo</a>
   </div>
 </section>
 </article>
@@ -286,7 +292,7 @@
         io.unobserve(entry.target);
       }
     });
-  }, { threshold: 0.12, rootMargin: "0px 0px -40px 0px" });
+  }, { threshold: 0, rootMargin: "0px 0px -40px 0px" });
   els.forEach(function (el) { io.observe(el); });
 })();
 </script>
@@ -315,6 +321,6 @@
   });
 })();
 </script>
-<script src="./tessar-concierge-widget.js?v=2" defer></script>
+<script src="./tessar-concierge-widget.js?v=3" defer></script>
 </body>
 </html>

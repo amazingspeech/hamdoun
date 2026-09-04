@@ -2,19 +2,18 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Vervang het huidige donkere, cyaan-blauwe, beeldloze kleursysteem van tessar.nl door het in de spec vastgelegde lichte oker/teal-systeem met documentaire fotografie, over alle 13 pagina's (index.src.html/index.html als homepage meegerekend), zonder de SEO/curl-crawlbaarheid te verslechteren.
+**Goal:** Vervang het huidige donkere, cyaan-blauwe kleursysteem van tessar.nl door het in de spec vastgelegde lichte oker/teal-systeem, over alle 13 pagina's (index.src.html/index.html als homepage meegerekend), zonder de SEO/curl-crawlbaarheid te verslechteren.
 
-**Architecture:** Eén nieuw gedeeld tokenbestand (`assets/tessar-design-tokens.css`) vervangt de tot nu toe overal gedupliceerde inline `:root`-blokken. Elke pagina krijgt een `<link>` naar dat bestand plus zijn eigen, kleinere aanpassingen (hero-markup, koptekst-lettertype, component-audit). Gedeelde JS-widgets (cookie-banner, Tess-conciërge) en het merkicoon worden apart herkleurd, los van de pagina-tokens. Hero-fotografie wordt **niet door implementers gegenereerd** — dat blijft een controller-taak met expliciete toestemming van de gebruiker per generatie-batch (credit-budget).
+**Architecture:** Eén nieuw gedeeld tokenbestand (`assets/tessar-design-tokens.css`) vervangt de tot nu toe overal gedupliceerde inline `:root`-blokken. Elke pagina krijgt een `<link>` naar dat bestand plus zijn eigen, kleinere aanpassingen (hero-markup, koptekst-lettertype, component-audit). Gedeelde JS-widgets (cookie-banner, Tess-conciërge) en het merkicoon worden apart herkleurd, los van de pagina-tokens. **Herzien tijdens implementatie:** er komt geen nieuwe hero-fotografie in dit plan. De twee al bestaande, eerder gegenereerde beelden (homepage-fold-motief, AI-telefonist-hoorn) worden herkleurd/opnieuw ge-scrimd voor het lichte thema; alle andere hero-pagina's krijgen geen beeld (typografie/lay-out draagt de hero, spec sectie 4/5).
 
-**Tech Stack:** Statische HTML/CSS, geen build-tooling behalve voor `index.src.html` (Playwright-prerender via `npm run build`). Python 3 + Pillow voor deterministische beeldbewerking (icoon-herkleuring, geen AI-generatie). Higgsfield-CLI voor hero-fotografie (uitsluitend door de controller, na toestemming).
+**Tech Stack:** Statische HTML/CSS, geen build-tooling behalve voor `index.src.html` (Playwright-prerender via `npm run build`). Python 3 + Pillow voor deterministische beeldbewerking (icoon-herkleuring, bestaande-beeld-scrim-aanpassing — geen AI-generatie in dit plan).
 
 **Spec:** `docs/superpowers/specs/2026-09-03-tessar-premium-redesign-design.md`
 
 ## Global Constraints
 
 - **SEO/curl-crawlbaarheid mag niet verslechteren.** Elke wijziging blijft zichtbaar in de statische, ongerenderde HTML (`curl`/`grep`-verifieerbaar, geen JS-afhankelijkheid). `index.src.html` gaat via `npm run build` vóór elke curl-check.
-- **Geen Higgsfield-beeldgeneratie door implementers.** Waar een taak een nieuwe hero-foto nodig heeft, gebruikt de implementer een door de controller aangeleverd, al goedgekeurd bestand (pad staat in de taak zodra beschikbaar) — de implementer roept zelf nooit `higgsfield generate` aan.
-- **Credit-budget is krap.** ~180 Higgsfield-credits resterend (starter-plan) bij aanvang van dit plan. Zie "Fotografie-strategie" hieronder — er worden gedeelde foto's per "shoot" hergebruikt over verwante pagina's, niet 9 losse eenmalige shoots.
+- **Geen Higgsfield-beeldgeneratie, door niemand — controller of implementer.** Een poging tijdens deze uitvoering liep vast: het eerste concept had geen enkele link met AI-automatisering, het tweede (bakker/bloemist) was op zichzelf klichévrij maar stond volledig los van Tessar's eigen merk-identiteit (een geometrische wireframe-kubus/tesseract). De gebruiker heeft besloten: geen nieuwe generaties meer tot hij daar zelf om vraagt. Dit plan gebruikt uitsluitend de twee al bestaande beelden (homepage-fold-motief, AI-telefonist-hoorn); geen enkele taak roept `higgsfield generate` aan.
 - **Exacte kleurtokens** (uit spec sectie 1, letterlijk over te nemen, nergens anders vandaan):
   ```css
   :root {
@@ -43,17 +42,60 @@
 - **Geen liggend streepje (—/em-dash)** in nieuwe of aangepaste zichtbare copy.
 - **`npm test` moet groen blijven** na elke taak die JS/widget-bestanden raakt.
 
-## Fotografie-strategie (geldt voor alle hero-taken)
+## Fotografie: geannuleerd
 
-Negen pagina's krijgen een nieuwe/vervangende hero-foto (zie pagina-inventaris in de spec). Tegen het credit-budget aan wordt dit **niet** als negen losse fotoshoots aangepakt, maar als een klein aantal "shoots" die hergebruikt worden met een andere crop/uitsnede per pagina — zoals een echt fotograaf-opdracht voor één merk ook één coherente set oplevert, geen negen incidentele losse beelden:
+De oorspronkelijke "Fotografie-strategie" (vijf gebundelde Higgsfield-shoots,
+Taak 6-10 hieronder) is **vervallen** tijdens implementatie — zie Global
+Constraints en spec sectie 4. Er komt geen nieuwe hero-fotografie in dit
+plan. Taak 11 (homepage) en Taak 14 (AI-telefonist) hergebruiken hun
+bestaande beelden; alle andere hero-pagina's (Taak 12, 13, 15, 16, 17, 18)
+krijgen geen beeld. Taak 19 (blog-kaart-thumbnails bijwerken naar nieuwe
+foto's) is om dezelfde reden vervallen.
 
-1. **Shoot A — "Aan de balie/telefoon"**: voor `ai-telefonist-voor-bedrijf.html` en `ai-receptioniste-voor-bedrijven.html` (nauw verwante onderwerpen: telefonie/receptie).
-2. **Shoot B — "Klantcontact/chat"**: voor `ai-chatbot-voor-bedrijven.html` en `chatbots.html`.
-3. **Shoot C — "Kantoor/proces"**: voor `bedrijfsprocessen-automatiseren-met-ai.html`, `workflow-automatisering-met-ai.html` en `ai-implementatie-laten-uitvoeren.html`.
-4. **Shoot D — homepage**: eigen, herkenbaarste beeld (de belangrijkste pagina verdient een uniek beeld, geen hergebruikte crop).
-5. **Shoot E — `services.html`**: eigen beeld (overzichtspagina van alle diensten, past niet bij één van de andere shoots).
+## Verplichte extra stap: hardcoded kleur-literals migreren (ontdekt tijdens Taak 11)
 
-Dit brengt het aantal generatie-momenten van negen naar vijf, elk met een paar downloadbare crops voor de betrokken pagina's. **Elke shoot is een aparte controller-taak vóór de bijbehorende implementatietaken** (zie Taak 6-7-8-9-10 hieronder) — de gebruiker geeft per shoot toestemming, zoals eerder deze sessie bij de homepage en AI-telefonist-pagina.
+**Dit raakt elke resterende paginataak (12-18), bovenop hun eigen `:root`-swap-stap.**
+
+Taak 11 ontdekte dat `:root`-tokens vervangen door een `<link>` naar het
+gedeelde bestand **niet voldoende is**: de codebase gebruikt op veel plekken
+hardcoded `oklch(...)`-kleurwaarden direct in inline `style=""`-attributen
+(oude cyaan/blauw-accent-hue 220/230/200, en lichte "tekst-op-bijna-zwart"
+-tinten met hue 250) in plaats van `var(--accent-text)` etc. Die literals
+veranderen niet mee met de tokenswap. Zonder deze stap: onleesbare tekst en
+blijvend felblauwe knoppen op wat verder een crème/teal-pagina is geworden.
+
+**Methodologie (dezelfde als Taak 11, per pagina toe te passen als
+onderdeel van de componentregel-audit-stap):**
+
+1. Zoek alle hardcoded `oklch(... 220 ...)`/`oklch(... 230 ...)`/
+   `oklch(... 200 ...)` (oude accentkleur) en `color:#FFF`/vergelijkbare
+   witte tekst-literals in de pagina.
+2. Voor **zelfstandige UI-elementen** (knoppen, bolletjes/dots, randen —
+   dingen die hun eigen interne contrast met hun eigen tekstkleur hebben,
+   ongeacht de paginabodem): roteer de hue naar `188` (dezelfde hue als
+   `--accent` `#0F5C57`), lichtheid/chroma **ongewijzigd**.
+3. Voor kleuren die **als tekst/icoon direct op de nieuwe lichte
+   `--bg`/`--surface` staan** (percentages, iconen, labels): roteer naar
+   hue `188` én **verlaag de lichtheid naar ~42-45%** voor voldoende
+   contrast — controleer met een WCAG-berekening (zie Taak 21's
+   contrastformule) dat het resultaat ≥ 4.5:1 haalt tegen zijn achtergrond.
+4. Voor lichte "tekst-op-donker"-literals (hue 250, lichtheid 70-98%) die
+   nu op een lichte achtergrond staan: vervang door `var(--text-muted)` of
+   `var(--accent-text)` in plaats van een nieuwe eigen hardcoded waarde.
+5. `color:#FFF`/vergelijkbare witte-tekst-literals op secties die nu een
+   lichte `--bg` hebben: verwijderen (tekst erft dan `var(--text)` via
+   `body`) of expliciet naar `var(--text)` zetten.
+6. **Niet aanraken**: secties die *bewust* donker blijven (als de pagina
+   zoiets heeft, zoals de homepage's "why-us"-band en footer) — die hebben
+   hun eigen, intern consistente donkere styling en vallen buiten deze
+   migratie. Alleen aanpassen als de sectie zelf naar het lichte thema gaat.
+7. Documenteer in het taakrapport welke literals gevonden en aangepast zijn
+   (net als Taak 11 deed) — dit is geen stilzwijgende bijvangst, het is een
+   expliciet te rapporteren onderdeel van de taak.
+
+Dit is bewust **geen losse taak** maar een vaste toevoeging aan elke
+resterende paginataak se componentregel-audit-stap: elke pagina heeft zijn
+eigen literals, dus het hoort bij de taak die de pagina toch al aanraakt.
 
 ---
 
@@ -365,57 +407,22 @@ git commit -m "feat: Outfit-lettertype voor koppen naast IBM Plex Sans/Mono"
 
 ---
 
-### Taak 6 (controller, geen implementer-dispatch): Shoot D — homepage hero-foto
+### Taken 6-10: vervallen (geen nieuwe fotografie)
 
-Deze taak wordt **door de controller uitgevoerd, niet door een gedispatchte implementer** (Global Constraint: geen Higgsfield-generatie door implementers). Volgt hetzelfde patroon als eerder deze sessie: concept voorstellen, toestemming vragen, 2-3 varianten genereren, gebruiker laat kiezen, downloaden en optimaliseren naar `assets/hero-visual-v2.webp` (+ `-sm` variant) — documentair/foto-realistisch, geen sculptuur (spec sectie 4). Resultaat: bestandspad(en) die Taak 11 als input consumeert.
-
-**Interfaces:**
-- Produces: `assets/hero-visual-v2.webp` + `assets/hero-visual-v2-sm.webp` (of vergelijkbare namen, definitief pad wordt genoteerd bij afronding van deze taak) — vervangt `assets/hero-visual.webp`/`-sm.webp` uit de vorige (sculptuur-)aanpak.
-
----
-
-### Taak 7 (controller): Shoot A — telefonie/receptie hero-foto's
-
-Voor `ai-telefonist-voor-bedrijf.html` en `ai-receptioniste-voor-bedrijven.html`. Zelfde controller-only aanpak als Taak 6. Documentair, geen sculptuur — vervangt de bestaande hoorn-sculptuurfoto op de AI-telefonist-pagina.
-
-**Interfaces:**
-- Produces: `assets/blog/ai-telefonist-hero-v2.webp` + `-sm.webp`, `assets/blog/ai-receptioniste-hero.webp` + `-sm.webp` (twee crops/varianten uit dezelfde shoot, of twee losse maar thematisch identieke generaties — ter beoordeling bij uitvoering, binnen het credit-budget).
+Zie "Fotografie: geannuleerd" hierboven. Deze taaknummers zijn bewust niet
+hergebruikt voor andere inhoud, zodat de ledger/geschiedenis van deze
+uitvoering herleidbaar blijft.
 
 ---
 
-### Taak 8 (controller): Shoot B — klantcontact/chat hero-foto's
-
-Voor `ai-chatbot-voor-bedrijven.html` en `chatbots.html`.
-
-**Interfaces:**
-- Produces: `assets/blog/ai-chatbot-hero.webp` + `-sm.webp`, `assets/chatbots-hero.webp` + `-sm.webp`.
-
----
-
-### Taak 9 (controller): Shoot C — kantoor/proces hero-foto's
-
-Voor `bedrijfsprocessen-automatiseren-met-ai.html`, `workflow-automatisering-met-ai.html`, `ai-implementatie-laten-uitvoeren.html`.
-
-**Interfaces:**
-- Produces: `assets/blog/bedrijfsprocessen-hero.webp` + `-sm.webp`, `assets/blog/workflow-hero.webp` + `-sm.webp`, `assets/blog/ai-implementatie-hero.webp` + `-sm.webp`.
-
----
-
-### Taak 10 (controller): Shoot E — services.html hero-foto
-
-**Interfaces:**
-- Produces: `assets/services-hero.webp` + `-sm.webp`.
-
----
-
-### Taak 11: Homepage — tokens, hero, typografie, SEO
+### Taak 11: Homepage — tokens, bestaand hero-beeld herkleuren, typografie, SEO
 
 **Files:**
 - Modify: `index.src.html`
 - Modify: `index.html` (via `npm run build`, niet handmatig)
 
 **Interfaces:**
-- Consumes: `assets/tessar-design-tokens.css` (Taak 1), herkleurd icoon (Taak 2), Outfit-patroon (Taak 5, al toegepast), hero-foto uit Taak 6.
+- Consumes: `assets/tessar-design-tokens.css` (Taak 1), herkleurd icoon (Taak 2), Outfit-patroon (Taak 5, al toegepast). Geen nieuwe hero-foto — het bestaande `assets/hero-visual.webp`/`hero-visual-sm.webp` (het "gevouwen metaal"-beeld) blijft staan.
 
 - [ ] **Stap 1: Verwijder het huidige inline `:root`-blok en voeg de link toe**
 
@@ -442,9 +449,11 @@ In de `<head>`, vóór het bestaande `<style>`-blok:
 <link rel="stylesheet" href="./assets/tessar-design-tokens.css">
 ```
 
-- [ ] **Stap 2: Vervang het hero-beeld**
+- [ ] **Stap 2: Pas de bestaande hero-afbeelding aan het lichte thema aan (geen nieuw beeld)**
 
-In de `.hero-visual`-`<img>` (toegevoegd in een eerdere sessie-taak): vervang `src`/`srcset` van `./assets/hero-visual.webp`/`hero-visual-sm.webp` naar de nieuwe bestanden uit Taak 6. Verwijder de `.hero-visual::before`-warme-gloed-CSS en de `mask-image`-fade die specifiek op de sculptuur-foto waren afgestemd (donker-op-donker-effect) — met een documentaire foto op een lichte pagina-achtergrond is een scherpe, volledig beeldvullende foto met een scrim precies op de tekstzone het juiste patroon (spec sectie 5), geen wegvloeiende rand.
+Het `.hero-visual`-`<img>` blijft `./assets/hero-visual.webp`/`hero-visual-sm.webp` (het gevouwen-metaal-beeld) — dit wordt niet vervangen. Wel aanpassen:
+- De `.hero-visual::before`-warme-gloed en de `mask-image`-radiale-fade (toegevoegd om het beeld te laten "oplossen" in het oude, bijna-zwarte `--bg`) worden herijkt op de nieuwe lichte `--bg` (`#F7F2E9`): de fade/gloed moet overvloeien naar de crème-achtergrond, niet naar zwart.
+- Beoordeel of de `.grad-text-warm`-brug (het amber-gekleurde tweede deel van de koptekst, eerder toegevoegd om het warme brons-beeld te verzoenen met het toen nog koele cyaan-accent) nog nodig is: met de nieuwe warme oker-basis plus teal-accent is de kleur-botsing die deze brug oploste er niet meer op dezelfde manier — het bronzen beeld past nu van nature beter bij een warme achtergrond. Vereenvoudig (bijv. laat beide koptekst-highlights de teal-accentkleur gebruiken) als de warme brug overbodig blijkt bij visuele controle; behoud hem als het beeld anders alsnog los blijft staan. Motiveer de keuze kort in het rapport.
 
 - [ ] **Stap 3: `theme-color` bijwerken**
 
@@ -492,7 +501,6 @@ Controleer de "why-us"-grid en capabilities-grid op visuele variatie (spec secti
 
 ```bash
 npm run build
-curl -s http://localhost:0 2>/dev/null; true  # placeholder-vrij: gebruik onderstaande echte check
 grep -o "tessar-design-tokens.css" index.html | head -1
 grep -o "F7F2E9" index.html | head -1
 grep -o "Organization" index.html | head -1
@@ -507,7 +515,7 @@ Herhaal de Playwright-screenshot-aanpak uit eerdere sessie-taken (desktop 1440px
 
 ```bash
 git add index.src.html index.html
-git commit -m "feat: homepage naar het lichte oker/teal-thema met nieuwe hero-fotografie"
+git commit -m "feat: homepage naar het lichte oker/teal-thema"
 ```
 
 ---
@@ -518,7 +526,7 @@ git commit -m "feat: homepage naar het lichte oker/teal-thema met nieuwe hero-fo
 - Modify: `services.html`
 
 **Interfaces:**
-- Consumes: Taak 1, 2, 10.
+- Consumes: Taak 1, 2. Geen hero-foto (vervallen, zie "Fotografie: geannuleerd") — deze pagina krijgt een tekst-gedreven hero.
 
 - [ ] **Stap 1: Verwijder het inline `:root`-blok, voeg de link toe**
 
@@ -541,9 +549,11 @@ volledig verwijderen, en in de `<head>` toevoegen:
 <link rel="stylesheet" href="./assets/tessar-design-tokens.css">
 ```
 
-- [ ] **Stap 2: Herbouw de hero naar het Vapi-model**
+- [ ] **Stap 2: Hertoon de bestaande tekst-hero voor het lichte thema (geen beeld)**
 
-De huidige hero (`<section style="...background:var(--bg);color:#FFF;...text-align:center;">` met H1 "Vijf diensten, één aanpak") is gecentreerde tekst zonder beeld. Herbouw naar: beeldvullende foto (Taak 10) met de tekst rechtstreeks erover en een scrim, zoals spec sectie 5. Verwijder `color:#FFF` van de sectie (de tekst kleurt nu via de scrim/foto-context, niet via een vaste witte kleur op een donkere paginakleur).
+De huidige hero (`<section style="...background:var(--bg);color:#FFF;...text-align:center;">` met H1 "Vijf diensten, één aanpak") blijft gecentreerde tekst zonder beeld — geen Vapi-model hier, spec sectie 4/5 heeft dit vervangen door het Vercel/Linear-model (typografie draagt de hero). Concreet:
+- Verwijder `color:#FFF` van de sectie (de tekst kleurt nu via de pagina-eigen `--text`-token, niet via een vaste witte kleur op wat een donkere achtergrond was).
+- Laat de gecentreerde structuur en de bestaande `padding`-waarden ongemoeid — de Outfit-koptekst (stap 3 hieronder) plus de nieuwe lichte tokens geven de sectie al meer gewicht zonder een beeld nodig te hebben.
 
 - [ ] **Stap 3: Outfit toepassen op de H1**
 
@@ -564,7 +574,7 @@ grep -o "tessar-design-tokens.css" services.html | head -1
 grep -o "F7F2E9" services.html | head -1
 npm test
 git add services.html
-git commit -m "feat: services.html naar het lichte oker/teal-thema met nieuwe hero-fotografie"
+git commit -m "feat: services.html naar het lichte oker/teal-thema"
 ```
 
 ---
@@ -595,9 +605,9 @@ volledig verwijderen, en in de `<head>` toevoegen:
 <link rel="stylesheet" href="./assets/tessar-design-tokens.css">
 ```
 
-- [ ] **Stap 2: Herbouw de hero naar het Vapi-model**
+- [ ] **Stap 2: Hertoon de bestaande tekst-hero voor het lichte thema (geen beeld)**
 
-De huidige hero (`<section id="hero" style="...background:var(--bg);color:#FFF;...text-align:center;">` met H1 "Een chatbot die past bij hoe jouw praktijk werkt") is gecentreerde tekst zonder beeld. Herbouw naar: beeldvullende foto (Taak 8, bestand `assets/chatbots-hero.webp`/`-sm.webp`) met de tekst rechtstreeks erover en een scrim, zoals spec sectie 5. Verwijder `color:#FFF` van de sectie.
+De huidige hero (`<section id="hero" style="...background:var(--bg);color:#FFF;...text-align:center;">` met H1 "Een chatbot die past bij hoe jouw praktijk werkt") blijft gecentreerde tekst zonder beeld (Vercel/Linear-model, spec sectie 4/5 — geen nieuwe fotografie). Verwijder `color:#FFF` van de sectie; laat de gecentreerde structuur en padding ongemoeid.
 
 - [ ] **Stap 3: Outfit toepassen op de H1**
 
@@ -617,65 +627,56 @@ grep -o "tessar-design-tokens.css" chatbots.html | head -1
 grep -o "F7F2E9" chatbots.html | head -1
 npm test
 git add chatbots.html
-git commit -m "feat: chatbots.html naar het lichte oker/teal-thema met nieuwe hero-fotografie"
+git commit -m "feat: chatbots.html naar het lichte oker/teal-thema"
 ```
 
 ---
 
-### Taak 14: `ai-telefonist-voor-bedrijf.html` — tokens, nieuwe hero-foto, typografie
+### Taak 14: `ai-telefonist-voor-bedrijf.html` — tokens, bestaand hero-beeld herkleuren, typografie
 
-Artikel-pagina-patroon (smalle 700px-kolom, geen gecentreerde sectie) — vervangt de bestaande hoorn-sculptuurfoto (uit een eerdere sessie-taak) door de documentaire foto uit Taak 7, in dezelfde structuur (contained ~900px `<img>` tussen titelblok en lopende tekst, zoals al aanwezig).
+Artikel-pagina-patroon (smalle 700px-kolom, geen gecentreerde sectie). De bestaande hoorn-foto (contained ~900px `<img>` tussen titelblok en lopende tekst) **blijft staan** — geen nieuwe generatie (zie "Fotografie: geannuleerd"). Alleen kleursysteem/scrim eromheen wordt aangepast aan het lichte thema.
 
 **Files:**
 - Modify: `ai-telefonist-voor-bedrijf.html`
 
 - [ ] **Stap 1:** inline `:root`-blok verwijderen, `<link>` naar `tessar-design-tokens.css` toevoegen.
-- [ ] **Stap 2:** de bestaande `<img src="./assets/blog/ai-telefonist-hero.webp" ...>` (artikel-hero) vervangen door de nieuwe bestanden uit Taak 7 (`ai-telefonist-hero-v2.webp`/`-sm.webp`).
-- [ ] **Stap 3:** `og:image`/`twitter:image` blijven verwijzen naar `assets/blog/ai-telefonist-voor-bedrijf.png` (de kaart-thumbnail) — dat bestand wordt in Taak 19 (blog-kaarten-sweep) bijgewerkt naar een crop van dezelfde nieuwe foto, niet in deze taak.
+- [ ] **Stap 2:** de bestaande `<img src="./assets/blog/ai-telefonist-hero.webp" ...>` blijft ongewijzigd staan (zelfde bestand, zelfde `srcset`) — geen vervanging. Controleer alleen of de `border-radius:12px`/geen-scrim-styling van dit contained beeld nog past bij de lichte paginakleur eromheen (bijv. of er genoeg contrast/afstand is tussen het beeld en de nu lichte `--bg`); pas alleen aan als het visueel nodig blijkt.
+- [ ] **Stap 3:** `og:image`/`twitter:image` blijven ongewijzigd verwijzen naar `assets/blog/ai-telefonist-voor-bedrijf.png` (de kaart-thumbnail) — geen wijziging, Taak 19 is vervallen.
 - [ ] **Stap 4:** `'IBM Plex Sans'` → `'Outfit'` in de H1.
 - [ ] **Stap 5:** `theme-color` bijwerken, componentregel-audit (em-dash-scan: `grep -c "—" ai-telefonist-voor-bedrijf.html`, handmatig beoordelen — dit artikel is lang, controleer de hele lopende tekst).
 - [ ] **Stap 6:** curl-check + visuele controle + commit:
 ```bash
 grep -o "tessar-design-tokens.css" ai-telefonist-voor-bedrijf.html | head -1
 git add ai-telefonist-voor-bedrijf.html
-git commit -m "feat: AI-telefonist-pagina naar het lichte thema met nieuwe documentaire hero-foto"
+git commit -m "feat: AI-telefonist-pagina naar het lichte oker/teal-thema"
 ```
 
 ---
 
-### Taak 15: `ai-receptioniste-voor-bedrijven.html` — tokens, nieuwe hero-foto, typografie
+### Taak 15: `ai-receptioniste-voor-bedrijven.html` — tokens, typografie (geen hero-foto)
 
-Zelfde artikel-patroon als Taak 14, maar deze pagina heeft **nu nog geen enkel in-pagina hero-beeld** (alleen een og:image met het generieke flat-icoon) — dit is dus een toevoeging, geen vervanging.
+Zelfde artikel-patroon als Taak 14, maar deze pagina heeft geen bestaand bespoke beeld en krijgt er ook geen (zie "Fotografie: geannuleerd") — alleen kleursysteem, typografie en component-audit.
 
 **Files:**
 - Modify: `ai-receptioniste-voor-bedrijven.html`
 
 - [ ] **Stap 1:** inline `:root`-blok verwijderen, `<link>` toevoegen.
-- [ ] **Stap 2:** voeg, direct na het titelblok (dezelfde structuur als `ai-telefonist-voor-bedrijf.html`: `<section>` met `max-width:700px`-titel, gevolgd door de prose-`<section>`) een nieuwe `<section>` toe met de hero-foto uit Taak 7, exact naar het patroon dat al in `ai-telefonist-voor-bedrijf.html` staat:
-```html
-<section style="padding:0 clamp(20px,5vw,40px) clamp(32px,4vw,44px);background:var(--bg);">
-  <div style="max-width:900px;margin:0 auto;">
-    <img src="./assets/blog/ai-receptioniste-hero.webp" srcset="./assets/blog/ai-receptioniste-hero-sm.webp 800w, ./assets/blog/ai-receptioniste-hero.webp 1600w" sizes="(min-width: 900px) 900px, 100vw" width="1600" height="905" alt="" loading="eager" fetchpriority="high" style="display:block;width:100%;height:auto;border-radius:12px;">
-  </div>
-</section>
-```
-(Breedte/hoogte-attributen aanpassen aan de daadwerkelijke afmetingen van het door de controller aangeleverde bestand uit Taak 7.)
-- [ ] **Stap 3:** `og:image`/`twitter:image` blijven ongewijzigd in deze taak (bijgewerkt in Taak 19).
-- [ ] **Stap 4:** `'IBM Plex Sans'` → `'Outfit'` in de H1.
-- [ ] **Stap 5:** `theme-color` bijwerken, componentregel-audit.
-- [ ] **Stap 6:** curl-check + commit:
+- [ ] **Stap 2:** `og:image`/`twitter:image` blijven ongewijzigd (het huidige generieke flat-icoon) — geen nieuwe fotografie, dus geen wijziging hier.
+- [ ] **Stap 3:** `'IBM Plex Sans'` → `'Outfit'` in de H1.
+- [ ] **Stap 4:** `theme-color` bijwerken, componentregel-audit.
+- [ ] **Stap 5:** curl-check + commit:
 ```bash
 grep -o "tessar-design-tokens.css" ai-receptioniste-voor-bedrijven.html | head -1
-grep -o "ai-receptioniste-hero" ai-receptioniste-voor-bedrijven.html | head -1
+npm test
 git add ai-receptioniste-voor-bedrijven.html
-git commit -m "feat: AI-receptioniste-pagina naar het lichte thema met nieuwe hero-foto"
+git commit -m "feat: AI-receptioniste-pagina naar het lichte oker/teal-thema"
 ```
 
 ---
 
-### Taak 16: `ai-chatbot-voor-bedrijven.html` — tokens, nieuwe hero-foto, typografie
+### Taak 16: `ai-chatbot-voor-bedrijven.html` — tokens, typografie (geen hero-foto)
 
-Artikel-patroon, identieke structuur als `ai-telefonist-voor-bedrijf.html`. Deze pagina heeft nu nog geen in-pagina hero-beeld (alleen een og:image met het generieke flat-icoon) — dit is een toevoeging.
+Artikel-patroon, identieke structuur als `ai-telefonist-voor-bedrijf.html`. Geen bestand beeld, geen nieuwe fotografie (zie "Fotografie: geannuleerd") — alleen kleursysteem, typografie, component-audit.
 
 **Files:**
 - Modify: `ai-chatbot-voor-bedrijven.html`
@@ -699,35 +700,22 @@ volledig verwijderen; in de `<head>` toevoegen:
 <link rel="stylesheet" href="./assets/tessar-design-tokens.css">
 ```
 
-- [ ] **Stap 2: Voeg de hero-foto toe**
-
-Direct na het titelblok (vóór de prose-`<section>`):
-```html
-<section style="padding:0 clamp(20px,5vw,40px) clamp(32px,4vw,44px);background:var(--bg);">
-  <div style="max-width:900px;margin:0 auto;">
-    <img src="./assets/blog/ai-chatbot-hero.webp" srcset="./assets/blog/ai-chatbot-hero-sm.webp 800w, ./assets/blog/ai-chatbot-hero.webp 1600w" sizes="(min-width: 900px) 900px, 100vw" width="1600" height="905" alt="" loading="eager" fetchpriority="high" style="display:block;width:100%;height:auto;border-radius:12px;">
-  </div>
-</section>
-```
-(Breedte/hoogte aanpassen aan de daadwerkelijke afmetingen van het door de controller aangeleverde bestand uit Taak 8.)
-
-- [ ] **Stap 3:** `og:image`/`twitter:image` blijven ongewijzigd in deze taak (bijgewerkt in Taak 19).
-- [ ] **Stap 4:** `'IBM Plex Sans'` → `'Outfit'` in de H1 ("AI Chatbot voor Bedrijven: Automatiseer Klantenservice in 5 Stappen").
-- [ ] **Stap 5:** `theme-color` bijwerken (`content="#0a0a0f"` → `content="#F7F2E9"`), componentregel-audit (em-dash-scan, eyebrow-ratio).
-- [ ] **Stap 6: Verificatie + commit**
+- [ ] **Stap 2:** `og:image`/`twitter:image` blijven ongewijzigd (het huidige generieke flat-icoon).
+- [ ] **Stap 3:** `'IBM Plex Sans'` → `'Outfit'` in de H1 ("AI Chatbot voor Bedrijven: Automatiseer Klantenservice in 5 Stappen").
+- [ ] **Stap 4:** `theme-color` bijwerken (`content="#0a0a0f"` → `content="#F7F2E9"`), componentregel-audit (em-dash-scan, eyebrow-ratio).
+- [ ] **Stap 5: Verificatie + commit**
 ```bash
 grep -o "tessar-design-tokens.css" ai-chatbot-voor-bedrijven.html | head -1
-grep -o "ai-chatbot-hero" ai-chatbot-voor-bedrijven.html | head -1
 npm test
 git add ai-chatbot-voor-bedrijven.html
-git commit -m "feat: AI-chatbot-pagina naar het lichte thema met nieuwe hero-foto"
+git commit -m "feat: AI-chatbot-pagina naar het lichte oker/teal-thema"
 ```
 
 ---
 
-### Taak 17: `bedrijfsprocessen-automatiseren-met-ai.html` en `workflow-automatisering-met-ai.html` — tokens, nieuwe hero-foto's, typografie
+### Taak 17: `bedrijfsprocessen-automatiseren-met-ai.html` en `workflow-automatisering-met-ai.html` — tokens, typografie (geen hero-foto's)
 
-Beide pagina's hebben identieke structuur aan `ai-telefonist-voor-bedrijf.html` en geen van beide heeft nu een in-pagina hero-beeld. Eén taak voor twee bestanden omdat het exact dezelfde wijziging is (zie "Batch small same-shape work").
+Beide pagina's hebben identieke structuur aan `ai-telefonist-voor-bedrijf.html`, geen bestaand beeld, en krijgen er ook geen (zie "Fotografie: geannuleerd"). Eén taak voor twee bestanden omdat het exact dezelfde wijziging is (zie "Batch small same-shape work").
 
 **Files:**
 - Modify: `bedrijfsprocessen-automatiseren-met-ai.html`
@@ -752,46 +740,27 @@ volledig verwijderen op beide bestanden; in beide `<head>`s toevoegen:
 <link rel="stylesheet" href="./assets/tessar-design-tokens.css">
 ```
 
-- [ ] **Stap 2: Voeg de hero-foto toe op `bedrijfsprocessen-automatiseren-met-ai.html`**
-```html
-<section style="padding:0 clamp(20px,5vw,40px) clamp(32px,4vw,44px);background:var(--bg);">
-  <div style="max-width:900px;margin:0 auto;">
-    <img src="./assets/blog/bedrijfsprocessen-hero.webp" srcset="./assets/blog/bedrijfsprocessen-hero-sm.webp 800w, ./assets/blog/bedrijfsprocessen-hero.webp 1600w" sizes="(min-width: 900px) 900px, 100vw" width="1600" height="905" alt="" loading="eager" fetchpriority="high" style="display:block;width:100%;height:auto;border-radius:12px;">
-  </div>
-</section>
-```
+- [ ] **Stap 2:** op beide bestanden: `og:image`/`twitter:image` blijven ongewijzigd (de huidige generieke flat-iconen) — geen nieuwe fotografie.
+- [ ] **Stap 3:** op beide: `'IBM Plex Sans'` → `'Outfit'` in de H1 ("Bedrijfsprocessen automatiseren met AI: praktische gids voor het mkb" resp. "Workflow Automatisering met AI: Hoe het Werkt en Waarom mkb's het Nodig Hebben"); `theme-color` → `content="#F7F2E9"`; componentregel-audit (em-dash-scan — de tweede H1 bevat een bezitsvorm-apostrof, geen liggend streepje, geen wijziging nodig daar).
 
-- [ ] **Stap 3: Voeg de hero-foto toe op `workflow-automatisering-met-ai.html`**
-```html
-<section style="padding:0 clamp(20px,5vw,40px) clamp(32px,4vw,44px);background:var(--bg);">
-  <div style="max-width:900px;margin:0 auto;">
-    <img src="./assets/blog/workflow-hero.webp" srcset="./assets/blog/workflow-hero-sm.webp 800w, ./assets/blog/workflow-hero.webp 1600w" sizes="(min-width: 900px) 900px, 100vw" width="1600" height="905" alt="" loading="eager" fetchpriority="high" style="display:block;width:100%;height:auto;border-radius:12px;">
-  </div>
-</section>
-```
-
-- [ ] **Stap 4:** op beide: `og:image`/`twitter:image` blijven ongewijzigd (bijgewerkt in Taak 19); `'IBM Plex Sans'` → `'Outfit'` in de H1 ("Bedrijfsprocessen automatiseren met AI: praktische gids voor het mkb" resp. "Workflow Automatisering met AI: Hoe het Werkt en Waarom mkb's het Nodig Hebben"); `theme-color` → `content="#F7F2E9"`; componentregel-audit (em-dash-scan — de tweede H1 bevat een bezitsvorm-apostrof, geen liggend streepje, geen wijziging nodig daar).
-
-- [ ] **Stap 5: Verificatie**
+- [ ] **Stap 4: Verificatie**
 ```bash
 grep -o "tessar-design-tokens.css" bedrijfsprocessen-automatiseren-met-ai.html workflow-automatisering-met-ai.html
-grep -o "bedrijfsprocessen-hero" bedrijfsprocessen-automatiseren-met-ai.html | head -1
-grep -o "workflow-hero" workflow-automatisering-met-ai.html | head -1
 npm test
 ```
 
-- [ ] **Stap 6: Commit (één commit voor beide bestanden)**
+- [ ] **Stap 5: Commit (één commit voor beide bestanden)**
 ```bash
 git add bedrijfsprocessen-automatiseren-met-ai.html workflow-automatisering-met-ai.html
-git commit -m "feat: bedrijfsprocessen- en workflow-automatisering-pagina's naar het lichte thema met nieuwe hero-foto's"
+git commit -m "feat: bedrijfsprocessen- en workflow-automatisering-pagina's naar het lichte oker/teal-thema"
 ```
 
 ---
 
-### Taak 18: `ai-implementatie-laten-uitvoeren.html`, `prijzen.html`, `contact.html`, `blog.html`, `privacy.html` — tokens en typografie (geen nieuw hero-beeld voor de laatste vier)
+### Taak 18: `ai-implementatie-laten-uitvoeren.html`, `prijzen.html`, `contact.html`, `blog.html`, `privacy.html` — tokens en typografie (geen van deze vijf krijgt een hero-foto)
 
-Vijf pagina's, verschillend qua hero-behoefte:
-- `ai-implementatie-laten-uitvoeren.html`: artikel-patroon zoals Taak 15, met de hero-foto `ai-implementatie-hero.webp` uit Taak 9.
+Vijf pagina's, geen enkele krijgt nieuwe fotografie (zie "Fotografie: geannuleerd"):
+- `ai-implementatie-laten-uitvoeren.html`: artikel-patroon zoals Taak 15, alleen tokens/font/audit.
 - `prijzen.html`, `blog.html`, `privacy.html`: geen hero, alleen tokens/font/audit (spec sectie 12: geen hero-behoefte).
 - `contact.html`: geen hero, tokens/font/audit, plús formulier-toegankelijkheid (spec sectie 8).
 
@@ -813,16 +782,7 @@ Verwijder het inline `:root`-blok:
 ```
 Voeg in de `<head>` toe: `<link rel="stylesheet" href="./assets/tessar-design-tokens.css">`.
 
-Voeg direct na het titelblok (vóór de prose-`<section>`) de hero-foto toe:
-```html
-<section style="padding:0 clamp(20px,5vw,40px) clamp(32px,4vw,44px);background:var(--bg);">
-  <div style="max-width:900px;margin:0 auto;">
-    <img src="./assets/blog/ai-implementatie-hero.webp" srcset="./assets/blog/ai-implementatie-hero-sm.webp 800w, ./assets/blog/ai-implementatie-hero.webp 1600w" sizes="(min-width: 900px) 900px, 100vw" width="1600" height="905" alt="" loading="eager" fetchpriority="high" style="display:block;width:100%;height:auto;border-radius:12px;">
-  </div>
-</section>
-```
-
-`og:image`/`twitter:image` blijven in deze taak ongewijzigd (dit bestand — `assets/blog/ai-implementatie-laten-uitvoeren.png` — is niet opgenomen in Taak 19's blog-kaarten-sweep omdat het niet op `blog.html` als kaart verschijnt; controleer of dat klopt en werk het bestand hier zelf bij met dezelfde Pillow-crop-aanpak als Taak 19 stap 1 als het wél ergens als thumbnail gebruikt wordt).
+`og:image`/`twitter:image` (`assets/blog/ai-implementatie-laten-uitvoeren.png`) blijven ongewijzigd — geen nieuwe fotografie.
 
 Vervang `'IBM Plex Sans'` door `'Outfit'` in de H1 ("AI implementatie laten uitvoeren: Maatwerk automation voor jouw mkb"). Werk `theme-color` bij naar `content="#F7F2E9"`. Voer de componentregel-audit uit (em-dash-scan, eyebrow-ratio).
 
@@ -855,43 +815,9 @@ git commit -m "feat: overige pagina's naar het lichte oker/teal-thema, contactfo
 
 ---
 
-### Taak 19: Blog-kaart-thumbnails bijwerken naar de nieuwe hero-foto's
+### Taak 19: vervallen (geen nieuwe fotografie)
 
-`blog.html` toont voor elk artikel een kaart met een thumbnail (`<img src="./assets/blog/<artikel>.png" ... style="...object-fit:cover;">` in een 600×160-box). Deze thumbnails zijn dezelfde bestanden als de `og:image`-meta-tags van de bijbehorende artikel-pagina's (zie sessie-precedent bij `ai-telefonist-voor-bedrijf.html`, waar dit al eenmalig is gedaan). Deze taak werkt de resterende vier bij: `ai-receptioniste-voor-bedrijven.png`, `ai-chatbot-voor-bedrijven.png`, `bedrijfsprocessen-automatiseren-met-ai.png`, `workflow-automatisering-met-ai.png`.
-
-**Files:**
-- Modify: `assets/blog/ai-receptioniste-voor-bedrijven.png`
-- Modify: `assets/blog/ai-chatbot-voor-bedrijven.png`
-- Modify: `assets/blog/bedrijfsprocessen-automatiseren-met-ai.png`
-- Modify: `assets/blog/workflow-automatisering-met-ai.png`
-
-**Interfaces:**
-- Consumes: de hero-foto's uit Taak 7, 8, 9 (nog ongecropte, hoge-resolutie brondata van dezelfde generatie, niet de al-verkleinde webp's).
-
-- [ ] **Stap 1: Genereer voor elk artikel een 600:160-crop (3.75:1) uit de bijbehorende brondata**, zelfde aanpak als eerder in de sessie bij `ai-telefonist-voor-bedrijf.png` (Pillow, crop gebiast naar het belangrijkste beeldelement, niet blind center-crop):
-```python
-from PIL import Image
-img = Image.open("<pad naar de hoge-resolutie bron uit Taak 7/8/9>").convert("RGB")
-w, h = img.size
-target_ratio = 600 / 160
-crop_h = round(w / target_ratio)
-leftover = h - crop_h
-top = round(leftover * 0.30)  # zelfde bias als eerder, aanpassen indien het onderwerp elders in het beeld staat
-crop = img.crop((0, top, w, top + crop_h))
-out = crop.resize((1200, round(1200 / target_ratio)), Image.LANCZOS)
-out.save("assets/blog/<artikel>.png", "PNG", optimize=True)
-```
-Herhalen voor alle vier de artikelen, telkens de crop visueel controleren (Read-tool) vóór opslaan naar het definitieve pad.
-
-- [ ] **Stap 2: Verifieer op de blog-overzichtspagina**
-
-Herhaal de Playwright-screenshot-aanpak op `blog.html` (zoals eerder bij de AI-telefonist-kaart) en bekijk of alle vier de kaarten nu de nieuwe documentaire foto tonen i.p.v. het oude flat-icoon.
-
-- [ ] **Stap 3: Commit**
-```bash
-git add assets/blog/ai-receptioniste-voor-bedrijven.png assets/blog/ai-chatbot-voor-bedrijven.png assets/blog/bedrijfsprocessen-automatiseren-met-ai.png assets/blog/workflow-automatisering-met-ai.png
-git commit -m "feat: blog-kaart-thumbnails bijgewerkt naar de nieuwe documentaire hero-foto's"
-```
+Deze taak (blog-kaart-thumbnails bijwerken naar nieuwe hero-foto's) verviel samen met Taak 6-10 — er zijn geen nieuwe foto's om de thumbnails van bij te werken. De vier flat-icoon-thumbnails blijven staan tot de gebruiker nieuwe fotografie laat maken.
 
 ---
 
@@ -1025,3 +951,169 @@ npm test
 Expected: alle tests slagen.
 
 - [ ] **Stap 5: Geen commit nodig tenzij stap 1 of 2 een fix vereiste** (dan een losse `fix:`-commit met de specifieke afwijking benoemd).
+
+---
+
+### Taak 23: Homepage-hero — volledig beeldvullend met nieuw beeld (vervangt Taak 11's hero-layout)
+
+**Nieuwe, na Taak 11 toegevoegde taak — directe instructie van de gebruiker.** Taak 11 leverde de homepage-hero op als een twee-koloms grid (tekst links, beeld rechts in een gemaskeerd/wegvloeiend kader — het "gevouwen metaal"-beeld met een radiale mask-fade). De gebruiker wil dit vervangen door een **volledig beeldvullende hero** ("fullscreen"), met de koptekst rechtstreeks over het beeld heen (zoals het Vapi-model uit spec sectie 4/5, nu ook toegepast op de homepage) — geen twee-koloms lay-out, geen gemaskeerd kader meer. Het beeld zelf is ook vervangen: een nieuw, door de gebruiker goedgekeurd Higgsfield-beeld met dezelfde "verkreukeld → precies geometrisch"-signatuurstijl, maar op een lichte, warme achtergrond (niet meer bijna-zwart) — bewust zo gegenereerd omdat het donkere beeld niet meer paste op de nu lichte site. Alle overige Taak 11-wijzigingen (tokens, SEO-JSON-LD, em-dash-cleanup, kleur-literal-migratie, kaart-variatie) blijven ongewijzigd — deze taak raakt alleen de hero-sectie se structuur en het beeld.
+
+**Files:**
+- Modify: `index.src.html`
+- Modify: `index.html` (via `npm run build`, niet handmatig)
+- De nieuwe beeldbestanden staan al klaar: `assets/hero-visual-full.webp` (2400px breed, desktop) en `assets/hero-visual-full-sm.webp` (960×1200, mobiel, portrait-crop met de linkerkant van het object — reeds gegenereerd/gecropt en gecommit door de controller). De oude `assets/hero-visual.webp`/`hero-visual-sm.webp` blijven op schijf staan (niet verwijderen — geen ruimte om na te gaan of iets anders ernaar verwijst) maar worden door de homepage niet langer gebruikt.
+
+**Interfaces:**
+- Consumes: `assets/hero-visual-full.webp`/`-sm.webp` (al aangeleverd), alle Taak 11-tokens/structuur (ongewijzigd).
+
+- [ ] **Stap 1: Herbouw de heropbouw naar één laag-op-laag structuur (geen twee-koloms grid meer)**
+
+Zoek de huidige `#top`-sectie met de `.hero-layout`/`.hero-text`/`.hero-visual`-structuur (uit Taak 11/eerdere sessie-taken). Vervang door:
+- Eén relatief gepositioneerde `<section id="top">` (behoud de bestaande verticale padding-conventie van de site, bijv. `clamp(64px,8vw,88px)`, maar controleer of die nog past bij een volledig beeldvullende hero of dat de sectie een eigen, hogere `min-height` nodig heeft om echt "fullscreen" aan te voelen — gebruik je eigen visuele oordeel, iets in de orde van `min-height:clamp(560px,82vh,820px)` is een redelijk startpunt, gebaseerd op eerdere sessie-onderzoek naar hero-hoogtes; niet letterlijk 100vh, dat was eerder al te hoog gebleken).
+- Een absoluut gepositioneerde achtergrond-`<img>` die de hele sectie vult:
+```html
+<img class="hero-full-bg" src="./assets/hero-visual-full.webp" srcset="./assets/hero-visual-full-sm.webp 960w, ./assets/hero-visual-full.webp 2400w" sizes="100vw" width="2400" height="1357" alt="" loading="eager" fetchpriority="high" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center center;z-index:0;">
+```
+(Breedte/hoogte-attributen kloppen al met de aangeleverde bestanden — controleer bij twijfel met een snelle Pillow-check.) Test `object-position` visueel op desktop en mobiel; het beeld se rustige zone zit rechts, dus `right center` kan op sommige breedtes beter werken dan `center center` — kies wat op de meeste viewport-breedtes het minst van het interessante deel van het beeld wegsnijdt.
+- Een scrim-laag die de linkerkant (waar de tekst komt) laat overvloeien naar de paginakleur, zodat de tekst leesbaar blijft zonder een nieuwe, losse overlay-kleur te verzinnen:
+```html
+<div class="hero-full-scrim" style="position:absolute;inset:0;background:linear-gradient(90deg, var(--bg) 0%, var(--bg) 32%, transparent 68%);pointer-events:none;z-index:0;"></div>
+```
+- De bestaande tekst-inhoud (badge, H1, subtekst, CTA, trust-pills) blijft **inhoudelijk en structureel ongewijzigd** — verwijder alleen de omliggende `.hero-layout`/`.hero-text`-wrapper-divs en zet de content direct in de sectie met `position:relative;z-index:1;max-width` vergelijkbaar met de oude `.hero-text`-kolombreedte (zodat de tekst niet over de volle breedte van de nu bredere sectie uitrekt).
+- Verwijder de nu overbodige CSS: `.hero-layout`, `.hero-visual` (incl. `::before`-gloed en `mask-image`, die specifiek voor het oude gemaskeerde-kader-beeld waren), en de bijbehorende media-query-regels. Nieuwe, kleinere CSS-regels voor `.hero-full-bg`/`.hero-full-scrim` mogen als losse classes (i.p.v. alles inline) als dat de sectie leesbaarder maakt — jouw keuze, zolang het patroon van de rest van het bestand (veel inline styling, een paar gedeelde classes voor herbruikte elementen) niet doorbroken wordt.
+
+- [ ] **Stap 2: Mobiele/smalle-viewport-tuning**
+
+Controleer via een Playwright-screenshot op 390px breedte of de scrim-verhouding (32%/68%) nog steeds voldoende leesbaarheid geeft — op een smalle viewport toont `object-fit:cover` een smaller deel van het beeld, dus de scrim-percentages moeten mogelijk breder (bijv. `var(--bg) 0%, var(--bg) 50%, transparent 85%`) om de tekst leesbaar te houden. Gebruik een `@media`-query op `.hero-full-scrim` als de desktop- en mobiele verhouding uiteen moeten lopen.
+
+- [ ] **Stap 3: WCAG-contrastcontrole**
+
+Controleer dat de koptekst/subtekst/badge op de scrim-overgang (het gebied waar het beeld nog gedeeltelijk doorschijnt) voldoende contrast houdt — als de tekst een vaste `max-width` heeft die ruim binnen de `var(--bg) 0%...32%`-zone blijft (waar de scrim vrijwel ondoorzichtig is), is dit vermoedelijk geen probleem, maar verifieer met een screenshot.
+
+- [ ] **Stap 4: Build en verificatie**
+
+```bash
+npm run build
+grep -o "hero-visual-full.webp" index.html | head -1
+grep -o "hero-full-scrim" index.html | head -1
+```
+Expected: beide geven een treffer.
+
+- [ ] **Stap 5: Visuele controle + `npm test`**
+
+Playwright-screenshots desktop (1440px) en mobiel (390px), bekeken met de Read-tool: bevestig dat (a) het beeld nu volledig beeldvullend is, geen kader/doosje meer, (b) de koptekst goed leesbaar is over het beeld, (c) de rustige/lichte zone van het beeld (rechts) nog steeds zichtbaar is en niet volledig onder de scrim verdwijnt, (d) er geen layout-breuk is t.o.v. de rest van de pagina (de secties direct onder de hero moeten nog normaal aansluiten). Draai `npm test` — moet groen blijven.
+
+- [ ] **Stap 6: Commit**
+
+```bash
+git add index.src.html index.html
+git commit -m "feat: homepage-hero volledig beeldvullend met nieuw lichtgetint beeld"
+```
+
+---
+
+### Taak 24: Homepage-hero — subtiele "levend"-animatie op het achtergrondbeeld (gratis, geen Higgsfield)
+
+**Nieuwe taak, directe instructie van de gebruiker.** Na Taak 23 vroeg de gebruiker om de hero "levend" te maken. Gekozen aanpak (gratis, geen nieuwe Higgsfield-generatie): een subtiele, eenmalige zoom/settle-animatie op het achtergrondbeeld bij het laden van de pagina — geen doorlopende loop (dat oogt onrustig/goedkoop), maar één rustige overgang die samen met de bestaande `heroContentIn`-tekst-animatie (spec sectie 6, al aanwezig) de hero bij het laden laat "landen".
+
+**Files:**
+- Modify: `index.src.html`
+- Modify: `index.html` (via `npm run build`)
+
+**Interfaces:**
+- Consumes: `.hero-full-bg`/`.hero-full-scrim` uit Taak 23 (ongewijzigde structuur, alleen een animatie toegevoegd aan `.hero-full-bg`).
+
+- [ ] **Stap 1: Voeg de animatie toe aan `.hero-full-bg`**
+
+```css
+.hero-full-bg { animation: heroBgSettle 2.2s cubic-bezier(0.16,1,0.3,1) both; }
+@keyframes heroBgSettle {
+  0% { transform: scale(1.06); opacity: 0.92; }
+  100% { transform: scale(1); opacity: 1; }
+}
+```
+(Exacte duur/schaal mag je naar eigen smaak bijstellen na visuele controle — dit is een startpunt, geen exacte eis. Doel: subtiel, premium, geen goedkope "zoom-whoosh".)
+
+- [ ] **Stap 2: `prefers-reduced-motion` respecteren**
+
+Voeg `.hero-full-bg` toe aan de bestaande `@media (prefers-reduced-motion: reduce)`-regel (zoek de regel die nu al `.hero-content`/`.hero-scroll-cue` bevat) zodat de animatie wordt uitgeschakeld:
+```css
+.hero-full-bg { animation: none; }
+```
+
+- [ ] **Stap 3: Build en visuele controle**
+
+```bash
+npm run build
+grep -o "heroBgSettle" index.html | head -1
+```
+Expected: treffer. Maak een Playwright-screenshot/video-achtige reeks stills vlak na page-load (bijv. 0ms, 500ms, 1000ms, 2500ms na `page.goto`) op desktop, en bekijk ze met de Read-tool om te bevestigen dat de overgang rustig en subtiel oogt, niet abrupt of storend. Test ook met `page.emulateMedia({ reducedMotion: 'reduce' })` dat de animatie dan wegvalt (beeld staat meteen op eindstand).
+
+- [ ] **Stap 4: `npm test` en commit**
+
+```bash
+npm test
+git add index.src.html index.html
+git commit -m "feat: subtiele settle-animatie op de homepage-hero-achtergrond"
+```
+
+---
+
+### Taak 25: Kleur-literal-migratie in één batch voor de resterende 10 pagina's
+
+**Nieuwe taak, gebruikersinstructie.** Taken 11-13 lieten zien dat elke pagina dozijnen hardcoded `oklch(...)`-literals bevat (oude hue 220/230/200-accentkleur, hue 250-lichte-tekst-op-donker, `color:#FFF`) die niet via de gedeelde `:root`-tokenswap meeveranderen — dat blijft zo, want de site zet kleuren in inline `style=""`-attributen, niet via `var()`-referenties, en dat is een bestaande codebase-conventie, geen keuze binnen dit plan. Een gedeeld CSS-bestand kan die letterlijke waarden niet overschrijven zonder `!important`-trucs.
+
+Maar de **bewerking zelf** is nu, na drie pagina's, een volledig vaste, mechanische regel (zie `kleur-literal-migratie.md`) — die hoeft niet meer per pagina opnieuw "ontdekt" te worden door een aparte subagent. Deze taak past de regel in één keer toe op de resterende 10 pagina's (de 6 met een nog te doen paginataak, plus de 4 uit Taak 18 — die hebben dezelfde gedeelde nav/footer/back-to-top-boilerplate met dezelfde literals):
+
+`ai-telefonist-voor-bedrijf.html`, `ai-receptioniste-voor-bedrijven.html`, `ai-chatbot-voor-bedrijven.html`, `bedrijfsprocessen-automatiseren-met-ai.html`, `workflow-automatisering-met-ai.html`, `ai-implementatie-laten-uitvoeren.html`, `prijzen.html`, `contact.html`, `blog.html`, `privacy.html`.
+
+Na deze taak hoeven Taken 14-18 alleen nog het **pagina-specifieke** werk te doen (tokenswap, Outfit op de eigen H1, em-dash/eyebrow-audit, hero-specifieke aanpassingen) — niet meer de kleur-ontdekking zelf.
+
+**Files:**
+- Modify: alle 10 hierboven genoemde `.html`-bestanden
+- Create (tijdelijk script, niet commiten): `/tmp/migrate-colors-batch.py`
+
+**Interfaces:**
+- Consumes: de methodologie uit `kleur-literal-migratie.md` (identiek toe te passen, geen nieuwe regels verzinnen).
+- Produces: 10 bestanden zonder hue-220/230/200-literals of `color:#FFF` op lichte secties — Taken 14-18 mogen dit als voldongen feit aannemen (met een korte eigen grep-controle, niet een volledige herontdekking).
+
+- [ ] **Stap 1: Schrijf één Python-script dat de regel toepast op alle 10 bestanden**
+
+Voor elk bestand: zoek elke `oklch(L% C H)`-waarde met hue 220, 230, 200 of 250, en elke `color:#FFF`/`color:#FFFFFF`/`color:white`-literal. Bepaal per treffer de CSS-eigenschap waar de waarde bij hoort (kijk terug naar de laatste `:` vóór de waarde binnen hetzelfde `style="..."`-blok):
+
+- Eigenschap is `background`, `background-color`, `border`, `border-color`, `box-shadow` (zelfstandig UI-element): hue → `188`, lichtheid/chroma **ongewijzigd**. (`rgba(0,212,255,X)`-varianten: zelfde regel, herbereken de rgb-waarden van hue 188 bij dezelfde lichtheid/verzadiging.)
+- Eigenschap is `color` (tekst/icoon) én de waarde had hue 220/230/200 met lichtheid ≥60% (was bedoeld als het felle accent, nu tekst op een lichte achtergrond): hue → `188`, lichtheid **verlagen naar ~42-45%**.
+- Eigenschap is `color` met hue 250 en lichtheid ≥70% (oude "lichte tekst op bijna-zwart"): vervang door `var(--text-muted)` (bij lichtheid 70-85%) of `var(--accent-text)` (als het duidelijk een link/accent-tekst was, niet gewone lopende tekst) — gebruik je beoordeling op basis van de omliggende context (is het een `<a>`, een label, gewone paragraaftekst?).
+- `color:#FFF`/`#FFFFFF`/`white` op een sectie/element waarvan de achtergrond niet meer donker is: verwijderen (tekst erft dan `var(--text)`) — **niet** aanraken op secties die bewust donker blijven (footer, eventuele andere donkere band — controleer per pagina of zoiets bestaat, net als de homepage se "why-us"-band).
+
+Herbruik zoveel mogelijk letterlijk dezelfde aanpak/code als in Taak 11's eigen (niet-gecommitte) script, als je die kunt reconstrueren uit de taak-11/12/13-rapporten — anders vanaf nul, met dezelfde regels.
+
+- [ ] **Stap 2: Voer het script uit op alle 10 bestanden**
+
+- [ ] **Stap 3: Verifieer mechanisch**
+
+```bash
+for f in ai-telefonist-voor-bedrijf.html ai-receptioniste-voor-bedrijven.html ai-chatbot-voor-bedrijven.html bedrijfsprocessen-automatiseren-met-ai.html workflow-automatisering-met-ai.html ai-implementatie-laten-uitvoeren.html prijzen.html contact.html blog.html privacy.html; do
+  echo "=== $f ==="
+  grep -c "oklch([^)]*220\|oklch([^)]*230\|oklch([^)]* 200 \|color:#FFF\|color:#FFFFFF" "$f"
+done
+```
+Expected: elk bestand toont `0`, behalve waar een bewust donkere sectie (footer e.d.) een hue-250-lichte-tekst-op-donker-waarde legitiem behoudt — controleer die uitzonderingen handmatig, net als bij Taak 11/12/13.
+
+- [ ] **Stap 4: Visuele steekproef**
+
+Maak van elk van de 10 pagina's minstens één desktop-screenshot (1440px) van de bovenste viewport, en van 2-3 willekeurig gekozen pagina's ook een screenshot verderop (bijv. een prijskaart-sectie, een FAQ) om te controleren dat de batch-regel geen rare uitzondering heeft gemist of verkeerd gecategoriseerd (bijv. een icoon dat nu te licht/onleesbaar is). Bekijk alle screenshots met de Read-tool.
+
+- [ ] **Stap 5: `npm test` en commit**
+
+```bash
+npm test
+git add ai-telefonist-voor-bedrijf.html ai-receptioniste-voor-bedrijven.html ai-chatbot-voor-bedrijven.html bedrijfsprocessen-automatiseren-met-ai.html workflow-automatisering-met-ai.html ai-implementatie-laten-uitvoeren.html prijzen.html contact.html blog.html privacy.html
+git commit -m "feat: kleur-literal-migratie in één batch voor de 10 resterende pagina's"
+```
+
+- [ ] **Stap 6: Ruim het tijdelijke script op**
+
+```bash
+rm /tmp/migrate-colors-batch.py
+```
