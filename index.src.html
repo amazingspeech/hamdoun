@@ -231,8 +231,9 @@ if (location.hostname === "amazingspeech.github.io") {
   @media (max-width: 700px) {
     .about-grid { grid-template-columns:1fr !important; }
     .stack-row { grid-template-columns:1fr !important; gap:10px !important; max-width:none; }
+    .footer-grid { grid-template-columns:repeat(2,1fr) !important; }
   }
-  @media (max-width: 480px) { .process-grid { grid-template-columns:1fr !important; } }
+  @media (max-width: 480px) { .process-grid { grid-template-columns:1fr !important; } .footer-grid { grid-template-columns:1fr !important; } }
   .faq-item[open] .faq-chevron { transform:rotate(180deg); }
   .faq-item summary::-webkit-details-marker { display:none; }
   .faq-item summary { list-style:none; cursor:pointer; }
@@ -746,7 +747,7 @@ if (location.hostname === "amazingspeech.github.io") {
 
 <footer style="padding:clamp(48px,6vw,64px) clamp(20px,5vw,40px) 32px;background:oklch(4% 0 0);color:oklch(62% 0.02 250);">
   <div style="max-width:1200px;margin:0 auto;">
-    <div style="display:grid;grid-template-columns:minmax(220px,1.4fr) repeat(3,minmax(140px,1fr));gap:clamp(28px,4vw,48px);padding-bottom:clamp(32px,4vw,44px);border-bottom:1px solid oklch(20% 0.01 255);">
+    <div class="footer-grid" style="display:grid;grid-template-columns:minmax(220px,1.4fr) repeat(3,minmax(140px,1fr));gap:clamp(28px,4vw,48px);padding-bottom:clamp(32px,4vw,44px);border-bottom:1px solid oklch(20% 0.01 255);">
       <div>
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
           <img src="./assets/tessar-icon-optimized.png" width="26" height="28" alt="Tessar logo" style="height:26px;width:auto;opacity:0.9;">

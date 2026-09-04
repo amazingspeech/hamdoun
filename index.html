@@ -267,8 +267,9 @@ if (location.hostname === "amazingspeech.github.io") {
   @media (max-width: 700px) {
     .about-grid { grid-template-columns:1fr !important; }
     .stack-row { grid-template-columns:1fr !important; gap:10px !important; max-width:none; }
+    .footer-grid { grid-template-columns:repeat(2,1fr) !important; }
   }
-  @media (max-width: 480px) { .process-grid { grid-template-columns:1fr !important; } }
+  @media (max-width: 480px) { .process-grid { grid-template-columns:1fr !important; } .footer-grid { grid-template-columns:1fr !important; } }
   .faq-item[open] .faq-chevron { transform:rotate(180deg); }
   .faq-item summary::-webkit-details-marker { display:none; }
   .faq-item summary { list-style:none; cursor:pointer; }
@@ -1179,7 +1180,7 @@ if (location.hostname === "amazingspeech.github.io") {
     <p data-dc-tpl="247" style="font: 400 clamp(0.8rem, 1.2vw, 0.85rem) / 1.6 &quot;IBM Plex Sans&quot;; color: var(--text-muted); text-align: center; margin: 28px 0px 0px; padding-top: 28px; border-top: 1px solid oklch(0.7 0.14 188 / 0.2);"><span class="sc-interp">Meestal binnen 24 uur reactie.</span></p>
   </div></section><footer data-dc-tpl="248" style="padding: clamp(48px, 6vw, 64px) clamp(20px, 5vw, 40px) 32px; background: oklch(0.04 0 0); color: oklch(0.62 0.02 250);">
   <div data-dc-tpl="249" style="max-width: 1200px; margin: 0px auto;">
-    <div data-dc-tpl="250" style="display: grid; grid-template-columns: minmax(220px, 1.4fr) repeat(3, minmax(140px, 1fr)); gap: clamp(28px, 4vw, 48px); padding-bottom: clamp(32px, 4vw, 44px); border-bottom: 1px solid oklch(0.2 0.01 255);">
+    <div data-dc-tpl="250" class="footer-grid" style="display: grid; grid-template-columns: minmax(220px, 1.4fr) repeat(3, minmax(140px, 1fr)); gap: clamp(28px, 4vw, 48px); padding-bottom: clamp(32px, 4vw, 44px); border-bottom: 1px solid oklch(0.2 0.01 255);">
       <div data-dc-tpl="251">
         <div data-dc-tpl="252" style="display: flex; align-items: center; gap: 10px; margin-bottom: 14px;">
           <img data-dc-tpl="253" src="./assets/tessar-icon-optimized.png" width="26" height="28" alt="Tessar logo" style="height: 26px; width: auto; opacity: 0.9;">
