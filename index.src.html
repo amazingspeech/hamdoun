@@ -174,7 +174,7 @@ if (location.hostname === "amazingspeech.github.io") {
      bridge existed to reconcile the warm bronze hero photo with the old cool-cyan accent.
      With a warm oker base + this teal accent, that clash is gone, so both headline
      highlights now share one consistent brand accent instead of two competing hues. */
-  .grad-text, .grad-text-warm { color:oklch(70% 0.14 188); }
+  .grad-text, .grad-text-warm { color:var(--accent-text); }
 
   .hero-badge { display:inline-flex; align-items:center; gap:9px; background:var(--surface); border:1px solid oklch(70% 0.14 188 / 0.35); padding:9px 18px 9px 14px; border-radius:24px; margin-bottom:30px; font:600 0.8125rem/1 'IBM Plex Mono'; letter-spacing:0.06em; text-transform:uppercase; color:var(--accent-text); }
   .hero-badge-dot { width:6px; height:6px; border-radius:50%; background:oklch(58% 0.16 188); flex-shrink:0; }
@@ -182,7 +182,7 @@ if (location.hostname === "amazingspeech.github.io") {
   .hero-trust-pill { display:flex; align-items:center; gap:8px; background:var(--surface); border:1px solid var(--border); padding:8px 16px; border-radius:20px; font:500 0.8125rem/1 'IBM Plex Sans'; color:var(--text-muted); }
   .hero-trust-pill .hero-badge-dot { background:oklch(55% 0.16 188); }
 
-  .hero-cta-primary { display:inline-block; background:oklch(70% 0.14 188); color:#001a2e; padding:17px 38px; border-radius:6px; font-weight:700; font-size:0.9625rem; transition:all 280ms ease; white-space:nowrap; }
+  .hero-cta-primary { display:inline-block; background:var(--accent); color:var(--bg); padding:17px 38px; border-radius:6px; font-weight:700; font-size:0.9625rem; transition:all 280ms ease; white-space:nowrap; }
   .hero-cta-primary:hover { transform:translateY(-2px); }
 
   .hero-content { animation:heroContentIn 900ms cubic-bezier(0.16,1,0.3,1) both; }
@@ -195,7 +195,7 @@ if (location.hostname === "amazingspeech.github.io") {
   /* Sits left of the fixed Tess concierge launcher (60px circle at bottom:24px/right:24px, see
      tessar-concierge-widget.js), same row, so it never collides with the launcher or its hint bubble
      (which pops up above the launcher, not beside it). */
-  #back-to-top { position:fixed; right:100px; bottom:24px; z-index:40; width:48px; height:48px; border-radius:50%; border:none; background:oklch(70% 0.14 188); color:#001a2e; display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:0 8px 24px oklch(20% 0.02 255 / 0.25); opacity:0; transform:translateY(12px); pointer-events:none; transition:opacity 260ms ease, transform 260ms ease, box-shadow 200ms ease; }
+  #back-to-top { position:fixed; right:100px; bottom:24px; z-index:40; width:48px; height:48px; border-radius:50%; border:none; background:var(--accent); color:var(--bg); display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:0 8px 24px oklch(20% 0.02 255 / 0.25); opacity:0; transform:translateY(12px); pointer-events:none; transition:opacity 260ms ease, transform 260ms ease, box-shadow 200ms ease; }
   #back-to-top.is-visible { opacity:1; transform:translateY(0); pointer-events:auto; }
   #back-to-top:hover { transform:translateY(-3px); box-shadow:0 12px 32px rgba(15,92,87,0.35); }
   #back-to-top:focus-visible { outline:2px solid var(--accent-text); outline-offset:3px; }
@@ -325,7 +325,7 @@ if (location.hostname === "amazingspeech.github.io") {
       <a href="./chatbots.html" class="nav-link" style="color:var(--text-muted);transition:color 200ms ease;" style-hover="color:var(--text);">{{ navChatbots }}</a>
       <a href="./blog.html" class="nav-link" style="color:var(--text-muted);transition:color 200ms ease;" style-hover="color:var(--text);">{{ navBlog }}</a>
       <a href="./contact.html" class="nav-link" style="color:var(--text-muted);transition:color 200ms ease;" style-hover="color:var(--text);">Contact</a>
-      <a class="nav-link" href="#contact" style="background:oklch(70% 0.14 188);color:#001a2e;padding:10px 20px;border-radius:6px;font-weight:600;transition:all 200ms ease;white-space:nowrap;" style-hover="transform:translateY(-2px);box-shadow:0 8px 24px rgba(15, 92, 87, 0.25);">{{ navBookCall }}</a>
+      <a class="nav-link" href="#contact" style="background:var(--accent);color:var(--bg);padding:10px 20px;border-radius:6px;font-weight:600;transition:all 200ms ease;white-space:nowrap;" style-hover="transform:translateY(-2px);box-shadow:0 8px 24px rgba(15, 92, 87, 0.25);">{{ navBookCall }}</a>
     </nav>
     <button type="button" class="nav-toggle" id="nav-toggle-btn" aria-label="Menu" aria-expanded="false" aria-controls="nav-mobile-panel">
       <span></span><span></span><span></span>
@@ -338,7 +338,7 @@ if (location.hostname === "amazingspeech.github.io") {
     <a href="./chatbots.html">{{ navChatbots }}</a>
     <a href="./blog.html">{{ navBlog }}</a>
     <a href="./contact.html">Contact</a>
-    <a href="#contact" style="background:oklch(70% 0.14 188);color:#001a2e !important;text-align:center;border-radius:6px;font-weight:600;">{{ navBookCall }}</a>
+    <a href="#contact" style="background:var(--accent);color:var(--bg) !important;text-align:center;border-radius:6px;font-weight:600;">{{ navBookCall }}</a>
   </div>
 </header>
 
@@ -379,7 +379,7 @@ if (location.hostname === "amazingspeech.github.io") {
   <div data-reveal-grid class="why-us-grid" style="max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:clamp(20px,3vw,32px);">
     <sc-for list="{{ whyUs }}" as="w" hint-placeholder-count="3">
       <div data-reveal style="display:flex;align-items:flex-start;gap:14px;transition:opacity 600ms ease, transform 600ms ease;">
-        <div class="icon {{ w.iconClass }}" style="width:22px;height:22px;color:oklch(70% 0.14 188);margin-top:3px;"></div>
+        <div class="icon {{ w.iconClass }}" style="width:22px;height:22px;color:var(--accent-text);margin-top:3px;"></div>
         <p style="font:400 0.9375rem/1.6 'IBM Plex Sans';color:oklch(80% 0.02 250);margin:0;">{{ w.text }}</p>
       </div>
     </sc-for>
@@ -631,7 +631,7 @@ if (location.hostname === "amazingspeech.github.io") {
               <li style="display:flex;gap:10px;align-items:flex-start;font:400 0.9375rem/1.5 'IBM Plex Sans';color:var(--text-muted);"><div class="icon icon-check" style="width:15px;height:15px;color:var(--accent-text);margin-top:3px;flex-shrink:0;"></div><span>{{ inc }}</span></li>
             </sc-for>
           </ul>
-          <a href="#contact" style="background:oklch(70% 0.14 188);color:#001a2e;padding:12px 20px;border-radius:6px;text-align:center;font-weight:600;font-size:0.9375rem;transition:all 200ms ease;white-space:nowrap;" style-hover="transform:translateY(-2px);box-shadow:0 8px 24px rgba(15, 92, 87, 0.25);">{{ tier.cta }}</a>
+          <a href="#contact" style="background:var(--accent);color:var(--bg);padding:12px 20px;border-radius:6px;text-align:center;font-weight:600;font-size:0.9375rem;transition:all 200ms ease;white-space:nowrap;" style-hover="transform:translateY(-2px);box-shadow:0 8px 24px rgba(15, 92, 87, 0.25);">{{ tier.cta }}</a>
         </div>
       </sc-for>
     </div>
@@ -670,19 +670,19 @@ if (location.hostname === "amazingspeech.github.io") {
     </div>
 
     <form id="contact-form" style="display:flex;flex-direction:column;gap:18px;">
-      <input type="text" name="name" id="cf-name" required placeholder="{{ formNamePlaceholder }}" style="background:oklch(100% 0 0 / 0.95);border:1px solid oklch(70% 0.14 188 / 0.3);border-radius:6px;padding:14px 18px;font:400 1rem/1.5 'IBM Plex Sans';color:var(--text);transition:all 200ms ease;" style-focus="border-color:oklch(70% 0.14 188);box-shadow:0 0 0 2px oklch(70% 0.14 188 / 0.1);outline:none;"/>
-      <input type="email" name="email" id="cf-email" required placeholder="{{ formEmailPlaceholder }}" style="background:oklch(100% 0 0 / 0.95);border:1px solid oklch(70% 0.14 188 / 0.3);border-radius:6px;padding:14px 18px;font:400 1rem/1.5 'IBM Plex Sans';color:var(--text);transition:all 200ms ease;" style-focus="border-color:oklch(70% 0.14 188);box-shadow:0 0 0 2px oklch(70% 0.14 188 / 0.1);outline:none;"/>
-      <input type="tel" name="phone" id="cf-phone" placeholder="{{ formPhonePlaceholder }}" style="background:oklch(100% 0 0 / 0.95);border:1px solid oklch(70% 0.14 188 / 0.3);border-radius:6px;padding:14px 18px;font:400 1rem/1.5 'IBM Plex Sans';color:var(--text);transition:all 200ms ease;" style-focus="border-color:oklch(70% 0.14 188);box-shadow:0 0 0 2px oklch(70% 0.14 188 / 0.1);outline:none;"/>
+      <input type="text" name="name" id="cf-name" required placeholder="{{ formNamePlaceholder }}" style="background:oklch(100% 0 0 / 0.95);border:1px solid oklch(70% 0.14 188 / 0.3);border-radius:6px;padding:14px 18px;font:400 1rem/1.5 'IBM Plex Sans';color:var(--text);transition:all 200ms ease;" style-focus="outline:2px solid var(--accent);outline-offset:2px;border-color:var(--accent);"/>
+      <input type="email" name="email" id="cf-email" required placeholder="{{ formEmailPlaceholder }}" style="background:oklch(100% 0 0 / 0.95);border:1px solid oklch(70% 0.14 188 / 0.3);border-radius:6px;padding:14px 18px;font:400 1rem/1.5 'IBM Plex Sans';color:var(--text);transition:all 200ms ease;" style-focus="outline:2px solid var(--accent);outline-offset:2px;border-color:var(--accent);"/>
+      <input type="tel" name="phone" id="cf-phone" placeholder="{{ formPhonePlaceholder }}" style="background:oklch(100% 0 0 / 0.95);border:1px solid oklch(70% 0.14 188 / 0.3);border-radius:6px;padding:14px 18px;font:400 1rem/1.5 'IBM Plex Sans';color:var(--text);transition:all 200ms ease;" style-focus="outline:2px solid var(--accent);outline-offset:2px;border-color:var(--accent);"/>
       <label for="cf-industry" style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;">{{ formIndustryPlaceholder }}</label>
-      <select name="industry" id="cf-industry" style="background:oklch(100% 0 0 / 0.95);border:1px solid oklch(70% 0.14 188 / 0.3);border-radius:6px;padding:14px 18px;font:400 1rem/1.5 'IBM Plex Sans';color:var(--text);transition:all 200ms ease;cursor:pointer;" style-focus="border-color:oklch(70% 0.14 188);outline:none;">
+      <select name="industry" id="cf-industry" style="background:oklch(100% 0 0 / 0.95);border:1px solid oklch(70% 0.14 188 / 0.3);border-radius:6px;padding:14px 18px;font:400 1rem/1.5 'IBM Plex Sans';color:var(--text);transition:all 200ms ease;cursor:pointer;" style-focus="outline:2px solid var(--accent);outline-offset:2px;border-color:var(--accent);">
         <option value="">{{ formIndustryPlaceholder }}</option>
         <sc-for list="{{ industries }}" as="opt" hint-placeholder-count="0">
           <option value="{{ opt.title }}">{{ opt.title }}</option>
         </sc-for>
       </select>
-      <textarea name="message" id="cf-message" required placeholder="{{ formMessagePlaceholder }}" rows="4" style="background:oklch(100% 0 0 / 0.95);border:1px solid oklch(70% 0.14 188 / 0.3);border-radius:6px;padding:14px 18px;font:400 1rem/1.5 'IBM Plex Sans';color:var(--text);resize:none;transition:all 200ms ease;" style-focus="border-color:oklch(70% 0.14 188);box-shadow:0 0 0 2px oklch(70% 0.14 188 / 0.1);outline:none;"></textarea>
+      <textarea name="message" id="cf-message" required placeholder="{{ formMessagePlaceholder }}" rows="4" style="background:oklch(100% 0 0 / 0.95);border:1px solid oklch(70% 0.14 188 / 0.3);border-radius:6px;padding:14px 18px;font:400 1rem/1.5 'IBM Plex Sans';color:var(--text);resize:none;transition:all 200ms ease;" style-focus="outline:2px solid var(--accent);outline-offset:2px;border-color:var(--accent);"></textarea>
       <input type="text" name="website" id="cf-website" autocomplete="off" tabindex="-1" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;">
-      <button type="submit" id="cf-submit" style="background:oklch(70% 0.14 188);color:#001a2e;padding:14px 28px;border:none;border-radius:6px;font-weight:700;font-size:0.95rem;cursor:pointer;transition:all 280ms ease;" style-hover="transform:translateY(-2px);">{{ contactCTA }}</button>
+      <button type="submit" id="cf-submit" style="background:var(--accent);color:var(--bg);padding:14px 28px;border:none;border-radius:6px;font-weight:700;font-size:0.95rem;cursor:pointer;transition:all 280ms ease;" style-hover="transform:translateY(-2px);">{{ contactCTA }}</button>
       <p id="cf-status" role="status" style="font:400 0.9rem/1.5 'IBM Plex Sans';margin:0;min-height:1.4em;"></p>
     </form>
     <script>
@@ -1077,7 +1077,7 @@ class Component extends DCLogic {
 
   renderVals() {
     const t = copyNL;
-    const active = { background: 'oklch(70% 0.14 188)', color: '#001a2e' };
+    const active = { background: 'var(--accent)', color: 'var(--bg)' };
     const inactive = { background: 'transparent', color: 'oklch(46% 0.012 140)' };
     const s = this.state;
 

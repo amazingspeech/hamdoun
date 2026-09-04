@@ -96,7 +96,7 @@
   /* Sits left of the fixed Tess concierge launcher (60px circle at bottom:24px/right:24px, see
      tessar-concierge-widget.js), same row, so it never collides with the launcher or its hint bubble
      (which pops up above the launcher, not beside it). */
-  #back-to-top { position:fixed; right:100px; bottom:24px; z-index:40; width:48px; height:48px; border-radius:50%; border:none; background:oklch(70% 0.14 188); color:#001a2e; display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:0 8px 24px oklch(20% 0.02 255 / 0.25); opacity:0; transform:translateY(12px); pointer-events:none; transition:opacity 260ms ease, transform 260ms ease, box-shadow 200ms ease; }
+  #back-to-top { position:fixed; right:100px; bottom:24px; z-index:40; width:48px; height:48px; border-radius:50%; border:none; background:var(--accent); color:var(--bg); display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:0 8px 24px oklch(20% 0.02 255 / 0.25); opacity:0; transform:translateY(12px); pointer-events:none; transition:opacity 260ms ease, transform 260ms ease, box-shadow 200ms ease; }
   #back-to-top.is-visible { opacity:1; transform:translateY(0); pointer-events:auto; }
   #back-to-top:hover { transform:translateY(-3px); box-shadow:0 12px 32px rgba(15,92,87,0.35); }
   #back-to-top:focus-visible { outline:2px solid var(--accent-text); outline-offset:3px; }
@@ -126,7 +126,7 @@
       <a href="./chatbots.html" class="nav-link" style="color:var(--text-muted);transition:color 200ms ease;">Chatbots</a>
       <a href="./blog.html" class="nav-link" style="color:var(--text-muted);transition:color 200ms ease;">Blog</a>
       <a href="./contact.html" class="nav-link" style="color:var(--text);font-weight:600;">Contact</a>
-      <a class="nav-link" href="#stuur-bericht" style="background:oklch(70% 0.14 188);color:#001a2e;padding:10px 20px;border-radius:6px;font-weight:600;transition:all 200ms ease;">Plan gesprek</a>
+      <a class="nav-link" href="#stuur-bericht" style="background:var(--accent);color:var(--bg);padding:10px 20px;border-radius:6px;font-weight:600;transition:all 200ms ease;">Plan gesprek</a>
     </nav>
     <button type="button" class="nav-toggle" id="nav-toggle-btn" aria-label="Menu" aria-expanded="false" aria-controls="nav-mobile-panel">
       <span></span><span></span><span></span>
@@ -139,7 +139,7 @@
       <a href="./chatbots.html" style="color:var(--text-muted);transition:color 200ms ease;">Chatbots</a>
       <a href="./blog.html" style="color:var(--text-muted);transition:color 200ms ease;">Blog</a>
       <a href="./contact.html" style="color:var(--text);font-weight:600;">Contact</a>
-      <a href="#stuur-bericht" style="background:oklch(70% 0.14 188);color:#001a2e;padding:10px 20px;border-radius:6px;font-weight:600;transition:all 200ms ease;">Plan gesprek</a>
+      <a href="#stuur-bericht" style="background:var(--accent);color:var(--bg);padding:10px 20px;border-radius:6px;font-weight:600;transition:all 200ms ease;">Plan gesprek</a>
   </div>
 </header>
 
@@ -196,7 +196,7 @@
           <textarea name="message" id="cf-message" required placeholder="Je bericht" rows="5" class="contact-field" style="resize:none;"></textarea>
         </div>
         <input type="text" name="website" id="cf-website" autocomplete="off" tabindex="-1" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;">
-        <button type="submit" id="cf-submit" style="background:oklch(70% 0.14 188);color:#001a2e;padding:14px 28px;border:none;border-radius:6px;font-weight:700;font-size:0.95rem;cursor:pointer;transition:all 280ms ease;">Verstuur bericht</button>
+        <button type="submit" id="cf-submit" style="background:var(--accent);color:var(--bg);padding:14px 28px;border:none;border-radius:6px;font-weight:700;font-size:0.95rem;cursor:pointer;transition:all 280ms ease;">Verstuur bericht</button>
         <p style="font:400 0.8125rem/1.5 'IBM Plex Sans';color:var(--text-muted-2);margin:0;">Je gegevens worden verwerkt volgens de AVG, op EU-servers, je data blijft in de EU. Zie ons <a href="./privacy.html" style="color:var(--text-muted);">privacybeleid</a>.</p>
         <p id="cf-status" role="status" style="font:400 0.9rem/1.5 'IBM Plex Sans';margin:0;min-height:1.4em;"></p>
       </form>

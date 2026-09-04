@@ -210,7 +210,7 @@ if (location.hostname === "amazingspeech.github.io") {
      bridge existed to reconcile the warm bronze hero photo with the old cool-cyan accent.
      With a warm oker base + this teal accent, that clash is gone, so both headline
      highlights now share one consistent brand accent instead of two competing hues. */
-  .grad-text, .grad-text-warm { color:oklch(70% 0.14 188); }
+  .grad-text, .grad-text-warm { color:var(--accent-text); }
 
   .hero-badge { display:inline-flex; align-items:center; gap:9px; background:var(--surface); border:1px solid oklch(70% 0.14 188 / 0.35); padding:9px 18px 9px 14px; border-radius:24px; margin-bottom:30px; font:600 0.8125rem/1 'IBM Plex Mono'; letter-spacing:0.06em; text-transform:uppercase; color:var(--accent-text); }
   .hero-badge-dot { width:6px; height:6px; border-radius:50%; background:oklch(58% 0.16 188); flex-shrink:0; }
@@ -218,7 +218,7 @@ if (location.hostname === "amazingspeech.github.io") {
   .hero-trust-pill { display:flex; align-items:center; gap:8px; background:var(--surface); border:1px solid var(--border); padding:8px 16px; border-radius:20px; font:500 0.8125rem/1 'IBM Plex Sans'; color:var(--text-muted); }
   .hero-trust-pill .hero-badge-dot { background:oklch(55% 0.16 188); }
 
-  .hero-cta-primary { display:inline-block; background:oklch(70% 0.14 188); color:#001a2e; padding:17px 38px; border-radius:6px; font-weight:700; font-size:0.9625rem; transition:all 280ms ease; white-space:nowrap; }
+  .hero-cta-primary { display:inline-block; background:var(--accent); color:var(--bg); padding:17px 38px; border-radius:6px; font-weight:700; font-size:0.9625rem; transition:all 280ms ease; white-space:nowrap; }
   .hero-cta-primary:hover { transform:translateY(-2px); }
 
   .hero-content { animation:heroContentIn 900ms cubic-bezier(0.16,1,0.3,1) both; }
@@ -231,7 +231,7 @@ if (location.hostname === "amazingspeech.github.io") {
   /* Sits left of the fixed Tess concierge launcher (60px circle at bottom:24px/right:24px, see
      tessar-concierge-widget.js), same row, so it never collides with the launcher or its hint bubble
      (which pops up above the launcher, not beside it). */
-  #back-to-top { position:fixed; right:100px; bottom:24px; z-index:40; width:48px; height:48px; border-radius:50%; border:none; background:oklch(70% 0.14 188); color:#001a2e; display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:0 8px 24px oklch(20% 0.02 255 / 0.25); opacity:0; transform:translateY(12px); pointer-events:none; transition:opacity 260ms ease, transform 260ms ease, box-shadow 200ms ease; }
+  #back-to-top { position:fixed; right:100px; bottom:24px; z-index:40; width:48px; height:48px; border-radius:50%; border:none; background:var(--accent); color:var(--bg); display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:0 8px 24px oklch(20% 0.02 255 / 0.25); opacity:0; transform:translateY(12px); pointer-events:none; transition:opacity 260ms ease, transform 260ms ease, box-shadow 200ms ease; }
   #back-to-top.is-visible { opacity:1; transform:translateY(0); pointer-events:auto; }
   #back-to-top:hover { transform:translateY(-3px); box-shadow:0 12px 32px rgba(15,92,87,0.35); }
   #back-to-top:focus-visible { outline:2px solid var(--accent-text); outline-offset:3px; }
@@ -360,7 +360,7 @@ if (location.hostname === "amazingspeech.github.io") {
       <a data-dc-tpl="14" href="./chatbots.html" class="nav-link scp0" style="color: var(--text-muted); transition: color 200ms;"><span class="sc-interp">Chatbots</span></a>
       <a data-dc-tpl="15" href="./blog.html" class="nav-link scp0" style="color: var(--text-muted); transition: color 200ms;"><span class="sc-interp">Blog</span></a>
       <a data-dc-tpl="16" href="./contact.html" class="nav-link scp0" style="color: var(--text-muted); transition: color 200ms;">Contact</a>
-      <a data-dc-tpl="17" class="nav-link scp1" href="#contact" style="background: oklch(0.7 0.14 188); color: rgb(0, 26, 46); padding: 10px 20px; border-radius: 6px; font-weight: 600; transition: 200ms; white-space: nowrap;"><span class="sc-interp">Plan gesprek</span></a>
+      <a data-dc-tpl="17" class="nav-link scp1" href="#contact" style="background: var(--accent); color: var(--bg); padding: 10px 20px; border-radius: 6px; font-weight: 600; transition: 200ms; white-space: nowrap;"><span class="sc-interp">Plan gesprek</span></a>
     </nav>
     <button data-dc-tpl="18" type="button" class="nav-toggle" id="nav-toggle-btn" aria-label="Menu" aria-expanded="false" aria-controls="nav-mobile-panel">
       <span data-dc-tpl="19"></span><span data-dc-tpl="20"></span><span data-dc-tpl="21"></span>
@@ -373,7 +373,7 @@ if (location.hostname === "amazingspeech.github.io") {
     <a data-dc-tpl="26" href="./chatbots.html"><span class="sc-interp">Chatbots</span></a>
     <a data-dc-tpl="27" href="./blog.html"><span class="sc-interp">Blog</span></a>
     <a data-dc-tpl="28" href="./contact.html">Contact</a>
-    <a data-dc-tpl="29" href="#contact" style="background: oklch(0.7 0.14 188); text-align: center; border-radius: 6px; font-weight: 600;"><span class="sc-interp">Plan gesprek</span></a>
+    <a data-dc-tpl="29" href="#contact" style="background: var(--accent); color: var(--bg) !important; text-align: center; border-radius: 6px; font-weight: 600;"><span class="sc-interp">Plan gesprek</span></a>
   </div></header><section data-dc-tpl="30" id="top" style="position: relative; overflow: hidden; background: var(--bg); min-height: clamp(560px, 82vh, 820px); display: flex; align-items: center; padding: clamp(64px, 8vw, 88px) clamp(20px, 5vw, 40px);">
   <div data-dc-tpl="31" class="hero-grain"></div>
 
@@ -408,17 +408,17 @@ if (location.hostname === "amazingspeech.github.io") {
   <div data-dc-tpl="57" data-reveal-grid="" class="why-us-grid" style="max-width: 1200px; margin: 0px auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: clamp(20px, 3vw, 32px);">
     
       <div data-dc-tpl="59" data-reveal="" style="display: flex; align-items: flex-start; gap: 14px; transition: opacity 600ms, transform 600ms;">
-        <div data-dc-tpl="60" class="icon icon-message-square" style="width: 22px; height: 22px; color: oklch(0.7 0.14 188); margin-top: 3px;"></div>
+        <div data-dc-tpl="60" class="icon icon-message-square" style="width: 22px; height: 22px; color: var(--accent-text); margin-top: 3px;"></div>
         <p data-dc-tpl="61" style="font: 400 0.9375rem / 1.6 &quot;IBM Plex Sans&quot;; color: oklch(0.8 0.02 250); margin: 0px;"><span class="sc-interp">Rechtstreeks contact met wie het ook daadwerkelijk bouwt, geen account manager ertussen.</span></p>
       </div>
     
       <div data-dc-tpl="59" data-reveal="" style="display: flex; align-items: flex-start; gap: 14px; transition: opacity 600ms, transform 600ms;">
-        <div data-dc-tpl="60" class="icon icon-file-text" style="width: 22px; height: 22px; color: oklch(0.7 0.14 188); margin-top: 3px;"></div>
+        <div data-dc-tpl="60" class="icon icon-file-text" style="width: 22px; height: 22px; color: var(--accent-text); margin-top: 3px;"></div>
         <p data-dc-tpl="61" style="font: 400 0.9375rem / 1.6 &quot;IBM Plex Sans&quot;; color: oklch(0.8 0.02 250); margin: 0px;"><span class="sc-interp">Vaste prijs en vaste scope, afgesproken voordat er gebouwd wordt.</span></p>
       </div>
     
       <div data-dc-tpl="59" data-reveal="" style="display: flex; align-items: flex-start; gap: 14px; transition: opacity 600ms, transform 600ms;">
-        <div data-dc-tpl="60" class="icon icon-target" style="width: 22px; height: 22px; color: oklch(0.7 0.14 188); margin-top: 3px;"></div>
+        <div data-dc-tpl="60" class="icon icon-target" style="width: 22px; height: 22px; color: var(--accent-text); margin-top: 3px;"></div>
         <p data-dc-tpl="61" style="font: 400 0.9375rem / 1.6 &quot;IBM Plex Sans&quot;; color: oklch(0.8 0.02 250); margin: 0px;"><span class="sc-interp">Elk traject eindigt in een werkend systeem in productie, niet in een adviesrapport.</span></p>
       </div>
     
@@ -909,7 +909,7 @@ if (location.hostname === "amazingspeech.github.io") {
               <li data-dc-tpl="210" style="display: flex; gap: 10px; align-items: flex-start; font: 400 0.9375rem / 1.5 &quot;IBM Plex Sans&quot;; color: var(--text-muted);"><div data-dc-tpl="211" class="icon icon-check" style="width: 15px; height: 15px; color: var(--accent-text); margin-top: 3px; flex-shrink: 0;"></div><span data-dc-tpl="212"><span class="sc-interp">Realistische planning en budget</span></span></li>
             
           </ul>
-          <a data-dc-tpl="213" href="#contact" class="scp1" style="background: oklch(0.7 0.14 188); color: rgb(0, 26, 46); padding: 12px 20px; border-radius: 6px; text-align: center; font-weight: 600; font-size: 0.9375rem; transition: 200ms; white-space: nowrap;"><span class="sc-interp">Plan gesprek</span></a>
+          <a data-dc-tpl="213" href="#contact" class="scp1" style="background: var(--accent); color: var(--bg); padding: 12px 20px; border-radius: 6px; text-align: center; font-weight: 600; font-size: 0.9375rem; transition: 200ms; white-space: nowrap;"><span class="sc-interp">Plan gesprek</span></a>
         </div>
       
         <div data-dc-tpl="202" data-reveal="" class="scp3" style="background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: clamp(28px, 4vw, 36px); display: flex; flex-direction: column; transition: 220ms, opacity 600ms, transform 600ms;">
@@ -928,7 +928,7 @@ if (location.hostname === "amazingspeech.github.io") {
               <li data-dc-tpl="210" style="display: flex; gap: 10px; align-items: flex-start; font: 400 0.9375rem / 1.5 &quot;IBM Plex Sans&quot;; color: var(--text-muted);"><div data-dc-tpl="211" class="icon icon-check" style="width: 15px; height: 15px; color: var(--accent-text); margin-top: 3px; flex-shrink: 0;"></div><span data-dc-tpl="212"><span class="sc-interp">Eén aanbevolen vervolgstap (Quick win, PoC of volledige implementatie)</span></span></li>
             
           </ul>
-          <a data-dc-tpl="213" href="#contact" class="scp1" style="background: oklch(0.7 0.14 188); color: rgb(0, 26, 46); padding: 12px 20px; border-radius: 6px; text-align: center; font-weight: 600; font-size: 0.9375rem; transition: 200ms; white-space: nowrap;"><span class="sc-interp">Vraag een scan aan</span></a>
+          <a data-dc-tpl="213" href="#contact" class="scp1" style="background: var(--accent); color: var(--bg); padding: 12px 20px; border-radius: 6px; text-align: center; font-weight: 600; font-size: 0.9375rem; transition: 200ms; white-space: nowrap;"><span class="sc-interp">Vraag een scan aan</span></a>
         </div>
       
         <div data-dc-tpl="202" data-reveal="" class="scp3" style="background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: clamp(28px, 4vw, 36px); display: flex; flex-direction: column; transition: 220ms, opacity 600ms, transform 600ms;">
@@ -951,7 +951,7 @@ if (location.hostname === "amazingspeech.github.io") {
               <li data-dc-tpl="210" style="display: flex; gap: 10px; align-items: flex-start; font: 400 0.9375rem / 1.5 &quot;IBM Plex Sans&quot;; color: var(--text-muted);"><div data-dc-tpl="211" class="icon icon-check" style="width: 15px; height: 15px; color: var(--accent-text); margin-top: 3px; flex-shrink: 0;"></div><span data-dc-tpl="212"><span class="sc-interp">Overdracht en documentatie</span></span></li>
             
           </ul>
-          <a data-dc-tpl="213" href="#contact" class="scp1" style="background: oklch(0.7 0.14 188); color: rgb(0, 26, 46); padding: 12px 20px; border-radius: 6px; text-align: center; font-weight: 600; font-size: 0.9375rem; transition: 200ms; white-space: nowrap;"><span class="sc-interp">Bespreek dit pakket</span></a>
+          <a data-dc-tpl="213" href="#contact" class="scp1" style="background: var(--accent); color: var(--bg); padding: 12px 20px; border-radius: 6px; text-align: center; font-weight: 600; font-size: 0.9375rem; transition: 200ms; white-space: nowrap;"><span class="sc-interp">Bespreek dit pakket</span></a>
         </div>
       
         <div data-dc-tpl="202" data-reveal="" class="scp3" style="background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: clamp(28px, 4vw, 36px); display: flex; flex-direction: column; transition: 220ms, opacity 600ms, transform 600ms;">
@@ -972,7 +972,7 @@ if (location.hostname === "amazingspeech.github.io") {
               <li data-dc-tpl="210" style="display: flex; gap: 10px; align-items: flex-start; font: 400 0.9375rem / 1.5 &quot;IBM Plex Sans&quot;; color: var(--text-muted);"><div data-dc-tpl="211" class="icon icon-check" style="width: 15px; height: 15px; color: var(--accent-text); margin-top: 3px; flex-shrink: 0;"></div><span data-dc-tpl="212"><span class="sc-interp">Training van je team</span></span></li>
             
           </ul>
-          <a data-dc-tpl="213" href="#contact" class="scp1" style="background: oklch(0.7 0.14 188); color: rgb(0, 26, 46); padding: 12px 20px; border-radius: 6px; text-align: center; font-weight: 600; font-size: 0.9375rem; transition: 200ms; white-space: nowrap;"><span class="sc-interp">Bespreek dit pakket</span></a>
+          <a data-dc-tpl="213" href="#contact" class="scp1" style="background: var(--accent); color: var(--bg); padding: 12px 20px; border-radius: 6px; text-align: center; font-weight: 600; font-size: 0.9375rem; transition: 200ms; white-space: nowrap;"><span class="sc-interp">Bespreek dit pakket</span></a>
         </div>
       
         <div data-dc-tpl="202" data-reveal="" class="scp3" style="background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: clamp(28px, 4vw, 36px); display: flex; flex-direction: column; transition: 220ms, opacity 600ms, transform 600ms;">
@@ -993,7 +993,7 @@ if (location.hostname === "amazingspeech.github.io") {
               <li data-dc-tpl="210" style="display: flex; gap: 10px; align-items: flex-start; font: 400 0.9375rem / 1.5 &quot;IBM Plex Sans&quot;; color: var(--text-muted);"><div data-dc-tpl="211" class="icon icon-check" style="width: 15px; height: 15px; color: var(--accent-text); margin-top: 3px; flex-shrink: 0;"></div><span data-dc-tpl="212"><span class="sc-interp">90 dagen support</span></span></li>
             
           </ul>
-          <a data-dc-tpl="213" href="#contact" class="scp1" style="background: oklch(0.7 0.14 188); color: rgb(0, 26, 46); padding: 12px 20px; border-radius: 6px; text-align: center; font-weight: 600; font-size: 0.9375rem; transition: 200ms; white-space: nowrap;"><span class="sc-interp">Bespreek dit pakket</span></a>
+          <a data-dc-tpl="213" href="#contact" class="scp1" style="background: var(--accent); color: var(--bg); padding: 12px 20px; border-radius: 6px; text-align: center; font-weight: 600; font-size: 0.9375rem; transition: 200ms; white-space: nowrap;"><span class="sc-interp">Bespreek dit pakket</span></a>
         </div>
       
     </div>
@@ -1070,7 +1070,7 @@ if (location.hostname === "amazingspeech.github.io") {
       <input data-dc-tpl="235" type="email" name="email" id="cf-email" placeholder="jij@bedrijf.nl" class="scp4" style="background: oklch(1 0 0 / 0.95); border: 1px solid oklch(0.7 0.14 188 / 0.3); border-radius: 6px; padding: 14px 18px; font: 400 1rem / 1.5 &quot;IBM Plex Sans&quot;; color: var(--text); transition: 200ms;">
       <input data-dc-tpl="236" type="tel" name="phone" id="cf-phone" placeholder="Telefoonnummer (optioneel)" class="scp4" style="background: oklch(1 0 0 / 0.95); border: 1px solid oklch(0.7 0.14 188 / 0.3); border-radius: 6px; padding: 14px 18px; font: 400 1rem / 1.5 &quot;IBM Plex Sans&quot;; color: var(--text); transition: 200ms;">
       <label data-dc-tpl="237" for="cf-industry" style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border: 0px;"><span class="sc-interp">Jouw sector</span></label>
-      <select data-dc-tpl="238" name="industry" id="cf-industry" class="scp5" style="background: oklch(1 0 0 / 0.95); border: 1px solid oklch(0.7 0.14 188 / 0.3); border-radius: 6px; padding: 14px 18px; font: 400 1rem / 1.5 &quot;IBM Plex Sans&quot;; color: var(--text); transition: 200ms; cursor: pointer;">
+      <select data-dc-tpl="238" name="industry" id="cf-industry" class="scp4" style="background: oklch(1 0 0 / 0.95); border: 1px solid oklch(0.7 0.14 188 / 0.3); border-radius: 6px; padding: 14px 18px; font: 400 1rem / 1.5 &quot;IBM Plex Sans&quot;; color: var(--text); transition: 200ms; cursor: pointer;">
         <option data-dc-tpl="239" value=""><span class="sc-interp">Jouw sector</span></option>
         
           <option data-dc-tpl="241" value="Kapsalons/schoonheidssalons"><span class="sc-interp">Kapsalons/schoonheidssalons</span></option>
@@ -1118,7 +1118,7 @@ if (location.hostname === "amazingspeech.github.io") {
       </select>
       <textarea data-dc-tpl="242" name="message" id="cf-message" placeholder="Beschrijf kort je uitdaging..." rows="4" class="scp4" style="background: oklch(1 0 0 / 0.95); border: 1px solid oklch(0.7 0.14 188 / 0.3); border-radius: 6px; padding: 14px 18px; font: 400 1rem / 1.5 &quot;IBM Plex Sans&quot;; color: var(--text); resize: none; transition: 200ms;"></textarea>
       <input data-dc-tpl="243" type="text" name="website" id="cf-website" autocomplete="off" tabindex="-1" aria-hidden="true" style="position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0;">
-      <button data-dc-tpl="244" type="submit" id="cf-submit" class="scp6" style="background: oklch(0.7 0.14 188); color: rgb(0, 26, 46); padding: 14px 28px; border-width: medium; border-style: none; border-color: currentcolor; border-image: none; border-radius: 6px; font-weight: 700; font-size: 0.95rem; cursor: pointer; transition: 280ms;"><span class="sc-interp">Plan gesprek</span></button>
+      <button data-dc-tpl="244" type="submit" id="cf-submit" class="scp5" style="background: var(--accent); color: var(--bg); padding: 14px 28px; border-width: medium; border-style: none; border-color: currentcolor; border-image: none; border-radius: 6px; font-weight: 700; font-size: 0.95rem; cursor: pointer; transition: 280ms;"><span class="sc-interp">Plan gesprek</span></button>
       <p data-dc-tpl="245" id="cf-status" role="status" style="font: 400 0.9rem / 1.5 &quot;IBM Plex Sans&quot;; margin: 0px; min-height: 1.4em;"></p>
     </form>
     <script data-dc-tpl="246">
@@ -1507,7 +1507,7 @@ class Component extends DCLogic {
 
   renderVals() {
     const t = copyNL;
-    const active = { background: 'oklch(70% 0.14 188)', color: '#001a2e' };
+    const active = { background: 'var(--accent)', color: 'var(--bg)' };
     const inactive = { background: 'transparent', color: 'oklch(46% 0.012 140)' };
     const s = this.state;
 
