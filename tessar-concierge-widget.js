@@ -564,30 +564,6 @@ if (typeof document !== "undefined") {
     inputEl.style.height = "auto";
     inputEl.style.height = Math.min(inputEl.scrollHeight, 120) + "px";
   });
-
-  // ----------------------- AUTO-OPEN NA 10 SECONDEN -----------------------
-  // Opent het paneel vanzelf 10s na binnenkomst, zodat direct duidelijk is
-  // dat dit een AI-concierge is en geen standaard chat-widget die wacht tot
-  // je 'm zelf ontdekt. Gebeurt maar 1x per browsersessie (sessionStorage),
-  // zodat het niet bij elke paginanavigatie binnen dezelfde site opnieuw
-  // opduikt, en niet als de bezoeker het paneel intussen al zelf heeft
-  // geopend of gesloten.
-  var AUTO_OPEN_DELAY_MS = 5000;
-  var userInteractedManually = false;
-  launcher.addEventListener("click", function () { userInteractedManually = true; }, { once: true });
-  closeBtn.addEventListener("click", function () { userInteractedManually = true; }, { once: true });
-
-  var alreadyAutoOpened = false;
-  try { alreadyAutoOpened = sessionStorage.getItem("tsc_auto_opened") === "1"; } catch (e) {}
-
-  if (!alreadyAutoOpened) {
-    setTimeout(function () {
-      if (!userInteractedManually && !isOpen) {
-        openPanel();
-        try { sessionStorage.setItem("tsc_auto_opened", "1"); } catch (e) {}
-      }
-    }, AUTO_OPEN_DELAY_MS);
-  }
 })();
 }
 
