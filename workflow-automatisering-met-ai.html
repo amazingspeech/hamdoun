@@ -79,6 +79,12 @@
   a:hover { color:var(--accent-text); }
   [data-reveal] { opacity:0; transform:translateY(18px); transition:opacity 600ms ease, transform 600ms ease; }
   [data-reveal].is-visible { opacity:1; transform:translateY(0); }
+  [data-reveal-grid] > [data-reveal]:nth-child(1) { transition-delay:0ms; }
+  [data-reveal-grid] > [data-reveal]:nth-child(2) { transition-delay:90ms; }
+  [data-reveal-grid] > [data-reveal]:nth-child(3) { transition-delay:180ms; }
+  [data-reveal-grid] > [data-reveal]:nth-child(4) { transition-delay:270ms; }
+  [data-reveal-grid] > [data-reveal]:nth-child(5) { transition-delay:360ms; }
+  [data-reveal-grid] > [data-reveal]:nth-child(6) { transition-delay:450ms; }
   .nav-toggle { display:none; background:none; border:none; cursor:pointer; padding:8px; flex-direction:column; gap:5px; margin-left:4px; }
   .nav-toggle span { display:block; width:22px; height:2px; background:var(--text); border-radius:2px; transition:transform 200ms ease, opacity 200ms ease; }
   .nav-mobile-panel { display:none; }
@@ -150,7 +156,7 @@
 </section>
 
 <section style="padding:0 clamp(20px,5vw,40px) clamp(56px,7vw,88px);background:var(--bg);">
-  <div class="article-prose" style="max-width:700px;margin:0 auto;">
+  <div class="article-prose" data-reveal style="max-width:700px;margin:0 auto;transition:opacity 600ms ease, transform 600ms ease;">
 <p style="font:400 1.0625rem/1.8 'IBM Plex Sans';color:var(--text);margin:0 0 22px;">Elke dag opnieuw: inkomende mails sorteren, klantgegevens invoeren, telefoontjes doorverbinden, offertes aanmaken. Voor veel mkb-ondernemers en managers voelt dit als een eeuwig terugkerend ritueel dat kostbare uren opslokt. Terwijl je eigenlijk bezig zou willen zijn met wat echt belangrijk is: relaties met klanten, strategische besluiten, groei.</p>
 <p style="font:400 1.0625rem/1.8 'IBM Plex Sans';color:var(--text);margin:0 0 22px;">Dat gevoel van verspilde tijd is precies de plek waar workflow automatisering met AI aansluit. Niet als futuristische, ontoegankelijke technologie, maar als praktisch gereedschap dat vandaag al beschikbaar is voor bedrijven in jouw schaal.</p>
 <p style="font:400 1.0625rem/1.8 'IBM Plex Sans';color:var(--text);margin:0 0 22px;">In dit artikel ontdek je hoe AI-workflow-automatisering werkt, waarom het specifiek voor het mkb zo relevant is, en hoe je eraan kunt beginnen zonder je in technisch jargon te verliezen.</p>
@@ -203,43 +209,43 @@
       <div style="font:500 0.8125rem/1.3 'IBM Plex Mono';letter-spacing:0.06em;text-transform:uppercase;color:var(--accent-text);margin-bottom:12px;">Vragen</div>
       <h2 style="font:600 clamp(1.5rem,3.2vw,1.875rem)/1.2 'IBM Plex Sans';margin:0;letter-spacing:-0.02em;color:var(--text);">Veelgestelde vragen</h2>
     </div>
-    <div style="display:flex;flex-direction:column;gap:12px;">
-      <details class="faq-item" style="border:1px solid var(--border);border-radius:10px;padding:18px 22px;background:var(--bg);">
+    <div data-reveal-grid style="display:flex;flex-direction:column;gap:12px;">
+      <details data-reveal class="faq-item" style="border:1px solid var(--border);border-radius:10px;padding:18px 22px;background:var(--bg);transition:opacity 600ms ease, transform 600ms ease;">
         <summary style="display:flex;align-items:center;justify-content:space-between;gap:16px;font:600 1rem/1.4 'IBM Plex Sans';color:var(--text);cursor:pointer;">
           <span>Is het duur?</span>
           <div class="icon icon-chevron-down faq-chevron" style="width:18px;height:18px;color:var(--accent-text);transition:transform 200ms ease;flex-shrink:0;"></div>
         </summary>
         <p style="font:400 0.9375rem/1.65 'IBM Plex Sans';color:var(--text-muted);margin:14px 0 0;">Er zijn opties in alle prijsklassen. Basisautomatisering kan al voor tientjes per maand. Meer geavanceerde setups kosten honderden euro's. Vergelijk dit met: hoeveel betaal je nu voor iemand die dit werk handmatig doet? Voor de meeste mkb's is automatisering veel goedkoper dan extra personeelskosten.</p>
       </details>
-      <details class="faq-item" style="border:1px solid var(--border);border-radius:10px;padding:18px 22px;background:var(--bg);">
+      <details data-reveal class="faq-item" style="border:1px solid var(--border);border-radius:10px;padding:18px 22px;background:var(--bg);transition:opacity 600ms ease, transform 600ms ease;">
         <summary style="display:flex;align-items:center;justify-content:space-between;gap:16px;font:600 1rem/1.4 'IBM Plex Sans';color:var(--text);cursor:pointer;">
           <span>Hebben we veel training nodig?</span>
           <div class="icon icon-chevron-down faq-chevron" style="width:18px;height:18px;color:var(--accent-text);transition:transform 200ms ease;flex-shrink:0;"></div>
         </summary>
         <p style="font:400 0.9375rem/1.65 'IBM Plex Sans';color:var(--text-muted);margin:14px 0 0;">Moderne tools zijn steeds gebruiksvriendelijker. Geen codeerkennis vereist. Wel: iemand in je team moet ermee aan de slag willen gaan. Meestal is een paar uur oriëntatie al genoeg.</p>
       </details>
-      <details class="faq-item" style="border:1px solid var(--border);border-radius:10px;padding:18px 22px;background:var(--bg);">
+      <details data-reveal class="faq-item" style="border:1px solid var(--border);border-radius:10px;padding:18px 22px;background:var(--bg);transition:opacity 600ms ease, transform 600ms ease;">
         <summary style="display:flex;align-items:center;justify-content:space-between;gap:16px;font:600 1rem/1.4 'IBM Plex Sans';color:var(--text);cursor:pointer;">
           <span>Werkt het met onze bestaande systemen?</span>
           <div class="icon icon-chevron-down faq-chevron" style="width:18px;height:18px;color:var(--accent-text);transition:transform 200ms ease;flex-shrink:0;"></div>
         </summary>
         <p style="font:400 0.9375rem/1.65 'IBM Plex Sans';color:var(--text-muted);margin:14px 0 0;">Dat hangt af van je systemen. Veel populaire CRM's, e-mailsystemen en boekhoudpakketten hebben integraties met AI-automatiseringstools. Als je heel erg met legacysystemen werkt, kan het moeilijker zijn. Maar er zijn meestal creatieve oplossingen.</p>
       </details>
-      <details class="faq-item" style="border:1px solid var(--border);border-radius:10px;padding:18px 22px;background:var(--bg);">
+      <details data-reveal class="faq-item" style="border:1px solid var(--border);border-radius:10px;padding:18px 22px;background:var(--bg);transition:opacity 600ms ease, transform 600ms ease;">
         <summary style="display:flex;align-items:center;justify-content:space-between;gap:16px;font:600 1rem/1.4 'IBM Plex Sans';color:var(--text);cursor:pointer;">
           <span>Wat als de AI iets verkeerd doet?</span>
           <div class="icon icon-chevron-down faq-chevron" style="width:18px;height:18px;color:var(--accent-text);transition:transform 200ms ease;flex-shrink:0;"></div>
         </summary>
         <p style="font:400 0.9375rem/1.65 'IBM Plex Sans';color:var(--text-muted);margin:14px 0 0;">Goede vraag. Daarom begin je klein: je laat AI eerst "makkelijke" dingen doen, waar fouten minder schadelijk zijn. Inkomende e-mail categoriseren is minder risicovol dan automatisch geld overmaken. Je bouwt stap voor stap vertrouwen op. Plus: je team ziet wat de AI doet en kan corrigeren.</p>
       </details>
-      <details class="faq-item" style="border:1px solid var(--border);border-radius:10px;padding:18px 22px;background:var(--bg);">
+      <details data-reveal class="faq-item" style="border:1px solid var(--border);border-radius:10px;padding:18px 22px;background:var(--bg);transition:opacity 600ms ease, transform 600ms ease;">
         <summary style="display:flex;align-items:center;justify-content:space-between;gap:16px;font:600 1rem/1.4 'IBM Plex Sans';color:var(--text);cursor:pointer;">
           <span>Verliezen we controle over onze eigen data?</span>
           <div class="icon icon-chevron-down faq-chevron" style="width:18px;height:18px;color:var(--accent-text);transition:transform 200ms ease;flex-shrink:0;"></div>
         </summary>
         <p style="font:400 0.9375rem/1.65 'IBM Plex Sans';color:var(--text-muted);margin:14px 0 0;">Dat hangt van het gereedschap af. Sommige platforms slaan alles in de cloud op, andere werken met je eigen systemen. Let op: check privacy en databeleid. Voor gevoelige klantgegevens wil je zekerheid.</p>
       </details>
-      <details class="faq-item" style="border:1px solid var(--border);border-radius:10px;padding:18px 22px;background:var(--bg);">
+      <details data-reveal class="faq-item" style="border:1px solid var(--border);border-radius:10px;padding:18px 22px;background:var(--bg);transition:opacity 600ms ease, transform 600ms ease;">
         <summary style="display:flex;align-items:center;justify-content:space-between;gap:16px;font:600 1rem/1.4 'IBM Plex Sans';color:var(--text);cursor:pointer;">
           <span>Waar begin je echt?</span>
           <div class="icon icon-chevron-down faq-chevron" style="width:18px;height:18px;color:var(--accent-text);transition:transform 200ms ease;flex-shrink:0;"></div>
@@ -251,7 +257,7 @@
 </section>
 
 <section style="padding:clamp(48px,6vw,64px) clamp(20px,5vw,40px);background:var(--bg);border-top:1px solid var(--border);">
-  <div class="article-prose" style="max-width:700px;margin:0 auto;">
+  <div class="article-prose" data-reveal style="max-width:700px;margin:0 auto;transition:opacity 600ms ease, transform 600ms ease;">
 <h2 style="font:600 clamp(1.375rem,2.8vw,1.75rem)/1.3 'IBM Plex Sans';margin:44px 0 18px;letter-spacing:-0.015em;color:var(--text);">Volgende stap: ontdek wat mogelijk is voor jouw bedrijf</h2>
 <p style="font:400 1.0625rem/1.8 'IBM Plex Sans';color:var(--text);margin:0 0 22px;">Workflow automatisering met AI is niet iets voor de toekomst. Het is nu beschikbaar en betaalbaar voor bedrijven in jouw schaal. De mkb's die dit goed toepassen, zien hun teams sneller en beter presteren, hun kosten dalen, en hun klanten tevredener zijn.</p>
 <p style="font:400 1.0625rem/1.8 'IBM Plex Sans';color:var(--text);margin:0 0 22px;">Maar het begint met stap één: inzien dat die repetitieve taken misschien niet in jouw handen horen, maar in die van AI.</p>
