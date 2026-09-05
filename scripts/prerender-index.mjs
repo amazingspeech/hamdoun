@@ -95,6 +95,22 @@ async function main() {
     });
     if (removedCount) console.error(`${removedCount} runtime-widget-element(en) verwijderd voor het bakken (chatwidget/cookiebanner).`);
 
+    // De header krijgt de class "scrolled-past-hero" (effen achtergrond)
+    // pas via een scroll-listener zodra de bezoeker voorbij de hero-foto
+    // scrollt. Die class hangt af van waar het prerender-script toevallig
+    // stond op het moment van page.content() - een niet-deterministische
+    // scroll-snapshot die nooit mee gebakken mag worden. Een verse paginalaad
+    // start altijd bovenaan (scrollY 0), dus de juiste, gebakken standaard is
+    // zonder deze class (transparante header over de foto); de JS zet 'm er
+    // zelf weer bij zodra de bezoeker daadwerkelijk voorbij de hero scrolt.
+    const hadScrolledClass = await page.evaluate(() => {
+      const header = document.querySelector("header.scrolled-past-hero");
+      if (!header) return false;
+      header.classList.remove("scrolled-past-hero");
+      return true;
+    });
+    if (hadScrolledClass) console.error("header.scrolled-past-hero-class verwijderd voor het bakken (scroll-afhankelijke staat, geen SEO-content).");
+
     let html = await page.content();
 
     // dc-runtime laat soms zijn interne editor-encoding (sc-camel-kebab-case

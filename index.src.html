@@ -210,6 +210,13 @@ if (location.hostname === "amazingspeech.github.io") {
     #back-to-top { transition:opacity 200ms ease; transform:none; }
     .hero-scroll-cue { animation:none; }
   }
+  /* Header floats transparently over the hero photo at page-load (fixed, no
+     background/blur/border) and only reinstates the solid bar once the visitor
+     has scrolled past the hero section (class toggled from JS, see the
+     hide-on-scroll-direction script below). border-bottom stays present but
+     transparent by default so the transition to var(--border) doesn't shift layout. */
+  header { transition:background-color 220ms ease, backdrop-filter 220ms ease, border-color 220ms ease; border-bottom:1px solid transparent; }
+  header.scrolled-past-hero { background:color-mix(in oklch, var(--bg) 92%, transparent); backdrop-filter:blur(12px); border-bottom-color:var(--border); }
   .nav-toggle { display:none; background:none; border:none; cursor:pointer; padding:8px; flex-direction:column; gap:5px; margin-left:4px; }
   .nav-toggle span { display:block; width:22px; height:2px; background:var(--text); border-radius:2px; transition:transform 200ms ease, opacity 200ms ease; }
   .nav-mobile-panel { display:none; }
@@ -313,19 +320,19 @@ if (location.hostname === "amazingspeech.github.io") {
 </style>
 </helmet>
 
-<header style="position:sticky;top:0;z-index:30;background:color-mix(in oklch, var(--bg) 92%, transparent);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:16px clamp(20px,5vw,40px);">
+<header style="position:fixed;top:0;left:0;right:0;z-index:30;padding:16px clamp(20px,5vw,40px);">
   <div style="display:flex;align-items:center;justify-content:space-between;max-width:1400px;margin:0 auto;">
     <a href="#top" style="display:flex;align-items:center;gap:10px;flex-shrink:0;">
       <img src="./assets/tessar-icon-optimized.png" width="32" height="35" alt="Tessar logo" style="height:32px;width:auto;">
       <span style="font:700 1rem/1 'IBM Plex Sans';letter-spacing:-0.015em;color:var(--text);">Tessar</span>
     </a>
     <nav style="display:flex;flex-wrap:wrap;align-items:center;row-gap:10px;gap:clamp(12px,1.5vw,24px);font-size:0.9375rem;">
-      <a href="./services.html" class="nav-link" style="color:var(--text-muted);transition:color 200ms ease;" style-hover="color:var(--text);">{{ navServices }}</a>
-      <a href="#industries" class="nav-link" style="color:var(--text-muted);transition:color 200ms ease;" style-hover="color:var(--text);">{{ navIndustries }}</a>
-      <a href="./prijzen.html" class="nav-link" style="color:var(--text-muted);transition:color 200ms ease;" style-hover="color:var(--text);">{{ navPricing }}</a>
-      <a href="./chatbots.html" class="nav-link" style="color:var(--text-muted);transition:color 200ms ease;" style-hover="color:var(--text);">{{ navChatbots }}</a>
-      <a href="./blog.html" class="nav-link" style="color:var(--text-muted);transition:color 200ms ease;" style-hover="color:var(--text);">{{ navBlog }}</a>
-      <a href="./contact.html" class="nav-link" style="color:var(--text-muted);transition:color 200ms ease;" style-hover="color:var(--text);">Contact</a>
+      <a href="./services.html" class="nav-link" style="color:var(--text);font-weight:500;transition:color 200ms ease;" style-hover="color:var(--accent-text);">{{ navServices }}</a>
+      <a href="#industries" class="nav-link" style="color:var(--text);font-weight:500;transition:color 200ms ease;" style-hover="color:var(--accent-text);">{{ navIndustries }}</a>
+      <a href="./prijzen.html" class="nav-link" style="color:var(--text);font-weight:500;transition:color 200ms ease;" style-hover="color:var(--accent-text);">{{ navPricing }}</a>
+      <a href="./chatbots.html" class="nav-link" style="color:var(--text);font-weight:500;transition:color 200ms ease;" style-hover="color:var(--accent-text);">{{ navChatbots }}</a>
+      <a href="./blog.html" class="nav-link" style="color:var(--text);font-weight:500;transition:color 200ms ease;" style-hover="color:var(--accent-text);">{{ navBlog }}</a>
+      <a href="./contact.html" class="nav-link" style="color:var(--text);font-weight:500;transition:color 200ms ease;" style-hover="color:var(--accent-text);">Contact</a>
       <a class="nav-link" href="#contact" style="background:var(--accent);color:var(--bg);padding:10px 20px;border-radius:6px;font-weight:600;transition:all 200ms ease;white-space:nowrap;" style-hover="transform:translateY(-2px);box-shadow:0 8px 24px rgba(15, 92, 87, 0.25);">{{ navBookCall }}</a>
     </nav>
     <button type="button" class="nav-toggle" id="nav-toggle-btn" aria-label="Menu" aria-expanded="false" aria-controls="nav-mobile-panel">
@@ -1207,8 +1214,25 @@ class Component extends DCLogic {
   var revealThreshold = 12; // negeer kleine scroll-jitter
   var topOffset = 80; // altijd zichtbaar dicht bij de top
 
+  // De hero-foto vult #top; zolang die sectie nog achter de header
+  // doorloopt, blijft de header transparant erover heen zweven. Zodra de
+  // onderkant van #top boven de headerhoogte scrollt, is er geen foto meer
+  // achter de header (mogelijk een donkere sectie erna), dus krijgt de
+  // header dan zijn effen achtergrond terug via de scrolled-past-hero class.
+  var heroEl = document.getElementById("top");
+
+  function updateHeaderBackground() {
+    if (!heroEl) return;
+    var heroBottom = heroEl.getBoundingClientRect().bottom;
+    var headerHeight = header.offsetHeight;
+    var pastHero = heroBottom <= headerHeight;
+    header.classList.toggle("scrolled-past-hero", pastHero);
+  }
+
   function onScroll() {
     var y = window.scrollY || window.pageYOffset || 0;
+
+    updateHeaderBackground();
 
     if (y <= topOffset) {
       if (hidden) { header.style.transform = "translateY(0)"; hidden = false; }
@@ -1238,6 +1262,8 @@ class Component extends DCLogic {
       ticking = true;
     }
   }, { passive: true });
+
+  updateHeaderBackground();
 })();
 </script>
 <script>

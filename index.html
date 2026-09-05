@@ -246,6 +246,13 @@ if (location.hostname === "amazingspeech.github.io") {
     #back-to-top { transition:opacity 200ms ease; transform:none; }
     .hero-scroll-cue { animation:none; }
   }
+  /* Header floats transparently over the hero photo at page-load (fixed, no
+     background/blur/border) and only reinstates the solid bar once the visitor
+     has scrolled past the hero section (class toggled from JS, see the
+     hide-on-scroll-direction script below). border-bottom stays present but
+     transparent by default so the transition to var(--border) doesn't shift layout. */
+  header { transition:background-color 220ms ease, backdrop-filter 220ms ease, border-color 220ms ease; border-bottom:1px solid transparent; }
+  header.scrolled-past-hero { background:color-mix(in oklch, var(--bg) 92%, transparent); backdrop-filter:blur(12px); border-bottom-color:var(--border); }
   .nav-toggle { display:none; background:none; border:none; cursor:pointer; padding:8px; flex-direction:column; gap:5px; margin-left:4px; }
   .nav-toggle span { display:block; width:22px; height:2px; background:var(--text); border-radius:2px; transition:transform 200ms ease, opacity 200ms ease; }
   .nav-mobile-panel { display:none; }
@@ -348,19 +355,19 @@ if (location.hostname === "amazingspeech.github.io") {
 .icon-bot { -webkit-mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-bot' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Cpath d='M12 8V4H8' /%3E%3Crect width='16' height='12' x='4' y='8' rx='2' /%3E%3Cpath d='M2 14h2' /%3E%3Cpath d='M20 14h2' /%3E%3Cpath d='M15 13v2' /%3E%3Cpath d='M9 13v2' /%3E%3C/svg%3E"); mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-bot' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Cpath d='M12 8V4H8' /%3E%3Crect width='16' height='12' x='4' y='8' rx='2' /%3E%3Cpath d='M2 14h2' /%3E%3Cpath d='M20 14h2' /%3E%3Cpath d='M15 13v2' /%3E%3Cpath d='M9 13v2' /%3E%3C/svg%3E"); }
 </style></head>
 <body>
-<div id="dc-root"><div class="sc-host" data-sc-name="index.src"><header data-dc-tpl="5" style="position: sticky; top: 0px; z-index: 30; background: color-mix(in oklch, var(--bg) 92%, transparent); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px clamp(20px, 5vw, 40px); transition: transform 280ms cubic-bezier(0.16, 1, 0.3, 1); will-change: transform;">
+<div id="dc-root"><div class="sc-host" data-sc-name="index.src"><header data-dc-tpl="5" class="" style="position: fixed; top: 0px; left: 0px; right: 0px; z-index: 30; padding: 16px clamp(20px, 5vw, 40px); transition: transform 280ms cubic-bezier(0.16, 1, 0.3, 1); will-change: transform;">
   <div data-dc-tpl="6" style="display: flex; align-items: center; justify-content: space-between; max-width: 1400px; margin: 0px auto;">
     <a data-dc-tpl="7" href="#top" style="display: flex; align-items: center; gap: 10px; flex-shrink: 0;">
       <img data-dc-tpl="8" src="./assets/tessar-icon-optimized.png" width="32" height="35" alt="Tessar logo" style="height: 32px; width: auto;">
       <span data-dc-tpl="9" style="font: 700 1rem / 1 &quot;IBM Plex Sans&quot;; letter-spacing: -0.015em; color: var(--text);">Tessar</span>
     </a>
     <nav data-dc-tpl="10" style="display: flex; flex-wrap: wrap; align-items: center; gap: clamp(12px, 1.5vw, 24px); font-size: 0.9375rem;">
-      <a data-dc-tpl="11" href="./services.html" class="nav-link scp0" style="color: var(--text-muted); transition: color 200ms;"><span class="sc-interp">Diensten</span></a>
-      <a data-dc-tpl="12" href="#industries" class="nav-link scp0" style="color: var(--text-muted); transition: color 200ms;"><span class="sc-interp">Sectoren</span></a>
-      <a data-dc-tpl="13" href="./prijzen.html" class="nav-link scp0" style="color: var(--text-muted); transition: color 200ms;"><span class="sc-interp">Prijzen</span></a>
-      <a data-dc-tpl="14" href="./chatbots.html" class="nav-link scp0" style="color: var(--text-muted); transition: color 200ms;"><span class="sc-interp">Chatbots</span></a>
-      <a data-dc-tpl="15" href="./blog.html" class="nav-link scp0" style="color: var(--text-muted); transition: color 200ms;"><span class="sc-interp">Blog</span></a>
-      <a data-dc-tpl="16" href="./contact.html" class="nav-link scp0" style="color: var(--text-muted); transition: color 200ms;">Contact</a>
+      <a data-dc-tpl="11" href="./services.html" class="nav-link scp0" style="color: var(--text); font-weight: 500; transition: color 200ms;"><span class="sc-interp">Diensten</span></a>
+      <a data-dc-tpl="12" href="#industries" class="nav-link scp0" style="color: var(--text); font-weight: 500; transition: color 200ms;"><span class="sc-interp">Sectoren</span></a>
+      <a data-dc-tpl="13" href="./prijzen.html" class="nav-link scp0" style="color: var(--text); font-weight: 500; transition: color 200ms;"><span class="sc-interp">Prijzen</span></a>
+      <a data-dc-tpl="14" href="./chatbots.html" class="nav-link scp0" style="color: var(--text); font-weight: 500; transition: color 200ms;"><span class="sc-interp">Chatbots</span></a>
+      <a data-dc-tpl="15" href="./blog.html" class="nav-link scp0" style="color: var(--text); font-weight: 500; transition: color 200ms;"><span class="sc-interp">Blog</span></a>
+      <a data-dc-tpl="16" href="./contact.html" class="nav-link scp0" style="color: var(--text); font-weight: 500; transition: color 200ms;">Contact</a>
       <a data-dc-tpl="17" class="nav-link scp1" href="#contact" style="background: var(--accent); color: var(--bg); padding: 10px 20px; border-radius: 6px; font-weight: 600; transition: 200ms; white-space: nowrap;"><span class="sc-interp">Plan gesprek</span></a>
     </nav>
     <button data-dc-tpl="18" type="button" class="nav-toggle" id="nav-toggle-btn" aria-label="Menu" aria-expanded="false" aria-controls="nav-mobile-panel">
@@ -1637,8 +1644,25 @@ class Component extends DCLogic {
   var revealThreshold = 12; // negeer kleine scroll-jitter
   var topOffset = 80; // altijd zichtbaar dicht bij de top
 
+  // De hero-foto vult #top; zolang die sectie nog achter de header
+  // doorloopt, blijft de header transparant erover heen zweven. Zodra de
+  // onderkant van #top boven de headerhoogte scrollt, is er geen foto meer
+  // achter de header (mogelijk een donkere sectie erna), dus krijgt de
+  // header dan zijn effen achtergrond terug via de scrolled-past-hero class.
+  var heroEl = document.getElementById("top");
+
+  function updateHeaderBackground() {
+    if (!heroEl) return;
+    var heroBottom = heroEl.getBoundingClientRect().bottom;
+    var headerHeight = header.offsetHeight;
+    var pastHero = heroBottom <= headerHeight;
+    header.classList.toggle("scrolled-past-hero", pastHero);
+  }
+
   function onScroll() {
     var y = window.scrollY || window.pageYOffset || 0;
+
+    updateHeaderBackground();
 
     if (y <= topOffset) {
       if (hidden) { header.style.transform = "translateY(0)"; hidden = false; }
@@ -1668,6 +1692,8 @@ class Component extends DCLogic {
       ticking = true;
     }
   }, { passive: true });
+
+  updateHeaderBackground();
 })();
 </script>
 <script>
