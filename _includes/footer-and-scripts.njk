@@ -1,0 +1,80 @@
+<footer style="padding:32px clamp(20px,5vw,40px);background:oklch(6% 0 0);color:oklch(60% 0.02 250);text-align:center;font:400 0.85rem/1.6 'IBM Plex Sans';">
+  <a href="./index.html" style="color:oklch(70% 0.10 188);">Tessar</a>. AI-implementatie en AI-geintegreerde applicaties voor Nederlandse en Europese mkb-bedrijven. <a href="./index.html#cases" style="color:oklch(60% 0.02 250);">Cases</a> · <a href="./privacy.html" style="color:oklch(60% 0.02 250);">Privacybeleid</a> · <a href="/login" style="color:oklch(60% 0.02 250);">Login</a>
+</footer>
+
+<button type="button" id="back-to-top" aria-label="Naar boven" title="Naar boven">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5"/><path d="m5 12 7-7 7 7"/></svg>
+</button>
+
+<script>
+(function () {
+  "use strict";
+  var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var els = document.querySelectorAll("[data-reveal]");
+  if (reduceMotion || !("IntersectionObserver" in window)) {
+    els.forEach(function (el) { el.classList.add("is-visible"); });
+    return;
+  }
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("is-visible");
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0, rootMargin: "0px 0px -40px 0px" });
+  els.forEach(function (el) { io.observe(el); });
+})();
+</script>
+<script>
+(function () {
+  "use strict";
+  document.addEventListener("click", function (e) {
+    var toggle = e.target.closest && e.target.closest("#nav-toggle-btn");
+    if (toggle) {
+      var panel = document.getElementById("nav-mobile-panel");
+      var open = panel.classList.toggle("nav-open");
+      toggle.classList.toggle("nav-toggle-active", open);
+      toggle.setAttribute("aria-expanded", open ? "true" : "false");
+      return;
+    }
+    var link = e.target.closest && e.target.closest("#nav-mobile-panel a");
+    if (link) {
+      var panel2 = document.getElementById("nav-mobile-panel");
+      var btn2 = document.getElementById("nav-toggle-btn");
+      panel2.classList.remove("nav-open");
+      if (btn2) {
+        btn2.classList.remove("nav-toggle-active");
+        btn2.setAttribute("aria-expanded", "false");
+      }
+    }
+  });
+})();
+</script>
+<script>
+(function () {
+  "use strict";
+  var btn = document.getElementById("back-to-top");
+  if (!btn) return;
+  var threshold = 480;
+
+  function onScroll() {
+    var y = window.scrollY || window.pageYOffset || 0;
+    btn.classList.toggle("is-visible", y > threshold);
+  }
+
+  var ticking = false;
+  window.addEventListener("scroll", function () {
+    if (!ticking) {
+      requestAnimationFrame(function () { onScroll(); ticking = false; });
+      ticking = true;
+    }
+  }, { passive: true });
+  onScroll();
+
+  btn.addEventListener("click", function () {
+    var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    window.scrollTo({ top: 0, behavior: reduceMotion ? "auto" : "smooth" });
+  });
+})();
+</script>

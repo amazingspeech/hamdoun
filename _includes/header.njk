@@ -1,0 +1,29 @@
+<header style="position:sticky;top:0;z-index:30;background:color-mix(in oklch, var(--bg) 92%, transparent);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:16px clamp(20px,5vw,40px);">
+  <div style="display:flex;align-items:center;justify-content:space-between;max-width:1400px;margin:0 auto;">
+    <a href="./index.html" style="display:flex;align-items:center;gap:10px;flex-shrink:0;">
+      <img src="./assets/tessar-icon-optimized.png" width="32" height="35" alt="Tessar logo" style="height:32px;width:auto;">
+      <span style="font:700 1rem/1 'IBM Plex Sans';letter-spacing:-0.015em;color:var(--text);">Tessar</span>
+    </a>
+    <nav style="display:flex;flex-wrap:wrap;align-items:center;row-gap:10px;gap:clamp(12px,1.5vw,24px);font-size:0.9375rem;">
+      <a href="./services.html" class="nav-link" style="color:var(--text);{% if activeNav == 'services' %}font-weight:600;{% else %}font-weight:500;transition:color 200ms ease;{% endif %}">Diensten</a>
+      <a href="./index.html#industries" class="nav-link" style="color:var(--text);{% if activeNav == 'industries' %}font-weight:600;{% else %}font-weight:500;transition:color 200ms ease;{% endif %}">Sectoren</a>
+      <a href="./prijzen.html" class="nav-link" style="color:var(--text);{% if activeNav == 'prijzen' %}font-weight:600;{% else %}font-weight:500;transition:color 200ms ease;{% endif %}">Prijzen</a>
+      <a href="./chatbots.html" class="nav-link" style="color:var(--text);{% if activeNav == 'chatbots' %}font-weight:600;{% else %}font-weight:500;transition:color 200ms ease;{% endif %}">Chatbots</a>
+      <a href="./blog.html" class="nav-link" style="color:var(--text);{% if activeNav == 'blog' %}font-weight:600;{% else %}font-weight:500;transition:color 200ms ease;{% endif %}">Blog</a>
+      <a href="./contact.html" class="nav-link" style="color:var(--text);{% if activeNav == 'contact' %}font-weight:600;{% else %}font-weight:500;transition:color 200ms ease;{% endif %}">Contact</a>
+      <a class="nav-link" href="./contact.html#stuur-bericht" style="background:var(--accent);color:var(--bg);padding:10px 20px;border-radius:6px;font-weight:600;transition:all 200ms ease;">Plan gesprek</a>
+    </nav>
+    <button type="button" class="nav-toggle" id="nav-toggle-btn" aria-label="Menu" aria-expanded="false" aria-controls="nav-mobile-panel">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <div class="nav-mobile-panel" id="nav-mobile-panel">
+      <a href="./services.html"{% if activeNav == 'services' %} style="color:var(--text);font-weight:600;"{% endif %}>Diensten</a>
+      <a href="./index.html#industries"{% if activeNav == 'industries' %} style="color:var(--text);font-weight:600;"{% endif %}>Sectoren</a>
+      <a href="./prijzen.html"{% if activeNav == 'prijzen' %} style="color:var(--text);font-weight:600;"{% endif %}>Prijzen</a>
+      <a href="./chatbots.html"{% if activeNav == 'chatbots' %} style="color:var(--text);font-weight:600;"{% endif %}>Chatbots</a>
+      <a href="./blog.html"{% if activeNav == 'blog' %} style="color:var(--text);font-weight:600;"{% endif %}>Blog</a>
+      <a href="./contact.html"{% if activeNav == 'contact' %} style="color:var(--text);font-weight:600;"{% endif %}>Contact</a>
+      <a href="./contact.html#stuur-bericht" style="background:var(--accent);color:var(--bg);padding:10px 20px;border-radius:6px;font-weight:600;transition:all 200ms ease;">Plan gesprek</a>
+  </div>
+</header>
