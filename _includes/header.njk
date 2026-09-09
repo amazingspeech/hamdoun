@@ -11,7 +11,7 @@
       <a href="./chatbots.html" class="nav-link" style="color:var(--text);{% if activeNav == 'chatbots' %}font-weight:600;{% else %}font-weight:500;transition:color 200ms ease;{% endif %}">Chatbots</a>
       <a href="./blog.html" class="nav-link" style="color:var(--text);{% if activeNav == 'blog' or blogLinkBold %}font-weight:600;{% else %}font-weight:500;transition:color 200ms ease;{% endif %}">Blog</a>
       <a href="./contact.html" class="nav-link" style="color:var(--text);{% if activeNav == 'contact' %}font-weight:600;{% else %}font-weight:500;transition:color 200ms ease;{% endif %}">Contact</a>
-      <a class="nav-link" href="{{ ctaHref }}" style="background:var(--accent);color:var(--bg);padding:10px 20px;border-radius:6px;font-weight:600;transition:all 200ms ease;">Plan gesprek</a>
+      <a class="nav-link" href="{{ ctaHref }}" style="background:var(--accent);color:var(--bg);padding:10px 20px;border-radius:6px;font-weight:600;transition:all 200ms ease;">Plan gesprek</a>{# ctaHref heeft geen default en geen guard: elke pagina die base.njk extend't MOET dit zetten, anders rendert href="" (reload van de huidige pagina, geen build-fout). Zie _includes/README.md. #}
     </nav>
     <button type="button" class="nav-toggle" id="nav-toggle-btn" aria-label="Menu" aria-expanded="false" aria-controls="nav-mobile-panel">
       <span></span><span></span><span></span>
@@ -24,6 +24,6 @@
       <a href="./chatbots.html"{% if activeNav == 'chatbots' %} style="color:var(--text);font-weight:600;"{% endif %}>Chatbots</a>
       <a href="./blog.html"{% if activeNav == 'blog' %} style="color:var(--text);font-weight:600;"{% endif %}>Blog</a>
       <a href="./contact.html"{% if activeNav == 'contact' %} style="color:var(--text);font-weight:600;"{% endif %}>Contact</a>
-      <a href="{{ ctaHref }}" style="{{ ctaMobileStyle }}">Plan gesprek</a>
+      <a href="{{ ctaHref }}" style="{{ ctaMobileStyle }}">Plan gesprek</a>{# ctaMobileStyle heeft geen default en geen guard: elke pagina die base.njk extend't MOET dit zetten, anders rendert style="" (onopgemaakte CTA, geen build-fout). Zie _includes/README.md. #}
   </div>
 </header>

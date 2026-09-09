@@ -30,7 +30,7 @@
 <link rel="icon" type="image/png" sizes="16x16" href="./assets/favicon-16.png">
 <link rel="apple-touch-icon" href="./assets/apple-touch-icon.png">
 
-{% block social %}{% endblock %}{% block jsonld %}{% endblock %}
+{% block social %}{% endblock %}{% block jsonld %}{% endblock %}{# social/jsonld zijn twee aangrenzende, volgorde-behoudende content-slots, geen strikt-semantische "social meta" vs "structured data"-containers. Op chatbots.html/contact.html/blog.html staat de inhoud omgewisseld (social bevat JSON-LD, jsonld bevat de og/twitter-meta) om de byte-volgorde van productie op die 3 pagina's te behouden. Zie _includes/README.md. #}
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">

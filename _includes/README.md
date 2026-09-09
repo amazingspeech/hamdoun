@@ -18,17 +18,27 @@ introduceren.
 ## De 11 opt-in front-matter-vlaggen
 
 Elke pagina zet in zijn eigen front matter (bovenaan het `.html`-bestand,
-tussen `---`) alleen de vlaggen die het nodig heeft. Niets is verplicht buiten
-`permalink`; alle vlaggen hieronder zijn optioneel en vallen terug op "uit"
-(falsy) tenzij een pagina ze expliciet zet.
+tussen `---`) alleen de vlaggen die het nodig heeft. Op twee na (zie hieronder)
+is niets verplicht buiten `permalink`: alle overige vlaggen zijn optioneel en
+vallen terug op "uit" (falsy) tenzij een pagina ze expliciet zet.
+
+**Uitzondering: `ctaHref` en `ctaMobileStyle` zijn VERPLICHT, niet optioneel.**
+`_includes/header.njk` rendert `href="{{ ctaHref }}"` en
+`style="{{ ctaMobileStyle }}"` zonder default en zonder guard. Laat een
+pagina deze weg, dan bouwt Eleventy gewoon door (geen fout, geen waarschuwing)
+en rendert stilletjes `href=""` (de "Plan gesprek"-knop wordt een reload van
+de huidige pagina) en `style=""` (onopgemaakte mobiele CTA). Er is bewust geen
+gedeelde default toegevoegd, omdat de waarde per pagina-groep verschilt (zie
+de tabel hieronder), maar dat maakt deze twee vlaggen mandatory-met-stille-
+fallback, precies de gevaarlijkste combinatie. Zet ze op elke nieuwe pagina.
 
 | Vlag | Type | Doel |
 |---|---|---|
 | `activeNav` | string | Welke hoofdnav-link (desktop + mobiel-paneel) vetgedrukt wordt. Waarden: `"services"`, `"industries"`, `"prijzen"`, `"chatbots"`, `"blog"`, `"contact"`. Weggelaten op pagina's zonder eigen hoofdnav-item (privacy.html, 404.html, de 6 artikelpagina's). |
-| `ctaHref` | string | Het `href` van de "Plan gesprek"-knop in de header (desktop én mobiel). Meestal `"./index.html#contact"` of `"#stuur-bericht"`/`"./contact.html#stuur-bericht"` op contact-achtige pagina's. |
-| `ctaMobileStyle` | string | Inline `style`-attribuut voor de mobiele CTA-link. Varieert per pagina-groep: pagina's met `hasBackToTop` gebruiken de "pill"-stijl (padding+border-radius, geen `text-align`), de rest gebruikt een gecentreerde blok-stijl met `!important` — dit is 1-op-1 overgenomen uit de productie-bron per pagina, niet gestandaardiseerd. |
+| `ctaHref` **(VERPLICHT)** | string | Het `href` van de "Plan gesprek"-knop in de header (desktop én mobiel). Meestal `"./index.html#contact"` of `"#stuur-bericht"`/`"./contact.html#stuur-bericht"` op contact-achtige pagina's. Geen default in `header.njk`: weggelaten geeft stil `href=""`. |
+| `ctaMobileStyle` **(VERPLICHT)** | string | Inline `style`-attribuut voor de mobiele CTA-link. Varieert per pagina-groep: pagina's met `hasBackToTop` gebruiken de "pill"-stijl (padding+border-radius, geen `text-align`), de rest gebruikt een gecentreerde blok-stijl met `!important`, dit is 1-op-1 overgenomen uit de productie-bron per pagina, niet gestandaardiseerd. Geen default in `header.njk`: weggelaten geeft stil `style=""`. |
 | `hasBackToTop` | boolean | Rendert de "naar boven"-knop plus het bijbehorende scroll-toon/verberg- en smooth-scroll-script. Alleen gezet op pagina's die deze knop in productie al hadden (privacy, services, contact). |
-| `prebody` | Nunjucks block (geen front-matter-vlaag) | Hook-blok vóór `{% include "header.njk" %}` in `base.njk`, bedoeld voor content die vóór de header moet renderen. Alle 13 pagina's overschrijven dit blok momenteel leeg (`{% block prebody %}{% endblock %}`) — het is een gereserveerd uitbreidingspunt, geen actief gebruikte vlag. |
+| `prebody` | Nunjucks block (geen front-matter-vlaag) | Content-hook helemaal bovenaan `<body>`, vóór `{% include "header.njk" %}` in `base.njk`. Wél actief gebruikt, op drie manieren: `prijzen.html` vult dit blok met een echt, substantieel JSON-LD-blok (FAQPage-structured-data, 28 regels), dat komt zo terecht in `<body>`, vóór `<header>`, wat geldig is (Google accepteert JSON-LD overal in het document) en 1-op-1 overeenkomt met de productie-bron. `blog.html` + de 6 artikelpagina's (7 pagina's) zetten `{% block prebody %}{% endblock %}` juist leeg, puur om een blanco regel te onderdrukken die `base.njk`'s eigen block-default (een kale newline tussen `{% block prebody %}` en `{% endblock %}` in `base.njk` zelf) anders zou renderen vóór `{% include "header.njk" %}`, functioneel een 4e whitespace-vlag naast `tightHeaderGap`/`tightFooterGap`/`noTrailingNewline`. De overige 5 pagina's (`privacy`, `services`, `chatbots`, `contact`, `404`) laten het blok volledig weg en krijgen dus wél die default blanco regel vóór `<header>`, dat is precies wat hun eigen productie-bron ook had, vandaar dat deze 5 pagina's byte-identiek blijven. |
 | `tightHeaderGap` | boolean | Onderdrukt een blanco regel die `base.njk` normaal vóór `{% block content %}` zou renderen. Puur whitespace-byte-parity met pagina's wier bron-HTML géén lege regel had op die plek (prijzen.html, blog.html). Geen zichtbaar effect. |
 | `tightFooterGap` | boolean | Zelfde mechanisme als `tightHeaderGap`, maar dan ná `{% block content %}` / vóór de footer-include. Ook puur whitespace, geen zichtbaar effect. |
 | `noTrailingNewline` | boolean | Onderdrukt de trailing newline die `base.njk` normaal ná `</html>` zou schrijven. Whitespace-byte-parity met bronbestanden die geen eind-regeleinde hadden. |
@@ -51,3 +61,27 @@ forceren (zie `.superpowers/sdd/2026-09-09-eleventy-migratie-fase2/progress.md`,
 "Ruling" onder Taak 4). De 5 taak-4-vlaggen zelf zijn blijven staan — ze
 werken en zijn al gereviewd — maar er zijn dus bewust geen 5-10 vergelijkbare
 vlaggen bijgekomen voor de resterende 7 pagina's.
+
+## `social`/`jsonld`: op 3 pagina's staat de inhoud omgewisseld
+
+`base.njk` plaatst `{% block social %}{% endblock %}{% block jsonld %}{% endblock %}`
+als twee aangrenzende, volgorde-behoudende content-slots in `<head>`, de
+namen suggereren een strikte betekenis ("social meta" versus "structured
+data"), maar dat zijn ze niet. Op **`chatbots.html`**, **`contact.html`** en
+**`blog.html`** is de inhoud bewust omgewisseld om de exacte byte-volgorde van
+productie op die 3 pagina's te behouden (productie had daar JSON-LD vóór de
+og/twitter-meta staan):
+
+- `{% block social %}` bevat op deze 3 pagina's de JSON-LD `<script
+  type="application/ld+json">`-tag(s).
+- `{% block jsonld %}` bevat op deze 3 pagina's juist de og/twitter
+  `<meta>`-tags.
+
+Op de overige 10 pagina's komt de inhoud wél overeen met de blocknaam
+(`social` = og/twitter-meta, `jsonld` = structured data). De uitgeleverde
+HTML is op alle 13 pagina's correct (byte-identiek aan productie), dit is
+puur een documentatie-valkuil: wie op `chatbots.html`, `contact.html` of
+`blog.html` "het social-block" gaat aanpassen, vindt daar JSON-LD, niet
+og/twitter-meta. Niet in deze fix-ronde opgelost door de blocks te hernoemen
+of de 3 pagina's te herstructureren, dat is expliciet Fase-3-werk dat een
+verse byte-diff-pas over die 3 pagina's vereist.
