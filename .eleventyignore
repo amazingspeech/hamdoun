@@ -16,7 +16,3 @@ tessar-concierge-widget.test.js
 docs/tessar-concierge-systeemprompt.md
 docs/tessar-concierge-v2-audit.md
 docs/tessar-concierge-v2-opdracht.md
-
-# Nog niet gemigreerd naar Eleventy-templates (elke regel hier verdwijnt
-# zodra de bijbehorende migratietaak is afgerond):
-404.html
