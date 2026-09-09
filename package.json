@@ -7,7 +7,8 @@
     "build:site": "npx eleventy",
     "test:unit": "node tessar-concierge-widget.test.js",
     "test:e2e": "playwright test",
-    "test": "npm run test:unit && npm run test:e2e"
+    "test:assets": "npm run build && npm run build:site && node scripts/check-asset-refs.mjs",
+    "test": "npm run test:unit && npm run test:e2e && npm run test:assets"
   },
   "devDependencies": {
     "@11ty/eleventy": "^3.1.6",
