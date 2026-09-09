@@ -61,9 +61,9 @@
       "position:fixed;left:16px;right:16px;bottom:16px;z-index:9999;" +
       "max-width:520px;margin:0 auto;" +
       "background:var(--bg,#F1EADA);color:var(--text,#211C14);" +
-      "border:1px solid var(--border,rgba(255,255,255,0.14));" +
+      "border:1px solid var(--border,#DCD0B8);" +
       "border-radius:12px;padding:20px 22px;" +
-      "box-shadow:0 12px 36px rgba(0,0,0,0.35);" +
+      "box-shadow:0 12px 36px rgba(0,0,0,0.12);" +
       "font:400 0.9rem/1.5 var(--font-body,'IBM Plex Sans',-apple-system,'Segoe UI',sans-serif);" +
       "display:flex;flex-direction:column;gap:14px;" +
       "opacity:0;transform:translateY(24px);transition:opacity 220ms ease,transform 220ms ease;";
@@ -99,7 +99,7 @@
     accept.type = "button";
     accept.textContent = "Accepteren";
     accept.style.cssText =
-      "background:#0F5C57;" +
+      "background:var(--accent,#0F5C57);" +
       "color:#F7F2E9;border:none;border-radius:6px;padding:10px 20px;" +
       "font:700 0.875rem/1 inherit;cursor:pointer;transition:transform 160ms ease;";
 
