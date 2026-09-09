@@ -1,0 +1,34 @@
+node_modules/
+_site/
+_to_delete/
+docs/
+forecasting/
+scripts/
+e2e/
+preview/
+.superpowers/
+.claude/
+.github/
+index.src.html
+index.html
+googleb2c866753bf6b639.html
+tessar-concierge-widget.test.js
+docs/tessar-concierge-systeemprompt.md
+docs/tessar-concierge-v2-audit.md
+docs/tessar-concierge-v2-opdracht.md
+
+# Nog niet gemigreerd naar Eleventy-templates (elke regel hier verdwijnt
+# zodra de bijbehorende migratietaak is afgerond):
+services.html
+chatbots.html
+prijzen.html
+contact.html
+blog.html
+privacy.html
+404.html
+ai-telefonist-voor-bedrijf.html
+ai-receptioniste-voor-bedrijven.html
+ai-chatbot-voor-bedrijven.html
+workflow-automatisering-met-ai.html
+ai-implementatie-laten-uitvoeren.html
+bedrijfsprocessen-automatiseren-met-ai.html

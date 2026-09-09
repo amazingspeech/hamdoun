@@ -4,11 +4,13 @@
   "description": "Tests voor de Tessar-website (widget-unittests + e2e). Geen productie-dependencies - de site en de widget zijn en blijven zelfstandige, dependency-loze bestanden.",
   "scripts": {
     "build": "node scripts/prerender-index.mjs > index.html.tmp && mv index.html.tmp index.html",
+    "build:site": "npx eleventy",
     "test:unit": "node tessar-concierge-widget.test.js",
     "test:e2e": "playwright test",
     "test": "npm run test:unit && npm run test:e2e"
   },
   "devDependencies": {
+    "@11ty/eleventy": "^3.1.6",
     "@playwright/test": "^1.55.0"
   }
 }

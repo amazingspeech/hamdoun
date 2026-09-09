@@ -10,3 +10,6 @@ playwright-report/
 blob-report/
 playwright/.cache/
 .superpowers/
+
+# Eleventy build-output
+_site/
