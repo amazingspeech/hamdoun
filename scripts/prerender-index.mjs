@@ -2,9 +2,16 @@
 // Bakt index.src.html (client-side {{ }}/<sc-for>-template, dc-runtime/React)
 // naar een volledig statisch index.html: een headless Chromium laadt de
 // pagina, wacht tot de client-side render klaar is, en de resulterende DOM
-// wordt as-is weggeschreven. De <script>-tags blijven behouden, dus na
-// uitlevering hydrateert de browser gewoon overheen — maar curl/crawlers
-// zonder JS zien nu de echte tekst in plaats van {{ placeholders }}.
+// wordt weggeschreven. dc-runtime's <x-dc>-root bestaat op dat moment niet
+// meer (dc-runtime heeft 'm zelf al vervangen door #dc-root), dus dc-runtime's
+// eigen client-side hydratie-boot vindt in de browser nooit een <x-dc> terug
+// en doet daarna niets meer - support.js en de React/ReactDOM-vendor-bundels
+// zijn dus alleen nog nodig geweest om deze bake te draaien, niet voor de
+// uitgeleverde pagina. Daarom worden die <script>-tags (plus de dc-runtime-
+// editor-annotaties en de dubbel gebakken Tess-widget-stylesheet) hieronder
+// uit de gerenderde DOM verwijderd voordat page.content() wordt uitgelezen.
+// curl/crawlers zonder JS zien zo de echte tekst in plaats van
+// {{ placeholders }}, en de browser downloadt geen dode runtime meer.
 //
 // Gebruik: node scripts/prerender-index.mjs
 // Vereist: een lokale statische server die de repo-root serveert (voor
@@ -110,6 +117,61 @@ async function main() {
       return true;
     });
     if (hadScrolledClass) console.error("header.scrolled-past-hero-class verwijderd voor het bakken (scroll-afhankelijke staat, geen SEO-content).");
+
+    // dc-runtime's <x-dc>-root wordt door dc-runtime zelf al vervangen door
+    // #dc-root voordat deze pagina hier gerenderd wordt (zie parseDcDocument
+    // in support.js: die zoekt naar <x-dc>, vindt 'm nooit meer terug in de
+    // gebakken output, en stopt meteen). Met andere woorden: dc-runtime's
+    // client-side hydratie draait in productie nooit - support.js en de
+    // React/ReactDOM-vendor-bundels die het zelf inlaadt worden dus alleen
+    // gedownload en geparsed, zonder ooit iets te doen. Diezelfde bake haalt
+    // ook de 549 data-dc-tpl-editor-annotaties weg (dc-runtime's eigen
+    // node-mapping voor het design-canvas, puur voor dat canvas relevant, geen
+    // functionele/CSS-afhankelijkheid in de uitgeleverde pagina), de dubbel
+    // gebakken Tess-widget-stylesheet (tessar-concierge-widget.js injecteert
+    // zijn <style data-tessar-concierge> zelf, onvoorwaardelijk, bij elke
+    // paginalaad - de gebakken kopie is dus altijd een duplicaat), en het
+    // window.__resources-configuratieblok dat alleen bestond om support.js's
+    // eigen dynamische CDN-scriptloader (react/react-dom) same-origin te laten
+    // serveren - zonder support.js is dat blok eveneens dode configuratie.
+    const deadRuntimeStats = await page.evaluate(() => {
+      const deadScriptMarkers = ['support.js', 'react.production.min.js', 'react-dom.production.min.js'];
+      let scriptsRemoved = 0;
+      document.querySelectorAll('script[src]').forEach((el) => {
+        if (deadScriptMarkers.some((marker) => el.getAttribute('src').includes(marker))) {
+          el.remove();
+          scriptsRemoved++;
+        }
+      });
+
+      let resourcesConfigRemoved = 0;
+      document.querySelectorAll('script:not([src])').forEach((el) => {
+        if (el.textContent.includes('window.__resources')) {
+          el.remove();
+          resourcesConfigRemoved++;
+        }
+      });
+
+      let dcTplAttrsRemoved = 0;
+      document.querySelectorAll('[data-dc-tpl]').forEach((el) => {
+        el.removeAttribute('data-dc-tpl');
+        dcTplAttrsRemoved++;
+      });
+
+      let widgetStyleRemoved = 0;
+      document.querySelectorAll('style[data-tessar-concierge]').forEach((el) => {
+        el.remove();
+        widgetStyleRemoved++;
+      });
+
+      return { scriptsRemoved, resourcesConfigRemoved, dcTplAttrsRemoved, widgetStyleRemoved };
+    });
+    console.error(
+      `dc-runtime opgeruimd: ${deadRuntimeStats.scriptsRemoved} dode <script src>-tag(s), `
+      + `${deadRuntimeStats.resourcesConfigRemoved} window.__resources-configuratieblok(ken), `
+      + `${deadRuntimeStats.dcTplAttrsRemoved} data-dc-tpl-attribu(u)t(en), `
+      + `${deadRuntimeStats.widgetStyleRemoved} gedupliceerd(e) Tess-widget-stylesheet(s).`
+    );
 
     let html = await page.content();
 
