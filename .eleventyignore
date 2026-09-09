@@ -19,11 +19,6 @@ docs/tessar-concierge-v2-opdracht.md
 
 # Nog niet gemigreerd naar Eleventy-templates (elke regel hier verdwijnt
 # zodra de bijbehorende migratietaak is afgerond):
-services.html
-chatbots.html
-prijzen.html
-contact.html
-blog.html
 404.html
 ai-telefonist-voor-bedrijf.html
 ai-receptioniste-voor-bedrijven.html

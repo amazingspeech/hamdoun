@@ -26,9 +26,7 @@
 <title>{% block title %}{% endblock %}</title>
 <meta name="description" content="{% block description %}{% endblock %}">
 {% block canonical %}{% endblock %}
-<meta name="theme-color" content="#F7F2E9">
-{% block robots %}{% endblock %}
-<link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon-32.png">
+<meta name="theme-color" content="#F7F2E9">{% block robots %}{% endblock %}<link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon-32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="./assets/favicon-16.png">
 <link rel="apple-touch-icon" href="./assets/apple-touch-icon.png">
 
@@ -42,12 +40,13 @@
 </style>
 </head>
 <body>
-
-{% include "header.njk" %}
-
-{% block content %}{% endblock %}
-
-{% include "footer-and-scripts.njk" -%}
+{% block prebody %}
+{% endblock %}{% include "header.njk" %}
+{% if not tightHeaderGap %}
+{% endif %}{% block content %}{% endblock %}
+{% if not tightFooterGap %}
+{% endif %}{% include "footer-and-scripts.njk" -%}
 <script src="./tessar-concierge-widget.js?v=4" defer></script>
 </body>
-</html>
+</html>{% if not noTrailingNewline %}
+{% endif %}
