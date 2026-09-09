@@ -9,6 +9,13 @@ preview/
 .superpowers/
 .claude/
 .github/
+# index.html en googleb2c866753bf6b639.html staan hier EN in
+# addPassthroughCopy in .eleventy.js; dat is bewust, geen dubbeling om op te
+# ruimen. Zonder deze ignore-regel probeert Eleventy ze als Nunjucks-template
+# te verwerken (mangelt de inhoud) en past het pretty-URL-gedrag toe (bv.
+# googleb2c866753bf6b639.html/index.html i.p.v. het platte bestand op de
+# root). addPassthroughCopy zorgt dat ze alsnog 1-op-1 in _site/ terechtkomen.
+# Eén van deze twee regels weghalen ("simplificeren") breekt de homepage.
 index.src.html
 index.html
 googleb2c866753bf6b639.html
