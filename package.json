@@ -1,7 +1,7 @@
 {
   "name": "tessar-website",
   "private": true,
-  "description": "Tests voor de Tessar-website (widget-unittests + e2e). Geen productie-dependencies - de site en de widget zijn en blijven zelfstandige, dependency-loze bestanden.",
+  "description": "Tests + build-tooling voor de Tessar-website (widget-unittests + e2e + Eleventy voor de statische pagina's). De uitgeleverde site zelf blijft dependency-loos - Eleventy en Playwright draaien alleen tijdens build/test, niet in de browser.",
   "scripts": {
     "build": "node scripts/prerender-index.mjs > index.html.tmp && mv index.html.tmp index.html",
     "build:site": "npx eleventy",

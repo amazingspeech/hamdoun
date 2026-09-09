@@ -45,6 +45,12 @@ jobs:
           EOF
 
       - name: Rsync site to server
+        # --exclude='preview/' protects the live preview/ directory on the server: since the
+        # source here is _site/ (Eleventy output, which never contains preview/ per
+        # .eleventyignore), --delete would otherwise remove it. The old rsync (source ./, pre-
+        # Eleventy) instead had 4 separate uploads/... excludes for that content, but those had
+        # been dead since this workflow's creation — the real path was always preview/uploads/...,
+        # not uploads/... — unrelated to this migration; dropped as genuinely dead weight.
         run: |
           rsync -avz --delete \
             -e "ssh -i ~/.ssh/tessar_deploy_key -o StrictHostKeyChecking=yes" \
