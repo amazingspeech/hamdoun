@@ -2,9 +2,11 @@
   <a href="./index.html" style="color:oklch(70% 0.10 188);">Tessar</a>. AI-implementatie en AI-geintegreerde applicaties voor Nederlandse en Europese mkb-bedrijven. <a href="./index.html#cases" style="color:oklch(60% 0.02 250);">Cases</a> · <a href="./privacy.html" style="color:oklch(60% 0.02 250);">Privacybeleid</a> · <a href="/login" style="color:oklch(60% 0.02 250);">Login</a>
 </footer>
 
+{% if hasBackToTop %}
 <button type="button" id="back-to-top" aria-label="Naar boven" title="Naar boven">
   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5"/><path d="m5 12 7-7 7 7"/></svg>
 </button>
+{% endif %}
 
 <script>
 (function () {
@@ -51,6 +53,7 @@
   });
 })();
 </script>
+{% if hasBackToTop %}
 <script>
 (function () {
   "use strict";
@@ -78,3 +81,4 @@
   });
 })();
 </script>
+{% endif %}
