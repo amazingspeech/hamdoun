@@ -32,9 +32,7 @@
 <link rel="icon" type="image/png" sizes="16x16" href="./assets/favicon-16.png">
 <link rel="apple-touch-icon" href="./assets/apple-touch-icon.png">
 
-{% block social %}{% endblock %}
-
-{% block jsonld %}{% endblock %}
+{% block social %}{% endblock %}{% block jsonld %}{% endblock %}
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
@@ -49,8 +47,7 @@
 
 {% block content %}{% endblock %}
 
-{% include "footer-and-scripts.njk" %}
-
+{% include "footer-and-scripts.njk" -%}
 <script src="./tessar-concierge-widget.js?v=4" defer></script>
 </body>
 </html>
