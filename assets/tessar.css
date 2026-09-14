@@ -1,0 +1,121 @@
+/* assets/tessar.css
+   Gedeelde component-CSS voor de 13 Eleventy-pagina's (niet de homepage -
+   die blijft op het dc-runtime-bakproces, zie docs/superpowers/plans/
+   2026-09-14-css-consolidatie-fase3.md).
+   Regels hier zijn overal waar ze voorkomen byte-identiek geweest vóór
+   verplaatsing (gegenereerd/geverifieerd met scripts/extract-shared-css.mjs).
+   Twee expliciete uitzonderingen blijven bewust page-specific: de "a" en
+   "a:hover"-basisstijl verschilt tussen nav-aangrenzende en artikel-pagina's
+   en wordt hier NOOIT samengevoegd. */
+
+:root {
+  /* Kleur: overgenomen 1-op-1 uit assets/tessar-design-tokens.css. Dat
+     bestand blijft bestaan en gelinkt; dit is geen vervanging, puur zodat
+     dit bestand op zichzelf leesbaar is. */
+  --bg:            #F7F2E9;
+  --surface:       #F1EADA;
+  --surface-inset: #EAE1CC;
+  --border:        #DCD0B8;
+  --text:          #211C14;
+  --text-muted:    #5F5646;
+  --text-muted-2:  #6A6151;
+  --accent:        #0F5C57;
+  --accent-hover:  #0C4B47;
+  --accent-text:   #0F5C57;
+  --accent-dim:    #E3EEEC;
+  --ok-bg:         #EAF3E9;
+  --ok-border:     #C3DCC0;
+  --ok-text:       #2F6B2C;
+  --danger-bg:     #FBEAE6;
+  --danger-border: #E8C3B8;
+  --danger-text:   #A23F24;
+
+  /* Typografie-schaal (NIEUW, additief - nergens in dit plan toegepast,
+     bestaat als fundament voor fase 4). */
+  --text-xs:   0.75rem;
+  --text-sm:   0.8125rem;
+  --text-base: 0.9375rem;
+  --text-md:   1.0625rem;
+  --text-lg:   1.25rem;
+  --text-xl:   1.5rem;
+  --text-2xl:  2rem;
+  --text-3xl:  2.25rem;
+
+  /* Spacing-schaal, 4px-basis (NIEUW, additief). */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+}
+
+/* Hieronder: elke regel uit de scriptoutput die overal waar hij voorkomt
+   byte-identiek is, exclusief de a/a:hover-uitzondering hierboven. Plak
+   ze hier verbatim (geen herformattering, geen "verbetering" van de regel
+   zelf - puur verplaatsen). */
+
+/* Universeel, 13/13 pagina's */
+body { transition:background-color 200ms ease, color 200ms ease; }
+html, body { margin:0; padding:0; background:var(--bg); }
+html { scroll-behavior:smooth; }
+body { font-family:'IBM Plex Sans', -apple-system, 'Segoe UI', sans-serif; color:var(--text); line-height:1.55; -webkit-font-smoothing:antialiased; }
+.nav-toggle { display:none; background:none; border:none; cursor:pointer; padding:8px; flex-direction:column; gap:5px; margin-left:4px; }
+.nav-toggle span { display:block; width:22px; height:2px; background:var(--text); border-radius:2px; transition:transform 200ms ease, opacity 200ms ease; }
+.nav-mobile-panel { display:none; }
+@media (max-width: 960px) { .nav-link { display:none; } .nav-toggle { display:flex; } .nav-mobile-panel { display:none; flex-direction:column; padding:8px 20px 20px; background:var(--bg); border-top:1px solid var(--border); } .nav-mobile-panel.nav-open { display:flex; } .nav-mobile-panel a { display:block; padding:14px 0; font:500 1rem/1.3 'IBM Plex Sans'; color:var(--text); border-bottom:1px solid var(--border); } .nav-mobile-panel a:last-child { border-bottom:none; margin-top:8px; } .nav-toggle.nav-toggle-active span:nth-child(1) { transform:translateY(7px) rotate(45deg); } .nav-toggle.nav-toggle-active span:nth-child(2) { opacity:0; } .nav-toggle.nav-toggle-active span:nth-child(3) { transform:translateY(-7px) rotate(-45deg); } }
+
+/* [data-reveal] scroll-reveal mechaniek, 12/13 pagina's */
+[data-reveal] { opacity:0; transform:translateY(18px); transition:opacity 600ms ease, transform 600ms ease; }
+[data-reveal].is-visible { opacity:1; transform:translateY(0); }
+
+/* [data-reveal-grid] staggered delays, 9/13 t/m 6/13 pagina's (niet alle
+   pagina's hebben evenveel grid-items, vandaar aflopende page-counts) */
+[data-reveal-grid] > [data-reveal]:nth-child(1) { transition-delay:0ms; }
+[data-reveal-grid] > [data-reveal]:nth-child(2) { transition-delay:90ms; }
+[data-reveal-grid] > [data-reveal]:nth-child(3) { transition-delay:180ms; }
+[data-reveal-grid] > [data-reveal]:nth-child(4) { transition-delay:270ms; }
+[data-reveal-grid] > [data-reveal]:nth-child(5) { transition-delay:360ms; }
+[data-reveal-grid] > [data-reveal]:nth-child(6) { transition-delay:450ms; }
+
+/* .faq-item mechaniek, 9/13 pagina's */
+.faq-item[open] .faq-chevron { transform:rotate(180deg); }
+.faq-item summary::-webkit-details-marker { display:none; }
+.faq-item summary { list-style:none; cursor:pointer; }
+
+/* .icon-basis + icons die overal waar ze voorkomen identiek zijn */
+.icon { display:inline-block; width:1em; height:1em; background-color:currentColor; -webkit-mask-repeat:no-repeat; mask-repeat:no-repeat; -webkit-mask-position:center; mask-position:center; -webkit-mask-size:contain; mask-size:contain; flex-shrink:0; }
+.icon-chevron-down { -webkit-mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-chevron-down' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Cpath d='m6 9 6 6 6-6' /%3E%3C/svg%3E"); mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-chevron-down' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Cpath d='m6 9 6 6 6-6' /%3E%3C/svg%3E"); }
+
+/* reduced-motion, 9/13-variant (zonder #back-to-top-onderdeel) */
+@media (prefers-reduced-motion: reduce) { [data-reveal] { opacity:1; transform:none; transition:none; } html { scroll-behavior:auto; } }
+
+/* .article-prose, 6/13 pagina's (de 6 artikel-/blogpost-pagina's) */
+.article-prose h2:first-child { margin-top: 0; }
+.article-prose strong { font-weight: 650; }
+@media (max-width: 640px) { .article-prose { font-size: 0.98rem; } }
+
+/* #back-to-top mechaniek, 3/13 pagina's (contact.html, privacy.html, services.html) */
+#back-to-top.is-visible { opacity:1; transform:translateY(0); pointer-events:auto; }
+#back-to-top:hover { transform:translateY(-3px); box-shadow:0 12px 32px rgba(15,92,87,0.35); }
+#back-to-top:focus-visible { outline:2px solid var(--accent-text); outline-offset:3px; }
+@media (max-width: 480px) { #back-to-top { right:92px; bottom:16px; } }
+
+/* reduced-motion, 3/13-variant (inclusief #back-to-top-onderdeel) */
+@media (prefers-reduced-motion: reduce) { [data-reveal] { opacity:1; transform:none; transition:none; } html { scroll-behavior:auto; } #back-to-top { transition:opacity 200ms ease; transform:none; } }
+
+.icon-check { -webkit-mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-check' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Cpath d='M20 6 9 17l-5-5' /%3E%3C/svg%3E"); mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-check' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Cpath d='M20 6 9 17l-5-5' /%3E%3C/svg%3E"); }
+
+/* #back-to-top basisregel, 2/13 pagina's (contact.html, services.html - de
+   variant met de toelichtende comment over de Tess-launcher; privacy.html
+   heeft dezelfde regel zonder die comment en telt daardoor als een aparte,
+   niet-identieke regeltekst, dus die blijft page-specific op privacy.html) */
+/* Sits left of the fixed Tess concierge launcher (60px circle at bottom:24px/right:24px, see tessar-concierge-widget.js), same row, so it never collides with the launcher or its hint bubble (which pops up above the launcher, not beside it). */ #back-to-top { position:fixed; right:100px; bottom:24px; z-index:40; width:48px; height:48px; border-radius:50%; border:none; background:var(--accent); color:var(--bg); display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:0 8px 24px oklch(20% 0.02 255 / 0.25); opacity:0; transform:translateY(12px); pointer-events:none; transition:opacity 260ms ease, transform 260ms ease, box-shadow 200ms ease; }
+
+/* Overige icons, 2/13 pagina's (chatbots.html, prijzen.html) */
+.icon-shield-check { -webkit-mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-shield-check' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Cpath d='M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z' /%3E%3Cpath d='m9 12 2 2 4-4' /%3E%3C/svg%3E"); mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-shield-check' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Cpath d='M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z' /%3E%3Cpath d='m9 12 2 2 4-4' /%3E%3C/svg%3E"); }
+.icon-zap { -webkit-mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-zap' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Cpath d='M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z' /%3E%3C/svg%3E"); mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-zap' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Cpath d='M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z' /%3E%3C/svg%3E"); }
