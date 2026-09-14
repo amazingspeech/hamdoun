@@ -46,43 +46,8 @@ hasBackToTop: true
 <meta name="twitter:title" content="Contact met Tessar">
 <meta name="twitter:description" content="Telefoon, e-mail en bedrijfsgegevens van Tessar, of stuur direct een bericht.">
 <meta name="twitter:image" content="https://tessar.nl/og-image.jpg">{% endblock %}
-{% block styles %}  body { transition:background-color 200ms ease, color 200ms ease; }
-  html, body { margin:0; padding:0; background:var(--bg); }
-  html { scroll-behavior:smooth; }
-  body { font-family:'IBM Plex Sans', -apple-system, 'Segoe UI', sans-serif; color:var(--text); line-height:1.55; -webkit-font-smoothing:antialiased; }
-  a { color:var(--text); text-decoration:none; }
+{% block styles %}  a { color:var(--text); text-decoration:none; }
   a:hover { color:var(--accent-text); }
-  [data-reveal] { opacity:0; transform:translateY(18px); transition:opacity 600ms ease, transform 600ms ease; }
-  [data-reveal].is-visible { opacity:1; transform:translateY(0); }
-  [data-reveal-grid] > [data-reveal]:nth-child(1) { transition-delay:0ms; }
-  [data-reveal-grid] > [data-reveal]:nth-child(2) { transition-delay:90ms; }
-  .nav-toggle { display:none; background:none; border:none; cursor:pointer; padding:8px; flex-direction:column; gap:5px; margin-left:4px; }
-  .nav-toggle span { display:block; width:22px; height:2px; background:var(--text); border-radius:2px; transition:transform 200ms ease, opacity 200ms ease; }
-  .nav-mobile-panel { display:none; }
-  @media (max-width: 960px) {
-    .nav-link { display:none; }
-    .nav-toggle { display:flex; }
-    .nav-mobile-panel { display:none; flex-direction:column; padding:8px 20px 20px; background:var(--bg); border-top:1px solid var(--border); }
-    .nav-mobile-panel.nav-open { display:flex; }
-    .nav-mobile-panel a { display:block; padding:14px 0; font:500 1rem/1.3 'IBM Plex Sans'; color:var(--text); border-bottom:1px solid var(--border); }
-    .nav-mobile-panel a:last-child { border-bottom:none; margin-top:8px; }
-    .nav-toggle.nav-toggle-active span:nth-child(1) { transform:translateY(7px) rotate(45deg); }
-    .nav-toggle.nav-toggle-active span:nth-child(2) { opacity:0; }
-    .nav-toggle.nav-toggle-active span:nth-child(3) { transform:translateY(-7px) rotate(-45deg); }
-  }
-  /* Sits left of the fixed Tess concierge launcher (60px circle at bottom:24px/right:24px, see
-     tessar-concierge-widget.js), same row, so it never collides with the launcher or its hint bubble
-     (which pops up above the launcher, not beside it). */
-  #back-to-top { position:fixed; right:100px; bottom:24px; z-index:40; width:48px; height:48px; border-radius:50%; border:none; background:var(--accent); color:var(--bg); display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:0 8px 24px oklch(20% 0.02 255 / 0.25); opacity:0; transform:translateY(12px); pointer-events:none; transition:opacity 260ms ease, transform 260ms ease, box-shadow 200ms ease; }
-  #back-to-top.is-visible { opacity:1; transform:translateY(0); pointer-events:auto; }
-  #back-to-top:hover { transform:translateY(-3px); box-shadow:0 12px 32px rgba(15,92,87,0.35); }
-  #back-to-top:focus-visible { outline:2px solid var(--accent-text); outline-offset:3px; }
-  @media (max-width: 480px) { #back-to-top { right:92px; bottom:16px; } }
-  @media (prefers-reduced-motion: reduce) {
-    [data-reveal] { opacity:1; transform:none; transition:none; }
-    html { scroll-behavior:auto; }
-    #back-to-top { transition:opacity 200ms ease; transform:none; }
-  }
   .contact-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:clamp(24px,4vw,40px); }
   .contact-field { background:oklch(100% 0 0 / 0.95); border:1px solid oklch(70% 0.14 188 / 0.3); border-radius:6px; padding:14px 18px; font:400 1rem/1.5 'IBM Plex Sans'; color:var(--text); transition:all 200ms ease; width:100%; box-sizing:border-box; }
   .contact-field:focus { outline:2px solid var(--accent); outline-offset:2px; border-color:var(--accent); }{% endblock %}
