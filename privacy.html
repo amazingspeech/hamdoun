@@ -22,38 +22,15 @@ hasBackToTop: true
 <meta name="twitter:description" content="Welke gegevens Tessar verzamelt, waarom, en welke rechten je hebt onder de AVG.">
 <meta name="twitter:image" content="https://tessar.nl/og-image.jpg">{% endblock %}
 {% block jsonld %}{% endblock %}
-{% block styles %}  body { transition:background-color 200ms ease, color 200ms ease; }
-  html, body { margin:0; padding:0; background:var(--bg); }
-  html { scroll-behavior:smooth; }
-  body { font-family:'IBM Plex Sans', -apple-system, 'Segoe UI', sans-serif; color:var(--text); line-height:1.55; -webkit-font-smoothing:antialiased; }
-  a { color:var(--accent-text); text-decoration:none; }
+{% block styles %}  a { color:var(--accent-text); text-decoration:none; }
   a:hover { text-decoration:underline; }
-  [data-reveal] { opacity:0; transform:translateY(18px); transition:opacity 600ms ease, transform 600ms ease; }
-  [data-reveal].is-visible { opacity:1; transform:translateY(0); }
-  .nav-toggle { display:none; background:none; border:none; cursor:pointer; padding:8px; flex-direction:column; gap:5px; margin-left:4px; }
-  .nav-toggle span { display:block; width:22px; height:2px; background:var(--text); border-radius:2px; transition:transform 200ms ease, opacity 200ms ease; }
-  .nav-mobile-panel { display:none; }
-  @media (max-width: 960px) {
-    .nav-link { display:none; }
-    .nav-toggle { display:flex; }
-    .nav-mobile-panel { display:none; flex-direction:column; padding:8px 20px 20px; background:var(--bg); border-top:1px solid var(--border); }
-    .nav-mobile-panel.nav-open { display:flex; }
-    .nav-mobile-panel a { display:block; padding:14px 0; font:500 1rem/1.3 'IBM Plex Sans'; color:var(--text); border-bottom:1px solid var(--border); }
-    .nav-mobile-panel a:last-child { border-bottom:none; margin-top:8px; }
-    .nav-toggle.nav-toggle-active span:nth-child(1) { transform:translateY(7px) rotate(45deg); }
-    .nav-toggle.nav-toggle-active span:nth-child(2) { opacity:0; }
-    .nav-toggle.nav-toggle-active span:nth-child(3) { transform:translateY(-7px) rotate(-45deg); }
-  }
   #back-to-top { position:fixed; right:100px; bottom:24px; z-index:40; width:48px; height:48px; border-radius:50%; border:none; background:var(--accent); color:var(--bg); display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:0 8px 24px oklch(20% 0.02 255 / 0.25); opacity:0; transform:translateY(12px); pointer-events:none; transition:opacity 260ms ease, transform 260ms ease, box-shadow 200ms ease; }
-  #back-to-top.is-visible { opacity:1; transform:translateY(0); pointer-events:auto; }
-  #back-to-top:hover { transform:translateY(-3px); box-shadow:0 12px 32px rgba(15,92,87,0.35); }
-  #back-to-top:focus-visible { outline:2px solid var(--accent-text); outline-offset:3px; }
+  /* Deze regel staat ook al in assets/tessar.css, maar moet hier herhaald worden:
+     de basisregel hierboven blijft page-specific (zie tessar.css-comment over de
+     comment-asymmetrie) en laadt daardoor NA tessar.css. Zonder deze herhaling
+     zou de onvoorwaardelijke basisregel (gelijke specificity, latere source-order)
+     de mobiele override uit tessar.css verslaan bij <=480px. Zie task-2-report.md. */
   @media (max-width: 480px) { #back-to-top { right:92px; bottom:16px; } }
-  @media (prefers-reduced-motion: reduce) {
-    [data-reveal] { opacity:1; transform:none; transition:none; }
-    html { scroll-behavior:auto; }
-    #back-to-top { transition:opacity 200ms ease; transform:none; }
-  }
   .legal { max-width:760px; margin:0 auto; }
   .legal h2 { font:700 1.3125rem/1.35 'Outfit'; color:var(--text); margin:40px 0 14px; letter-spacing:-0.01em; }
   .legal h2:first-child { margin-top:0; }
