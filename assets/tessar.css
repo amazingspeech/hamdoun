@@ -99,6 +99,12 @@ body { font-family:'IBM Plex Sans', -apple-system, 'Segoe UI', sans-serif; color
 .article-prose strong { font-weight: 650; }
 @media (max-width: 640px) { .article-prose { font-size: 0.98rem; } }
 
+/* #back-to-top basisregel, 2/13 pagina's (contact.html, services.html - de
+   variant met de toelichtende comment over de Tess-launcher; privacy.html
+   heeft dezelfde regel zonder die comment en telt daardoor als een aparte,
+   niet-identieke regeltekst, dus die blijft page-specific op privacy.html) */
+/* Sits left of the fixed Tess concierge launcher (60px circle at bottom:24px/right:24px, see tessar-concierge-widget.js), same row, so it never collides with the launcher or its hint bubble (which pops up above the launcher, not beside it). */ #back-to-top { position:fixed; right:100px; bottom:24px; z-index:40; width:48px; height:48px; border-radius:50%; border:none; background:var(--accent); color:var(--bg); display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:0 8px 24px oklch(20% 0.02 255 / 0.25); opacity:0; transform:translateY(12px); pointer-events:none; transition:opacity 260ms ease, transform 260ms ease, box-shadow 200ms ease; }
+
 /* #back-to-top mechaniek, 3/13 pagina's (contact.html, privacy.html, services.html) */
 #back-to-top.is-visible { opacity:1; transform:translateY(0); pointer-events:auto; }
 #back-to-top:hover { transform:translateY(-3px); box-shadow:0 12px 32px rgba(15,92,87,0.35); }
@@ -109,12 +115,6 @@ body { font-family:'IBM Plex Sans', -apple-system, 'Segoe UI', sans-serif; color
 @media (prefers-reduced-motion: reduce) { [data-reveal] { opacity:1; transform:none; transition:none; } html { scroll-behavior:auto; } #back-to-top { transition:opacity 200ms ease; transform:none; } }
 
 .icon-check { -webkit-mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-check' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Cpath d='M20 6 9 17l-5-5' /%3E%3C/svg%3E"); mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-check' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Cpath d='M20 6 9 17l-5-5' /%3E%3C/svg%3E"); }
-
-/* #back-to-top basisregel, 2/13 pagina's (contact.html, services.html - de
-   variant met de toelichtende comment over de Tess-launcher; privacy.html
-   heeft dezelfde regel zonder die comment en telt daardoor als een aparte,
-   niet-identieke regeltekst, dus die blijft page-specific op privacy.html) */
-/* Sits left of the fixed Tess concierge launcher (60px circle at bottom:24px/right:24px, see tessar-concierge-widget.js), same row, so it never collides with the launcher or its hint bubble (which pops up above the launcher, not beside it). */ #back-to-top { position:fixed; right:100px; bottom:24px; z-index:40; width:48px; height:48px; border-radius:50%; border:none; background:var(--accent); color:var(--bg); display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:0 8px 24px oklch(20% 0.02 255 / 0.25); opacity:0; transform:translateY(12px); pointer-events:none; transition:opacity 260ms ease, transform 260ms ease, box-shadow 200ms ease; }
 
 /* Overige icons, 2/13 pagina's (chatbots.html, prijzen.html) */
 .icon-shield-check { -webkit-mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-shield-check' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Cpath d='M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z' /%3E%3Cpath d='m9 12 2 2 4-4' /%3E%3C/svg%3E"); mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-shield-check' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Cpath d='M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z' /%3E%3Cpath d='m9 12 2 2 4-4' /%3E%3C/svg%3E"); }
