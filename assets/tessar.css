@@ -6,7 +6,14 @@
    verplaatsing (gegenereerd/geverifieerd met scripts/extract-shared-css.mjs).
    Twee expliciete uitzonderingen blijven bewust page-specific: de "a" en
    "a:hover"-basisstijl verschilt tussen nav-aangrenzende en artikel-pagina's
-   en wordt hier NOOIT samengevoegd. */
+   en wordt hier NOOIT samengevoegd.
+
+   LET OP: de regelvolgorde in dit bestand is cascade-relevant, NIET zomaar
+   alfabetiseren of herordenen. Dit veroorzaakte al één echte bug (gefixt in
+   commit 465e5d8): de #back-to-top-basisregel moet vóór het
+   .is-visible/:hover/:focus-visible/@media(max-width:480px)-blok staan,
+   anders wint de onvoorwaardelijke basisregel (gelijke specificity, latere
+   source-order) alsnog van de override. */
 
 :root {
   /* Kleur: overgenomen 1-op-1 uit assets/tessar-design-tokens.css. Dat
@@ -114,6 +121,8 @@ body { font-family:'IBM Plex Sans', -apple-system, 'Segoe UI', sans-serif; color
 /* reduced-motion, 3/13-variant (inclusief #back-to-top-onderdeel) */
 @media (prefers-reduced-motion: reduce) { [data-reveal] { opacity:1; transform:none; transition:none; } html { scroll-behavior:auto; } #back-to-top { transition:opacity 200ms ease; transform:none; } }
 
+/* .icon-check, 3/13 pagina's (chatbots.html, prijzen.html, services.html) —
+   plek consistent met de aflopende-paginatelling-volgorde van dit bestand */
 .icon-check { -webkit-mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-check' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Cpath d='M20 6 9 17l-5-5' /%3E%3C/svg%3E"); mask-image:url("data:image/svg+xml,%3Csvg class='lucide lucide-check' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Cpath d='M20 6 9 17l-5-5' /%3E%3C/svg%3E"); }
 
 /* Overige icons, 2/13 pagina's (chatbots.html, prijzen.html) */

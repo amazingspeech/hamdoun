@@ -4,8 +4,20 @@ Bijhoudt van betekenisvolle wijzigingen aan de tessar.nl-codebase. Formaat losje
 
 ## Ongepubliceerd (branch `css-consolidatie-fase3`)
 
-### In uitvoering
-- CSS-consolidatie fase 3: gedeelde `assets/tessar.css` voor de 13 Eleventy-pagina's, tokenbestand-tegenstrijdigheid oplossen. Plan: `docs/superpowers/plans/2026-09-14-css-consolidatie-fase3.md`.
+### Fase 3 — CSS-consolidatie
+
+#### Toegevoegd
+- `assets/tessar.css` als gedeeld stijlbestand voor de 13 Eleventy-pagina's, gelinkt vanuit `_includes/base.njk`; `scripts/extract-shared-css.mjs` extraheert en verifieert welke regels overal identiek zijn.
+
+#### Gewijzigd
+- Alle 13 Eleventy-pagina's (privacy, 404, 5 hoofdnav-pagina's, 6 artikelpagina's) gebruiken nu `assets/tessar.css` in plaats van een eigen kopie van dezelfde CSS-regels in hun `{% block styles %}`.
+- `assets/tessar-tokens.css` bijgewerkt naar de live warme kleuren (o.a. `--accent: #0F5C57`); het tegenstrijdige, verouderde padcommentaar gecorrigeerd.
+
+#### Gefixt
+- Cascade-volgorde in `assets/tessar.css`: de `#back-to-top`-basisregel moet vóór het `.is-visible`/`:hover`/`:focus-visible`/`@media(max-width:480px)`-blok staan (commit `465e5d8`).
+- Overgetypte hex-waarde `--text-muted-2` in `assets/tessar.css`.
+
+Plan: `docs/superpowers/plans/2026-09-14-css-consolidatie-fase3.md`.
 
 ## 2026-09-14/15
 
