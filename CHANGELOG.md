@@ -2,9 +2,12 @@
 
 Bijhoudt van betekenisvolle wijzigingen aan de tessar.nl-codebase. Formaat losjes gebaseerd op [Keep a Changelog](https://keepachangelog.com/); nieuwste bovenaan.
 
-## Ongepubliceerd (branch `css-consolidatie-fase3`)
+## 2026-09-15
 
-### Fase 3 — CSS-consolidatie
+### Toegevoegd
+- 3 nieuwe blogartikelen, gebaseerd op de bestaande keyword-trackingpijplijn (2 gevolgde zoektermen zonder eigen pagina: "AI automatisering voor het mkb", "AI oplossingen voor bedrijven") plus een complementair, readiness-gericht artikel dat doorlinkt naar de AI-readiness scan: `ai-automatisering-voor-het-mkb.html`, `ai-oplossingen-voor-bedrijven.html`, `ai-readiness-checken.html`. Elk met een eigen abstracte hero-illustratie in de bestaande huisstijl (SVG, gerenderd naar webp/png), toegevoegd aan `blog.html` en `sitemap.xml`.
+
+## 2026-09-09/15 (Fase 3 — CSS-consolidatie)
 
 #### Toegevoegd
 - `assets/tessar.css` als gedeeld stijlbestand voor de 13 Eleventy-pagina's, gelinkt vanuit `_includes/base.njk`; `scripts/extract-shared-css.mjs` extraheert en verifieert welke regels overal identiek zijn.
