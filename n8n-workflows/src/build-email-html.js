@@ -1,9 +1,14 @@
 const PRIORITY_ORDER = { makkelijk: 0, gemiddeld: 1, lastig: 2 };
 
-// Hex equivalents of Tessar's design tokens (assets/tessar-tokens.css),
-// converted from OKLCH because no mail client understands oklch(). Email
-// clients also strip <style> blocks unreliably, so every rule below is
-// inlined rather than declared once and referenced.
+// Legacy e-mail-huisstijl: hardcoded hex-waarden voor de OUDE blauwe
+// Tessar-huisstijl. Dit is bewust NIET gesynchroniseerd met de live
+// website-kleuren in assets/tessar-tokens.css (die zijn sinds Fase 3 van
+// de CSS-consolidatie bijgewerkt naar de warme kleuren, o.a. --accent:
+// #0F5C57). Of deze e-mails ook naar de nieuwe stijl overgaan is een
+// aparte, toekomstige beslissing. Waarden hieronder blijven in hex omdat
+// geen mail client oklch() begrijpt; e-mailclients strippen <style>-blokken
+// ook onbetrouwbaar, dus elke regel hieronder wordt inline toegepast in
+// plaats van eenmalig gedeclareerd en gerefereerd.
 const COLOR = {
   text: '#0C121A',
   textDim: '#555A53',

@@ -8,8 +8,10 @@
    Protocolchecker-template, de Boekingsassistent, en het
    e-mail-buildscript (n8n-workflows/src/build-email-html.js — dat script
    leest dit bestand niet in, maar houdt er wel een eigen hex-vertaling
-   van bij). Wijzig kleurwaarden éérst in assets/tessar.css, synchroniseer
-   dan hierheen.
+   van bij, van de OUDE blauwe huisstijl, bewust NIET gesynchroniseerd
+   met de live kleuren hieronder — of dat script ook overgaat is een
+   aparte, toekomstige beslissing). Wijzig kleurwaarden éérst in
+   assets/tessar.css, synchroniseer dan hierheen.
 
    De --gradient-* en --on-gradient-tokens hieronder en het volledige
    donkere-thema-blok hebben géén tegenhanger in assets/tessar.css (de live

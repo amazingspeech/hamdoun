@@ -66,7 +66,10 @@ assert.ok(html.includes('Gratis gesprek inplannen.'), 'renders cta_direction');
 assert.ok(html.includes('Voicelabs') && html.includes('Geen mkb-specifieke voorbeelden.'), 'renders competitor_analysis name + gap');
 assert.ok(html.includes('informational') && html.includes('commercial'), 'renders search_intent per brief');
 
-// Tessar house style (assets/tessar-tokens.css, converted to hex for mail clients)
+// Legacy e-mail-huisstijl (oude blauwe Tessar-stijl, hardcoded als hex voor
+// mail clients) — bewust NIET gesynchroniseerd met de live website-kleuren
+// in assets/tessar-tokens.css, zie het commentaar bij COLOR in
+// build-email-html.js.
 assert.ok(html.includes('#00BCD8') && html.includes('#0091CE'), 'header uses the Tessar gradient');
 assert.ok(html.includes("IBM Plex Sans") && html.includes("IBM Plex Mono"), 'uses Tessar typography');
 assert.ok(html.includes('#AF3E30'), "'lastig' priority uses the danger palette");
