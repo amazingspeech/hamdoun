@@ -1,6 +1,6 @@
 const PRIORITY_ORDER = { makkelijk: 0, gemiddeld: 1, lastig: 2 };
 
-// Hex equivalents of Tessar's design tokens (preview/assets/tessar-tokens.css),
+// Hex equivalents of Tessar's design tokens (assets/tessar-tokens.css),
 // converted from OKLCH because no mail client understands oklch(). Email
 // clients also strip <style> blocks unreliably, so every rule below is
 // inlined rather than declared once and referenced.

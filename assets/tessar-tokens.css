@@ -1,15 +1,26 @@
 /* =========================================================================
-   Tessar design tokens — canonieke bron
+   Tessar design tokens — gesynchroniseerde export
    =========================================================================
-   Dit is dé plek waar Tessar-kleuren, -fonts, -spacing en -elevation
-   gedefinieerd staan. Productrepo's (Protocolchecker-template,
-   Boekingsassistent) nemen hier een kopie van op met een bronverwijzing in
-   de header — wijzig waarden éérst hier, kopieer dan door.
+   De canonieke bron voor Tessar-kleuren is assets/tessar.css (en het
+   onderliggende assets/tessar-design-tokens.css) in de hamdoun-repo. Dit
+   bestand is GEEN bron zelf, maar een gesynchroniseerde kopie voor externe
+   consumenten die geen toegang hebben tot de website-repo: het
+   Protocolchecker-template, de Boekingsassistent, en het
+   e-mail-buildscript (n8n-workflows/src/build-email-html.js — dat script
+   leest dit bestand niet in, maar houdt er wel een eigen hex-vertaling
+   van bij). Wijzig kleurwaarden éérst in assets/tessar.css, synchroniseer
+   dan hierheen.
 
-   Alle kleurwaarden komen letterlijk uit de live site (hamdoun/index.html);
-   de spacing-/typografieschaal is de bewezen 4px/1.2-ratio-structuur uit
-   Certo (protocolchecker/public/style.css). Zie
-   docs → tessar-design-system-spec.md voor onderbouwing per token.
+   De --gradient-* en --on-gradient-tokens hieronder en het volledige
+   donkere-thema-blok hebben géén tegenhanger in assets/tessar.css (de live
+   site kent momenteel geen gradient-accent en geen dark theme) en zijn dus
+   niet gesynchroniseerd — ongewijzigd gelaten als legacy totdat er een
+   live bron voor bestaat.
+
+   De spacing-/typografieschaal is de bewezen 4px/1.2-ratio-structuur uit
+   Certo (protocolchecker/public/style.css) en heeft geen relatie tot de
+   kleurtokens hierboven. Zie docs → tessar-design-system-spec.md voor
+   onderbouwing per token.
 
    Fonts: producten hosten IBM Plex zelf (woff2, latin-subset) — dit bestand
    declareert bewust géén @font-face, omdat de bestandspaden per product
@@ -19,22 +30,22 @@
 
 :root {
   /* --- Kleur: licht thema (standaard) --- */
-  --bg: oklch(100% 0 0);
-  --panel: oklch(98% 0.004 90);
-  --border: oklch(91% 0.006 90);
-  --text: oklch(18% 0.02 255);
-  --text-dim: oklch(46% 0.012 140);
-  --accent: oklch(48% 0.12 230);
-  --accent-hover: oklch(42% 0.12 230);
-  --accent-dim: oklch(96% 0.01 230);
+  --bg: #F7F2E9;
+  --panel: #F1EADA;
+  --border: #DCD0B8;
+  --text: #211C14;
+  --text-dim: #5F5646;
+  --accent: #0F5C57;
+  --accent-hover: #0C4B47;
+  --accent-dim: #E3EEEC;
 
   /* --- Semantische kleuren (uit de voor/na-sectie van de live site) --- */
-  --ok-bg: oklch(98% 0.02 165);
-  --ok-border: oklch(85% 0.05 165);
-  --ok-text: oklch(45% 0.14 165);
-  --danger-bg: oklch(98% 0.01 25);
-  --danger-border: oklch(88% 0.03 30);
-  --danger-text: oklch(52% 0.15 30);
+  --ok-bg: #EAF3E9;
+  --ok-border: #C3DCC0;
+  --ok-text: #2F6B2C;
+  --danger-bg: #FBEAE6;
+  --danger-border: #E8C3B8;
+  --danger-text: #A23F24;
 
   /* --- Het Tessar-gradient (identiek in licht en donker thema) --- */
   --gradient-primary: linear-gradient(135deg, oklch(72% 0.15 210), oklch(62% 0.14 235));
