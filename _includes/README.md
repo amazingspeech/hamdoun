@@ -9,11 +9,26 @@ kant-en-klaar bestand meegekopieerd door Eleventy.
 Deze includes zijn bewust byte-voor-byte gebouwd om exact dezelfde HTML te
 renderen als de oorspronkelijke, losse pagina's vóór de migratie (zie de
 taakrapporten in `.superpowers/sdd/2026-09-09-eleventy-migratie-fase2/` voor
-de diff-verificatie per pagina). Daarom staat deze uitleg hier in een losse
-README in plaats van als HTML-commentaar bovenaan `base.njk` — een commentaar
-daar zou in de uitgeleverde `<head>` van alle 13 pagina's verschijnen en dus
-zelf weer een (onschuldig, maar onnodig) verschil met de productie-baseline
-introduceren.
+de diff-verificatie per pagina), met één bewuste, sindsdien toegevoegde
+uitzondering: sinds Fase 3 van het CSS-consolidatietraject stuurt `base.njk`
+een extra `<link rel="stylesheet" href="./assets/tessar.css">`-regel uit (zie
+hieronder), dus de output is niet langer een absolute byte-voor-byte-claim
+maar "byte-identiek op die ene, bewuste `<link>`-regel na". Daarom staat deze
+uitleg hier in een losse README in plaats van als HTML-commentaar bovenaan
+`base.njk` — een commentaar daar zou in de uitgeleverde `<head>` van alle 13
+pagina's verschijnen en dus zelf weer een (onschuldig, maar onnodig) verschil
+met de productie-baseline introduceren.
+
+## Gedeelde CSS: `assets/tessar.css`
+
+Sinds Fase 3 van het CSS-consolidatietraject bestaat `assets/tessar.css` als
+het gedeelde stijlbestand voor deze 13 Eleventy-pagina's. Het wordt gelinkt
+vanuit `base.njk` (naast `assets/tessar-design-tokens.css`, dat de
+kleurtokens/variabelen levert). Een nieuwe CSS-regel die op meerdere pagina's
+identiek zou zijn hoort voortaan thuis in `assets/tessar.css`, niet herhaald
+in een pagina's eigen `{% block styles %}` — zie het commentaar bovenaan
+`assets/tessar.css` en `scripts/extract-shared-css.mjs` voor hoe gedeelde
+regels daarheen zijn verplaatst en geverifieerd.
 
 ## De 11 opt-in front-matter-vlaggen
 
