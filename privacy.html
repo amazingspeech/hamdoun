@@ -24,13 +24,6 @@ hasBackToTop: true
 {% block jsonld %}{% endblock %}
 {% block styles %}  a { color:var(--accent-text); text-decoration:none; }
   a:hover { text-decoration:underline; }
-  #back-to-top { position:fixed; right:100px; bottom:24px; z-index:40; width:48px; height:48px; border-radius:50%; border:none; background:var(--accent); color:var(--bg); display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:0 8px 24px oklch(20% 0.02 255 / 0.25); opacity:0; transform:translateY(12px); pointer-events:none; transition:opacity 260ms ease, transform 260ms ease, box-shadow 200ms ease; }
-  /* Deze regel staat ook al in assets/tessar.css, maar moet hier herhaald worden:
-     de basisregel hierboven blijft page-specific (zie tessar.css-comment over de
-     comment-asymmetrie) en laadt daardoor NA tessar.css. Zonder deze herhaling
-     zou de onvoorwaardelijke basisregel (gelijke specificity, latere source-order)
-     de mobiele override uit tessar.css verslaan bij <=480px. Zie task-2-report.md. */
-  @media (max-width: 480px) { #back-to-top { right:92px; bottom:16px; } }
   .legal { max-width:760px; margin:0 auto; }
   .legal h2 { font:700 1.3125rem/1.35 'Outfit'; color:var(--text); margin:40px 0 14px; letter-spacing:-0.01em; }
   .legal h2:first-child { margin-top:0; }
